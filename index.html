@@ -1,5 +1,3 @@
-클럽대회용 sv3.0 스텐다드
-
 <p data-ke-size="size16">&nbsp;</p>
 <p data-ke-size="size16"></p>
 <style>
@@ -2899,85 +2897,56 @@ function generateQRCodeWithParams() {
     qc.innerHTML = '';
     
     if (typeof QRCode !== 'undefined') {
-
-        // 1단계: 숨겨진 임시 div에 QR 코드 생성
-        var tempDiv = document.createElement('div');
-        tempDiv.style.position = 'absolute';
-        tempDiv.style.left = '-9999px';
-        document.body.appendChild(tempDiv);
-
-        new QRCode(tempDiv, {
+        var qrObj = new QRCode(qc, {
             text: qrUrl,
             width: 512,
             height: 512,
             colorDark: '#000000',
             colorLight: '#ffffff',
-            correctLevel: QRCode.CorrectLevel.H
+            correctLevel: QRCode.CorrectLevel.H,
+            margin: 4
         });
 
-        // 2단계: QRCode.js 렌더링 완료 후 canvas에 텍스트 합성
+        // QR 코드 생성 완료 후 중앙에 대회코드 텍스트 삽입
         setTimeout(function() {
-            var srcCanvas = tempDiv.querySelector('canvas');
-            if (!srcCanvas) {
-                document.body.removeChild(tempDiv);
-                qc.innerHTML = '<p style="color:#dc3545;">QR 코드 생성 실패</p>';
-                return;
-            }
+            var canvas = qc.querySelector('canvas');
+            if (!canvas) return;
 
-            // 3단계: 최종 출력용 새 canvas 생성
-            var finalCanvas = document.createElement('canvas');
-            var padding = 30;                       // 흰 여백
-            var size = srcCanvas.width;
-            finalCanvas.width  = size + padding * 2;
-            finalCanvas.height = size + padding * 2;
-            var ctx = finalCanvas.getContext('2d');
+            var ctx = canvas.getContext('2d');
+            var size = canvas.width;
 
-            // 4단계: 흰 배경
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
-
-            // 5단계: QR 이미지 복사
-            ctx.drawImage(srcCanvas, padding, padding);
-
-            // 6단계: 중앙에 대회코드 박스 + 텍스트
-            var cx = finalCanvas.width  / 2;
-            var cy = finalCanvas.height / 2;
-
-            var fontSize = Math.floor(size * 0.068);
+            // ────── 텍스트 설정 ──────
+            var label = eventCode;                  // 표시할 텍스트 = 대회코드
+            var fontSize = Math.floor(size * 0.072); // 폰트 크기 (QR 크기의 7.2%)
             ctx.font = 'bold ' + fontSize + 'px Arial, sans-serif';
-            var textWidth = ctx.measureText(eventCode).width;
-            var boxW = textWidth + 32;
-            var boxH = fontSize + 20;
 
-            // 흰 배경 박스 (둥근 모서리 효과)
+            var textWidth  = ctx.measureText(label).width;
+            var boxW = textWidth + 24;              // 박스 좌우 여백
+            var boxH = fontSize + 16;              // 박스 상하 여백
+            var cx = size / 2;                     // 중앙 X
+            var cy = size / 2;                     // 중앙 Y
+
+            // ────── 흰 배경 박스 ──────
             ctx.fillStyle = '#ffffff';
-            ctx.fillRect(cx - boxW / 2 - 2, cy - boxH / 2 - 2, boxW + 4, boxH + 4);
+            ctx.fillRect(cx - boxW / 2, cy - boxH / 2, boxW, boxH);
 
-            // 청록색 테두리
-            ctx.strokeStyle = '#00897b';
-            ctx.lineWidth = 4;
+            // ────── 박스 테두리 ──────
+            ctx.strokeStyle = '#00897b';            // 청록색 테두리
+            ctx.lineWidth = 3;
             ctx.strokeRect(cx - boxW / 2, cy - boxH / 2, boxW, boxH);
 
-            // 대회코드 텍스트
-            ctx.fillStyle = '#004d40';
+            // ────── 텍스트 출력 ──────
+            ctx.fillStyle = '#00695c';              // 진한 청록색 글자
             ctx.font = 'bold ' + fontSize + 'px Arial, sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText(eventCode, cx, cy);
+            ctx.fillText(label, cx, cy);
 
-            // 7단계: 최종 canvas를 화면에 표시
-            qc.innerHTML = '';
-            finalCanvas.style.maxWidth = '100%';
-            finalCanvas.style.borderRadius = '8px';
-            qc.appendChild(finalCanvas);
+        }, 200); // QRCode.js 렌더링 완료 후 실행
 
-            // 8단계: 임시 div 제거
-            document.body.removeChild(tempDiv);
+        document.getElementById('qrcodeDisplay').style.display = 'block';
 
-            document.getElementById('qrcodeDisplay').style.display = 'block';
-
-        }, 300);
-
+        alert('QR 코드가 생성되었습니다!\n\n대회 코드: ' + eventCode + '\n\n✅ QR 코드 중앙에 대회코드가 표시됩니다.');
     } else {
         qc.innerHTML = '<p style="color:#dc3545;">QR 코드 라이브러리를 불러올 수 없습니다.</p>';
     }
