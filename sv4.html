@@ -530,6 +530,17 @@ body { margin: 0; background: #f0fff4; }
   .parkgolf-app { border-radius: 0 !important; box-shadow: none !important; }
 }
 
+
+/* === SV4 모바일 풀가로(좌우 여백 최소화) 오버라이드 === */
+@media (max-width: 767px){
+  html, body { margin: 0 !important; padding: 0 !important; }
+  .parkgolf-app { margin: 0 !important; padding-left: 0 !important; padding-right: 0 !important; width: 100% !important; max-width: none !important; }
+  .parkgolf-app .container { margin: 0 !important; padding-left: 0 !important; padding-right: 0 !important; width: 100% !important; max-width: none !important; border-radius: 0 !important; }
+  .parkgolf-app .content, .parkgolf-app .section { padding-left: 0 !important; padding-right: 0 !important; }
+  /* 카드/정보 영역도 화면 끝까지 */
+  .parkgolf-app .info-section, .parkgolf-app .card, .parkgolf-app .panel { margin-left: 0 !important; margin-right: 0 !important; border-radius: 0 !important; }
+}
+
 </style>
 
 <div class="parkgolf-app" style="padding: 0px !important; margin: 0 !important; max-width: 100% !important; width: 100% !important;">
