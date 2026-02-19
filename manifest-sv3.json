@@ -1,0 +1,20 @@
+{
+  "name": "파크골프 점수 SV3 스탠다드",
+  "short_name": "SV3",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#15803d",
+  "theme_color": "#15803d",
+  "icons": [
+    {
+      "src": "sv3-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "sv3-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

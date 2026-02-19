@@ -1,0 +1,20 @@
+{
+  "name": "파크골프 점수 SV2 라이트",
+  "short_name": "SV2",
+  "start_url": "./sv2.html",
+  "display": "standalone",
+  "background_color": "#16a34a",
+  "theme_color": "#16a34a",
+  "icons": [
+    {
+      "src": "sv2-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "sv2-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
