@@ -1,7 +1,37 @@
-파시스_SV4_0_프로_정본(발행중)
-
-<div style="all: initial !important; font-family: 'Malgun Gothic', sans-serif !important;">
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>파시스 SV4.0 프로</title>
+</head>
+<body>
+<div class="sv4-root" style="all: initial !important; display:block !important; width:100% !important; box-sizing:border-box !important; padding:12px !important; font-family: 'Malgun Gothic', sans-serif !important; font-size:18px !important; line-height:1.35 !important;">
 <style>
+
+/* === GitHub Pages 모바일 가독성 패치 (SV4) === */
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: #f3f4f6; }
+.sv4-root { max-width: 980px; margin: 0 auto !important; }
+
+.sv4-root input, .sv4-root select, .sv4-root textarea, .sv4-root button {
+  font-size: 18px !important;
+  padding: 12px 12px !important;
+  min-height: 48px !important;
+}
+
+.sv4-root label, .sv4-root .label, .sv4-root .help, .sv4-root p, .sv4-root li, .sv4-root td, .sv4-root th {
+  font-size: 18px !important;
+}
+
+@media (max-width: 520px){
+  .sv4-root { padding: 14px !important; font-size: 19px !important; }
+  .sv4-root input, .sv4-root select, .sv4-root textarea, .sv4-root button { font-size: 19px !important; }
+}
+
+/* 버튼/카드 간격 */
+.sv4-root button, .sv4-root .btn, .sv4-root a.button { border-radius: 14px; }
+.sv4-root .section, .sv4-root .card, .sv4-root .panel, .sv4-root .box { padding-top: 16px !important; padding-bottom: 16px !important; }
 
 /* --- Team assignment mobile readability --- */
 #teamAssignmentSection .table-scroll { overflow-x:auto; -webkit-overflow-scrolling: touch; }
@@ -3394,3 +3424,6 @@ function toggleAppsScript() {
 }
 </script>
 <!-- ===== /SV4.0: Apps Script Install ===== -->
+
+</body>
+</html>
