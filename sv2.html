@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>파크골프 점수 - sv2.0 라이트</title>
 
-  <!-- 매니페스트 -->
+  <!-- PWA -->
   <link rel="manifest" href="manifest-sv2.json">
 
-  <!-- iPhone 홈화면 아이콘(1줄만) -->
+  <!-- iPhone 홈화면 아이콘: 이 1줄만 유지 -->
   <link rel="apple-touch-icon" sizes="180x180" href="sv2-180.png">
 
   <style>
-    /* ===== GitHub Pages 모바일 가독성 패치 ===== */
+    /* 모바일 가독성 기본값 */
     html { -webkit-text-size-adjust: 100%; }
     body { margin: 0; font-size: 18px; line-height: 1.35; }
 
@@ -23,13 +23,18 @@
     .parkgolf-app button,
     .parkgolf-app textarea { font-size: 18px !important; }
 
-    /* 모바일에서 위아래 여백 최소 확보 */
+    /* (선택) 모바일 여백 확보 */
     .parkgolf-app .container { padding-left: 10px; padding-right: 10px; }
     @media (max-width: 767px) {
       .parkgolf-app { padding-bottom: 24px !important; }
     }
+
+    /* ✅ 여기에 원래 있던 CSS가 더 있으면 '반드시' 이 <style> 안에만 넣으세요 */
   </style>
 </head>
+
+<body>
+  <!-- ✅ 여기부터 바로 앱 본문(div.parkgolf-app)이 나와야 합니다. -->
   
 /* 모바일에서 위아래 여백이 너무 타이트해 보일 때 최소 여백 확보 */
 .parkgolf-app .container { padding-left: 10px; padding-right: 10px; }
