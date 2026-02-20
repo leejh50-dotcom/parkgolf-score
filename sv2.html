@@ -4,23 +4,24 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>파크골프 점수 - sv2.0 라이트</title>
+
+  <!-- ✅ 아이콘/매니페스트는 style 밖에 있어야 iOS가 읽습니다 -->
+  <link rel="manifest" href="manifest-sv2.json">
+  <link rel="apple-touch-icon" sizes="180x180" href="/parkgolf-score/sv2-180-v2.png">
+  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="/parkgolf-score/sv2-180-v2.png">
+
   <style>
-<link rel="manifest" href="manifest-sv2.json">
-<link rel="apple-touch-icon" sizes="180x180" href="/parkgolf-score/sv2-180-v2.png">
-<link rel="apple-touch-icon-precomposed" sizes="180x180" href="/parkgolf-score/sv2-180-v2.png">
-    
-/* ===== GitHub Pages 모바일 가독성 패치 (티스토리와 유사하게 크게) ===== */
-html { -webkit-text-size-adjust: 100%; }
-body { margin: 0; font-size: 18px; line-height: 1.35; }
-
-/* iPhone에서 입력칸 자동확대/축소로 글자가 작아지는 현상 방지 */
-.parkgolf-app, .parkgolf-app * { -webkit-text-size-adjust: 100%; }
-
-.parkgolf-app input,
-.parkgolf-app select,
-.parkgolf-app button,
-.parkgolf-app textarea { font-size: 18px !important; }
-
+    /* ===== GitHub Pages 모바일 가독성 패치 ===== */
+    html { -webkit-text-size-adjust: 100%; }
+    body { margin: 0; font-size: 18px; line-height: 1.35; }
+    .parkgolf-app, .parkgolf-app * { -webkit-text-size-adjust: 100%; }
+    .parkgolf-app input,
+    .parkgolf-app select,
+    .parkgolf-app button,
+    .parkgolf-app textarea { font-size: 18px !important; }
+  </style>
+</head>
+  
 /* 모바일에서 위아래 여백이 너무 타이트해 보일 때 최소 여백 확보 */
 .parkgolf-app .container { padding-left: 10px; padding-right: 10px; }
 @media (max-width: 767px) {
