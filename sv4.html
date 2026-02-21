@@ -8,9 +8,19 @@
   <link rel="manifest" href="/parkgolf-score/manifest-sv4.json?v=401">
   
   <link rel="apple-touch-icon" sizes="180x180" href="/parkgolf-score/sv4-180.png?v=401">
+<script>
+  if (!location.search.includes('v=')) {
+    location.replace(location.pathname + '?v=401');
+  }
+</script>
 </head>
 
 <body>
+ <script>
+  window.onerror = function(msg, src, line, col, err){
+    alert("SV4 오류: " + msg + "\n" + src + ":" + line);
+  };
+</script> 
 <div class="sv4-root" style="all: initial !important; display:block !important; width:100% !important; box-sizing:border-box !important; padding:12px !important; font-family: 'Malgun Gothic', sans-serif !important; font-size:18px !important; line-height:1.35 !important;">
 <style>
 
