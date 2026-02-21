@@ -13,6 +13,11 @@
     location.replace(location.pathname + '?v=401');
   }
 </script>
+<script>
+  if (!location.search.includes('v=')) {
+    location.replace(location.pathname + '?v=401');
+  }
+</script>
 </head>
 
 <body>
