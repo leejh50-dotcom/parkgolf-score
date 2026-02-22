@@ -3,16 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>파크골프 점수 - sv2.0 라이트</title>
+  <title>파크골프 점수 - sv2.0 클럽용</title>
 
   <!-- PWA -->
   <link rel="manifest" href="manifest-sv2.json">
   <link rel="apple-touch-icon" sizes="180x180" href="sv2-180.png">
-
-  <!-- iPhone 홈화면 아이콘: 이 1줄만 유지 -->
-  <link rel="apple-touch-icon" sizes="180x180" href="sv2-180.png">
-
-  <style>
+<style>
     /* 모바일 가독성 기본값 */
     html { -webkit-text-size-adjust: 100%; }
     body { margin: 0; font-size: 18px; line-height: 1.35; }
@@ -31,17 +27,7 @@
     }
 
     /* ✅ 여기에 원래 있던 CSS가 더 있으면 '반드시' 이 <style> 안에만 넣으세요 */
-  </style>
-</head>
-
-<body>
-  <!-- ✅ 여기부터 바로 앱 본문(div.parkgolf-app)이 나와야 합니다. -->
   
-클럽용sv2.0라이트(발행중)
-
-<p data-ke-size="size16">&nbsp;</p>
-<p data-ke-size="size16"></p>
-<style>
 @media (max-width: 767px) {
     .parkgolf-app {
         padding: 0 !important;
@@ -1167,11 +1153,101 @@
   .parkgolf-app #locationInput{ font-size: 20px !important; }
   .parkgolf-app #teamNameInput{ font-size: 24px !important; }
 }
+/* ==================== 안내 버튼(설명/유튜브) ==================== */
+    .parkgolf-app .guide-divider{
+      margin: 18px 0 12px !important;
+      position: relative !important;
+      text-align: center !important;
+    }
+    .parkgolf-app .guide-divider::before{
+      content:"" !important;
+      display:block !important;
+      height:1px !important;
+      background: rgba(0,0,0,0.14) !important;
+      position:absolute !important;
+      left:0 !important; right:0 !important;
+      top:50% !important;
+    }
+    .parkgolf-app .guide-divider span{
+      position: relative !important;
+      display:inline-block !important;
+      padding: 6px 12px !important;
+      font-size: 13px !important;
+      font-weight: 900 !important;
+      border-radius: 999px !important;
+      background: #f4f6f8 !important;
+      color:#333 !important;
+      letter-spacing: -0.2px !important;
+    }
+    .parkgolf-app .guide-box{
+      background: #f4f6f8 !important;
+      border-radius: 16px !important;
+      padding: 12px !important;
+      box-shadow: 0 1px 0 rgba(0,0,0,0.06) inset !important;
+      margin-bottom: 30px !important;
+    }
+    .parkgolf-app .guide-buttons{
+      display:flex !important;
+      gap:12px !important;
+    }
+    .parkgolf-app .guide-btn{
+      flex:1 !important;
+      display:flex !important;
+      align-items:center !important;
+      gap:10px !important;
+      border:none !important;
+      border-radius: 14px !important;
+      padding: 14px 12px !important;
+      cursor:pointer !important;
+      text-align:left !important;
+      color:#fff !important;
+      font-weight: 900 !important;
+      font-size: 16px !important;
+    }
+    .parkgolf-app .guide-btn .ico{
+      width:34px !important;
+      text-align:center !important;
+      font-size:22px !important;
+      line-height:1 !important;
+      flex-shrink:0 !important;
+    }
+    .parkgolf-app .guide-btn .txt b{
+      display:block !important;
+      font-size: 16px !important;
+      line-height: 1.1 !important;
+    }
+    .parkgolf-app .guide-btn .txt small{
+      display:block !important;
+      font-size: 12.5px !important;
+      opacity: .92 !important;
+      margin-top: 2px !important;
+      font-weight: 700 !important;
+    }
+    .parkgolf-app .guide-tistory{ background:#2e7d32 !important; }
+    .parkgolf-app .guide-youtube{ background:#d32f2f !important; }
 
-</style>
+    @media (max-width: 480px){
+      .parkgolf-app .guide-btn{ padding: 16px 12px !important; }
+      .parkgolf-app .guide-btn .ico{ font-size:24px !important; }
+    }
+.parkgolf-app .guide-message{
+  font-size:15px;
+  font-weight:900;
+  margin-bottom:12px;
+  color:#111;
+  line-height:1.4;
+}
+.parkgolf-app .guide-btn{
+  text-decoration: none !important;  /* a 링크 밑줄 제거 */
+  display: flex !important;          /* 가운데 정렬 */
+  align-items: center !important;
+  justify-content: center !important;
+}
+  </style>
+</head>
 
-
-<div class="parkgolf-app" style="padding: 0px !important; margin: 0 !important; max-width: 100% !important; width: 100% !important;">
+<body>
+  <div class="parkgolf-app" style="padding: 0px !important; margin: 0 !important; max-width: 100% !important; width: 100% !important;">
 <div class="container" style="padding: 0px !important; margin: 0 !important; border-radius: 0 !important; box-shadow: none !important; max-width: 100% !important;">
 <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px 4px !important; border-radius: 12px; margin: 0 0 8px 0 !important; text-align: center;">
 <h1 style="color: #ffffff !important; margin: 0 0 14px 0 !important; font-size: 24px !important; font-weight: bold !important; letter-spacing: -0.5px !important;">파크골프 점수 기록표</h1>
@@ -1326,8 +1402,27 @@
 <div style="text-align: center; margin-top: 12px;">
 </div>
 </div>
-
 <div class="button-group" style="margin-top: 20px;"><button class="save-btn" onclick="saveData()">저장하기</button> <button class="history-btn" onclick="openHistoryModal()">저장된 기록<br>(<span id="historyCount">0</span>)</button> <button class="clear-btn" onclick="clearAllScores()">점수 지우기</button> <button class="share-btn" onclick="shareResult()">결과<br/>공유하기</button></div>
+
+<!-- ✅ 도움말/사용가이드(티스토리/유튜브) : 기존 4개 버튼 아래 -->
+<div class="guide-divider"><span>도움말 / 사용가이드</span></div>
+<div class="guide-box">
+<div class="guide-box">
+
+<div class="guide-message">
+  📌 자세한 사용방법은 아래 설명과 영상을 참고하세요
+</div>
+
+<div class="guide-buttons">
+  <a class="guide-btn guide-tistory" href="https://songgeun25.tistory.com/332" target="_blank" rel="noopener">
+    📘 사용 설명글 보기
+  </a>
+
+  <a class="guide-btn guide-youtube" href="https://youtu.be/EZeR7lyz1_k" target="_blank" rel="noopener">
+    ▶ 사용법 유튜브 보기
+  </a>
+</div>
+
 
 </div>
 <div id="parModal" class="modal">
@@ -2506,6 +2601,13 @@
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("/parkgolf-score/sw-sv2.js");
   }
+function openPasisGuide(){
+  window.open("https://songgeun25.tistory.com/332", "_blank");
+}
+
+function openPasisYoutube(){
+  window.open("https://youtu.be/EZeR7lyz1_k", "_blank");
+}
 </script>
  
 </body>
