@@ -1,7 +1,7 @@
 {
-  "name": "파시스 sv2.0 클럽용",
-  "short_name": "sv2",
-  "start_url": "./sv2.html",
+  "name": "파시스2 (SV2.0)",
+  "short_name": "파시스2",
+  "start_url": ". /sv2.html",
   "display": "standalone",
   "background_color": "#16a34a",
   "theme_color": "#16a34a",
