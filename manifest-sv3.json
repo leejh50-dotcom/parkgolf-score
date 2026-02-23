@@ -1,21 +1,13 @@
 {
-"name": "파시스 sv3.0 클럽대회용",
-"short_name": "sv3",
-  "start_url": "/parkgolf-score/",
-  "scope": "/parkgolf-score/",
+  "name": "파시스3 (SV3.0 클럽대항용)",
+  "short_name": "파시스3",
+  "start_url": "./",
+  "scope": "/피클클프접수/",
   "display": "standalone",
   "background_color": "#15803d",
   "theme_color": "#15803d",
   "icons": [
-    {
-      "src": "sv3-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "sv3-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
+    { "src": "sv3-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "sv3-512.png", "sizes": "512x512", "type": "image/png" }
   ]
 }
