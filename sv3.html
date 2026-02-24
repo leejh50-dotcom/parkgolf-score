@@ -2962,12 +2962,14 @@ function toggleQRSection() {
     }
 }
 
-// 파라미터 포함한 QR 코드 생성 (페이지 URL 설정 기능)
+// 파라미터 포함한 QR 코드 생성 (크기 최적화 + 텍스트 삽입 강화)
 function generateQRCodeWithParams() {
     var eventCode = document.getElementById('qrEventCode').value.trim();
     var webAppUrl = document.getElementById('qrWebAppUrl').value.trim();
     
-    console.log('QR 생성 시작:', eventCode, webAppUrl);
+    console.log('=== QR 생성 시작 ===');
+    console.log('대회코드:', eventCode);
+    console.log('웹앱 URL:', webAppUrl);
     
     if (!eventCode) {
         alert('❌ 대회 코드를 입력해주세요.');
@@ -2986,7 +2988,6 @@ function generateQRCodeWithParams() {
     
     localStorage.setItem('parkgolf_webapp_url', webAppUrl);
     
-    // QRCode 라이브러리 로드 확인
     if (typeof QRCode === 'undefined') {
         alert('⏳ QR 코드 라이브러리를 불러오는 중입니다...\n\n잠시 후 다시 시도해주세요.');
         
@@ -3003,16 +3004,14 @@ function generateQRCodeWithParams() {
     }
     
     try {
-        // ⭐ 핵심: 페이지 URL 가져오기 (localStorage 또는 자동 감지)
+        // 페이지 URL 가져오기
         var pageUrl = localStorage.getItem('parkgolf_page_url');
         
         if (!pageUrl) {
-            // 페이지 URL이 저장되지 않은 경우
             var userPageUrl = prompt(
                 '🔗 파시스 3.0 페이지 URL을 입력해주세요:\n\n' +
                 '예시:\n' +
-                '• GitHub: https://leejh50-dotcom.github.io/parkgolf-score/pasis-3.0-tournament/\n' +
-                '• 티스토리: https://songgeun25.tistory.com/XXX\n\n' +
+                'https://leejh50-dotcom.github.io/parkgolf-score/sv3.html\n\n' +
                 '💡 이 URL은 저장되어 다음에는 묻지 않습니다.\n' +
                 '변경하려면 F12 → Console에서:\n' +
                 'localStorage.removeItem("parkgolf_page_url")',
@@ -3024,12 +3023,8 @@ function generateQRCodeWithParams() {
                 return;
             }
             
-            // URL 끝에 / 제거
             pageUrl = userPageUrl.replace(/\/$/, '');
-            
-            // 저장
             localStorage.setItem('parkgolf_page_url', pageUrl);
-            
             console.log('✅ 페이지 URL 저장:', pageUrl);
         }
         
@@ -3044,122 +3039,155 @@ function generateQRCodeWithParams() {
         var qc = document.getElementById('qrcode');
         qc.innerHTML = '';
         
-        // QR 코드 생성
+        // ⭐ 크기 축소: 512 → 300
+        var qrSize = 300;
+        
         var qrObj = new QRCode(qc, {
             text: qrUrl,
-            width: 512,
-            height: 512,
+            width: qrSize,
+            height: qrSize,
             colorDark: '#000000',
             colorLight: '#ffffff',
             correctLevel: QRCode.CorrectLevel.M,
-            margin: 4
+            margin: 2  // 마진도 축소
         });
         
-        console.log('QR 객체 생성 완료');
+        console.log('QR 객체 생성 완료 (크기: ' + qrSize + 'x' + qrSize + ')');
         
-        // img를 canvas로 강제 변환 후 텍스트 삽입
+        // Canvas로 강제 변환 + 텍스트 삽입
         setTimeout(function() {
             try {
                 var img = qc.querySelector('img');
                 var canvas = qc.querySelector('canvas');
                 
-                console.log('img 존재:', !!img);
-                console.log('canvas 존재:', !!canvas);
+                console.log('→ img 요소:', img ? 'O' : 'X');
+                console.log('→ canvas 요소:', canvas ? 'O' : 'X');
                 
-                // img가 있으면 canvas로 변환
-                if (img && !canvas) {
-                    console.log('→ img를 canvas로 변환 중...');
-                    
-                    canvas = document.createElement('canvas');
-                    canvas.width = 512;
-                    canvas.height = 512;
-                    
-                    var ctx = canvas.getContext('2d');
-                    
-                    if (img.complete) {
-                        ctx.drawImage(img, 0, 0, 512, 512);
-                        qc.innerHTML = '';
-                        qc.appendChild(canvas);
-                        console.log('→ ✅ 변환 완료 (즉시)');
-                    } else {
-                        img.onload = function() {
-                            ctx.drawImage(img, 0, 0, 512, 512);
+                // Canvas가 없으면 생성
+                if (!canvas) {
+                    if (img) {
+                        console.log('→ img를 canvas로 변환 시작...');
+                        
+                        canvas = document.createElement('canvas');
+                        canvas.width = qrSize;
+                        canvas.height = qrSize;
+                        canvas.style.maxWidth = '100%';
+                        canvas.style.height = 'auto';
+                        
+                        var ctx = canvas.getContext('2d');
+                        
+                        var drawAndAddText = function() {
+                            // img를 canvas에 그리기
+                            ctx.drawImage(img, 0, 0, qrSize, qrSize);
+                            
+                            console.log('→ ✅ img → canvas 변환 완료');
+                            
+                            // 텍스트 추가
+                            addTextToCanvas(canvas, eventCode, qrSize);
+                            
+                            // img 제거하고 canvas로 교체
                             qc.innerHTML = '';
                             qc.appendChild(canvas);
-                            console.log('→ ✅ 변환 완료 (onload)');
+                            
+                            console.log('→ ✅ QR 코드 교체 완료');
                         };
+                        
+                        if (img.complete) {
+                            drawAndAddText();
+                        } else {
+                            img.onload = drawAndAddText;
+                        }
+                    } else {
+                        console.error('→ ❌ img도 canvas도 없습니다!');
                     }
+                } else {
+                    // Canvas가 있으면 바로 텍스트 추가
+                    console.log('→ canvas 발견, 텍스트 추가 시작...');
+                    addTextToCanvas(canvas, eventCode, qrSize);
                 }
-                
-                // canvas 다시 찾기
-                canvas = qc.querySelector('canvas');
-                
-                if (!canvas) {
-                    console.error('❌ Canvas를 찾을 수 없습니다!');
-                    return;
-                }
-                
-                // 텍스트 삽입
-                setTimeout(function() {
-                    var ctx = canvas.getContext('2d');
-                    var size = canvas.width;
-                    
-                    // ────── 텍스트 설정 ──────
-                    var label = eventCode;
-                    var fontSize = Math.floor(size * 0.072);
-                    ctx.font = 'bold ' + fontSize + 'px Arial, sans-serif';
-                    
-                    var textWidth = ctx.measureText(label).width;
-                    var boxW = textWidth + 24;
-                    var boxH = fontSize + 16;
-                    var cx = size / 2;
-                    var cy = size / 2;
-                    
-                    // ────── 흰 배경 박스 ──────
-                    ctx.fillStyle = '#ffffff';
-                    ctx.fillRect(cx - boxW / 2, cy - boxH / 2, boxW, boxH);
-                    
-                    // ────── 박스 테두리 ──────
-                    ctx.strokeStyle = '#00897b';
-                    ctx.lineWidth = 3;
-                    ctx.strokeRect(cx - boxW / 2, cy - boxH / 2, boxW, boxH);
-                    
-                    // ────── 텍스트 출력 ──────
-                    ctx.fillStyle = '#00695c';
-                    ctx.font = 'bold ' + fontSize + 'px Arial, sans-serif';
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    ctx.fillText(label, cx, cy);
-                    
-                    console.log('→ ✅✅✅ 대회코드 텍스트 삽입 완료:', label);
-                    
-                }, 400);
                 
             } catch (error) {
-                console.error('Canvas 처리 오류:', error);
+                console.error('→ ❌ Canvas 처리 오류:', error);
             }
-        }, 600);
+        }, 500);
         
-        document.getElementById('qrcodeDisplay').style.display = 'block';
+        // QR 표시
+        var displayDiv = document.getElementById('qrcodeDisplay');
+        displayDiv.style.display = 'block';
+        
+        // ⭐ 스크롤 개선: 부드럽게, 약간 위로
+        setTimeout(function() {
+            var qrContainer = document.getElementById('qrcode');
+            if (qrContainer) {
+                // 화면 중앙보다 약간 위로 스크롤
+                var rect = qrContainer.getBoundingClientRect();
+                var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                var targetY = rect.top + scrollTop - 100; // 100px 위 여백
+                
+                window.scrollTo({
+                    top: targetY,
+                    behavior: 'smooth'
+                });
+                
+                console.log('→ 스크롤 이동 완료');
+            }
+        }, 800);
         
         alert('✅ QR 코드가 생성되었습니다!\n\n' +
-              '📱 대회 코드: ' + eventCode + '\n' +
-              '🔗 QR 스캔 시 이동:\n' + qrUrl + '\n\n' +
-              '⚠️ QR을 스캔하여 정확한 페이지로\n이동하는지 확인하세요!\n\n' +
-              '💡 잘못된 페이지로 이동하면\nF12 → Console에서:\n' +
-              'localStorage.removeItem("parkgolf_page_url")\n' +
-              '입력 후 QR 재생성하세요.');
-        
-        setTimeout(function() {
-            document.getElementById('qrcodeDisplay').scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'center' 
-            });
-        }, 100);
+              '📱 대회 코드: ' + eventCode + '\n\n' +
+              '💡 QR 코드를 확인하세요.\n' +
+              '중앙에 대회코드가 표시되어야 합니다.\n\n' +
+              '⚠️ F12 → Console 탭을 열어\n' +
+              '로그를 확인해주세요!');
         
     } catch (error) {
-        console.error('QR 생성 오류:', error);
+        console.error('❌ QR 생성 오류:', error);
         alert('❌ QR 코드 생성 중 오류가 발생했습니다.\n\n' + error.message);
+    }
+}
+
+// Canvas에 텍스트 추가 함수
+function addTextToCanvas(canvas, label, size) {
+    try {
+        var ctx = canvas.getContext('2d');
+        
+        // 텍스트 설정
+        var fontSize = Math.floor(size * 0.08); // 크기에 비례해서 조금 크게
+        ctx.font = 'bold ' + fontSize + 'px Arial, sans-serif';
+        
+        var textWidth = ctx.measureText(label).width;
+        var boxW = textWidth + 20;
+        var boxH = fontSize + 12;
+        var cx = size / 2;
+        var cy = size / 2;
+        
+        console.log('→ 텍스트 설정:', {
+            label: label,
+            fontSize: fontSize,
+            boxW: boxW,
+            boxH: boxH
+        });
+        
+        // 흰 배경 박스
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(cx - boxW / 2, cy - boxH / 2, boxW, boxH);
+        
+        // 박스 테두리
+        ctx.strokeStyle = '#00897b';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(cx - boxW / 2, cy - boxH / 2, boxW, boxH);
+        
+        // 텍스트 출력
+        ctx.fillStyle = '#00695c';
+        ctx.font = 'bold ' + fontSize + 'px Arial, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(label, cx, cy);
+        
+        console.log('→ ✅✅✅ 대회코드 텍스트 삽입 완료:', label);
+        
+    } catch (error) {
+        console.error('→ ❌ 텍스트 삽입 오류:', error);
     }
 }
 
