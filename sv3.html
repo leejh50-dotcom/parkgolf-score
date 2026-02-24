@@ -2922,22 +2922,7 @@ function toggleQRSection() {
     }
 }
 
-// QR 섹션 토글
-function toggleQRSection() {
-    var qs = document.getElementById('qrSection');
-    if (qs.style.display === 'none' || !qs.style.display) {
-        qs.style.display = 'block';
-        // 저장된 URL이 있으면 자동으로 채우기
-        var savedUrl = localStorage.getItem('parkgolf_webapp_url');
-        if (savedUrl) {
-            document.getElementById('qrWebAppUrl').value = savedUrl;
-        }
-    } else {
-        qs.style.display = 'none';
-    }
-}
-
-// 파라미터 포함한 QR 코드 생성 (개선 버전)
+// 파라미터 포함한 QR 코드 생성 (용량 최적화 버전)
 function generateQRCodeWithParams() {
     var eventCode = document.getElementById('qrEventCode').value.trim();
     var webAppUrl = document.getElementById('qrWebAppUrl').value.trim();
@@ -2959,6 +2944,9 @@ function generateQRCodeWithParams() {
         return;
     }
     
+    // webAppUrl을 localStorage에 저장 (QR에는 포함하지 않음)
+    localStorage.setItem('parkgolf_webapp_url', webAppUrl);
+    
     // QRCode 라이브러리 로드 확인
     if (typeof QRCode === 'undefined') {
         alert('⏳ QR 코드 라이브러리를 불러오는 중입니다...\n\n잠시 후 다시 시도해주세요.');
@@ -2977,11 +2965,12 @@ function generateQRCodeWithParams() {
     }
     
     try {
-        // 현재 페이지 URL에 파라미터 추가
+        // ⭐ 핵심 수정: eventCode만 QR에 포함 (webAppUrl 제외)
         var baseUrl = window.location.origin + window.location.pathname;
-        var qrUrl = baseUrl + '?eventCode=' + encodeURIComponent(eventCode) + '&webAppUrl=' + encodeURIComponent(webAppUrl);
+        var qrUrl = baseUrl + '?eventCode=' + encodeURIComponent(eventCode);
         
-        console.log('QR URL:', qrUrl);
+        console.log('QR URL (최적화):', qrUrl);
+        console.log('URL 길이:', qrUrl.length);
         
         // QR 코드 컨테이너 초기화
         var qc = document.getElementById('qrcode');
@@ -2994,7 +2983,7 @@ function generateQRCodeWithParams() {
             height: 512,
             colorDark: '#000000',
             colorLight: '#ffffff',
-            correctLevel: QRCode.CorrectLevel.H,
+            correctLevel: QRCode.CorrectLevel.M,  // H → M으로 변경 (용량 절약)
             margin: 4
         });
         
@@ -3050,7 +3039,7 @@ function generateQRCodeWithParams() {
         document.getElementById('qrcodeDisplay').style.display = 'block';
         
         // 성공 메시지
-        alert('✅ QR 코드가 생성되었습니다!\n\n📱 대회 코드: ' + eventCode + '\n\n💡 QR 코드 중앙에 대회코드가 표시됩니다.\n\n👆 QR 이미지를 길게 눌러 저장하거나 스크린샷으로 캡처하세요!');
+        alert('✅ QR 코드가 생성되었습니다!\n\n📱 대회 코드: ' + eventCode + '\n\n💡 QR 코드 중앙에 대회코드가 표시됩니다.\n\n⚠️ 중요: QR 스캔 전에 관리자가 먼저\n"URL 저장" 버튼을 눌러\n웹앱 URL을 저장해두어야 합니다!\n\n👆 QR 이미지를 길게 눌러 저장하거나\n스크린샷으로 캡처하세요!');
         
         // QR 섹션 상단으로 스크롤
         setTimeout(function() {
@@ -3063,12 +3052,13 @@ function generateQRCodeWithParams() {
     }
 }
 
-
-// URL 파라미터 읽기 및 자동 설정
+// URL 파라미터 읽기 및 자동 설정 (수정 버전)
 function loadUrlParams() {
     var urlParams = new URLSearchParams(window.location.search);
     var eventCode = urlParams.get('eventCode');
-    var webAppUrl = urlParams.get('webAppUrl');
+    
+    // ⭐ webAppUrl은 localStorage에서 읽기 (QR 파라미터에서 제외)
+    var savedWebAppUrl = localStorage.getItem('parkgolf_webapp_url');
     
     if (eventCode) {
         var eventCodeInput = document.getElementById('eventCodeInput');
@@ -3078,21 +3068,26 @@ function loadUrlParams() {
         }
     }
     
-    if (webAppUrl) {
-        localStorage.setItem('parkgolf_webapp_url', webAppUrl);
+    // localStorage에 저장된 webAppUrl 자동 설정
+    if (savedWebAppUrl) {
         var webAppUrlInput = document.getElementById('webAppUrl');
         if (webAppUrlInput) {
-            webAppUrlInput.value = webAppUrl;
+            webAppUrlInput.value = savedWebAppUrl;
         }
     }
     
     // 파라미터가 있으면 안내 메시지
-    if (eventCode && webAppUrl) {
+    if (eventCode) {
         setTimeout(function() {
-            showToast('✅ 대회 설정이 완료되었습니다!\n대회 코드: ' + eventCode);
+            if (savedWebAppUrl) {
+                showToast('✅ 대회 설정이 완료되었습니다!\n대회 코드: ' + eventCode);
+            } else {
+                showToast('⚠️ 대회 코드는 설정되었으나\n웹앱 URL이 없습니다.\n\n관리자 도구에서 URL을 설정해주세요.');
+            }
         }, 500);
     }
 }
+
 
 // URL 저장 함수
 function saveURL() {
