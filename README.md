@@ -1,3 +1,192 @@
+# 파시스 (Pasis) - 파크골프 점수 관리 시스템
+
+![파크골프](https://img.shields.io/badge/파크골프-클럽대회-green)
+![License](https://img.shields.io/badge/license-MIT-blue)
+![Version](https://img.shields.io/badge/version-3.0-orange)
+
+**Park golf Scoring System**
+
+---
+
+## 📌 프로젝트 소개
+
+QR 코드 스캔만으로 파크골프 클럽 대회 점수를 자동으로 집계하고
+조편성까지 완성하는 웹 기반 시스템입니다.
+
+### 버전별 구성
+
+- **파시스2.0 클럽용**: 개인 및 소규모 조 점수 기록
+- **파시스3.0 클럽대회용**: 클럽 대회 전체 운영 (40명 이하 무료)
+- **파시스4.0 대회용**: 대규모 공식 대회 (준비 중)
+
+---
+
+## ✨ 주요 기능 (파시스3.0 기준)
+
+### 🎯 대회 운영 자동화
+
+- ✅ **QR 코드 자동 생성** (대회코드 중앙 표시)
+- ✅ **점수 자동 저장** 및 순위 집계
+- ✅ **자동 조편성** (남·여 분리 지원)
+- ✅ **중복 전송 자동 차단**
+- ✅ **구글 시트 실시간 연동**
+
+### 📱 사용자 친화
+
+- ✅ 앱 설치 불필요 (웹 브라우저)
+- ✅ QR 스캔으로 즉시 접속
+- ✅ 시니어 친화적 UI
+- ✅ 모든 기기 호환 (아이폰·안드로이드·PC)
+
+---
+
+## 🚀 빠른 시작
+
+### 1. 템플릿 복사
+
+구글 시트 템플릿을 내 드라이브로 복사:
+
+👉 [템플릿 복사하기](https://docs.google.com/spreadsheets/d/1lPB8pLFzoKVkKy4SPjoOWv_SfYwsJ6_TrIBALuobxko/copy)
+
+---
+
+### 2. Apps Script 배포 (최초 1회)
+
+⚠️ **PC 권장**
+```
+1. 구글 시트 → 확장 프로그램 → Apps Script
+2. 배포 → 새 배포 → 웹 앱
+3. 액세스 권한: 모든 사람
+4. 배포 → 웹앱 URL 복사
+```
+
+---
+
+### 3. 시스템에서 사용
+
+티스토리 시스템 접속:
+
+👉 [파시스3.0 사용하기](https://songgeun25.tistory.com)
+```
+1. 관리자 도구 → 웹앱 URL 설정
+2. 대회코드 입력 → QR 생성
+3. 경기자가 QR 스캔 → 점수 입력
+4. 순위 자동 집계 완료!
+```
+
+---
+
+## 📂 프로젝트 구조
+```
 parkgolf-score/
-├── pasis-2.0-club/
-├── pasis-3.0-tournament/
+├── pasis-2.0-club/          # 파시스2.0 클럽용
+│   └── index.html           # 개인·조 점수 기록
+├── pasis-3.0-tournament/    # 파시스3.0 클럽대회용
+│   └── index.html           # 대회 전체 운영
+├── docs/                    # 사용 설명서
+│   ├── 사용법.md
+│   └── screenshots/
+├── LICENSE
+└── README.md
+```
+
+---
+
+## 🛠️ 기술 스택
+
+### Frontend
+- HTML5 / CSS3 / JavaScript
+- QRCode.js (QR 생성)
+- html2canvas (결과 이미지)
+
+### Backend
+- Google Apps Script (서버리스)
+- Google Sheets (데이터베이스)
+
+### Integration
+- Google Apps Script Web App
+- RESTful API
+
+---
+
+## 🎯 버전별 타깃
+
+| 버전 | 대상 | 인원 | 가격 |
+|------|------|------|------|
+| 파시스2.0 | 개인·소규모 조 | 1~4명 | 무료 |
+| 파시스3.0 | 클럽 대회 | ~40명 | 무료 |
+| 파시스4.0 | 대규모 대회 | 무제한 | 유료 예정 |
+
+---
+
+## 📜 라이선스
+
+MIT License
+
+Copyright (c) 2026 송근 (leejh50-dotcom)
+
+개인 및 클럽 대회에서 자유롭게 사용 가능합니다.
+상업적 사용 시 사전 문의 바랍니다.
+
+---
+
+## 👨‍💻 개발자
+
+**송근** (leejh50-dotcom)
+
+- 블로그: [https://songgeun25.tistory.com](https://songgeun25.tistory.com)
+- GitHub: [https://github.com/leejh50-dotcom](https://github.com/leejh50-dotcom)
+
+---
+
+## ⚠️ 중요 안내
+
+이 저장소는 **프론트엔드 코드만** 포함합니다.
+
+실제 작동을 위해서는:
+1. 구글 시트 템플릿 복사
+2. Apps Script 배포 (별도 제공)
+3. 웹앱 URL 설정
+
+Apps Script 백엔드 코드는 보안상 공개하지 않습니다.
+
+---
+
+## 🤝 기여
+
+버그 제보 및 기능 제안은 Issue를 통해 남겨주세요!
+
+---
+
+## 📞 문의
+
+- 블로그 댓글
+- GitHub Issues
+
+---
+
+## 🏷️ 키워드
+
+`파시스` `Pasis` `파크골프` `파크골프점수표` `파크골프클럽대회` 
+`파크골프조편성` `파크골프QR` `파크골프자동집계` `파크골프앱` 
+`클럽대회관리` `파크골프대회운영`
+
+---
+
+**파크골프를 사랑하는 모든 분들을 위한 오픈소스 프로젝트입니다** 🏌️
+
+**Pasis - Park golf Scoring System**
+```
+
+---
+
+## ✅ 실행 순서
+```
+1. ✏️ (연필 아이콘) 클릭
+2. Ctrl+A (전체 선택)
+3. Delete (삭제)
+4. 위 내용 전체 복사
+5. 붙여넣기 (Ctrl+V)
+6. 아래로 스크롤
+7. "Commit changes" 클릭
+8. 완료!
