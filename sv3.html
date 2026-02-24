@@ -2962,7 +2962,7 @@ function toggleQRSection() {
     }
 }
 
-// 파라미터 포함한 QR 코드 생성 (텍스트 하단 표시)
+// 파라미터 포함한 QR 코드 생성 (검은 테두리 + 스캔 최적화)
 function generateQRCodeWithParams() {
     var eventCode = document.getElementById('qrEventCode').value.trim();
     var webAppUrl = document.getElementById('qrWebAppUrl').value.trim();
@@ -3037,21 +3037,28 @@ function generateQRCodeWithParams() {
         
         var qc = document.getElementById('qrcode');
         qc.innerHTML = '';
-        
-        // ⭐ QR 컨테이너를 text-align center로
         qc.style.textAlign = 'center';
         
-        var qrSize = 300;
+        var qrSize = 320; // 조금 키움
         
-        // QR wrapper div 생성
+        // ⭐ 메인 wrapper (검은 테두리)
         var wrapper = document.createElement('div');
         wrapper.style.display = 'inline-block';
         wrapper.style.textAlign = 'center';
+        wrapper.style.padding = '20px';
+        wrapper.style.background = '#f5f5f5'; // 연한 회색 배경
+        wrapper.style.borderRadius = '12px';
+        wrapper.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
         
-        // QR 코드 컨테이너
+        // ⭐ QR 컨테이너 (검은 테두리 추가)
         var qrContainer = document.createElement('div');
         qrContainer.id = 'qr-image-container';
         qrContainer.style.marginBottom = '15px';
+        qrContainer.style.padding = '10px'; // 패딩 추가
+        qrContainer.style.background = '#ffffff'; // 흰 배경
+        qrContainer.style.border = '4px solid #000000'; // ⭐ 검은 테두리
+        qrContainer.style.borderRadius = '8px';
+        qrContainer.style.display = 'inline-block';
         
         // QR 생성
         var qrObj = new QRCode(qrContainer, {
@@ -3060,13 +3067,13 @@ function generateQRCodeWithParams() {
             height: qrSize,
             colorDark: '#000000',
             colorLight: '#ffffff',
-            correctLevel: QRCode.CorrectLevel.M,
-            margin: 2
+            correctLevel: QRCode.CorrectLevel.H, // ⭐ 높은 오류 정정
+            margin: 1 // margin 줄임 (테두리가 있으니)
         });
         
-        console.log('QR 객체 생성 완료');
+        console.log('QR 객체 생성 완료 (크기: ' + qrSize + ', 오류정정: H)');
         
-        // ⭐ 대회코드 텍스트 (QR 하단)
+        // 대회코드 텍스트
         var labelDiv = document.createElement('div');
         labelDiv.style.fontSize = '28px';
         labelDiv.style.fontWeight = 'bold';
@@ -3074,19 +3081,21 @@ function generateQRCodeWithParams() {
         labelDiv.style.background = '#ffffff';
         labelDiv.style.border = '3px solid #00897b';
         labelDiv.style.borderRadius = '8px';
-        labelDiv.style.padding = '10px 20px';
+        labelDiv.style.padding = '12px 24px';
         labelDiv.style.display = 'inline-block';
         labelDiv.style.fontFamily = 'Arial, sans-serif';
+        labelDiv.style.marginTop = '10px';
         labelDiv.textContent = '대회코드: ' + eventCode;
         
         // wrapper에 추가
         wrapper.appendChild(qrContainer);
+        wrapper.appendChild(document.createElement('br'));
         wrapper.appendChild(labelDiv);
         
         // 최종 컨테이너에 추가
         qc.appendChild(wrapper);
         
-        console.log('✅✅✅ QR 코드 + 대회코드 표시 완료:', eventCode);
+        console.log('✅✅✅ QR 코드 + 테두리 + 대회코드 완료:', eventCode);
         
         // 표시
         document.getElementById('qrcodeDisplay').style.display = 'block';
@@ -3108,10 +3117,12 @@ function generateQRCodeWithParams() {
         
         alert('✅ QR 코드가 생성되었습니다!\n\n' +
               '📱 대회 코드: ' + eventCode + '\n\n' +
-              '⭐ QR 코드는 깨끗하게 유지됩니다!\n' +
-              '⭐ 카메라로 스캔이 가능합니다!\n' +
-              '⭐ 대회코드는 QR 하단에 표시됩니다!\n\n' +
-              '📸 스크린샷으로 저장하거나\nQR 이미지를 길게 눌러 저장하세요!');
+              '⭐ 개선 사항:\n' +
+              '• 검은 테두리 추가 (스캔 개선)\n' +
+              '• 회색 배경 (경계 명확)\n' +
+              '• 오류 정정 레벨 H (높음)\n' +
+              '• 크기 증가 (320px)\n\n' +
+              '📸 이제 카메라 스캔이 잘 될 것입니다!');
         
     } catch (error) {
         console.error('❌ QR 생성 오류:', error);
