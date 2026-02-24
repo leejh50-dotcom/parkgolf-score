@@ -1,12 +1,233 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="refresh" content="0; url=./sv3.html">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>파시스 sv3.0 클럽대회용</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>파시스 (Pasis) - 파크골프 점수 관리 시스템</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Malgun Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2d3748;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            font-size: 16px;
+            margin-bottom: 40px;
+        }
+        
+        .version-cards {
+            display: grid;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .version-card {
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        
+        .version-card:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+        
+        .version-card.active {
+            border-color: #48bb78;
+            background: #f0fff4;
+        }
+        
+        .version-card.beta {
+            border-color: #ed8936;
+            background: #fffaf0;
+        }
+        
+        .version-card.dev {
+            border-color: #718096;
+            background: #f7fafc;
+        }
+        
+        .version-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .version-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2d3748;
+        }
+        
+        .version-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .badge-active {
+            background: #48bb78;
+            color: white;
+        }
+        
+        .badge-beta {
+            background: #ed8936;
+            color: white;
+        }
+        
+        .badge-dev {
+            background: #718096;
+            color: white;
+        }
+        
+        .version-desc {
+            color: #4a5568;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        
+        .version-target {
+            color: #718096;
+            font-size: 13px;
+            font-style: italic;
+        }
+        
+        .footer {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #e2e8f0;
+            color: #718096;
+            font-size: 14px;
+        }
+        
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .version-title {
+                font-size: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <p>이동 중… <a href="./sv3.html">파시스 sv3.0 클럽대회용 열기</a></p>
+    <div class="container">
+        <h1>🏌️ 파시스 (Pasis)</h1>
+        <p class="subtitle">Park golf Scoring System</p>
+        
+        <div class="version-cards">
+            <!-- 파시스 2.0 -->
+            <a href="./sv2.html" class="version-card active">
+                <div class="version-header">
+                    <span class="version-title">파시스 2.0 클럽용</span>
+                    <span class="version-badge badge-active">서비스 중</span>
+                </div>
+                <p class="version-desc">
+                    개인 및 소규모 조(1~4명) 점수 기록용<br>
+                    QR 스캔 없이 바로 사용 가능<br>
+                    결과 이미지 공유 기능
+                </p>
+                <p class="version-target">
+                    👥 대상: 개인 플레이어, 친목 라운딩
+                </p>
+            </a>
+            
+            <!-- 파시스 3.0 -->
+            <a href="./sv3.html" class="version-card beta">
+                <div class="version-header">
+                    <span class="version-title">파시스 3.0 클럽대회용</span>
+                    <span class="version-badge badge-beta">베타 테스트</span>
+                </div>
+                <p class="version-desc">
+                    클럽 대회 전체 운영 시스템 (40명 이하)<br>
+                    QR 코드 자동 생성, 점수 자동 집계<br>
+                    구글 시트 연동, 자동 조편성 기능
+                </p>
+                <p class="version-target">
+                    🏆 대상: 클럽 정기 대회, 대회 운영자
+                </p>
+            </a>
+            
+            <!-- 파시스 4.0 -->
+            <a href="./sv4.html" class="version-card dev">
+                <div class="version-header">
+                    <span class="version-title">파시스 4.0 대회용</span>
+                    <span class="version-badge badge-dev">개발 중</span>
+                </div>
+                <p class="version-desc">
+                    대규모 공식 대회 운영 시스템 (40명 이상)<br>
+                    다코스 동시 진행, 복수 대회 관리<br>
+                    프리미엄 기능 (준비 중)
+                </p>
+                <p class="version-target">
+                    🎯 대상: 지자체 대회, 협회 공식 대회
+                </p>
+            </a>
+        </div>
+        
+        <div class="footer">
+            <p>
+                <strong>오픈소스 프로젝트</strong><br>
+                <a href="https://github.com/leejh50-dotcom/parkgolf-score" target="_blank">GitHub 저장소</a> · 
+                <a href="https://songgeun25.tistory.com" target="_blank">개발자 블로그</a>
+            </p>
+            <p style="margin-top: 10px; font-size: 12px;">
+                © 2026 송근 (leejh50-dotcom) · MIT License
+            </p>
+        </div>
+    </div>
 </body>
 </html>
