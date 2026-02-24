@@ -2962,7 +2962,7 @@ function toggleQRSection() {
     }
 }
 
-// 파라미터 포함한 QR 코드 생성 (크기 최적화 + 텍스트 삽입 강화)
+// 파라미터 포함한 QR 코드 생성 (완전 대기 버전)
 function generateQRCodeWithParams() {
     var eventCode = document.getElementById('qrEventCode').value.trim();
     var webAppUrl = document.getElementById('qrWebAppUrl').value.trim();
@@ -3004,7 +3004,6 @@ function generateQRCodeWithParams() {
     }
     
     try {
-        // 페이지 URL 가져오기
         var pageUrl = localStorage.getItem('parkgolf_page_url');
         
         if (!pageUrl) {
@@ -3039,9 +3038,9 @@ function generateQRCodeWithParams() {
         var qc = document.getElementById('qrcode');
         qc.innerHTML = '';
         
-        // ⭐ 크기 축소: 512 → 300
         var qrSize = 300;
         
+        // ⭐ 핵심: QR 생성 시 canvas 모드 강제
         var qrObj = new QRCode(qc, {
             text: qrUrl,
             width: qrSize,
@@ -3049,80 +3048,80 @@ function generateQRCodeWithParams() {
             colorDark: '#000000',
             colorLight: '#ffffff',
             correctLevel: QRCode.CorrectLevel.M,
-            margin: 2  // 마진도 축소
+            margin: 2
         });
         
         console.log('QR 객체 생성 완료 (크기: ' + qrSize + 'x' + qrSize + ')');
         
-        // Canvas로 강제 변환 + 텍스트 삽입
+        // ⭐ 핵심: 충분히 긴 시간 대기 (1.5초)
         setTimeout(function() {
+            console.log('→ 1.5초 대기 완료, Canvas 처리 시작...');
+            
             try {
-                var img = qc.querySelector('img');
-                var canvas = qc.querySelector('canvas');
+                // 모든 img와 canvas 찾기
+                var allImgs = qc.querySelectorAll('img');
+                var allCanvases = qc.querySelectorAll('canvas');
                 
-                console.log('→ img 요소:', img ? 'O' : 'X');
-                console.log('→ canvas 요소:', canvas ? 'O' : 'X');
+                console.log('→ 발견된 img 개수:', allImgs.length);
+                console.log('→ 발견된 canvas 개수:', allCanvases.length);
                 
-                // Canvas가 없으면 생성
-                if (!canvas) {
-                    if (img) {
-                        console.log('→ img를 canvas로 변환 시작...');
-                        
-                        canvas = document.createElement('canvas');
-                        canvas.width = qrSize;
-                        canvas.height = qrSize;
-                        canvas.style.maxWidth = '100%';
-                        canvas.style.height = 'auto';
-                        
-                        var ctx = canvas.getContext('2d');
-                        
-                        var drawAndAddText = function() {
-                            // img를 canvas에 그리기
-                            ctx.drawImage(img, 0, 0, qrSize, qrSize);
-                            
-                            console.log('→ ✅ img → canvas 변환 완료');
-                            
-                            // 텍스트 추가
-                            addTextToCanvas(canvas, eventCode, qrSize);
-                            
-                            // img 제거하고 canvas로 교체
-                            qc.innerHTML = '';
-                            qc.appendChild(canvas);
-                            
-                            console.log('→ ✅ QR 코드 교체 완료');
-                        };
-                        
-                        if (img.complete) {
-                            drawAndAddText();
-                        } else {
-                            img.onload = drawAndAddText;
-                        }
-                    } else {
-                        console.error('→ ❌ img도 canvas도 없습니다!');
-                    }
-                } else {
-                    // Canvas가 있으면 바로 텍스트 추가
-                    console.log('→ canvas 발견, 텍스트 추가 시작...');
-                    addTextToCanvas(canvas, eventCode, qrSize);
+                var finalCanvas = null;
+                
+                // Canvas가 있으면 사용
+                if (allCanvases.length > 0) {
+                    finalCanvas = allCanvases[0];
+                    console.log('→ 기존 canvas 사용');
                 }
+                // Canvas가 없고 img가 있으면 변환
+                else if (allImgs.length > 0) {
+                    console.log('→ img를 canvas로 변환 시작...');
+                    var img = allImgs[0];
+                    
+                    finalCanvas = document.createElement('canvas');
+                    finalCanvas.width = qrSize;
+                    finalCanvas.height = qrSize;
+                    finalCanvas.style.maxWidth = '100%';
+                    finalCanvas.style.height = 'auto';
+                    
+                    var ctx = finalCanvas.getContext('2d');
+                    
+                    if (img.complete && img.naturalWidth > 0) {
+                        ctx.drawImage(img, 0, 0, qrSize, qrSize);
+                        qc.innerHTML = '';
+                        qc.appendChild(finalCanvas);
+                        console.log('→ ✅ img → canvas 변환 완료');
+                    } else {
+                        console.error('→ ❌ img가 로드되지 않음');
+                        return;
+                    }
+                }
+                
+                if (!finalCanvas) {
+                    console.error('→ ❌ Canvas를 찾거나 생성할 수 없습니다!');
+                    alert('⚠️ QR 코드는 생성되었으나\n대회코드 텍스트를 추가할 수 없습니다.\n\nQR 코드는 정상 작동합니다.');
+                    return;
+                }
+                
+                // ⭐ 텍스트 추가 (추가 대기 시간)
+                setTimeout(function() {
+                    console.log('→ 텍스트 삽입 시작...');
+                    addTextToCanvas(finalCanvas, eventCode, qrSize);
+                    console.log('→ ✅ 모든 처리 완료!');
+                }, 300);
                 
             } catch (error) {
                 console.error('→ ❌ Canvas 처리 오류:', error);
             }
-        }, 500);
+        }, 1500); // 1.5초 대기
         
-        // QR 표시
-        var displayDiv = document.getElementById('qrcodeDisplay');
-        displayDiv.style.display = 'block';
+        document.getElementById('qrcodeDisplay').style.display = 'block';
         
-        // ⭐ 스크롤 개선: 부드럽게, 약간 위로
         setTimeout(function() {
             var qrContainer = document.getElementById('qrcode');
             if (qrContainer) {
-                // 화면 중앙보다 약간 위로 스크롤
                 var rect = qrContainer.getBoundingClientRect();
                 var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                var targetY = rect.top + scrollTop - 100; // 100px 위 여백
+                var targetY = rect.top + scrollTop - 100;
                 
                 window.scrollTo({
                     top: targetY,
@@ -3131,14 +3130,9 @@ function generateQRCodeWithParams() {
                 
                 console.log('→ 스크롤 이동 완료');
             }
-        }, 800);
+        }, 2000); // 2초 후 스크롤
         
-        alert('✅ QR 코드가 생성되었습니다!\n\n' +
-              '📱 대회 코드: ' + eventCode + '\n\n' +
-              '💡 QR 코드를 확인하세요.\n' +
-              '중앙에 대회코드가 표시되어야 합니다.\n\n' +
-              '⚠️ F12 → Console 탭을 열어\n' +
-              '로그를 확인해주세요!');
+        alert('✅ QR 코드 생성 중...\n\n잠시만 기다려주세요!\n(약 2초 소요)\n\n⏳ Console 로그를 확인하세요.');
         
     } catch (error) {
         console.error('❌ QR 생성 오류:', error);
@@ -3152,7 +3146,7 @@ function addTextToCanvas(canvas, label, size) {
         var ctx = canvas.getContext('2d');
         
         // 텍스트 설정
-        var fontSize = Math.floor(size * 0.08); // 크기에 비례해서 조금 크게
+        var fontSize = Math.floor(size * 0.08);
         ctx.font = 'bold ' + fontSize + 'px Arial, sans-serif';
         
         var textWidth = ctx.measureText(label).width;
@@ -3165,7 +3159,8 @@ function addTextToCanvas(canvas, label, size) {
             label: label,
             fontSize: fontSize,
             boxW: boxW,
-            boxH: boxH
+            boxH: boxH,
+            canvasSize: canvas.width + 'x' + canvas.height
         });
         
         // 흰 배경 박스
@@ -3174,7 +3169,7 @@ function addTextToCanvas(canvas, label, size) {
         
         // 박스 테두리
         ctx.strokeStyle = '#00897b';
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 3;
         ctx.strokeRect(cx - boxW / 2, cy - boxH / 2, boxW, boxH);
         
         // 텍스트 출력
@@ -3185,6 +3180,10 @@ function addTextToCanvas(canvas, label, size) {
         ctx.fillText(label, cx, cy);
         
         console.log('→ ✅✅✅ 대회코드 텍스트 삽입 완료:', label);
+        
+        // ⭐ 확인용: Canvas 데이터 확인
+        var imageData = ctx.getImageData(cx - 5, cy - 5, 10, 10);
+        console.log('→ 텍스트 영역 픽셀 데이터 샘플:', imageData.data.slice(0, 20));
         
     } catch (error) {
         console.error('→ ❌ 텍스트 삽입 오류:', error);
