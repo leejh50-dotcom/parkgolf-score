@@ -2922,35 +2922,72 @@ function toggleQRSection() {
     }
 }
 
-// 파라미터 포함한 QR 코드 생성
+// QR 섹션 토글
+function toggleQRSection() {
+    var qs = document.getElementById('qrSection');
+    if (qs.style.display === 'none' || !qs.style.display) {
+        qs.style.display = 'block';
+        // 저장된 URL이 있으면 자동으로 채우기
+        var savedUrl = localStorage.getItem('parkgolf_webapp_url');
+        if (savedUrl) {
+            document.getElementById('qrWebAppUrl').value = savedUrl;
+        }
+    } else {
+        qs.style.display = 'none';
+    }
+}
+
+// 파라미터 포함한 QR 코드 생성 (개선 버전)
 function generateQRCodeWithParams() {
     var eventCode = document.getElementById('qrEventCode').value.trim();
     var webAppUrl = document.getElementById('qrWebAppUrl').value.trim();
     
+    console.log('QR 생성 시작:', eventCode, webAppUrl);
+    
     if (!eventCode) {
-        alert('대회 코드를 입력해주세요.');
+        alert('❌ 대회 코드를 입력해주세요.');
         return;
     }
     
     if (!webAppUrl) {
-        alert('웹앱 URL을 입력해주세요.');
+        alert('❌ 웹앱 URL을 입력해주세요.\n\n관리자 도구 상단에서 "URL 저장" 먼저 해주세요.');
         return;
     }
     
     if (!webAppUrl.includes('script.google.com')) {
-        alert('올바른 Google Apps Script 웹앱 URL을 입력해주세요.');
+        alert('❌ 올바른 Google Apps Script 웹앱 URL을 입력해주세요.\n\n예: https://script.google.com/macros/s/.../exec');
         return;
     }
     
-    // 현재 페이지 URL에 파라미터 추가
-    var baseUrl = window.location.origin + window.location.pathname;
-    var qrUrl = baseUrl + '?eventCode=' + encodeURIComponent(eventCode) + '&webAppUrl=' + encodeURIComponent(webAppUrl);
+    // QRCode 라이브러리 로드 확인
+    if (typeof QRCode === 'undefined') {
+        alert('⏳ QR 코드 라이브러리를 불러오는 중입니다...\n\n잠시 후 다시 시도해주세요.');
+        
+        // 라이브러리 다시 로드 시도
+        var script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js';
+        script.onload = function() {
+            alert('✅ 라이브러리 로드 완료!\n\n다시 QR 코드 생성 버튼을 눌러주세요.');
+        };
+        script.onerror = function() {
+            alert('❌ QR 코드 라이브러리를 불러올 수 없습니다.\n\n인터넷 연결을 확인해주세요.');
+        };
+        document.head.appendChild(script);
+        return;
+    }
     
-    // QR 코드 생성
-    var qc = document.getElementById('qrcode');
-    qc.innerHTML = '';
-    
-    if (typeof QRCode !== 'undefined') {
+    try {
+        // 현재 페이지 URL에 파라미터 추가
+        var baseUrl = window.location.origin + window.location.pathname;
+        var qrUrl = baseUrl + '?eventCode=' + encodeURIComponent(eventCode) + '&webAppUrl=' + encodeURIComponent(webAppUrl);
+        
+        console.log('QR URL:', qrUrl);
+        
+        // QR 코드 컨테이너 초기화
+        var qc = document.getElementById('qrcode');
+        qc.innerHTML = '';
+        
+        // QR 코드 생성
         var qrObj = new QRCode(qc, {
             text: qrUrl,
             width: 512,
@@ -2960,51 +2997,72 @@ function generateQRCodeWithParams() {
             correctLevel: QRCode.CorrectLevel.H,
             margin: 4
         });
-
+        
+        console.log('QR 객체 생성 완료');
+        
         // QR 코드 생성 완료 후 중앙에 대회코드 텍스트 삽입
         setTimeout(function() {
-            var canvas = qc.querySelector('canvas');
-            if (!canvas) return;
-
-            var ctx = canvas.getContext('2d');
-            var size = canvas.width;
-
-            // ────── 텍스트 설정 ──────
-            var label = eventCode;                  // 표시할 텍스트 = 대회코드
-            var fontSize = Math.floor(size * 0.072); // 폰트 크기 (QR 크기의 7.2%)
-            ctx.font = 'bold ' + fontSize + 'px Arial, sans-serif';
-
-            var textWidth  = ctx.measureText(label).width;
-            var boxW = textWidth + 24;              // 박스 좌우 여백
-            var boxH = fontSize + 16;              // 박스 상하 여백
-            var cx = size / 2;                     // 중앙 X
-            var cy = size / 2;                     // 중앙 Y
-
-            // ────── 흰 배경 박스 ──────
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(cx - boxW / 2, cy - boxH / 2, boxW, boxH);
-
-            // ────── 박스 테두리 ──────
-            ctx.strokeStyle = '#00897b';            // 청록색 테두리
-            ctx.lineWidth = 3;
-            ctx.strokeRect(cx - boxW / 2, cy - boxH / 2, boxW, boxH);
-
-            // ────── 텍스트 출력 ──────
-            ctx.fillStyle = '#00695c';              // 진한 청록색 글자
-            ctx.font = 'bold ' + fontSize + 'px Arial, sans-serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(label, cx, cy);
-
-        }, 200); // QRCode.js 렌더링 완료 후 실행
-
+            try {
+                var canvas = qc.querySelector('canvas');
+                if (!canvas) {
+                    console.error('Canvas not found');
+                    return;
+                }
+                
+                var ctx = canvas.getContext('2d');
+                var size = canvas.width;
+                
+                // ────── 텍스트 설정 ──────
+                var label = eventCode;                  // 표시할 텍스트 = 대회코드
+                var fontSize = Math.floor(size * 0.072); // 폰트 크기 (QR 크기의 7.2%)
+                ctx.font = 'bold ' + fontSize + 'px Arial, sans-serif';
+                
+                var textWidth  = ctx.measureText(label).width;
+                var boxW = textWidth + 24;              // 박스 좌우 여백
+                var boxH = fontSize + 16;              // 박스 상하 여백
+                var cx = size / 2;                     // 중앙 X
+                var cy = size / 2;                     // 중앙 Y
+                
+                // ────── 흰 배경 박스 ──────
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(cx - boxW / 2, cy - boxH / 2, boxW, boxH);
+                
+                // ────── 박스 테두리 ──────
+                ctx.strokeStyle = '#00897b';            // 청록색 테두리
+                ctx.lineWidth = 3;
+                ctx.strokeRect(cx - boxW / 2, cy - boxH / 2, boxW, boxH);
+                
+                // ────── 텍스트 출력 ──────
+                ctx.fillStyle = '#00695c';              // 진한 청록색 글자
+                ctx.font = 'bold ' + fontSize + 'px Arial, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(label, cx, cy);
+                
+                console.log('대회코드 텍스트 삽입 완료');
+                
+            } catch (error) {
+                console.error('텍스트 삽입 오류:', error);
+            }
+        }, 300); // QRCode.js 렌더링 완료 후 실행
+        
+        // QR 표시 영역 보이기
         document.getElementById('qrcodeDisplay').style.display = 'block';
-
-        alert('QR 코드가 생성되었습니다!\n\n대회 코드: ' + eventCode + '\n\n✅ QR 코드 중앙에 대회코드가 표시됩니다.');
-    } else {
-        qc.innerHTML = '<p style="color:#dc3545;">QR 코드 라이브러리를 불러올 수 없습니다.</p>';
+        
+        // 성공 메시지
+        alert('✅ QR 코드가 생성되었습니다!\n\n📱 대회 코드: ' + eventCode + '\n\n💡 QR 코드 중앙에 대회코드가 표시됩니다.\n\n👆 QR 이미지를 길게 눌러 저장하거나 스크린샷으로 캡처하세요!');
+        
+        // QR 섹션 상단으로 스크롤
+        setTimeout(function() {
+            document.getElementById('qrcodeDisplay').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+        
+    } catch (error) {
+        console.error('QR 생성 오류:', error);
+        alert('❌ QR 코드 생성 중 오류가 발생했습니다.\n\n' + error.message + '\n\n페이지를 새로고침 후 다시 시도해주세요.');
     }
 }
+
 
 // URL 파라미터 읽기 및 자동 설정
 function loadUrlParams() {
