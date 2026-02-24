@@ -1,2 +1,3 @@
-# parkgolf-score
-파크골프 점수 집계 시스템
+parkgolf-score/
+├── pasis-2.0-club/
+├── pasis-3.0-tournament/
