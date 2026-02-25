@@ -2642,13 +2642,11 @@ body { margin: 0; font-size: 18px; line-height: 1.35; }
                 console.log('응답 상태:', response && response.status);
                 console.log('응답 타입:', response && response.type);
                 saveSubmissionRecord(data);
-                alert('✅ 전송 완료 처리!
-
-대회: ' + data.eventCode + '
-조: ' + data.teamName + '
-
-※ no-cors 특성상 브라우저에서 서버 응답 확인은 불가합니다.
-구글시트 원본데이터에서 최종 확인하세요.');
+                alert('✅ 전송 완료 처리!\n\n' +
+                      '대회: ' + data.eventCode + '\n' +
+                      '조: ' + data.teamName + '\n\n' +
+                      '※ no-cors 특성상 브라우저에서 서버 응답 확인은 불가합니다.\n' +
+                      '구글시트 원본데이터에서 최종 확인하세요.');
             })
             .catch(function(error) {
                 clearTimeout(timerId);
