@@ -2617,49 +2617,62 @@ body { margin: 0; font-size: 18px; line-height: 1.35; }
                 return;
             }
             // ========================================
-            
             showToast('전송 중입니다...');
-            
-            // ⭐ 핵심 개선: mode 제거하고 정상 응답 확인
+
+            // ⭐ Apps Script 웹앱 전송 안정화 (GitHub Pages → GAS): no-cors + text/plain(JSON문자열)
+            const payloadText = JSON.stringify(data);
+            const abortCtrl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+            const timerId = setTimeout(function() {
+                if (abortCtrl) abortCtrl.abort();
+            }, 15000);
+
             fetch(webAppUrl, {
                 method: 'POST',
+                mode: 'no-cors',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'text/plain;charset=utf-8'
                 },
-                body: JSON.stringify(data),
-                redirect: 'follow'  // 리다이렉트 따라가기
+                body: payloadText,
+                redirect: 'follow',
+                signal: abortCtrl ? abortCtrl.signal : undefined
             })
             .then(function(response) {
-                console.log('응답 상태:', response.status);
-                console.log('응답 타입:', response.type);
-                console.log('응답 OK:', response.ok);
-                
-                // Apps Script는 리다이렉트를 사용하므로
-                // status가 0이거나 ok가 false여도 성공일 수 있음
-                if (response.ok || response.status === 0 || response.type === 'opaque') {
-                    return response.text();
-                } else {
-                    throw new Error('서버 응답 오류 (상태: ' + response.status + ')');
-                }
-            })
-            .then(function(responseText) {
-                console.log('응답 내용:', responseText);
-                
+                clearTimeout(timerId);
+                // no-cors에서는 응답을 읽을 수 없으므로 성공 여부는 시트에서 확인
+                console.log('응답 상태:', response && response.status);
+                console.log('응답 타입:', response && response.type);
                 saveSubmissionRecord(data);
-                alert('✅ 전송이 완료되었습니다!\n\n대회: ' + data.eventCode + '\n조: ' + data.teamName + '\n\n구글 시트를 확인해주세요!');
+                alert('✅ 전송 완료 처리!
+
+대회: ' + data.eventCode + '
+조: ' + data.teamName + '
+
+※ no-cors 특성상 브라우저에서 서버 응답 확인은 불가합니다.
+구글시트 원본데이터에서 최종 확인하세요.');
             })
             .catch(function(error) {
+                clearTimeout(timerId);
                 console.error('전송 오류:', error);
-                
-                // CORS 오류인 경우 특별 처리
-                if (error.message.includes('CORS') || error.message.includes('Failed to fetch')) {
-                    alert('⚠️ 전송은 되었을 수 있습니다!\n\n오류: ' + error.message + 
-                          '\n\nCORS 오류는 정상입니다.\n구글 시트를 확인해주세요.\n\n데이터가 없으면:\n1. Apps Script 배포 확인\n2. 웹앱 URL 다시 확인');
-                    saveSubmissionRecord(data);
-                } else {
-                    alert('❌ 전송 실패!\n\n오류: ' + error.message + 
-                          '\n\n확인 사항:\n1. 인터넷 연결\n2. 웹앱 URL이 올바른지\n3. Apps Script 배포 상태\n\nF12 → Console 탭에서\n상세 오류를 확인하세요.');
+                const msg = (error && error.message) ? error.message : String(error);
+
+                if (msg.includes('aborted')) {
+                    alert('❌ 전송 시간 초과(15초)
+
+인터넷 상태를 확인한 뒤 다시 전송하세요.
+이미 저장되었을 수도 있으니 원본데이터 시트를 먼저 확인하세요.');
+                    return;
                 }
+
+                alert('❌ 전송 실패!
+
+오류: ' + msg +
+                      '
+
+확인 사항:
+1. 인터넷 연결
+2. 웹앱 URL(/exec)
+3. Apps Script 재배포(모든 사용자)
+4. 휴대폰 캐시 삭제 후 재실행');
             });
         };
 
@@ -3028,7 +3041,7 @@ function generateQRCodeWithParams() {
         }
         
         // ⭐ URL 단축: eventCode → e로 변경
-        var qrUrl = pageUrl + '?e=' + encodeURIComponent(eventCode) + '&w=' + encodeURIComponent(webAppUrl);
+        var qrUrl = pageUrl + '?e=' + encodeURIComponent(eventCode);
         
         console.log('========================================');
         console.log('페이지 URL:', pageUrl);
@@ -3141,11 +3154,6 @@ function loadUrlParams() {
     
     // ⭐ 'e' 또는 'eventCode' 둘 다 지원 (호환성)
     var eventCode = urlParams.get('e') || urlParams.get('eventCode');
-    // ⭐ QR에 웹앱 URL 포함 시 자동 저장 (신규)
-    var webAppUrlFromParam = urlParams.get('w') || urlParams.get('webAppUrl');
-    if (webAppUrlFromParam && webAppUrlFromParam.indexOf('script.google.com') !== -1) {
-        localStorage.setItem('parkgolf_webapp_url', webAppUrlFromParam);
-    }
     
     var savedWebAppUrl = localStorage.getItem('parkgolf_webapp_url');
     
@@ -3183,8 +3191,8 @@ function saveURL() {
         alert('URL을 입력해주세요.');
         return;
     }
-    if (!url.includes('script.google.com') || !url.includes('/exec')) {
-        alert('올바른 Google Apps Script 웹앱 URL(/exec)을 입력해주세요.');
+    if (!url.includes('script.google.com')) {
+        alert('올바른 Google Apps Script 웹앱 URL을 입력해주세요.');
         return;
     }
     localStorage.setItem('parkgolf_webapp_url', url);
