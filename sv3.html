@@ -2619,55 +2619,35 @@ body { margin: 0; font-size: 18px; line-height: 1.35; }
             // ========================================
             showToast('전송 중입니다...');
 
-            // ⭐ Apps Script 웹앱 전송 안정화 (GitHub Pages → GAS): no-cors + text/plain(JSON문자열)
-            const payloadText = JSON.stringify(data);
-            const abortCtrl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
-            const timerId = setTimeout(function() {
-                if (abortCtrl) abortCtrl.abort();
-            }, 15000);
+// ✅ Apps Script 웹앱 전송(안정형): no-cors + Blob(text/plain)
+// - AbortController/redirect 제거 (POST body 누락 방지)
+// - Blob로 body를 명확히 전송
 
-            fetch(webAppUrl, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'text/plain;charset=utf-8'
-                },
-                body: payloadText,
-                redirect: 'follow',
-                signal: abortCtrl ? abortCtrl.signal : undefined
-            })
-            .then(function(response) {
-                clearTimeout(timerId);
-                // no-cors에서는 응답을 읽을 수 없으므로 성공 여부는 시트에서 확인
-                console.log('응답 상태:', response && response.status);
-                console.log('응답 타입:', response && response.type);
-                saveSubmissionRecord(data);
-                alert('✅ 전송 완료 처리!\n\n' +
-                      '대회: ' + data.eventCode + '\n' +
-                      '조: ' + data.teamName + '\n\n' +
-                      '※ no-cors 특성상 브라우저에서 서버 응답 확인은 불가합니다.\n' +
-                      '구글시트 원본데이터에서 최종 확인하세요.');
-            })
-            .catch(function(error) {
-                clearTimeout(timerId);
-                console.error('전송 오류:', error);
-                const msg = (error && error.message) ? error.message : String(error);
+const payloadText = JSON.stringify(data);
+const payloadBlob = new Blob([payloadText], { type: 'text/plain;charset=utf-8' });
 
-                if (msg.includes('aborted')) {
-                    alert('❌ 전송 시간 초과(15초)\n\n' +
-                          '인터넷 상태를 확인한 뒤 다시 전송하세요.\n' +
-                          '이미 저장되었을 수도 있으니 원본데이터 시트를 먼저 확인하세요.');
-                    return;
-                }
+fetch(webAppUrl, {
+  method: 'POST',
+  mode: 'no-cors',
+  headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+  body: payloadBlob
+})
+.then(function () {
+  // no-cors에서는 응답 확인이 불가하므로 "요청 전송" 기준으로 안내합니다.
+  saveSubmissionRecord(data);
 
-                alert('❌ 전송 실패!\n\n' +
-                      '오류: ' + msg + '\n\n' +
-                      '확인 사항:\n' +
-                      '1. 인터넷 연결\n' +
-                      '2. 웹앱 URL(/exec)\n' +
-                      '3. Apps Script 재배포(모든 사용자)\n' +
-                      '4. 휴대폰 캐시 삭제 후 재실행');
-            });
+  alert(
+    '✅ 전송 요청을 보냈습니다.\n\n' +
+    '대회: ' + data.eventCode + '\n' +
+    '조: ' + data.teamName + '\n\n' +
+    '※ no-cors 특성상 브라우저에서 서버 응답 확인은 불가합니다.\n' +
+    '구글시트 "원본데이터"에서 최종 확인하세요.'
+  );
+})
+.catch(function (error) {
+  console.error('전송 오류:', error);
+  alert('❌ 전송 요청 자체가 실패했습니다.\n' + (error && error.message ? error.message : error));
+});
         };
 
         
