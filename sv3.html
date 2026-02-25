@@ -3028,7 +3028,7 @@ function generateQRCodeWithParams() {
         }
         
         // ⭐ URL 단축: eventCode → e로 변경
-        var qrUrl = pageUrl + '?e=' + encodeURIComponent(eventCode);
+        var qrUrl = pageUrl + '?e=' + encodeURIComponent(eventCode) + '&w=' + encodeURIComponent(webAppUrl);
         
         console.log('========================================');
         console.log('페이지 URL:', pageUrl);
@@ -3141,6 +3141,11 @@ function loadUrlParams() {
     
     // ⭐ 'e' 또는 'eventCode' 둘 다 지원 (호환성)
     var eventCode = urlParams.get('e') || urlParams.get('eventCode');
+    // ⭐ QR에 웹앱 URL 포함 시 자동 저장 (신규)
+    var webAppUrlFromParam = urlParams.get('w') || urlParams.get('webAppUrl');
+    if (webAppUrlFromParam && webAppUrlFromParam.indexOf('script.google.com') !== -1) {
+        localStorage.setItem('parkgolf_webapp_url', webAppUrlFromParam);
+    }
     
     var savedWebAppUrl = localStorage.getItem('parkgolf_webapp_url');
     
@@ -3178,8 +3183,8 @@ function saveURL() {
         alert('URL을 입력해주세요.');
         return;
     }
-    if (!url.includes('script.google.com')) {
-        alert('올바른 Google Apps Script 웹앱 URL을 입력해주세요.');
+    if (!url.includes('script.google.com') || !url.includes('/exec')) {
+        alert('올바른 Google Apps Script 웹앱 URL(/exec)을 입력해주세요.');
         return;
     }
     localStorage.setItem('parkgolf_webapp_url', url);
