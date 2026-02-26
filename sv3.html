@@ -1,5 +1,3 @@
-구글폼 html
-
 <!doctype html>
 <html lang="ko">
 <head>
@@ -2551,59 +2549,124 @@ body { margin: 0; font-size: 18px; line-height: 1.35; }
         // ========== 새로 추가된 기능들 ==========
         
         // 구글시트로 보내기
-                window.sendToGoogleSheet = function() {
-            const webAppUrl = localStorage.getItem('parkgolf_webapp_url');
-            
-            // ========================================
-            // 디버깅 로그
-            // ========================================
-            console.log('=== 전송 시작 ===');
+                        // 구글시트로 보내기(안정형: form POST → GAS)
+        window.sendToGoogleSheet = function () {
+            const webAppUrl = localStorage.getItem('parkgolf_webapp_url') || '';
+
+            console.log('=== 전송 시작(안정형) ===');
             console.log('webAppUrl:', webAppUrl);
-            
+
             if (!webAppUrl) {
                 alert('❌ 웹앱 URL이 설정되지 않았습니다!\n\n관리자 도구에서 먼저 "URL 저장"을 해주세요.');
                 openAdminModal();
                 return;
             }
-            
-            // URL 형식 체크
+
+            // URL 형식 체크 (/exec 필수)
             if (!webAppUrl.includes('script.google.com') || !webAppUrl.includes('/exec')) {
                 alert('❌ 웹앱 URL 형식이 잘못되었습니다!\n\n올바른 형식:\nhttps://script.google.com/macros/s/.../exec\n\n현재 URL:\n' + webAppUrl + '\n\n관리자 도구에서 다시 설정해주세요.');
                 openAdminModal();
                 return;
             }
-            
-            // ========================================
+
             // 필수 입력 체크
-            // ========================================
-            const teamName = document.getElementById('teamNameInput').value || '';
-            const eventCode = document.getElementById('eventCodeInput').value || '';
-            
-            if (!teamName || teamName.trim() === '' || teamName === '미입력') {
+            const teamName = (document.getElementById('teamNameInput').value || '').trim();
+            const eventCode = (document.getElementById('eventCodeInput').value || '').trim();
+
+            if (!teamName || teamName === '미입력') {
                 alert('❌ 조명을 입력해주세요!\n\n조명은 필수 입력 항목입니다.\n예: 1조, A조, 3조');
                 document.getElementById('teamNameInput').focus();
                 return;
             }
-            
-            if (!eventCode || eventCode.trim() === '' || eventCode === '미입력') {
+
+            if (!eventCode || eventCode === '미입력') {
                 alert('❌ 대회코드를 입력해주세요!\n\n대회코드는 필수 입력 항목입니다.\nQR 코드를 스캔하면 자동으로 입력됩니다.');
                 document.getElementById('eventCodeInput').focus();
                 return;
             }
-            // ========================================
-            
+
+            // 데이터 구성(기존 구조 유지)
             const data = {
-                date: document.getElementById('dateInput').value,
+                date: document.getElementById('dateInput').value || '',
                 location: document.getElementById('locationInput').value || '미입력',
-                teamName: teamName.trim(),
+                teamName: teamName,
                 eventName: document.getElementById('eventNameInput').value || '미입력',
-                eventCode: eventCode.trim(),
+                eventCode: eventCode,
                 note: document.getElementById('note-input-new').value || '',
                 player1: getPlayerData(1),
                 player2: getPlayerData(2),
                 player3: getPlayerData(3),
                 player4: getPlayerData(4)
             };
+
+        // ✅ GAS 웹앱으로 가장 안정적으로 보내는 방식: 숨김 form POST(payload)
+        function postToGAS_viaForm(webAppUrl, data) {
+            // 1) 숨김 iframe (응답 화면 안 뜨게)
+            let iframe = document.getElementById('gasHiddenFrame');
+            if (!iframe) {
+                iframe = document.createElement('iframe');
+                iframe.id = 'gasHiddenFrame';
+                iframe.name = 'gasHiddenFrame';
+                iframe.style.display = 'none';
+                document.body.appendChild(iframe);
+            }
+
+            // 2) 숨김 form + payload input
+            let form = document.getElementById('gasPostForm');
+            if (!form) {
+                form = document.createElement('form');
+                form.id = 'gasPostForm';
+                form.method = 'POST';
+                form.target = 'gasHiddenFrame';
+                form.style.display = 'none';
+                document.body.appendChild(form);
+
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'payload'; // Apps Script에서 e.parameter.payload 로 받음
+                input.id = 'gasPayloadInput';
+                form.appendChild(input);
+            }
+
+            // 3) action = 웹앱URL(/exec)
+            form.action = webAppUrl;
+
+            // 4) payload 넣고 제출
+            document.getElementById('gasPayloadInput').value = JSON.stringify(data);
+            form.submit();
+
+            // 5) 로컬 기록(있으면)
+            if (typeof saveSubmissionRecord === 'function') {
+                try { saveSubmissionRecord(data); } catch (e) {}
+            }
+
+            alert(
+                '✅ 전송 완료!\n\n' +
+                '대회코드: ' + (data.eventCode || '') + '\n' +
+                '조명: ' + (data.teamName || '') + '\n\n' +
+                '→ 구글시트 "원본데이터" / "순위"에서 확인하세요.'
+            );
+        }
+
+
+
+            // 중복 전송 체크(함수 있으면 사용)
+            try {
+                if (typeof checkDuplicateSubmission === 'function' && checkDuplicateSubmission(data)) {
+                    return;
+                }
+            } catch (e) {
+                console.warn('중복 전송 체크 오류(무시):', e);
+            }
+
+            // ✅ 핵심: fetch가 아닌 form POST(payload)로 전송
+            try {
+                postToGAS_viaForm(webAppUrl, data);
+            } catch (e) {
+                console.error('전송 실패:', e);
+                alert('❌ 전송 실패: ' + (e && e.message ? e.message : e));
+            }
+        };
             
             // 디버깅 로그
             console.log('전송 데이터:', data);
@@ -2619,64 +2682,51 @@ body { margin: 0; font-size: 18px; line-height: 1.35; }
                 return;
             }
             // ========================================
+            
             showToast('전송 중입니다...');
-
-// ✅ Apps Script 웹앱 전송(안정형): no-cors + Blob(text/plain)
-// - AbortController/redirect 제거 (POST body 누락 방지)
-// - Blob로 body를 명확히 전송
-
-// ✅ GAS 웹앱으로 가장 안정적으로 보내는 방식: 숨김 form POST
-function postToGAS_viaForm(webAppUrl, data) {
-  // 1) 숨김 iframe (응답 화면 안 뜨게)
-  let iframe = document.getElementById('gasHiddenFrame');
-  if (!iframe) {
-    iframe = document.createElement('iframe');
-    iframe.id = 'gasHiddenFrame';
-    iframe.name = 'gasHiddenFrame';
-    iframe.style.display = 'none';
-    document.body.appendChild(iframe);
-  }
-
-  // 2) 숨김 form + payload input
-  let form = document.getElementById('gasPostForm');
-  if (!form) {
-    form = document.createElement('form');
-    form.id = 'gasPostForm';
-    form.method = 'POST';
-    form.target = 'gasHiddenFrame';
-    form.style.display = 'none';
-    document.body.appendChild(form);
-
-    const input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = 'payload'; // ✅ Apps Script에서 e.parameter.payload 로 받음
-    input.id = 'gasPayloadInput';
-    form.appendChild(input);
-  }
-
-  // 3) action = 웹앱URL(/exec)
-  form.action = webAppUrl;
-
-  // 4) payload 넣고 제출
-  document.getElementById('gasPayloadInput').value = JSON.stringify(data);
-  form.submit();
-
-  // 5) 안내(전송은 매우 안정적으로 도착)
-  if (typeof saveSubmissionRecord === 'function') {
-    try { saveSubmissionRecord(data); } catch(e) {}
-  }
-
-  alert(
-    '✅ 전송을 보냈습니다.\n\n' +
-    '대회: ' + (data.eventCode || '') + '\n' +
-    '조: ' + (data.teamName || '') + '\n\n' +
-    '→ 구글시트 "원본데이터"에 행이 추가되는지 확인하세요.'
-  );
-}
-
-// ✅ 여기서 실제 전송 호출 (data 만든 직후)
-postToGAS_viaForm(webAppUrl, data);
-return;        };
+            
+            // ⭐ 핵심 개선: mode 제거하고 정상 응답 확인
+            fetch(webAppUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data),
+                redirect: 'follow'  // 리다이렉트 따라가기
+            })
+            .then(function(response) {
+                console.log('응답 상태:', response.status);
+                console.log('응답 타입:', response.type);
+                console.log('응답 OK:', response.ok);
+                
+                // Apps Script는 리다이렉트를 사용하므로
+                // status가 0이거나 ok가 false여도 성공일 수 있음
+                if (response.ok || response.status === 0 || response.type === 'opaque') {
+                    return response.text();
+                } else {
+                    throw new Error('서버 응답 오류 (상태: ' + response.status + ')');
+                }
+            })
+            .then(function(responseText) {
+                console.log('응답 내용:', responseText);
+                
+                saveSubmissionRecord(data);
+                alert('✅ 전송이 완료되었습니다!\n\n대회: ' + data.eventCode + '\n조: ' + data.teamName + '\n\n구글 시트를 확인해주세요!');
+            })
+            .catch(function(error) {
+                console.error('전송 오류:', error);
+                
+                // CORS 오류인 경우 특별 처리
+                if (error.message.includes('CORS') || error.message.includes('Failed to fetch')) {
+                    alert('⚠️ 전송은 되었을 수 있습니다!\n\n오류: ' + error.message + 
+                          '\n\nCORS 오류는 정상입니다.\n구글 시트를 확인해주세요.\n\n데이터가 없으면:\n1. Apps Script 배포 확인\n2. 웹앱 URL 다시 확인');
+                    saveSubmissionRecord(data);
+                } else {
+                    alert('❌ 전송 실패!\n\n오류: ' + error.message + 
+                          '\n\n확인 사항:\n1. 인터넷 연결\n2. 웹앱 URL이 올바른지\n3. Apps Script 배포 상태\n\nF12 → Console 탭에서\n상세 오류를 확인하세요.');
+                }
+            });
+        };
 
         
         // 중복 전송 체크 함수
@@ -3302,130 +3352,6 @@ Apps Script 배포 후 생성된 웹앱 URL을 입력하세요.
 </div>
 
 <p data-ke-size="size16">&nbsp;</p>
-<script>
-// ================================
-// ✅ 하이브리드 전송(구글폼) 설정
-// ================================
-const GOOGLE_FORM_ACTION =
-  'https://docs.google.com/forms/d/e/1FAIpQLSeSoBdGpwfQMslcbwHHnj0gUQRvREg2NA_6henqGfhfXQef8A/formResponse';
 
-// entry 매핑 (고정)
-const GF = {
-  eventCode: 'entry.2074018855',
-  teamName:  'entry.1441577232',
-  course:    'entry.1647628901',
-  p1:        'entry.1813180563',
-  p2:        'entry.122300375',
-  p3:        'entry.654088723',
-  p4:        'entry.560783498',
-  total:     'entry.435637603',
-  holeInOne: 'entry.187011463'
-};
-
-// (한 번만) 숨김 iframe + form 준비
-function ensureGoogleFormPoster() {
-  let iframe = document.getElementById('gfHiddenFrame');
-  if (!iframe) {
-    iframe = document.createElement('iframe');
-    iframe.id = 'gfHiddenFrame';
-    iframe.name = 'gfHiddenFrame';
-    iframe.style.display = 'none';
-    document.body.appendChild(iframe);
-  }
-
-  let form = document.getElementById('gfPostForm');
-  if (!form) {
-    form = document.createElement('form');
-    form.id = 'gfPostForm';
-    form.method = 'POST';
-    form.target = 'gfHiddenFrame';
-    form.action = GOOGLE_FORM_ACTION;
-    form.style.display = 'none';
-    document.body.appendChild(form);
-  } else {
-    form.action = GOOGLE_FORM_ACTION;
-  }
-
-  return form;
-}
-
-// form에 entry 값을 세팅(없으면 생성, 있으면 값만 교체)
-function setGFValue(form, name, value) {
-  let input = form.querySelector(`input[name="${name}"]`);
-  if (!input) {
-    input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = name;
-    form.appendChild(input);
-  }
-  input.value = (value === undefined || value === null) ? '' : String(value);
-}
-
-// ✅ sv3 data -> 구글폼으로 제출
-function submitToGoogleForm(data) {
-  // 필수값 점검(시니어 실수 방지)
-  if (!data || !data.eventCode || !String(data.eventCode).trim()) {
-    alert('❌ 대회코드가 비어 있습니다.\nQR을 다시 스캔하거나 대회코드를 입력해주세요.');
-    return;
-  }
-  if (!data.teamName || !String(data.teamName).trim()) {
-    alert('❌ 조(팀명)이 비어 있습니다.\n예: 1조 / A조');
-    return;
-  }
-
-  // 1) 폼 준비
-  const form = ensureGoogleFormPoster();
-
-  // 2) 값 매핑 (sv3에서 만든 data 기준)
-  // - course: 없다면 "A" 기본
-  const course = data.course || data.courseName || 'A';
-
-  // 선수 점수: sv3 데이터 구조가 다를 수 있어 안전하게 처리
-  const p1 = data.player1?.total ?? data.p1 ?? data.score1 ?? '';
-  const p2 = data.player2?.total ?? data.p2 ?? data.score2 ?? '';
-  const p3 = data.player3?.total ?? data.p3 ?? data.score3 ?? '';
-  const p4 = data.player4?.total ?? data.p4 ?? data.score4 ?? '';
-
-  // 총점: 없으면 선수점수 합산 시도
-  let total = data.total ?? data.sum ?? data.totalScore ?? '';
-  if (total === '' || total === null || total === undefined) {
-    const nums = [p1,p2,p3,p4].map(v => Number(v)).filter(n => !Number.isNaN(n));
-    total = nums.length ? nums.reduce((a,b)=>a+b,0) : '';
-  }
-
-  // 홀인원: 없으면 0
-  const holeInOne = data.holeInOne ?? data.holeInOneCount ?? 0;
-
-  // 3) entry 세팅
-  setGFValue(form, GF.eventCode, data.eventCode);
-  setGFValue(form, GF.teamName, data.teamName);
-  setGFValue(form, GF.course, course);
-
-  setGFValue(form, GF.p1, p1);
-  setGFValue(form, GF.p2, p2);
-  setGFValue(form, GF.p3, p3);
-  setGFValue(form, GF.p4, p4);
-
-  setGFValue(form, GF.total, total);
-  setGFValue(form, GF.holeInOne, holeInOne);
-
-  // 4) 제출
-  form.submit();
-
-  // 5) 사용자 안내(구글폼은 응답 확인이 화면에 즉시 안 보일 수 있음)
-  // 기존 로컬 기록 함수가 있으면 유지
-  if (typeof saveSubmissionRecord === 'function') {
-    try { saveSubmissionRecord(data); } catch(e) {}
-  }
-
-  alert(
-    '✅ 전송되었습니다. 감사합니다.\n\n' +
-    '대회코드: ' + data.eventCode + '\n' +
-    '조: ' + data.teamName + '\n' +
-    '코스: ' + course + '\n\n' +
-    '※ 구글시트(폼 응답)에서 저장 여부를 확인하세요.'
-  );
-}
-</script>
 </body>
 </html>
