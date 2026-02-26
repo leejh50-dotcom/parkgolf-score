@@ -273,6 +273,66 @@ body.modal-open {
 }
 </style>
 
+
+<style>
+/* ===== 점수 입력 모달(키패드) 안정화: 배경 스크롤 방지 + 키패드 고정 ===== */
+#scoreModal {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  display: none;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 10px !important;
+  background: rgba(0,0,0,0.45) !important;
+  z-index: 99998 !important;
+  box-sizing: border-box !important;
+}
+
+#scoreModal .modal-content {
+  width: min(520px, 94vw) !important;
+  max-height: 92vh !important;
+  overflow: hidden !important;            /* 내부 레이아웃에서 키패드는 고정 */
+  display: flex !important;
+  flex-direction: column !important;
+  border-radius: 14px !important;
+  padding: 14px !important;
+  box-sizing: border-box !important;
+}
+
+#scoreModal h3 { margin: 0 0 10px 0 !important; }
+
+#scoreModal .score-input-row { flex: 0 0 auto !important; }
+
+#scoreModal .keyboard {
+  flex: 1 1 auto !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  padding-bottom: 12px !important;
+}
+
+/* 키패드 버튼 터치 안정화 */
+#scoreModal .key-btn, #scoreModal button {
+  touch-action: manipulation !important;
+}
+
+/* 하단 버튼(지우기/닫기)이 가려지지 않게 */
+#scoreModal .modal-close,
+#scoreModal .delete-btn,
+#scoreModal .clear-btn {
+  width: 100% !important;
+  display: block !important;
+  margin-top: 10px !important;
+}
+
+@media (max-width: 768px) {
+  #scoreModal { padding: 8px !important; }
+  #scoreModal .modal-content { width: 96vw !important; max-height: 94vh !important; }
+  #scoreModal .key-btn { min-height: 56px !important; font-size: 22px !important; }
+}
+</style>
+
 </head>
 <body>
 클럽대회용 sv3.0 스텐다드
@@ -3891,6 +3951,26 @@ Apps Script 배포 후 생성된 웹앱 URL을 입력하세요.
       obs.observe(modal, { attributes: true, attributeFilter: ['style'] });
     }
   } catch (e) {}
+})();
+</script>
+
+
+<script>
+/* ===== 점수모달 열림/닫힘에 배경 스크롤 잠금 연동 ===== */
+(function() {
+  function watchModal(id) {
+    try {
+      var modal = document.getElementById(id);
+      if (!modal) return;
+      var obs = new MutationObserver(function() {
+        var d = (modal.style && modal.style.display) ? modal.style.display : '';
+        if (d && d !== 'none') window.__lockBodyScrollForModal && window.__lockBodyScrollForModal();
+        if (d === 'none') window.__unlockBodyScrollForModal && window.__unlockBodyScrollForModal();
+      });
+      obs.observe(modal, { attributes: true, attributeFilter: ['style'] });
+    } catch (e) {}
+  }
+  watchModal('scoreModal');
 })();
 </script>
 
