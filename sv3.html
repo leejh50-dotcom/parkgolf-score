@@ -2625,32 +2625,58 @@ body { margin: 0; font-size: 18px; line-height: 1.35; }
 // - AbortController/redirect 제거 (POST body 누락 방지)
 // - Blob로 body를 명확히 전송
 
-const payloadText = JSON.stringify(data);
-const payloadBlob = new Blob([payloadText], { type: 'text/plain;charset=utf-8' });
+// ✅ GAS 웹앱으로 가장 안정적으로 보내는 방식: 숨김 form POST
+function postToGAS_viaForm(webAppUrl, data) {
+  // 1) 숨김 iframe (응답 화면 안 뜨게)
+  let iframe = document.getElementById('gasHiddenFrame');
+  if (!iframe) {
+    iframe = document.createElement('iframe');
+    iframe.id = 'gasHiddenFrame';
+    iframe.name = 'gasHiddenFrame';
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+  }
 
-fetch(webAppUrl, {
-  method: 'POST',
-  mode: 'no-cors',
-  headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-  body: payloadBlob
-})
-.then(function () {
-  // no-cors에서는 응답 확인이 불가하므로 "요청 전송" 기준으로 안내합니다.
-  saveSubmissionRecord(data);
+  // 2) 숨김 form + payload input
+  let form = document.getElementById('gasPostForm');
+  if (!form) {
+    form = document.createElement('form');
+    form.id = 'gasPostForm';
+    form.method = 'POST';
+    form.target = 'gasHiddenFrame';
+    form.style.display = 'none';
+    document.body.appendChild(form);
+
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'payload'; // ✅ Apps Script에서 e.parameter.payload 로 받음
+    input.id = 'gasPayloadInput';
+    form.appendChild(input);
+  }
+
+  // 3) action = 웹앱URL(/exec)
+  form.action = webAppUrl;
+
+  // 4) payload 넣고 제출
+  document.getElementById('gasPayloadInput').value = JSON.stringify(data);
+  form.submit();
+
+  // 5) 안내(전송은 매우 안정적으로 도착)
+  if (typeof saveSubmissionRecord === 'function') {
+    try { saveSubmissionRecord(data); } catch(e) {}
+  }
 
   alert(
-    '✅ 전송 요청을 보냈습니다.\n\n' +
-    '대회: ' + data.eventCode + '\n' +
-    '조: ' + data.teamName + '\n\n' +
-    '※ no-cors 특성상 브라우저에서 서버 응답 확인은 불가합니다.\n' +
-    '구글시트 "원본데이터"에서 최종 확인하세요.'
+    '✅ 전송을 보냈습니다.\n\n' +
+    '대회: ' + (data.eventCode || '') + '\n' +
+    '조: ' + (data.teamName || '') + '\n\n' +
+    '→ 구글시트 "원본데이터"에 행이 추가되는지 확인하세요.'
   );
-})
-.catch(function (error) {
-  console.error('전송 오류:', error);
-  alert('❌ 전송 요청 자체가 실패했습니다.\n' + (error && error.message ? error.message : error));
-});
-        };
+}
+
+// ✅ 여기서 실제 전송 호출 (data 만든 직후)
+postToGAS_viaForm(webAppUrl, data);
+return;        };
 
         
         // 중복 전송 체크 함수
@@ -3403,4 +3429,3 @@ function submitToGoogleForm(data) {
 </script>
 </body>
 </html>
-
