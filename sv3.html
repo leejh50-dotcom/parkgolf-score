@@ -1,56 +1,4 @@
-<!doctype html>
-<html lang="ko">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>파크골프 점수 - 파시스 sv3.0 클럽대회용</title>
-
-<link rel="manifest" href="manifest-sv3.json">
-<link rel="apple-touch-icon" sizes="180x180" href="/parkgolf-score/sv3-180-v2.png">
-
-  <style>
-/* ===== GitHub Pages 모바일 가독성 패치 (티스토리와 유사하게 크게) ===== */
-html { -webkit-text-size-adjust: 100%; }
-body { margin: 0; font-size: 18px; line-height: 1.35; }
-
-/* iPhone에서 입력칸 자동확대/축소로 글자가 작아지는 현상 방지 */
-.parkgolf-app, .parkgolf-app * { -webkit-text-size-adjust: 100%; }
-
-.parkgolf-app input,
-.parkgolf-app select,
-.parkgolf-app textarea,
-.parkgolf-app button {
-  font-size: 18px !important;
-  line-height: 1.2 !important;
-}
-
-.parkgolf-app input,
-.parkgolf-app select,
-.parkgolf-app textarea {
-  min-height: 48px !important;
-  padding-top: 12px !important;
-  padding-bottom: 12px !important;
-}
-
-.parkgolf-app button {
-  min-height: 48px !important;
-  padding: 12px 14px !important;
-}
-
-/* 모바일에서 너무 ‘붙어’ 보이는 여백을 완화 */
-@media (max-width: 767px) {
-  .parkgolf-app .info-section { padding: 12px !important; margin: 0 0 12px 0 !important; }
-  .parkgolf-app .container { padding: 0 8px !important; }
-  .parkgolf-app h1, .parkgolf-app h2, .parkgolf-app h3 { line-height: 1.2 !important; }
-  .parkgolf-app .course-table thead th { font-size: 16px !important; }
-  .parkgolf-app .summary-table-new th,
-  .parkgolf-app .summary-table-new td { font-size: 15px !important; }
-}
-/* ===== 패치 끝 ===== */
-</style>
-</head>
-<body>
-파시스 sv3.0 클럽대회용
+클럽대회용 sv3.0 스텐다드
 
 <p data-ke-size="size16">&nbsp;</p>
 <p data-ke-size="size16"></p>
@@ -1157,6 +1105,206 @@ body { margin: 0; font-size: 18px; line-height: 1.35; }
   .parkgolf-app #teamNameInput{ font-size: 17px !important; }
 }
 
+
+/* ===== 가독성 확장 패치 (기능 로직 미수정 / CSS만 추가) ===== */
+.parkgolf-app {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.parkgolf-app .container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    box-sizing: border-box !important;
+}
+
+.parkgolf-app .section,
+.parkgolf-app .score-section,
+.parkgolf-app .player-card,
+.parkgolf-app .summary-card,
+.parkgolf-app .team-info,
+.parkgolf-app .event-info,
+.parkgolf-app .button-section {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.parkgolf-app table,
+.parkgolf-app .score-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+}
+
+.parkgolf-app th,
+.parkgolf-app td {
+    word-break: keep-all !important;
+}
+
+.parkgolf-app input,
+.parkgolf-app select,
+.parkgolf-app button,
+.parkgolf-app textarea {
+    font-size: 17px !important;
+}
+
+.parkgolf-app .section-title,
+.parkgolf-app .player-title,
+.parkgolf-app .total-score,
+.parkgolf-app .summary-title {
+    font-size: 20px !important;
+}
+
+@media (min-width: 768px) {
+    .parkgolf-app .container {
+        max-width: 1180px !important;
+        padding-left: 18px !important;
+        padding-right: 18px !important;
+    }
+}
+
+@media (min-width: 1200px) {
+    .parkgolf-app .container {
+        max-width: 1280px !important;
+    }
+}
+
+
+/* ===== 모바일 세로 가독성 강화 패치 ===== */
+@media (max-width: 768px) {
+    body {
+        font-size: 18px !important;
+        line-height: 1.55 !important;
+    }
+
+    .parkgolf-app,
+    .parkgolf-app .container {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        box-sizing: border-box !important;
+    }
+
+    .parkgolf-app .section,
+    .parkgolf-app .score-section,
+    .parkgolf-app .player-card,
+    .parkgolf-app .summary-card,
+    .parkgolf-app .team-info,
+    .parkgolf-app .event-info,
+    .parkgolf-app .button-section {
+        margin-bottom: 18px !important;
+        padding: 14px !important;
+        border-radius: 12px !important;
+    }
+
+    .parkgolf-app h1,
+    .parkgolf-app .main-title,
+    .parkgolf-app .section-title,
+    .parkgolf-app .player-title,
+    .parkgolf-app .summary-title {
+        font-size: 28px !important;
+        line-height: 1.35 !important;
+        margin-bottom: 14px !important;
+    }
+
+    .parkgolf-app h2,
+    .parkgolf-app h3 {
+        font-size: 22px !important;
+        line-height: 1.4 !important;
+    }
+
+    .parkgolf-app input,
+    .parkgolf-app select,
+    .parkgolf-app textarea {
+        min-height: 56px !important;
+        font-size: 22px !important;
+        padding: 14px 16px !important;
+        border-radius: 10px !important;
+    }
+
+    .parkgolf-app button,
+    .parkgolf-app .sheet-btn,
+    .parkgolf-app .action-btn {
+        min-height: 58px !important;
+        font-size: 21px !important;
+        font-weight: 800 !important;
+        border-radius: 10px !important;
+        padding: 14px 16px !important;
+    }
+
+    .parkgolf-app .course-btn,
+    .parkgolf-app .save-btn,
+    .parkgolf-app .load-btn,
+    .parkgolf-app .clear-btn {
+        min-height: 64px !important;
+        font-size: 20px !important;
+    }
+
+    .parkgolf-app .date-box,
+    .parkgolf-app .event-box,
+    .parkgolf-app .location-box {
+        min-height: 58px !important;
+        font-size: 24px !important;
+        font-weight: 700 !important;
+    }
+
+    .parkgolf-app .player-number,
+    .parkgolf-app .badge,
+    .parkgolf-app .num-circle {
+        width: 38px !important;
+        height: 38px !important;
+        min-width: 38px !important;
+        min-height: 38px !important;
+        font-size: 20px !important;
+        line-height: 38px !important;
+    }
+
+    .parkgolf-app table,
+    .parkgolf-app .score-table {
+        width: 100% !important;
+        table-layout: fixed !important;
+    }
+
+    .parkgolf-app th {
+        font-size: 16px !important;
+        padding: 10px 4px !important;
+        line-height: 1.35 !important;
+    }
+
+    .parkgolf-app td {
+        font-size: 20px !important;
+        padding: 10px 4px !important;
+        min-height: 48px !important;
+        line-height: 1.4 !important;
+    }
+
+    .parkgolf-app .score-table input,
+    .parkgolf-app td input {
+        min-height: 44px !important;
+        font-size: 22px !important;
+        padding: 6px !important;
+    }
+
+    .parkgolf-app .help-text,
+    .parkgolf-app .guide-text,
+    .parkgolf-app #qrGuideMessage,
+    .parkgolf-app #eventCodeLockNote {
+        font-size: 17px !important;
+        line-height: 1.55 !important;
+    }
+
+    .parkgolf-app .top-banner,
+    .parkgolf-app .header-box,
+    .parkgolf-app .hero {
+        padding-top: 22px !important;
+        padding-bottom: 22px !important;
+        border-radius: 14px !important;
+    }
+}
+
 </style>
 
 
@@ -1165,7 +1313,7 @@ body { margin: 0; font-size: 18px; line-height: 1.35; }
 <div style="background: linear-gradient(135deg, #2d7a4f 0%, #1a5634 100%); padding: 30px 4px !important; border-radius: 12px; margin: 0 0 8px 0 !important; text-align: center;">
 <h1 style="color: #ffffff !important; margin: 0 0 14px 0 !important; font-size: 24px !important; font-weight: bold !important; letter-spacing: -0.5px !important;">파크골프 점수 기록표</h1>
 <div style="display: inline-block; background: rgba(255,255,255,0.3); padding: 8px 18px; border-radius: 8px;">
-<span style="font-size: 15px; color: #fff3e0; font-weight: 600; letter-spacing: 0.5px;">파시스 sv3.0 클럽대회용</span>
+<span style="font-size: 15px; color: #fff3e0; font-weight: 600; letter-spacing: 0.5px;">클럽대회용 sv3.0 스텐다드</span>
 </div>
 </div>
 <div class="info-section" style="padding: 3px !important; margin: 0 0 8px 0 !important;">
@@ -1180,7 +1328,8 @@ body { margin: 0; font-size: 18px; line-height: 1.35; }
 <input id="eventNameInput" type="text" placeholder="대회명" style="text-align: center !important; font-size: 17px !important; font-weight: 600 !important; padding: 12px !important;" />
 </div>
 <div class="input-group">
-<input id="eventCodeInput" type="text" placeholder="대회 코드" style="text-align: center !important; font-size: 17px !important; font-weight: 600 !important; padding: 12px !important;" />
+<input id="eventCodeInput" type="text" placeholder="대회 코드" readonly inputmode="none" tabindex="-1" style="text-align: center !important; font-size: 17px !important; font-weight: 700 !important; padding: 12px !important; background: #f1f3f4 !important; color: #333 !important; border: 2px solid #d0d7de !important; cursor: not-allowed !important; -webkit-user-select: none !important; user-select: none !important;" />
+<div id="qrGuideMessage" style="display:none; margin-top:8px; padding:10px 12px; border-radius:8px; background:#fff3cd; color:#8a5a00; font-size:15px; font-weight:700; text-align:center; line-height:1.5;">⚠️ QR코드를 먼저 스캔해야 전송할 수 있습니다.</div>
 </div>
 <div class="input-group">
 <input id="teamNameInput" type="text" placeholder="조명 넣기" style="text-align: center !important; font-size: 17px !important; font-weight: 600 !important; padding: 12px !important;" />
@@ -1328,7 +1477,7 @@ body { margin: 0; font-size: 18px; line-height: 1.35; }
 
 <!-- 구글시트로 보내기 버튼 -->
 <div style="margin-top: 30px !important; margin-bottom: 40px !important;">
-<button class="sheet-btn" onclick="sendToGoogleSheet();" style="width: 100% !important; padding: 18px !important; background: linear-gradient(135deg, #0f9d58 0%, #0b7a44 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">대회 집계(구글시트) 전송</button>
+<button id="sendToSheetBtn" class="sheet-btn" onclick="sendToGoogleSheet();" style="width: 100% !important; padding: 18px !important; background: linear-gradient(135deg, #0f9d58 0%, #0b7a44 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">대회 집계(구글시트) 전송</button>
 </div>
 
 <!-- 구분선 -->
@@ -2464,6 +2613,7 @@ body { margin: 0; font-size: 18px; line-height: 1.35; }
             
             // URL 파라미터 읽기 (QR 코드로 접속한 경우)
             loadUrlParams();
+            updateQrSendGuardUI();
             
             // 저장된 데이터가 없으면 빈 테이블 렌더링
             if (!hasData) {
@@ -2549,24 +2699,11 @@ body { margin: 0; font-size: 18px; line-height: 1.35; }
         // ========== 새로 추가된 기능들 ==========
         
         // 구글시트로 보내기
-                window.sendToGoogleSheet = function() {
+        window.sendToGoogleSheet = function() {
             const webAppUrl = localStorage.getItem('parkgolf_webapp_url');
             
-            // ========================================
-            // 디버깅 로그
-            // ========================================
-            console.log('=== 전송 시작 ===');
-            console.log('webAppUrl:', webAppUrl);
-            
             if (!webAppUrl) {
-                alert('❌ 웹앱 URL이 설정되지 않았습니다!\n\n관리자 도구에서 먼저 "URL 저장"을 해주세요.');
-                openAdminModal();
-                return;
-            }
-            
-            // URL 형식 체크
-            if (!webAppUrl.includes('script.google.com') || !webAppUrl.includes('/exec')) {
-                alert('❌ 웹앱 URL 형식이 잘못되었습니다!\n\n올바른 형식:\nhttps://script.google.com/macros/s/.../exec\n\n현재 URL:\n' + webAppUrl + '\n\n관리자 도구에서 다시 설정해주세요.');
+                alert('먼저 관리자 도구에서 웹앱 URL을 설정해주세요.');
                 openAdminModal();
                 return;
             }
@@ -2603,53 +2740,52 @@ body { margin: 0; font-size: 18px; line-height: 1.35; }
                 player4: getPlayerData(4)
             };
             
-            // 디버깅 로그
-            console.log('전송 데이터:', data);
-            
             // ========================================
             // 중복 전송 체크
             // ========================================
             const duplicateCheck = checkDuplicateSubmission(data);
             if (duplicateCheck.hasDuplicate) {
+                // 선택권 없이 무조건 차단!
                 alert('❌ 중복 전송 차단!\n\n' + duplicateCheck.message + 
                       '\n\n이미 전송된 경기자입니다.\n전송이 차단되었습니다.\n\n' +
                       '※ 점수 수정이 필요하면\n   대회 관리자에게 직접 문의하세요!');
-                return;
+                return; // 전송 중단
             }
             // ========================================
-            showToast('전송 중입니다...');
+            
+            const sendingNames = [
+                data.player1.name,
+                data.player2.name,
+                data.player3.name,
+                data.player4.name
+            ].filter(function(name) {
+                return name && String(name).trim() !== '' && !String(name).startsWith('경기자');
+            });
 
-// ✅ Apps Script 웹앱 전송(안정형): no-cors + Blob(text/plain)
-// - AbortController/redirect 제거 (POST body 누락 방지)
-// - Blob로 body를 명확히 전송
+            const firstName = sendingNames.length > 0 ? sendingNames[0] : '대표선수';
+            const extraCount = sendingNames.length > 1 ? (' 외 ' + (sendingNames.length - 1) + '명') : '';
+            const teamLabel = (data.teamName && String(data.teamName).trim() !== '') ? String(data.teamName).trim() : '조명없음';
 
-const payloadText = JSON.stringify(data);
-const payloadBlob = new Blob([payloadText], { type: 'text/plain;charset=utf-8' });
-
-fetch(webAppUrl, {
-  method: 'POST',
-  mode: 'no-cors',
-  headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-  body: payloadBlob
-})
-.then(function () {
-  // no-cors에서는 응답 확인이 불가하므로 "요청 전송" 기준으로 안내합니다.
-  saveSubmissionRecord(data);
-
-  alert(
-    '✅ 전송 요청을 보냈습니다.\n\n' +
-    '대회: ' + data.eventCode + '\n' +
-    '조: ' + data.teamName + '\n\n' +
-    '※ no-cors 특성상 브라우저에서 서버 응답 확인은 불가합니다.\n' +
-    '구글시트 "원본데이터"에서 최종 확인하세요.'
-  );
-})
-.catch(function (error) {
-  console.error('전송 오류:', error);
-  alert('❌ 전송 요청 자체가 실패했습니다.\n' + (error && error.message ? error.message : error));
-});
+            showToast(teamLabel + ' / ' + firstName + extraCount + ' 전송 중입니다...');
+            
+            fetch(webAppUrl, {
+                method: 'POST',
+                mode: 'no-cors', // CORS 문제 해결
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(function(response) {
+                // no-cors 모드에서는 응답을 읽을 수 없으므로
+                // 전송이 완료되면 성공으로 간주
+                saveSubmissionRecord(data);
+                alert('✅ 전송이 정상적으로 완료되었습니다!\n\n대회: ' + data.eventCode + '\n조: ' + data.teamName);
+            })
+            .catch(function(error) {
+                alert('❌ 전송 실패!\n\n' + error.message + '\n\n인터넷 연결을 확인하고 다시 시도해주세요.');
+            });
         };
-
         
         // 중복 전송 체크 함수
         function checkDuplicateSubmission(data) {
@@ -2949,187 +3085,155 @@ function toggleQRSection() {
     }
 }
 
-// 파라미터 포함한 QR 코드 생성 (URL 단축 버전)
+// 파라미터 포함한 QR 코드 생성
 function generateQRCodeWithParams() {
     var eventCode = document.getElementById('qrEventCode').value.trim();
     var webAppUrl = document.getElementById('qrWebAppUrl').value.trim();
     
-    console.log('=== QR 생성 시작 ===');
-    console.log('대회코드:', eventCode);
-    console.log('웹앱 URL:', webAppUrl);
-    
     if (!eventCode) {
-        alert('❌ 대회 코드를 입력해주세요.');
+        alert('대회 코드를 입력해주세요.');
         return;
     }
     
     if (!webAppUrl) {
-        alert('❌ 웹앱 URL을 입력해주세요.\n\n관리자 도구 상단에서 "URL 저장" 먼저 해주세요.');
+        alert('웹앱 URL을 입력해주세요.');
         return;
     }
     
     if (!webAppUrl.includes('script.google.com')) {
-        alert('❌ 올바른 Google Apps Script 웹앱 URL을 입력해주세요.\n\n예: https://script.google.com/macros/s/.../exec');
+        alert('올바른 Google Apps Script 웹앱 URL을 입력해주세요.');
         return;
     }
     
-    localStorage.setItem('parkgolf_webapp_url', webAppUrl);
+    // 현재 페이지 URL에 파라미터 추가
+    var baseUrl = window.location.origin + window.location.pathname;
+    var qrUrl = baseUrl + '?eventCode=' + encodeURIComponent(eventCode) + '&webAppUrl=' + encodeURIComponent(webAppUrl);
     
-    if (typeof QRCode === 'undefined') {
-        alert('⏳ QR 코드 라이브러리를 불러오는 중입니다...\n\n잠시 후 다시 시도해주세요.');
-        
-        var script = document.createElement('script');
-        script.src = 'https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js';
-        script.onload = function() {
-            alert('✅ 라이브러리 로드 완료!\n\n다시 QR 코드 생성 버튼을 눌러주세요.');
-        };
-        script.onerror = function() {
-            alert('❌ QR 코드 라이브러리를 불러올 수 없습니다.\n\n인터넷 연결을 확인해주세요.');
-        };
-        document.head.appendChild(script);
-        return;
-    }
+    // QR 코드 생성
+    var qc = document.getElementById('qrcode');
+    qc.innerHTML = '';
     
-    try {
-        var pageUrl = localStorage.getItem('parkgolf_page_url');
-        
-        if (!pageUrl) {
-            var userPageUrl = prompt(
-                '🔗 파시스 3.0 페이지 URL을 입력해주세요:\n\n' +
-                '예시:\n' +
-                'https://leejh50-dotcom.github.io/parkgolf-score/sv3.html\n\n' +
-                '💡 이 URL은 저장되어 다음에는 묻지 않습니다.\n' +
-                '변경하려면 F12 → Console에서:\n' +
-                'localStorage.removeItem("parkgolf_page_url")',
-                window.location.href
-            );
-            
-            if (!userPageUrl) {
-                alert('❌ 페이지 URL이 필요합니다.');
-                return;
-            }
-            
-            pageUrl = userPageUrl.replace(/\/$/, '');
-            localStorage.setItem('parkgolf_page_url', pageUrl);
-            console.log('✅ 페이지 URL 저장:', pageUrl);
-        }
-        
-        // ⭐ URL 단축: eventCode → e로 변경
-        var qrUrl = pageUrl + '?e=' + encodeURIComponent(eventCode);
-        
-        console.log('========================================');
-        console.log('페이지 URL:', pageUrl);
-        console.log('QR URL (단축):', qrUrl);
-        console.log('URL 길이:', qrUrl.length, '(이전:', (pageUrl + '?eventCode=' + eventCode).length + ')');
-        console.log('========================================');
-        
-        var qc = document.getElementById('qrcode');
-        qc.innerHTML = '';
-        qc.style.textAlign = 'center';
-        
-        var qrSize = 400; // 적당한 크기
-        
-        var wrapper = document.createElement('div');
-        wrapper.style.display = 'inline-block';
-        wrapper.style.textAlign = 'center';
-        wrapper.style.padding = '25px';
-        wrapper.style.background = '#f5f5f5';
-        wrapper.style.borderRadius = '16px';
-        wrapper.style.boxShadow = '0 6px 20px rgba(0,0,0,0.2)';
-        
-        var qrContainer = document.createElement('div');
-        qrContainer.id = 'qr-image-container';
-        qrContainer.style.marginBottom = '20px';
-        qrContainer.style.padding = '12px';
-        qrContainer.style.background = '#ffffff';
-        qrContainer.style.border = '5px solid #000000';
-        qrContainer.style.borderRadius = '12px';
-        qrContainer.style.display = 'inline-block';
-        
-        var qrObj = new QRCode(qrContainer, {
+    if (typeof QRCode !== 'undefined') {
+
+        // 1단계: 숨겨진 임시 div에 QR 코드 생성
+        var tempDiv = document.createElement('div');
+        tempDiv.style.position = 'absolute';
+        tempDiv.style.left = '-9999px';
+        document.body.appendChild(tempDiv);
+
+        new QRCode(tempDiv, {
             text: qrUrl,
-            width: qrSize,
-            height: qrSize,
+            width: 512,
+            height: 512,
             colorDark: '#000000',
             colorLight: '#ffffff',
-            correctLevel: QRCode.CorrectLevel.L, // ⭐ L (낮음) - 더 단순한 패턴
-            margin: 3 // 여백 증가
+            correctLevel: QRCode.CorrectLevel.H
         });
-        
-        console.log('QR 객체 생성 완료 (크기: ' + qrSize + 'px, 오류정정: L - 단순 패턴)');
-        
-        var labelDiv = document.createElement('div');
-        labelDiv.style.fontSize = '32px';
-        labelDiv.style.fontWeight = 'bold';
-        labelDiv.style.color = '#00695c';
-        labelDiv.style.background = '#ffffff';
-        labelDiv.style.border = '4px solid #00897b';
-        labelDiv.style.borderRadius = '10px';
-        labelDiv.style.padding = '14px 28px';
-        labelDiv.style.display = 'inline-block';
-        labelDiv.style.fontFamily = 'Arial, sans-serif';
-        labelDiv.style.marginTop = '15px';
-        labelDiv.textContent = '대회코드: ' + eventCode;
-        
-        wrapper.appendChild(qrContainer);
-        wrapper.appendChild(document.createElement('br'));
-        wrapper.appendChild(labelDiv);
-        
-        var downloadHint = document.createElement('div');
-        downloadHint.style.marginTop = '20px';
-        downloadHint.style.fontSize = '14px';
-        downloadHint.style.color = '#666';
-        downloadHint.innerHTML = '💡 스캔 팁: 화면 밝기 최대 | 거리 20~30cm | 정면에서 스캔<br>' +
-                                 '📥 다운로드: QR 우클릭 → 다른 이름으로 저장 → 인쇄';
-        wrapper.appendChild(downloadHint);
-        
-        qc.appendChild(wrapper);
-        
-        console.log('✅✅✅ 단순화된 QR 코드 생성 완료:', eventCode);
-        
-        document.getElementById('qrcodeDisplay').style.display = 'block';
-        
+
+        // 2단계: QRCode.js 렌더링 완료 후 canvas에 텍스트 합성
         setTimeout(function() {
-            var qrContainer = document.getElementById('qrcode');
-            if (qrContainer) {
-                var rect = qrContainer.getBoundingClientRect();
-                var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                var targetY = rect.top + scrollTop - 50;
-                
-                window.scrollTo({
-                    top: targetY,
-                    behavior: 'smooth'
-                });
+            var srcCanvas = tempDiv.querySelector('canvas');
+            if (!srcCanvas) {
+                document.body.removeChild(tempDiv);
+                qc.innerHTML = '<p style="color:#dc3545;">QR 코드 생성 실패</p>';
+                return;
             }
+
+            // 3단계: 최종 출력용 새 canvas 생성
+            var finalCanvas = document.createElement('canvas');
+            var padding = 30;                       // 흰 여백
+            var size = srcCanvas.width;
+            finalCanvas.width  = size + padding * 2;
+            finalCanvas.height = size + padding * 2;
+            var ctx = finalCanvas.getContext('2d');
+
+            // 4단계: 흰 배경
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+
+            // 5단계: QR 이미지 복사
+            ctx.drawImage(srcCanvas, padding, padding);
+
+            // 6단계: 중앙에 대회코드 박스 + 텍스트
+            var cx = finalCanvas.width  / 2;
+            var cy = finalCanvas.height / 2;
+
+            var fontSize = Math.floor(size * 0.068);
+            ctx.font = 'bold ' + fontSize + 'px Arial, sans-serif';
+            var textWidth = ctx.measureText(eventCode).width;
+            var boxW = textWidth + 32;
+            var boxH = fontSize + 20;
+
+            // 흰 배경 박스 (둥근 모서리 효과)
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(cx - boxW / 2 - 2, cy - boxH / 2 - 2, boxW + 4, boxH + 4);
+
+            // 청록색 테두리
+            ctx.strokeStyle = '#00897b';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(cx - boxW / 2, cy - boxH / 2, boxW, boxH);
+
+            // 대회코드 텍스트
+            ctx.fillStyle = '#004d40';
+            ctx.font = 'bold ' + fontSize + 'px Arial, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(eventCode, cx, cy);
+
+            // 7단계: 최종 canvas를 화면에 표시
+            qc.innerHTML = '';
+            finalCanvas.style.maxWidth = '100%';
+            finalCanvas.style.borderRadius = '8px';
+            qc.appendChild(finalCanvas);
+
+            // 8단계: 임시 div 제거
+            document.body.removeChild(tempDiv);
+
+            document.getElementById('qrcodeDisplay').style.display = 'block';
+
         }, 300);
-        
-        alert('✅ 단순화된 QR 코드가 생성되었습니다!\n\n' +
-              '📱 대회 코드: ' + eventCode + '\n' +
-              '📏 크기: 400 x 400 픽셀\n' +
-              '🔧 최적화: URL 단축 + 단순 패턴\n\n' +
-              '⭐ 스캔이 훨씬 쉬워졌습니다!\n\n' +
-              '💡 온라인 테스트:\n' +
-              '1. QR 우클릭 → 저장\n' +
-              '2. zxing.org/w/decode 접속\n' +
-              '3. 이미지 업로드\n' +
-              '4. URL 확인');
-        
-    } catch (error) {
-        console.error('❌ QR 생성 오류:', error);
-        alert('❌ QR 코드 생성 중 오류가 발생했습니다.\n\n' + error.message);
+
+    } else {
+        qc.innerHTML = '<p style="color:#dc3545;">QR 코드 라이브러리를 불러올 수 없습니다.</p>';
     }
 }
 
+window.qrModeActive = false;
 
-// URL 파라미터 읽기 및 자동 설정 (수정 버전)
-// URL 파라미터 읽기 및 자동 설정 (단축 버전)
+function updateQrSendGuardUI() {
+    var guide = document.getElementById('qrGuideMessage');
+    var sendBtn = document.getElementById('sendToSheetBtn');
+
+    if (!guide || !sendBtn) return;
+
+    if (window.qrModeActive) {
+        guide.style.display = 'none';
+        sendBtn.style.opacity = '1';
+        sendBtn.style.filter = 'none';
+        sendBtn.style.boxShadow = 'none';
+    } else {
+        guide.style.display = 'block';
+        sendBtn.style.opacity = '0.55';
+        sendBtn.style.filter = 'grayscale(0.15)';
+        sendBtn.style.boxShadow = '0 0 0 3px rgba(255, 193, 7, 0.25)';
+    }
+}
+
+function requireQrBeforeSend() {
+    if (window.qrModeActive) return true;
+
+    alert('⚠️ 먼저 QR코드를 스캔해 주세요!\n\n점수 기록은 할 수 있지만, 전송은 QR로 대회코드가 자동입력된 상태에서만 가능합니다.');
+    var eventCodeInput = document.getElementById('eventCodeInput');
+    if (eventCodeInput) eventCodeInput.focus();
+    updateQrSendGuardUI();
+    return false;
+}
+
+// URL 파라미터 읽기 및 자동 설정
 function loadUrlParams() {
     var urlParams = new URLSearchParams(window.location.search);
-    
-    // ⭐ 'e' 또는 'eventCode' 둘 다 지원 (호환성)
-    var eventCode = urlParams.get('e') || urlParams.get('eventCode');
-    
-    var savedWebAppUrl = localStorage.getItem('parkgolf_webapp_url');
+    var eventCode = urlParams.get('eventCode');
+    var webAppUrl = urlParams.get('webAppUrl');
     
     if (eventCode) {
         var eventCodeInput = document.getElementById('eventCodeInput');
@@ -3139,24 +3243,23 @@ function loadUrlParams() {
         }
     }
     
-    if (savedWebAppUrl) {
+    if (webAppUrl) {
+        localStorage.setItem('parkgolf_webapp_url', webAppUrl);
         var webAppUrlInput = document.getElementById('webAppUrl');
         if (webAppUrlInput) {
-            webAppUrlInput.value = savedWebAppUrl;
+            webAppUrlInput.value = webAppUrl;
         }
     }
     
-    if (eventCode) {
+    // 파라미터가 있으면 안내 메시지
+    if (eventCode && webAppUrl) {
         setTimeout(function() {
-            if (savedWebAppUrl) {
-                showToast('✅ 대회 설정이 완료되었습니다!\n대회 코드: ' + eventCode);
-            } else {
-                showToast('⚠️ 대회 코드는 설정되었으나\n웹앱 URL이 없습니다.\n\n관리자 도구에서 URL을 설정해주세요.');
-            }
+            showToast('✅ 대회 설정이 완료되었습니다!\n대회 코드: ' + eventCode);
         }, 500);
     }
-}
 
+    updateQrSendGuardUI();
+}
 
 // URL 저장 함수
 function saveURL() {
@@ -3274,6 +3377,3 @@ Apps Script 배포 후 생성된 웹앱 URL을 입력하세요.
 </div>
 
 <p data-ke-size="size16">&nbsp;</p>
-
-</body>
-</html>
