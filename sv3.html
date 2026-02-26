@@ -1,7 +1,147 @@
+<script>
+(function() {
+  try {
+    var m = document.querySelector('meta[name="viewport"]');
+    if (!m) {
+      m = document.createElement('meta');
+      m.name = 'viewport';
+      m.content = 'width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover';
+      document.head.appendChild(m);
+    } else {
+      m.setAttribute('content', 'width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover');
+    }
+
+    var title = document.querySelector('title');
+    if (!title) {
+      title = document.createElement('title');
+      title.textContent = '파시스 sv3.0';
+      document.head.appendChild(title);
+    }
+  } catch (e) {}
+})();
+</script>
+
 클럽대회용 sv3.0 스텐다드
 
 <p data-ke-size="size16">&nbsp;</p>
 <p data-ke-size="size16"></p>
+
+<style>
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+  background: #f5f7fb !important;
+  -webkit-text-size-adjust: 100% !important;
+}
+
+body > p:first-of-type,
+body > p:nth-of-type(2) {
+  display: none !important;
+}
+
+.parkgolf-app {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 auto !important;
+}
+
+@media (max-width: 768px) {
+  html, body {
+    font-size: 18px !important;
+  }
+
+  .parkgolf-app {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .parkgolf-app .container,
+  .container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .parkgolf-app .info-section,
+  .parkgolf-app .score-section,
+  .parkgolf-app .button-section,
+  .parkgolf-app .summary-section,
+  .parkgolf-app .player-card,
+  .parkgolf-app .section {
+    padding: 12px !important;
+    margin-bottom: 12px !important;
+    border-radius: 12px !important;
+  }
+
+  .parkgolf-app h1,
+  .parkgolf-app .main-title,
+  .parkgolf-app .title,
+  .parkgolf-app .section-title {
+    font-size: 30px !important;
+    line-height: 1.3 !important;
+  }
+
+  .parkgolf-app input,
+  .parkgolf-app select,
+  .parkgolf-app textarea {
+    min-height: 60px !important;
+    font-size: 23px !important;
+    padding: 14px 16px !important;
+  }
+
+  .parkgolf-app button,
+  .parkgolf-app .sheet-btn,
+  .parkgolf-app .action-btn {
+    min-height: 64px !important;
+    font-size: 23px !important;
+    padding: 14px 16px !important;
+  }
+
+  .parkgolf-app .course-table,
+  .parkgolf-app .summary-table-new,
+  .parkgolf-app .score-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+  }
+
+  .parkgolf-app .course-table thead th {
+    font-size: 17px !important;
+    padding: 10px 2px !important;
+  }
+
+  .parkgolf-app .course-table td,
+  .parkgolf-app .summary-table-new td,
+  .parkgolf-app .score-table td {
+    font-size: 21px !important;
+    min-height: 52px !important;
+    height: 52px !important;
+    padding: 8px 3px !important;
+  }
+
+  .parkgolf-app .course-table input,
+  .parkgolf-app .score-table input,
+  .parkgolf-app td input {
+    min-height: 46px !important;
+    font-size: 24px !important;
+    padding: 4px !important;
+  }
+
+  .parkgolf-app .player-header,
+  .parkgolf-app .player-name,
+  .parkgolf-app .team-input {
+    font-size: 24px !important;
+  }
+}
+</style>
+
 <style>
 @media (max-width: 767px) {
     .parkgolf-app {
