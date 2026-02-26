@@ -255,6 +255,24 @@ html, body {
 }
 </style>
 
+
+<style>
+/* ===== 모달 열렸을 때 배경 스크롤 잠금 ===== */
+body.modal-open {
+  overflow: hidden !important;
+  touch-action: none !important;
+}
+
+#adminModal {
+  overscroll-behavior: contain !important;
+}
+
+#adminModal .modal-content {
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-y !important;
+}
+</style>
+
 </head>
 <body>
 클럽대회용 sv3.0 스텐다드
@@ -3805,5 +3823,76 @@ Apps Script 배포 후 생성된 웹앱 URL을 입력하세요.
 </div>
 
 <p data-ke-size="size16">&nbsp;</p>
+
+<script>
+/* ===== 모달 배경 스크롤 잠금/복원 ===== */
+(function() {
+  var _scrollY = 0;
+
+  window.__lockBodyScrollForModal = function() {
+    try {
+      _scrollY = window.scrollY || window.pageYOffset || 0;
+      document.body.classList.add('modal-open');
+      document.body.style.position = 'fixed';
+      document.body.style.top = (-_scrollY) + 'px';
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.width = '100%';
+    } catch (e) {}
+  };
+
+  window.__unlockBodyScrollForModal = function() {
+    try {
+      document.body.classList.remove('modal-open');
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
+      window.scrollTo(0, _scrollY);
+    } catch (e) {}
+  };
+
+  // adminModal이 열릴 때/닫힐 때 자동 적용 (표준 함수명이 있을 경우 우선 적용)
+  var openNames = ['openAdminModal', 'showAdminModal', 'openAdminTool', 'openAdminToolModal'];
+  var closeNames = ['closeAdminModal', 'hideAdminModal', 'closeAdminTool', 'closeAdminToolModal'];
+
+  openNames.forEach(function(fn) {
+    if (typeof window[fn] === 'function') {
+      var _orig = window[fn];
+      window[fn] = function() {
+        var r = _orig.apply(this, arguments);
+        window.__lockBodyScrollForModal();
+        return r;
+      };
+    }
+  });
+
+  closeNames.forEach(function(fn) {
+    if (typeof window[fn] === 'function') {
+      var _orig = window[fn];
+      window[fn] = function() {
+        var r = _orig.apply(this, arguments);
+        window.__unlockBodyScrollForModal();
+        return r;
+      };
+    }
+  });
+
+  // 안전장치: adminModal display가 flex로 바뀌면 잠금, none이면 해제
+  try {
+    var modal = document.getElementById('adminModal');
+    if (modal) {
+      var obs = new MutationObserver(function() {
+        var d = (modal.style && modal.style.display) ? modal.style.display : '';
+        if (d && d !== 'none') window.__lockBodyScrollForModal();
+        if (d === 'none') window.__unlockBodyScrollForModal();
+      });
+      obs.observe(modal, { attributes: true, attributeFilter: ['style'] });
+    }
+  } catch (e) {}
+})();
+</script>
+
 </body>
 </html>
