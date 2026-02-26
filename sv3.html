@@ -197,9 +197,67 @@ html, body {
   margin: 0 auto !important;
 }
 </style>
+
+<style>
+/* ===== 관리자 도구 모달: 모바일 중앙정렬/넘침 방지 최종 패치 ===== */
+#adminModal {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  display: none;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 14px !important;
+  background: rgba(0,0,0,0.45) !important;
+  z-index: 99999 !important;
+  box-sizing: border-box !important;
+}
+
+#adminModal .modal-content {
+  width: min(640px, 92vw) !important;
+  max-height: 88vh !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  margin: 0 !important;
+  border-radius: 14px !important;
+  box-sizing: border-box !important;
+  padding: 16px !important;
+}
+
+#adminModal .modal-content * {
+  box-sizing: border-box !important;
+}
+
+#adminModal .modal-content button,
+#adminModal .modal-content .btn,
+#adminModal .modal-content .sheet-btn,
+#adminModal .modal-content .action-btn {
+  width: 100% !important;
+  display: block !important;
+  margin: 10px 0 !important;
+  white-space: normal !important;
+}
+
+#adminModal .modal-content input,
+#adminModal .modal-content textarea,
+#adminModal .modal-content select {
+  width: 100% !important;
+}
+
+@media (max-width: 768px) {
+  #adminModal { padding: 10px !important; }
+  #adminModal .modal-content {
+    width: 94vw !important;
+    max-height: 90vh !important;
+    padding: 14px !important;
+  }
+}
+</style>
+
 </head>
 <body>
-파시스 sv3.0 클럽대회용
+클럽대회용 sv3.0 스텐다드
 
 <p data-ke-size="size16">&nbsp;</p>
 <p data-ke-size="size16"></p>
