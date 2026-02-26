@@ -1,3 +1,6 @@
+<!doctype html>
+<html lang="ko">
+<head>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <title>파시스 sv3.0</title>
 
@@ -175,7 +178,27 @@ html, body {
   }
 }
 </style>
-
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="파시스 sv3.0">
+<link rel="manifest" href="manifest-sv3.json">
+<link rel="apple-touch-icon" sizes="180x180" href="sv3-180-v2.png">
+<link rel="icon" type="image/png" sizes="192x192" href="sv3-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="sv3-512.png">
+<meta name="theme-color" content="#0f9d58">
+<style>
+/* ===== 모달 가운데 정렬 보정 ===== */
+#adminModal, .modal {
+  left: 0 !important;
+  right: 0 !important;
+  margin: 0 auto !important;
+}
+#adminModal .modal-content, .modal .modal-content {
+  margin: 0 auto !important;
+}
+</style>
+</head>
+<body>
 클럽대회용 sv3.0 스텐다드
 
 <p data-ke-size="size16">&nbsp;</p>
@@ -1832,7 +1855,7 @@ html, body {
 
 <!-- 관리자 도구 버튼 -->
 <div style="margin-top: 40px !important; margin-bottom: 30px !important;">
-<button class="admin-btn" onclick="document.getElementById('adminModal').style.display='block';" style="width: 100% !important; padding: 18px !important; background: linear-gradient(135deg, #f4b400 0%, #db9200 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">대회 관리자 전용 관리자 도구 열기</button>
+<button class="admin-btn" onclick="document.getElementById('adminModal').style.display='flex';" style="width: 100% !important; padding: 18px !important; background: linear-gradient(135deg, #f4b400 0%, #db9200 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">대회 관리자 전용 관리자 도구 열기</button>
 </div>
 
 </div>
@@ -3724,3 +3747,5 @@ Apps Script 배포 후 생성된 웹앱 URL을 입력하세요.
 </div>
 
 <p data-ke-size="size16">&nbsp;</p>
+</body>
+</html>
