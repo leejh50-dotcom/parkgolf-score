@@ -260,7 +260,8 @@ html, body {
 /* ===== 모달 열렸을 때 배경 스크롤 잠금 ===== */
 body.modal-open {
   overflow: hidden !important;
-  }
+  touch-action: none !important;
+}
 
 #adminModal {
   overscroll-behavior: contain !important;
@@ -334,7 +335,7 @@ body.modal-open {
 
 </head>
 <body>
-클럽대회용 sv3.0 스텐다드
+파시스 sv3.0 클럽대회용
 
 <p data-ke-size="size16">&nbsp;</p>
 <p data-ke-size="size16"></p>
@@ -651,7 +652,12 @@ body.modal-open {
 .parkgolf-app .history-btn {
     background: #6f42c1 !important;
     color: white !important;
+
+    font-size: 21px !important;
+    font-weight: 800 !important;
+    line-height: 1.1 !important;
 }
+
 
 .parkgolf-app .history-btn:hover {
     background: #5a32a3 !important;
@@ -1818,7 +1824,7 @@ body.modal-open {
 <div style="background: linear-gradient(135deg, #2d7a4f 0%, #1a5634 100%); padding: 30px 4px !important; border-radius: 12px; margin: 0 0 8px 0 !important; text-align: center;">
 <h1 style="color: #ffffff !important; margin: 0 0 14px 0 !important; font-size: 24px !important; font-weight: bold !important; letter-spacing: -0.5px !important;">파크골프 점수 기록표</h1>
 <div style="display: inline-block; background: rgba(255,255,255,0.3); padding: 8px 18px; border-radius: 8px;">
-<span style="font-size: 15px; color: #fff3e0; font-weight: 600; letter-spacing: 0.5px;">클럽대회용 sv3.0 스텐다드</span>
+<span style="font-size: 15px; color: #fff3e0; font-weight: 600; letter-spacing: 0.5px;">파시스 sv3.0 클럽대회용</span>
 </div>
 </div>
 <div class="info-section" style="padding: 3px !important; margin: 0 0 8px 0 !important;">
@@ -3403,7 +3409,7 @@ body.modal-open {
             
             const modal = document.getElementById('adminModal');
             if (modal) {
-                modal.style.display = 'flex';
+                modal.style.display = 'block';
                 console.log('모달 표시됨');
             } else {
                 console.error('adminModal을 찾을 수 없습니다');
@@ -3459,6 +3465,16 @@ body.modal-open {
                 qrSection.style.display = 'none';
             }
         };
+        // QR코드만 닫기 (관리자 모달은 유지)
+        window.closeQrOnly = function() {
+            const qrSection = document.getElementById('qrSection');
+            const qrDisplay = document.getElementById('qrcodeDisplay');
+            const qrContainer = document.getElementById('qrcode');
+            if (qrDisplay) qrDisplay.style.display = 'none';
+            if (qrContainer) qrContainer.innerHTML = '';
+            if (qrSection) qrSection.style.display = 'none';
+        };
+        
 
         function generateQRCodeInModal() {
             const qrContainer = document.getElementById('qrcode');
@@ -3770,15 +3786,15 @@ function loadUrlParams() {
 function saveURL() {
     var url = document.getElementById('webAppUrl').value.trim();
     if (!url) {
-        (typeof showToast==='function'?showToast('URL을 입력해주세요.'):alert('URL을 입력해주세요.'));
+        alert('URL을 입력해주세요.');
         return;
     }
     if (!url.includes('script.google.com')) {
-        (typeof showToast==='function'?showToast('올바른 Google Apps Script 웹앱 URL을 입력해주세요.'):alert('올바른 Google Apps Script 웹앱 URL을 입력해주세요.'));
+        alert('올바른 Google Apps Script 웹앱 URL을 입력해주세요.');
         return;
     }
     localStorage.setItem('parkgolf_webapp_url', url);
-    (typeof showToast==='function'?showToast('✅ URL이 저장되었습니다!'):alert('URL이 저장되었습니다!'));
+    alert('URL이 저장되었습니다!');
 }
 </script>
 </div>
@@ -3788,7 +3804,6 @@ function saveURL() {
 <div id="adminModal" style="display: none !important; position: fixed !important; z-index: 99999 !important; left: 0 !important; top: 0 !important; width: 100% !important; height: 100% !important; background: rgba(0, 0, 0, 0.6) !important; overflow: auto !important; padding: 20px !important;">
 <div style="background: white !important; margin: 50px auto !important; padding: 30px !important; border-radius: 12px !important; max-width: 800px !important; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;">
 <h3 style="text-align: center !important; color: #1e3c72 !important; margin-bottom: 25px !important; font-size: 22px !important; font-weight: 900 !important;">대회 관리자 전용 관리자 도구 열기</h3>
-<div style=\"margin:-8px 0 14px 0; font-size:12px; color:#6c757d;\">패치 확인표시: <b>ADMIN-PATCH v3</b> (이 글자가 보이면 최신 파일입니다)</div>
 
 <!-- 웹앱 URL 설정 섹션 -->
 <div style="background: #f8f9fa !important; padding: 20px !important; border-radius: 8px !important; margin-bottom: 20px !important;">
@@ -3874,6 +3889,9 @@ Apps Script 배포 후 생성된 웹앱 URL을 입력하세요.
 <p style="margin: 5px 0 !important;">2. 대회 코드와 웹앱 URL이 자동으로 설정됩니다</p>
 <p style="margin: 5px 0 !important;">3. 기록자가 바로 점수를 입력하고 전송할 수 있습니다</p>
 </div>
+<div style="margin-top: 12px !important; text-align: center !important;">
+  <button type="button" onclick="closeQrOnly()" style="width: 100% !important; padding: 14px !important; background: #495057 !important; color: #ffffff !important; border: none !important; border-radius: 8px !important; font-size: 16px !important; font-weight: 900 !important; cursor: pointer !important;">QR코드 닫기</button>
+</div>
 </div>
 </div>
 </div>
@@ -3893,16 +3911,22 @@ Apps Script 배포 후 생성된 웹앱 URL을 입력하세요.
     try {
       _scrollY = window.scrollY || window.pageYOffset || 0;
       document.body.classList.add('modal-open');
-      // iOS/Safari에서 body를 fixed로 잠그면 모달 내 버튼 탭이 먹통이 되는 경우가 있어
-      // overflow만 잠그는 방식으로 변경합니다.
-      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.top = (-_scrollY) + 'px';
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.width = '100%';
     } catch (e) {}
   };
 
   window.__unlockBodyScrollForModal = function() {
     try {
       document.body.classList.remove('modal-open');
-      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
       window.scrollTo(0, _scrollY);
     } catch (e) {}
   };
@@ -3966,70 +3990,6 @@ Apps Script 배포 후 생성된 웹앱 URL을 입력하세요.
   }
   watchModal('scoreModal');
 })();
-</script>
-
-
-<script>
-/* ===== (진단용) 관리자 모달 버튼 탭 감지 + 오류 표시 ===== */
-(function(){
-  function toast(msg){
-    try{
-      var t=document.getElementById('__toast');
-      if(!t){
-        t=document.createElement('div');
-        t.id='__toast';
-        t.style.cssText='position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:rgba(0,0,0,0.78);color:#fff;padding:10px 14px;border-radius:10px;z-index:2147483647;font-size:14px;font-weight:700;max-width:92vw;text-align:center;display:none;';
-        document.body.appendChild(t);
-      }
-      t.textContent=msg;
-      t.style.display='block';
-      clearTimeout(window.__toastTimer);
-      window.__toastTimer=setTimeout(function(){t.style.display='none';},1200);
-    }catch(e){}
-  }
-
-  function wrap(name, label){
-    var fn=window[name];
-    if(typeof fn!=='function') return;
-    window[name]=function(){
-      toast(label+' 클릭');
-      try{ return fn.apply(this, arguments); }
-      catch(e){ alert(label+' 오류: '+(e && e.message ? e.message : e)); throw e; }
-    };
-  }
-
-  // 버튼들 래핑
-  wrap('saveURL','URL 저장');
-  wrap('copyTemplate','템플릿 복사');
-  wrap('toggleTeamAssignment','조편성');
-  wrap('toggleQRSection','QR코드');
-  wrap('executeTeamAssignment','조편성 실행');
-})();
-</script>
-<style>
-/* 모달 클릭/탭 보강 */
-#adminModal { pointer-events:auto !important; }
-#adminModal * { pointer-events:auto !important; }
-</style>
-
-
-<script>
-// === ADMIN 모달 버튼 탭 감지용(진단) ===
-document.addEventListener('DOMContentLoaded', function() {
-  var m = document.getElementById('adminModal');
-  if (!m) return;
-  // 캡처 단계에서 먼저 잡아서, 어떤 경우든 '클릭이 들어오는지' 확인
-  m.addEventListener('click', function(e){
-    var t = e.target;
-    // 버튼 또는 버튼처럼 생긴 요소
-    if (t && (t.tagName === 'BUTTON' || t.closest('button'))) {
-      var btn = t.tagName === 'BUTTON' ? t : t.closest('button');
-      var label = (btn.innerText || btn.textContent || '').trim().slice(0, 30);
-      if (typeof showToast === 'function') showToast('버튼 클릭 감지: ' + (label || '(빈라벨)'));
-      console.log('[ADMIN] button click:', label);
-    }
-  }, true);
-});
 </script>
 
 </body>
