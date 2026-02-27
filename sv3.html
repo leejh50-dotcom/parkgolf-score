@@ -3843,11 +3843,11 @@ Apps Script 배포 후 생성된 웹앱 URL을 입력하세요.
 </p>
 <input type="text" id="webAppUrl" placeholder="https://script.google.com/macros/s/YOUR_ID/exec" 
        style="width: 100% !important; padding: 14px !important; margin-bottom: 12px !important; border: 2px solid #dee2e6 !important; border-radius: 8px !important; font-size: 14px !important; font-weight: 600 !important; font-family: 'Malgun Gothic', sans-serif !important; box-sizing: border-box !important;">
-<button onclick="saveURL()" style="width: 100% !important; padding: 16px !important; background: #28a745 !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 16px !important; font-weight: 900 !important; cursor: pointer !important;">URL 저장</button>
+<button type="button" id="btnSaveUrl" onclick="saveURL()" style="width: 100% !important; padding: 16px !important; background: #28a745 !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 16px !important; font-weight: 900 !important; cursor: pointer !important;">URL 저장</button>
 </div>
 
 <!-- 템플릿 복사 버튼 (모바일 개선) -->
-<button onclick="copyTemplate();" style="width: 100% !important; padding: 18px !important; margin-bottom: 15px !important; background: linear-gradient(135deg, #4285f4 0%, #3367d6 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important;">템플릿 복사</button>
+<button type="button" id="btnCopyTemplate" onclick="copyTemplate();" style="width: 100% !important; padding: 18px !important; margin-bottom: 15px !important; background: linear-gradient(135deg, #4285f4 0%, #3367d6 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important;">템플릿 복사</button>
 
 <!-- 템플릿 URL 안내 -->
 <div style="padding: 15px !important; margin-bottom: 15px !important; background: #f8f9fa !important; border-radius: 8px !important; border: 1px solid #e0e0e0 !important;">
@@ -3862,7 +3862,7 @@ Apps Script 배포 후 생성된 웹앱 URL을 입력하세요.
 </div>
 
 <!-- 조편성 버튼 -->
-<button onclick="toggleTeamAssignment()" style="width: 100% !important; padding: 18px !important; margin-bottom: 15px !important; background: linear-gradient(135deg, #00897b 0%, #00695c 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important;">⚡ 조편성</button>
+<button type="button" id="btnToggleTeam" onclick="toggleTeamAssignment()" style="width: 100% !important; padding: 18px !important; margin-bottom: 15px !important; background: linear-gradient(135deg, #00897b 0%, #00695c 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important;">⚡ 조편성</button>
 
 <!-- 조편성 섹션 -->
 <div id="teamAssignmentSection" style="display: none !important; margin-bottom: 20px !important;">
@@ -3885,14 +3885,14 @@ Apps Script 배포 후 생성된 웹앱 URL을 입력하세요.
 </select>
 </div>
 
-<button onclick="executeTeamAssignment()" style="width: 100% !important; padding: 14px !important; background: #00897b !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 16px !important; font-weight: 900 !important; cursor: pointer !important; margin-bottom: 10px !important;">🎯 조편성 실행</button>
+<button type="button" id="btnRunTeam" onclick="executeTeamAssignment()" style="width: 100% !important; padding: 14px !important; background: #00897b !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 16px !important; font-weight: 900 !important; cursor: pointer !important; margin-bottom: 10px !important;">🎯 조편성 실행</button>
 
 <div id="teamAssignmentResult" style="margin-top: 15px !important; padding: 12px !important; background: white !important; border-radius: 6px !important; display: none !important; max-height: 300px !important; overflow-y: auto !important;"></div>
 </div>
 </div>
 
 <!-- QR코드 생성하기 버튼 -->
-<button onclick="toggleQRSection()" style="width: 100% !important; padding: 18px !important; margin-bottom: 15px !important; background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important;">QR코드 생성하기</button>
+<button type="button" id="btnToggleQR" onclick="toggleQRSection()" style="width: 100% !important; padding: 18px !important; margin-bottom: 15px !important; background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important;">QR코드 생성하기</button>
 
 <!-- QR 섹션 -->
 <div id="qrSection" style="display: none !important; margin-bottom: 20px !important;">
@@ -3905,7 +3905,7 @@ Apps Script 배포 후 생성된 웹앱 URL을 입력하세요.
     • 전송/저장은 인원 제한 없이 됩니다.<br>
     • <b>40명 초과</b> 시에는 자동 순위집계만 제한됩니다(관리자가 수동 집계 가능).
   </div>
-  <button onclick="executeMakeRank()" style="width:100% !important; padding:16px !important; background:#0d47a1 !important; color:white !important; border:none !important; border-radius:10px !important; font-size:18px !important; font-weight:900 !important; cursor:pointer !important;">
+  <button type="button" id="btnRunRank" onclick="executeMakeRank()" style="width:100% !important; padding:16px !important; background:#0d47a1 !important; color:white !important; border:none !important; border-radius:10px !important; font-size:18px !important; font-weight:900 !important; cursor:pointer !important;">
     🏆 순위집계 생성(관리자)
   </button>
   <div id="makeRankResult" style="display:none !important; margin-top:12px !important;"></div>
@@ -3922,7 +3922,7 @@ QR코드 설정</h4>
 <input type="text" id="qrWebAppUrl" placeholder="https://script.google.com/macros/s/..." style="width: 100% !important; padding: 12px !important; border: 2px solid #dee2e6 !important; border-radius: 6px !important; font-size: 15px !important; font-weight: 600 !important; box-sizing: border-box !important;">
 </div>
 
-<button onclick="generateQRCodeWithParams()" style="width: 100% !important; padding: 14px !important; background: #9c27b0 !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 16px !important; font-weight: 900 !important; cursor: pointer !important; margin-bottom: 15px !important;">QR 코드 생성</button>
+<button type="button" id="btnGenQR" onclick="generateQRCodeWithParams()" style="width: 100% !important; padding: 14px !important; background: #9c27b0 !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 16px !important; font-weight: 900 !important; cursor: pointer !important; margin-bottom: 15px !important;">QR 코드 생성</button>
 
 <div id="qrcodeDisplay" style="display: none !important; text-align: center !important; margin-top: 20px !important;">
 <div id="qrcode" style="margin: 20px auto !important; padding: 15px !important; background: white !important; display: inline-block !important; border: 2px solid #dee2e6 !important; border-radius: 8px !important;"></div>
@@ -4069,6 +4069,49 @@ function executeMakeRank() {
       });
 }
 
+</script>
+
+
+<script>
+/* ✅ 관리자 모달 버튼 "무반응" 방지 패치
+   - inline onclick이 어떤 이유로든 동작하지 않을 때도 이벤트를 강제로 연결
+   - 클릭/터치 둘 다 지원
+*/
+(function () {
+  function callFn(fnName) {
+    try {
+      var fn = window[fnName];
+      if (typeof fn === 'function') return fn();
+      alert('기능을 찾을 수 없습니다: ' + fnName + '\n(스크립트 로딩이 중단되었을 수 있습니다)');
+    } catch (e) {
+      console.error(e);
+      alert('오류가 발생했습니다: ' + (e && e.message ? e.message : e));
+    }
+  }
+
+  function bind(id, fnName) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    // iOS/안드로이드 터치 대응
+    var handler = function (e) {
+      try { e.preventDefault(); } catch(_) {}
+      try { e.stopPropagation(); } catch(_) {}
+      callFn(fnName);
+      return false;
+    };
+    el.addEventListener('click', handler, { passive: false });
+    el.addEventListener('touchend', handler, { passive: false });
+  }
+
+  // admin modal buttons
+  bind('btnSaveUrl', 'saveURL');
+  bind('btnCopyTemplate', 'copyTemplate');
+  bind('btnToggleTeam', 'toggleTeamAssignment');
+  bind('btnRunTeam', 'executeTeamAssignment');
+  bind('btnToggleQR', 'toggleQRSection');
+  bind('btnGenQR', 'generateQRCodeWithParams');
+  bind('btnRunRank', 'executeMakeRank');
+})();
 </script>
 
 </body>
