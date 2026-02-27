@@ -1,382 +1,3 @@
-<!doctype html>
-<html lang="ko">
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<title>파시스 sv3.0</title>
-
-<style>
-/* ===== 2.0 기준 모바일 대형화 정밀 패치 ===== */
-html, body {
-  margin: 0 !important;
-  padding: 0 !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  overflow-x: hidden !important;
-  -webkit-text-size-adjust: 100% !important;
-}
-
-.parkgolf-app, .parkgolf-app * { box-sizing: border-box !important; }
-
-@media (max-width: 768px) {
-  .parkgolf-app {
-    width: 100vw !important;
-    max-width: 100vw !important;
-    margin: 0 auto !important;
-  }
-
-  .parkgolf-app .container,
-  .container {
-    width: 100% !important;
-    max-width: 100% !important;
-    padding-left: 6px !important;
-    padding-right: 6px !important;
-    margin: 0 !important;
-  }
-
-  /* 상단 입력부 */
-  .parkgolf-app input[type="text"],
-  .parkgolf-app input[type="date"],
-  .parkgolf-app select,
-  .parkgolf-app textarea {
-    min-height: 58px !important;
-    font-size: 22px !important;
-    font-weight: 700 !important;
-    padding: 12px 14px !important;
-    border-radius: 10px !important;
-  }
-
-  #eventCodeInput, #teamNameInput, #eventNameInput, #locationInput {
-    min-height: 58px !important;
-    font-size: 22px !important;
-    font-weight: 700 !important;
-  }
-
-  /* 제목/섹션 */
-  .parkgolf-app h1,
-  .parkgolf-app .main-title,
-  .parkgolf-app .section-title,
-  .parkgolf-app .player-title,
-  .parkgolf-app .summary-title {
-    font-size: 28px !important;
-    line-height: 1.35 !important;
-    margin-bottom: 12px !important;
-    font-weight: 800 !important;
-  }
-
-  .parkgolf-app .section,
-  .parkgolf-app .score-section,
-  .parkgolf-app .button-section,
-  .parkgolf-app .player-card,
-  .parkgolf-app .summary-card {
-    padding: 12px !important;
-    margin-bottom: 14px !important;
-    border-radius: 12px !important;
-  }
-
-  /* 버튼 */
-  .parkgolf-app button,
-  .parkgolf-app .sheet-btn,
-  .parkgolf-app .action-btn {
-    min-height: 60px !important;
-    font-size: 21px !important;
-    font-weight: 800 !important;
-    padding: 12px 14px !important;
-    border-radius: 10px !important;
-  }
-
-  .parkgolf-app .course-btn,
-  .parkgolf-app .save-btn,
-  .parkgolf-app .load-btn,
-  .parkgolf-app .clear-btn {
-    min-height: 64px !important;
-    font-size: 21px !important;
-  }
-
-  /* 점수표: 2.0 감각으로 확대 */
-  .parkgolf-app .course-table,
-  .parkgolf-app .score-table,
-  .parkgolf-app .summary-table-new {
-    width: 100% !important;
-    table-layout: fixed !important;
-  }
-
-  .parkgolf-app .course-table thead th {
-    font-size: 16px !important;
-    padding: 10px 2px !important;
-    white-space: nowrap !important;
-  }
-
-  .parkgolf-app .course-table thead th:nth-child(1),
-  .parkgolf-app .course-table thead th:nth-child(2),
-  .parkgolf-app .hole-cell,
-  .parkgolf-app .par-cell {
-    width: 34px !important;
-    min-width: 34px !important;
-    max-width: 34px !important;
-    font-size: 16px !important;
-  }
-
-  .parkgolf-app .score-cell {
-    width: calc((100% - 68px) / 4) !important;
-    min-width: 92px !important;
-    max-width: none !important;
-  }
-
-  .parkgolf-app .score-input,
-  .parkgolf-app .course-table input,
-  .parkgolf-app .score-table input,
-  .parkgolf-app td input[type="number"],
-  .parkgolf-app td input[type="text"] {
-    min-height: 46px !important;
-    height: 46px !important;
-    font-size: 24px !important;
-    font-weight: 800 !important;
-    padding: 4px !important;
-    text-align: center !important;
-  }
-
-  .parkgolf-app .course-table td,
-  .parkgolf-app .score-table td {
-    min-height: 52px !important;
-    height: 52px !important;
-    font-size: 20px !important;
-    padding: 6px 2px !important;
-  }
-
-  /* 요약표 */
-  .parkgolf-app .summary-table-new th:first-child,
-  .parkgolf-app .summary-table-new td:first-child {
-    width: 42px !important;
-    min-width: 42px !important;
-    max-width: 42px !important;
-    padding: 8px 0 !important;
-  }
-
-  .parkgolf-app .summary-table-new th,
-  .parkgolf-app .summary-table-new td {
-    font-size: 15px !important;
-    padding: 8px 2px !important;
-  }
-
-  .parkgolf-app .summary-table-new th:not(:first-child),
-  .parkgolf-app .summary-table-new td:not(:first-child) {
-    min-width: 108px !important;
-  }
-
-  /* 선수명/안내문 */
-  .parkgolf-app .player-name-col,
-  .parkgolf-app .player-name,
-  .parkgolf-app .team-input {
-    font-size: 20px !important;
-    font-weight: 700 !important;
-  }
-
-  #qrGuideMessage,
-  #eventCodeLockNote {
-    font-size: 16px !important;
-    line-height: 1.5 !important;
-  }
-}
-</style>
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="파시스 sv3.0">
-<link rel="manifest" href="manifest-sv3.json">
-<link rel="apple-touch-icon" sizes="180x180" href="sv3-180-v2.png">
-<link rel="icon" type="image/png" sizes="192x192" href="sv3-192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="sv3-512.png">
-<meta name="theme-color" content="#0f9d58">
-<style>
-/* ===== 모달 가운데 정렬 보정 ===== */
-#adminModal, .modal {
-  left: 0 !important;
-  right: 0 !important;
-  margin: 0 auto !important;
-}
-#adminModal .modal-content, .modal .modal-content {
-  margin: 0 auto !important;
-}
-</style>
-
-<style>
-/* ===== 관리자 도구 모달: 모바일 중앙정렬/넘침 방지 최종 패치 ===== */
-#adminModal {
-  position: fixed !important;
-  inset: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  display: none;
-  align-items: center !important;
-  justify-content: center !important;
-  padding: 14px !important;
-  background: rgba(0,0,0,0.45) !important;
-  z-index: 99999 !important;
-  box-sizing: border-box !important;
-}
-
-#adminModal .modal-content {
-  width: min(640px, 92vw) !important;
-  max-height: 88vh !important;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  margin: 0 !important;
-  border-radius: 14px !important;
-  box-sizing: border-box !important;
-  padding: 16px !important;
-}
-
-#adminModal .modal-content * {
-  box-sizing: border-box !important;
-}
-
-#adminModal .modal-content button,
-#adminModal .modal-content .btn,
-#adminModal .modal-content .sheet-btn,
-#adminModal .modal-content .action-btn {
-  width: 100% !important;
-  display: block !important;
-  margin: 10px 0 !important;
-  white-space: normal !important;
-}
-
-#adminModal .modal-content input,
-#adminModal .modal-content textarea,
-#adminModal .modal-content select {
-  width: 100% !important;
-}
-
-@media (max-width: 768px) {
-  #adminModal { padding: 10px !important; }
-  #adminModal .modal-content {
-    width: 94vw !important;
-    max-height: 90vh !important;
-    padding: 14px !important;
-  }
-}
-</style>
-
-
-<style>
-/* ===== 모달 열렸을 때 배경 스크롤 잠금 ===== */
-body.modal-open {
-  overflow: hidden !important;
-  touch-action: none !important;
-}
-
-#adminModal {
-  overscroll-behavior: contain !important;
-}
-
-#adminModal .modal-content {
-  -webkit-overflow-scrolling: touch !important;
-  touch-action: pan-y !important;
-}
-</style>
-
-
-<style>
-/* ===== 점수 입력 모달(키패드) 안정화: 배경 스크롤 방지 + 키패드 고정 ===== */
-#scoreModal {
-  position: fixed !important;
-  inset: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  display: none;
-  align-items: center !important;
-  justify-content: center !important;
-  padding: 10px !important;
-  background: rgba(0,0,0,0.45) !important;
-  z-index: 99998 !important;
-  box-sizing: border-box !important;
-}
-
-#scoreModal .modal-content {
-  width: min(520px, 94vw) !important;
-  max-height: 92vh !important;
-  overflow: hidden !important;            /* 내부 레이아웃에서 키패드는 고정 */
-  display: flex !important;
-  flex-direction: column !important;
-  border-radius: 14px !important;
-  padding: 14px !important;
-  box-sizing: border-box !important;
-}
-
-#scoreModal h3 { margin: 0 0 10px 0 !important; }
-
-#scoreModal .score-input-row { flex: 0 0 auto !important; }
-
-#scoreModal .keyboard {
-  flex: 1 1 auto !important;
-  overflow-y: auto !important;
-  -webkit-overflow-scrolling: touch !important;
-  padding-bottom: 12px !important;
-}
-
-/* 키패드 버튼 터치 안정화 */
-#scoreModal .key-btn, #scoreModal button {
-  touch-action: manipulation !important;
-}
-
-/* 하단 버튼(지우기/닫기)이 가려지지 않게 */
-#scoreModal .modal-close,
-#scoreModal .delete-btn,
-#scoreModal .clear-btn {
-  width: 100% !important;
-  display: block !important;
-  margin-top: 10px !important;
-}
-
-@media (max-width: 768px) {
-  #scoreModal { padding: 8px !important; }
-  #scoreModal .modal-content { width: 96vw !important; max-height: 94vh !important; }
-  #scoreModal .key-btn { min-height: 56px !important; font-size: 22px !important; }
-}
-</style>
-
-
-<style>
-/* ✅ 관리자 모달(대회 sv3.0): 화면 정중앙 + 닫기(X) 위치 보정 (2026-02-27) */
-#adminModal.modal-overlay{
-  position: fixed !important;
-  inset: 0 !important;
-  display: none;
-  align-items: center !important;
-  justify-content: center !important;
-  padding: 14px !important;
-  background: rgba(0,0,0,0.6) !important;
-  z-index: 99999 !important;
-  box-sizing: border-box !important;
-}
-#adminModal.modal-overlay.show{
-  display: flex !important;
-}
-#adminModal .modal-content{
-  position: relative !important;
-  left: auto !important;
-  right: auto !important;
-  top: auto !important;
-  margin: 0 !important;
-  transform: none !important;
-  float: none !important;
-
-  width: min(560px, 92vw) !important;
-  max-height: 88vh !important;
-  overflow: auto !important;
-  background: #fff !important;
-  padding: 22px !important;
-  border-radius: 14px !important;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.25) !important;
-}
-#adminModalCloseBtn{
-  position: absolute !important;
-  top: 10px !important;
-  right: 10px !important;
-  z-index: 2 !important;
-}
-</style>
-
-</head>
-<body>
 클럽대회용 sv3.0 스텐다드
 
 <p data-ke-size="size16">&nbsp;</p>
@@ -1484,375 +1105,6 @@ body.modal-open {
   .parkgolf-app #teamNameInput{ font-size: 17px !important; }
 }
 
-
-/* ===== 가독성 확장 패치 (기능 로직 미수정 / CSS만 추가) ===== */
-.parkgolf-app {
-    width: 100% !important;
-    max-width: 100% !important;
-}
-
-.parkgolf-app .container {
-    width: 100% !important;
-    max-width: 100% !important;
-    padding-left: 12px !important;
-    padding-right: 12px !important;
-    box-sizing: border-box !important;
-}
-
-.parkgolf-app .section,
-.parkgolf-app .score-section,
-.parkgolf-app .player-card,
-.parkgolf-app .summary-card,
-.parkgolf-app .team-info,
-.parkgolf-app .event-info,
-.parkgolf-app .button-section {
-    width: 100% !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-}
-
-.parkgolf-app table,
-.parkgolf-app .score-table {
-    width: 100% !important;
-    table-layout: fixed !important;
-}
-
-.parkgolf-app th,
-.parkgolf-app td {
-    word-break: keep-all !important;
-}
-
-.parkgolf-app input,
-.parkgolf-app select,
-.parkgolf-app button,
-.parkgolf-app textarea {
-    font-size: 17px !important;
-}
-
-.parkgolf-app .section-title,
-.parkgolf-app .player-title,
-.parkgolf-app .total-score,
-.parkgolf-app .summary-title {
-    font-size: 20px !important;
-}
-
-@media (min-width: 768px) {
-    .parkgolf-app .container {
-        max-width: 1180px !important;
-        padding-left: 18px !important;
-        padding-right: 18px !important;
-    }
-}
-
-@media (min-width: 1200px) {
-    .parkgolf-app .container {
-        max-width: 1280px !important;
-    }
-}
-
-
-/* ===== 모바일 세로 가독성 강화 패치 ===== */
-@media (max-width: 768px) {
-    body {
-        font-size: 18px !important;
-        line-height: 1.55 !important;
-    }
-
-    .parkgolf-app,
-    .parkgolf-app .container {
-        width: 100% !important;
-        max-width: 100% !important;
-        padding-left: 10px !important;
-        padding-right: 10px !important;
-        box-sizing: border-box !important;
-    }
-
-    .parkgolf-app .section,
-    .parkgolf-app .score-section,
-    .parkgolf-app .player-card,
-    .parkgolf-app .summary-card,
-    .parkgolf-app .team-info,
-    .parkgolf-app .event-info,
-    .parkgolf-app .button-section {
-        margin-bottom: 18px !important;
-        padding: 14px !important;
-        border-radius: 12px !important;
-    }
-
-    .parkgolf-app h1,
-    .parkgolf-app .main-title,
-    .parkgolf-app .section-title,
-    .parkgolf-app .player-title,
-    .parkgolf-app .summary-title {
-        font-size: 28px !important;
-        line-height: 1.35 !important;
-        margin-bottom: 14px !important;
-    }
-
-    .parkgolf-app h2,
-    .parkgolf-app h3 {
-        font-size: 22px !important;
-        line-height: 1.4 !important;
-    }
-
-    .parkgolf-app input,
-    .parkgolf-app select,
-    .parkgolf-app textarea {
-        min-height: 56px !important;
-        font-size: 22px !important;
-        padding: 14px 16px !important;
-        border-radius: 10px !important;
-    }
-
-    .parkgolf-app button,
-    .parkgolf-app .sheet-btn,
-    .parkgolf-app .action-btn {
-        min-height: 58px !important;
-        font-size: 21px !important;
-        font-weight: 800 !important;
-        border-radius: 10px !important;
-        padding: 14px 16px !important;
-    }
-
-    .parkgolf-app .course-btn,
-    .parkgolf-app .save-btn,
-    .parkgolf-app .load-btn,
-    .parkgolf-app .clear-btn {
-        min-height: 64px !important;
-        font-size: 20px !important;
-    }
-
-    .parkgolf-app .date-box,
-    .parkgolf-app .event-box,
-    .parkgolf-app .location-box {
-        min-height: 58px !important;
-        font-size: 24px !important;
-        font-weight: 700 !important;
-    }
-
-    .parkgolf-app .player-number,
-    .parkgolf-app .badge,
-    .parkgolf-app .num-circle {
-        width: 38px !important;
-        height: 38px !important;
-        min-width: 38px !important;
-        min-height: 38px !important;
-        font-size: 20px !important;
-        line-height: 38px !important;
-    }
-
-    .parkgolf-app table,
-    .parkgolf-app .score-table {
-        width: 100% !important;
-        table-layout: fixed !important;
-    }
-
-    .parkgolf-app th {
-        font-size: 16px !important;
-        padding: 10px 4px !important;
-        line-height: 1.35 !important;
-    }
-
-    .parkgolf-app td {
-        font-size: 20px !important;
-        padding: 10px 4px !important;
-        min-height: 48px !important;
-        line-height: 1.4 !important;
-    }
-
-    .parkgolf-app .score-table input,
-    .parkgolf-app td input {
-        min-height: 44px !important;
-        font-size: 22px !important;
-        padding: 6px !important;
-    }
-
-    .parkgolf-app .help-text,
-    .parkgolf-app .guide-text,
-    .parkgolf-app #qrGuideMessage,
-    .parkgolf-app #eventCodeLockNote {
-        font-size: 17px !important;
-        line-height: 1.55 !important;
-    }
-
-    .parkgolf-app .top-banner,
-    .parkgolf-app .header-box,
-    .parkgolf-app .hero {
-        padding-top: 22px !important;
-        padding-bottom: 22px !important;
-        border-radius: 14px !important;
-    }
-}
-
-
-/* ===== 초강화 모바일 확대 패치 ===== */
-@media (max-width: 768px) {
-  html, body {
-    -webkit-text-size-adjust: 100% !important;
-  }
-
-  body {
-    font-size: 20px !important;
-    line-height: 1.6 !important;
-  }
-
-  .parkgolf-app .container,
-  .container,
-  .wrap,
-  .app-container,
-  .main-container {
-    padding-left: 8px !important;
-    padding-right: 8px !important;
-    max-width: 100% !important;
-  }
-
-  .parkgolf-app .top-banner,
-  .parkgolf-app .header-box,
-  .parkgolf-app .hero,
-  .header,
-  .title-box {
-    padding-top: 26px !important;
-    padding-bottom: 26px !important;
-    margin-bottom: 16px !important;
-  }
-
-  .parkgolf-app h1,
-  .parkgolf-app .main-title,
-  .main-title,
-  .title,
-  .page-title {
-    font-size: 34px !important;
-    line-height: 1.3 !important;
-    font-weight: 800 !important;
-  }
-
-  .parkgolf-app h2,
-  .parkgolf-app h3,
-  .section-title,
-  .player-title,
-  .summary-title {
-    font-size: 26px !important;
-    line-height: 1.35 !important;
-    font-weight: 800 !important;
-  }
-
-  .parkgolf-app .section,
-  .section,
-  .card,
-  .box,
-  .panel {
-    padding: 16px !important;
-    margin-bottom: 16px !important;
-    border-radius: 14px !important;
-  }
-
-  .parkgolf-app input,
-  .parkgolf-app select,
-  .parkgolf-app textarea,
-  input,
-  select,
-  textarea {
-    min-height: 62px !important;
-    font-size: 24px !important;
-    font-weight: 700 !important;
-    padding: 16px 18px !important;
-    border-radius: 12px !important;
-  }
-
-  #eventCodeInput,
-  #teamNameInput,
-  #eventNameInput,
-  #locationInput {
-    min-height: 62px !important;
-    font-size: 24px !important;
-  }
-
-  .parkgolf-app button,
-  .parkgolf-app .sheet-btn,
-  .parkgolf-app .action-btn,
-  button {
-    min-height: 66px !important;
-    font-size: 24px !important;
-    font-weight: 800 !important;
-    padding: 16px 18px !important;
-    border-radius: 12px !important;
-  }
-
-  .course-btn,
-  .save-btn,
-  .load-btn,
-  .clear-btn {
-    min-height: 72px !important;
-    font-size: 22px !important;
-    line-height: 1.35 !important;
-  }
-
-  .date-box,
-  .event-box,
-  .location-box,
-  .datetime-box {
-    min-height: 64px !important;
-    font-size: 28px !important;
-    font-weight: 800 !important;
-  }
-
-  .player-number,
-  .badge,
-  .num-circle,
-  .player-index {
-    width: 44px !important;
-    height: 44px !important;
-    min-width: 44px !important;
-    min-height: 44px !important;
-    line-height: 44px !important;
-    font-size: 22px !important;
-    font-weight: 800 !important;
-  }
-
-  .parkgolf-app table,
-  .parkgolf-app .score-table,
-  table {
-    width: 100% !important;
-    table-layout: fixed !important;
-  }
-
-  .parkgolf-app th,
-  th {
-    font-size: 17px !important;
-    font-weight: 800 !important;
-    padding: 12px 4px !important;
-    line-height: 1.35 !important;
-  }
-
-  .parkgolf-app td,
-  td {
-    font-size: 22px !important;
-    font-weight: 700 !important;
-    padding: 8px 4px !important;
-    min-height: 54px !important;
-    height: 54px !important;
-    line-height: 1.35 !important;
-  }
-
-  .parkgolf-app td input,
-  .parkgolf-app .score-table input,
-  td input {
-    min-height: 48px !important;
-    height: 48px !important;
-    font-size: 24px !important;
-    font-weight: 800 !important;
-    padding: 4px !important;
-  }
-
-  .help-text,
-  .guide-text,
-  #qrGuideMessage,
-  #eventCodeLockNote {
-    font-size: 18px !important;
-    line-height: 1.6 !important;
-  }
-}
-
 </style>
 
 
@@ -2033,7 +1285,7 @@ body.modal-open {
 
 <!-- 관리자 도구 버튼 -->
 <div style="margin-top: 40px !important; margin-bottom: 30px !important;">
-<button class="admin-btn" onclick="openAdminModal()" style="width: 100% !important; padding: 18px !important; background: linear-gradient(135deg, #f4b400 0%, #db9200 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">대회 관리자 전용 관리자 도구 열기</button>
+<button class="admin-btn" onclick="document.getElementById('adminModal').style.display='block';" style="width: 100% !important; padding: 18px !important; background: linear-gradient(135deg, #f4b400 0%, #db9200 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">대회 관리자 전용 관리자 도구 열기</button>
 </div>
 
 </div>
@@ -2089,7 +1341,7 @@ body.modal-open {
 <div class="modal-content" style="padding: 0; display: flex; flex-direction: column; max-height: 80vh;">
 <h3 style="text-align: center; margin: 20px 0; padding: 0 20px; color: #1e3c72;">저장된 이름 목록</h3>
 <div id="nameListContainer" style="overflow-y: auto; flex: 1; padding: 0 20px;"></div>
-<div class="modal-content" style="position: relative !important; padding: 15px 20px 20px 20px; background: white; border-top: 1px solid #eee;>
+<div style="padding: 15px 20px 20px 20px; background: white; border-top: 1px solid #eee;">
 <button id="nameListCloseBtn" class="modal-close" type="button" style="margin-top: 0;">닫기</button>
 </div>
 </div>
@@ -3318,8 +2570,10 @@ body.modal-open {
             
             fetch(webAppUrl, {
                 method: 'POST',
-                mode: 'no-cors',
-                headers: {'Content-Type': 'text/plain;charset=utf-8'},
+                mode: 'no-cors', // CORS 문제 해결
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify(data)
             })
             .then(function(response) {
@@ -3444,8 +2698,7 @@ body.modal-open {
             
             const modal = document.getElementById('adminModal');
             if (modal) {
-                modal.classList.add('show');
-                modal.style.display = 'flex';
+                modal.style.display = 'block';
                 console.log('모달 표시됨');
             } else {
                 console.error('adminModal을 찾을 수 없습니다');
@@ -3453,41 +2706,8 @@ body.modal-open {
         };
 
         window.closeAdminModal = function() {
-            const m=document.getElementById('adminModal'); if(m){m.classList.remove('show'); m.style.display='none';}
+            document.getElementById('adminModal').style.display = 'none';
         };
-
-        // ✅ 모달 닫기 버튼/바깥 클릭/ESC 닫기 (최종 패치)
-        (function() {
-          var modal = document.getElementById('adminModal');
-          if (!modal) return;
-
-          // 닫기 버튼
-          var btn = document.getElementById('adminModalCloseBtn');
-          if (btn) {
-            btn.addEventListener('click', function(e){
-              e.preventDefault();
-              if (window.closeAdminModal) window.closeAdminModal();
-              else modal.style.display = 'none';
-            });
-          }
-
-          // 바깥(오버레이) 클릭 닫기
-          modal.addEventListener('click', function(e){
-            if (e.target === modal) {
-              if (window.closeAdminModal) window.closeAdminModal();
-              else modal.style.display = 'none';
-            }
-          });
-
-          // ESC 키 닫기
-          document.addEventListener('keydown', function(e){
-            if (e.key === 'Escape' && modal.style.display !== 'none') {
-              if (window.closeAdminModal) window.closeAdminModal();
-              else modal.style.display = 'none';
-            }
-          });
-        })();
-
 
         window.saveWebAppUrl = function() {
             const url = document.getElementById('webAppUrl').value.trim();
@@ -3543,15 +2763,7 @@ body.modal-open {
             // 기존 QR 코드 제거
             qrContainer.innerHTML = '';
             
-            if (typeof QRCode === 'undefined') {
-        ensureQRCodeLib(function(ok){
-            if (ok) { generateQRCodeWithParams(); }
-            else { qc.innerHTML = '<p style="color:#dc3545;">QR 코드 라이브러리를 불러올 수 없습니다. (인터넷 연결 확인)</p>'; }
-        });
-        return;
-    }
-
-    if (typeof QRCode !== 'undefined') {
+            if (typeof QRCode !== 'undefined') {
                 new QRCode(qrContainer, {
                     text: currentUrl,
                     width: 512,              // 256 → 512로 증가
@@ -3633,7 +2845,9 @@ function executeTeamAssignment() {
         fetch(webAppUrl, {
             method: 'POST',
             mode: 'no-cors',
-            headers: {'Content-Type': 'text/plain;charset=utf-8'},
+            headers: {
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify({
                 action: 'teamAssignment',
                 playersPerTeam: playersPerTeam
@@ -3691,25 +2905,11 @@ function generateQRCodeWithParams() {
         return;
     }
     
-    // 현재 페이지 URL에 파라미터 추가 (✅ 짧은 파라미터 사용: e, w)
+    // 현재 페이지 URL에 파라미터 추가
     var baseUrl = window.location.origin + window.location.pathname;
-
-    // ✅ webAppUrl은 매우 길어서 QR이 촘촘해져 스캔이 어려울 수 있습니다.
-    //    그래서 URL에서 "배포ID"만 추출해 w 파라미터로 넣고, 스캔 후 자동으로 /exec URL로 복원합니다.
-    var deployId = '';
-    try {
-        var m = webAppUrl.match(/\/s\/([^\/]+)\//);
-        if (m && m[1]) deployId = m[1];
-    } catch(e) {}
-
-    var wValue = deployId || webAppUrl;
-    var qrUrl = baseUrl + '?e=' + encodeURIComponent(eventCode) + '&w=' + encodeURIComponent(wValue);
-
-    // 화면에 QR에 포함된 주소 표시 + 복사 기능용 저장
-    window.__latestQrUrl = qrUrl;
-    var qrUrlTextEl = document.getElementById('qrUrlText');
-    if (qrUrlTextEl) qrUrlTextEl.textContent = qrUrl;
-// QR 코드 생성
+    var qrUrl = baseUrl + '?eventCode=' + encodeURIComponent(eventCode) + '&webAppUrl=' + encodeURIComponent(webAppUrl);
+    
+    // QR 코드 생성
     var qc = document.getElementById('qrcode');
     qc.innerHTML = '';
     
@@ -3758,27 +2958,13 @@ function generateQRCodeWithParams() {
             var cx = finalCanvas.width  / 2;
             var cy = finalCanvas.height / 2;
 
-            // ✅ 대회코드 길이에 따라 글자/박스 크기를 자동 조절 (중앙 가림 최소화)
-            var baseFont = Math.floor(size * 0.070);
-            var fontSize = baseFont;
-
-            // 너무 긴 코드면 글자를 줄임
-            if (eventCode.length >= 14) fontSize = Math.floor(baseFont * 0.78);
-            if (eventCode.length >= 18) fontSize = Math.floor(baseFont * 0.68);
-
-            // 최소/최대 안전 범위
-            fontSize = Math.max(22, Math.min(fontSize, 44));
-
+            var fontSize = Math.floor(size * 0.068);
             ctx.font = 'bold ' + fontSize + 'px Arial, sans-serif';
             var textWidth = ctx.measureText(eventCode).width;
+            var boxW = textWidth + 32;
+            var boxH = fontSize + 20;
 
-            // 박스 패딩도 글자 크기에 비례
-            var padX = Math.max(18, Math.floor(fontSize * 0.9));
-            var padY = Math.max(14, Math.floor(fontSize * 0.65));
-
-            var boxW = textWidth + padX * 2;
-            var boxH = fontSize + padY * 2;
-// 흰 배경 박스 (둥근 모서리 효과)
+            // 흰 배경 박스 (둥근 모서리 효과)
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(cx - boxW / 2 - 2, cy - boxH / 2 - 2, boxW + 4, boxH + 4);
 
@@ -3810,86 +2996,6 @@ function generateQRCodeWithParams() {
     } else {
         qc.innerHTML = '<p style="color:#dc3545;">QR 코드 라이브러리를 불러올 수 없습니다.</p>';
     }
-}
-
-
-// ==================== QR 도우미 (URL 복사 / PNG 저장) ====================
-window.__latestQrUrl = window.__latestQrUrl || '';
-
-window.__qrLibLoading = false;
-window.__qrLibLoaded = false;
-
-function ensureQRCodeLib(cb) {
-    if (typeof QRCode !== 'undefined') { window.__qrLibLoaded = true; cb(true); return; }
-    if (window.__qrLibLoading) { setTimeout(function(){ ensureQRCodeLib(cb); }, 150); return; }
-    window.__qrLibLoading = true;
-
-    var urls = [
-        'https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js',
-        'https://unpkg.com/qrcodejs@1.0.0/qrcode.min.js'
-    ];
-
-    (function tryLoad(i){
-        if (i >= urls.length) { window.__qrLibLoading = false; cb(false); return; }
-        var s = document.createElement('script');
-        s.src = urls[i];
-        s.onload = function(){ window.__qrLibLoading = false; window.__qrLibLoaded = true; cb(true); };
-        s.onerror = function(){ tryLoad(i+1); };
-        document.head.appendChild(s);
-    })(0);
-}
-
-function copyQrUrl() {
-    if (!window.__latestQrUrl) {
-        alert('먼저 QR코드를 생성해주세요.');
-        return;
-    }
-    var text = window.__latestQrUrl;
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(function() {
-            showToast('✅ QR 주소가 복사되었습니다!');
-        }).catch(function() {
-            fallbackCopyText(text);
-        });
-    } else {
-        fallbackCopyText(text);
-    }
-}
-
-function fallbackCopyText(text) {
-    var ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.left = '-9999px';
-    document.body.appendChild(ta);
-    ta.select();
-    try { document.execCommand('copy'); } catch(e) {}
-    document.body.removeChild(ta);
-    showToast('✅ QR 주소가 복사되었습니다!');
-}
-
-function downloadQRCodeImage() {
-    var qrcodeDiv = document.getElementById('qrcode');
-    if (!qrcodeDiv) return;
-
-    var canvas = qrcodeDiv.querySelector('canvas');
-    if (!canvas) {
-        alert('먼저 QR코드를 생성해주세요.');
-        return;
-    }
-
-    var dataUrl = canvas.toDataURL('image/png');
-
-    // iOS Safari는 download가 막힐 수 있어 새 창으로도 열어줌
-    var a = document.createElement('a');
-    a.href = dataUrl;
-    a.download = 'pasis_sv3_qr.png';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-
-    // 보조: 새 창 열기(아이폰에서 길게 눌러 저장)
-    try { window.open(dataUrl, '_blank'); } catch(e) {}
 }
 
 window.qrModeActive = false;
@@ -3926,18 +3032,10 @@ function requireQrBeforeSend() {
 // URL 파라미터 읽기 및 자동 설정
 function loadUrlParams() {
     var urlParams = new URLSearchParams(window.location.search);
-
-    // ✅ 신규(짧은) 파라미터 + 구버전 파라미터 모두 지원
-    var eventCode = urlParams.get('e') || urlParams.get('eventCode');
-    var wParam   = urlParams.get('w') || urlParams.get('webAppUrl'); // w = 배포ID 또는 전체 URL
-
-    // w가 "배포ID"만 들어온 경우(길고 스크립트 도메인 없는 경우) 전체 URL로 복원
-    var webAppUrl = wParam;
-    if (webAppUrl && !webAppUrl.includes('script.google.com')) {
-        webAppUrl = 'https://script.google.com/macros/s/' + webAppUrl + '/exec';
-    }
-
-if (eventCode) {
+    var eventCode = urlParams.get('eventCode');
+    var webAppUrl = urlParams.get('webAppUrl');
+    
+    if (eventCode) {
         var eventCodeInput = document.getElementById('eventCodeInput');
         if (eventCodeInput) {
             eventCodeInput.value = eventCode;
@@ -3982,14 +3080,8 @@ function saveURL() {
 </div>
 
 <!-- 관리자 도구 모달 (parkgolf-app 밖에 배치) -->
-<div id="adminModal" class="modal-overlay">
-<div id="adminModalContent" class="modal-content">
-  <button type="button" id="adminModalCloseBtn" aria-label="닫기" style="
-    position: absolute; top: 10px; right: 10px;
-    width: 44px; height: 44px; border-radius: 12px;
-    border: 1px solid #d0d7de; background: #fff;
-    font-size: 22px; line-height: 1; cursor: pointer;">✕</button>
-
+<div id="adminModal" style="display: none !important; position: fixed !important; z-index: 99999 !important; left: 0 !important; top: 0 !important; width: 100% !important; height: 100% !important; background: rgba(0, 0, 0, 0.6) !important; overflow: auto !important; padding: 20px !important;">
+<div style="background: white !important; margin: 50px auto !important; padding: 30px !important; border-radius: 12px !important; max-width: 800px !important; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;">
 <h3 style="text-align: center !important; color: #1e3c72 !important; margin-bottom: 25px !important; font-size: 22px !important; font-weight: 900 !important;">대회 관리자 전용 관리자 도구 열기</h3>
 
 <!-- 웹앱 URL 설정 섹션 -->
@@ -4075,19 +3167,7 @@ Apps Script 배포 후 생성된 웹앱 URL을 입력하세요.
 <p style="margin: 5px 0 !important;">1. 이 QR코드를 스캔하면 점수 입력 페이지가 열립니다</p>
 <p style="margin: 5px 0 !important;">2. 대회 코드와 웹앱 URL이 자동으로 설정됩니다</p>
 <p style="margin: 5px 0 !important;">3. 기록자가 바로 점수를 입력하고 전송할 수 있습니다</p>
-<p style="margin: 10px 0 6px 0 !important; font-weight: 800 !important; color:#343a40 !important;">🔎 QR에 들어가는 주소</p>
-<div id="qrUrlText" style="word-break: break-all !important; background:#ffffff !important; border:1px solid #ced4da !important; padding:8px 10px !important; border-radius:6px !important; font-size:12px !important; color:#212529 !important;">(QR 생성 후 여기에 표시됩니다)</div>
-</div></div>
-
-<div style="display:flex !important; gap:10px !important; justify-content:center !important; flex-wrap:wrap !important; margin-top:12px !important;">
-  <button type="button" onclick="copyQrUrl()" style="padding:12px 14px !important; background:#1565c0 !important; color:#fff !important; border:none !important; border-radius:8px !important; font-weight:900 !important; cursor:pointer !important;">🔗 URL 복사</button>
-  <button type="button" onclick="downloadQRCodeImage()" style="padding:12px 14px !important; background:#2e7d32 !important; color:#fff !important; border:none !important; border-radius:8px !important; font-weight:900 !important; cursor:pointer !important;">🖼️ QR PNG 저장</button>
 </div>
-
-<div style="margin-top:10px !important; font-size:12px !important; color:#6c757d !important; line-height:1.5 !important;">
-  ※ 아이폰은 “저장” 대신 이미지가 새 창에 뜰 수 있습니다. 그때는 이미지를 길게 눌러 ‘사진에 저장’ 하세요.
-</div>
-
 </div>
 </div>
 </div>
@@ -4097,96 +3177,3 @@ Apps Script 배포 후 생성된 웹앱 URL을 입력하세요.
 </div>
 
 <p data-ke-size="size16">&nbsp;</p>
-
-<script>
-/* ===== 모달 배경 스크롤 잠금/복원 ===== */
-(function() {
-  var _scrollY = 0;
-
-  window.__lockBodyScrollForModal = function() {
-    try {
-      _scrollY = window.scrollY || window.pageYOffset || 0;
-      document.body.classList.add('modal-open');
-      document.body.style.position = 'fixed';
-      document.body.style.top = (-_scrollY) + 'px';
-      document.body.style.left = '0';
-      document.body.style.right = '0';
-      document.body.style.width = '100%';
-    } catch (e) {}
-  };
-
-  window.__unlockBodyScrollForModal = function() {
-    try {
-      document.body.classList.remove('modal-open');
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.left = '';
-      document.body.style.right = '';
-      document.body.style.width = '';
-      window.scrollTo(0, _scrollY);
-    } catch (e) {}
-  };
-
-  // adminModal이 열릴 때/닫힐 때 자동 적용 (표준 함수명이 있을 경우 우선 적용)
-  var openNames = ['openAdminModal', 'showAdminModal', 'openAdminTool', 'openAdminToolModal'];
-  var closeNames = ['closeAdminModal', 'hideAdminModal', 'closeAdminTool', 'closeAdminToolModal'];
-
-  openNames.forEach(function(fn) {
-    if (typeof window[fn] === 'function') {
-      var _orig = window[fn];
-      window[fn] = function() {
-        var r = _orig.apply(this, arguments);
-        window.__lockBodyScrollForModal();
-        return r;
-      };
-    }
-  });
-
-  closeNames.forEach(function(fn) {
-    if (typeof window[fn] === 'function') {
-      var _orig = window[fn];
-      window[fn] = function() {
-        var r = _orig.apply(this, arguments);
-        window.__unlockBodyScrollForModal();
-        return r;
-      };
-    }
-  });
-
-  // 안전장치: adminModal display가 flex로 바뀌면 잠금, none이면 해제
-  try {
-    var modal = document.getElementById('adminModal');
-    if (modal) {
-      var obs = new MutationObserver(function() {
-        var d = (modal.style && modal.style.display) ? modal.style.display : '';
-        if (d && d !== 'none') window.__lockBodyScrollForModal();
-        if (d === 'none') window.__unlockBodyScrollForModal();
-      });
-      obs.observe(modal, { attributes: true, attributeFilter: ['style'] });
-    }
-  } catch (e) {}
-})();
-</script>
-
-
-<script>
-/* ===== 점수모달 열림/닫힘에 배경 스크롤 잠금 연동 ===== */
-(function() {
-  function watchModal(id) {
-    try {
-      var modal = document.getElementById(id);
-      if (!modal) return;
-      var obs = new MutationObserver(function() {
-        var d = (modal.style && modal.style.display) ? modal.style.display : '';
-        if (d && d !== 'none') window.__lockBodyScrollForModal && window.__lockBodyScrollForModal();
-        if (d === 'none') window.__unlockBodyScrollForModal && window.__unlockBodyScrollForModal();
-      });
-      obs.observe(modal, { attributes: true, attributeFilter: ['style'] });
-    } catch (e) {}
-  }
-  watchModal('scoreModal');
-})();
-</script>
-
-</body>
-</html>
