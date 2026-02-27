@@ -3469,7 +3469,15 @@ body.modal-open {
             // 기존 QR 코드 제거
             qrContainer.innerHTML = '';
             
-            if (typeof QRCode !== 'undefined') {
+            if (typeof QRCode === 'undefined') {
+        ensureQRCodeLib(function(ok){
+            if (ok) { generateQRCodeWithParams(); }
+            else { qc.innerHTML = '<p style="color:#dc3545;">QR 코드 라이브러리를 불러올 수 없습니다. (인터넷 연결 확인)</p>'; }
+        });
+        return;
+    }
+
+    if (typeof QRCode !== 'undefined') {
                 new QRCode(qrContainer, {
                     text: currentUrl,
                     width: 512,              // 256 → 512로 증가
@@ -3611,11 +3619,25 @@ function generateQRCodeWithParams() {
         return;
     }
     
-    // 현재 페이지 URL에 파라미터 추가
+    // 현재 페이지 URL에 파라미터 추가 (✅ 짧은 파라미터 사용: e, w)
     var baseUrl = window.location.origin + window.location.pathname;
-    var qrUrl = baseUrl + '?eventCode=' + encodeURIComponent(eventCode) + '&webAppUrl=' + encodeURIComponent(webAppUrl);
-    
-    // QR 코드 생성
+
+    // ✅ webAppUrl은 매우 길어서 QR이 촘촘해져 스캔이 어려울 수 있습니다.
+    //    그래서 URL에서 "배포ID"만 추출해 w 파라미터로 넣고, 스캔 후 자동으로 /exec URL로 복원합니다.
+    var deployId = '';
+    try {
+        var m = webAppUrl.match(/\/s\/([^\/]+)\//);
+        if (m && m[1]) deployId = m[1];
+    } catch(e) {}
+
+    var wValue = deployId || webAppUrl;
+    var qrUrl = baseUrl + '?e=' + encodeURIComponent(eventCode) + '&w=' + encodeURIComponent(wValue);
+
+    // 화면에 QR에 포함된 주소 표시 + 복사 기능용 저장
+    window.__latestQrUrl = qrUrl;
+    var qrUrlTextEl = document.getElementById('qrUrlText');
+    if (qrUrlTextEl) qrUrlTextEl.textContent = qrUrl;
+// QR 코드 생성
     var qc = document.getElementById('qrcode');
     qc.innerHTML = '';
     
@@ -3664,13 +3686,27 @@ function generateQRCodeWithParams() {
             var cx = finalCanvas.width  / 2;
             var cy = finalCanvas.height / 2;
 
-            var fontSize = Math.floor(size * 0.068);
+            // ✅ 대회코드 길이에 따라 글자/박스 크기를 자동 조절 (중앙 가림 최소화)
+            var baseFont = Math.floor(size * 0.070);
+            var fontSize = baseFont;
+
+            // 너무 긴 코드면 글자를 줄임
+            if (eventCode.length >= 14) fontSize = Math.floor(baseFont * 0.78);
+            if (eventCode.length >= 18) fontSize = Math.floor(baseFont * 0.68);
+
+            // 최소/최대 안전 범위
+            fontSize = Math.max(22, Math.min(fontSize, 44));
+
             ctx.font = 'bold ' + fontSize + 'px Arial, sans-serif';
             var textWidth = ctx.measureText(eventCode).width;
-            var boxW = textWidth + 32;
-            var boxH = fontSize + 20;
 
-            // 흰 배경 박스 (둥근 모서리 효과)
+            // 박스 패딩도 글자 크기에 비례
+            var padX = Math.max(18, Math.floor(fontSize * 0.9));
+            var padY = Math.max(14, Math.floor(fontSize * 0.65));
+
+            var boxW = textWidth + padX * 2;
+            var boxH = fontSize + padY * 2;
+// 흰 배경 박스 (둥근 모서리 효과)
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(cx - boxW / 2 - 2, cy - boxH / 2 - 2, boxW + 4, boxH + 4);
 
@@ -3702,6 +3738,86 @@ function generateQRCodeWithParams() {
     } else {
         qc.innerHTML = '<p style="color:#dc3545;">QR 코드 라이브러리를 불러올 수 없습니다.</p>';
     }
+}
+
+
+// ==================== QR 도우미 (URL 복사 / PNG 저장) ====================
+window.__latestQrUrl = window.__latestQrUrl || '';
+
+window.__qrLibLoading = false;
+window.__qrLibLoaded = false;
+
+function ensureQRCodeLib(cb) {
+    if (typeof QRCode !== 'undefined') { window.__qrLibLoaded = true; cb(true); return; }
+    if (window.__qrLibLoading) { setTimeout(function(){ ensureQRCodeLib(cb); }, 150); return; }
+    window.__qrLibLoading = true;
+
+    var urls = [
+        'https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js',
+        'https://unpkg.com/qrcodejs@1.0.0/qrcode.min.js'
+    ];
+
+    (function tryLoad(i){
+        if (i >= urls.length) { window.__qrLibLoading = false; cb(false); return; }
+        var s = document.createElement('script');
+        s.src = urls[i];
+        s.onload = function(){ window.__qrLibLoading = false; window.__qrLibLoaded = true; cb(true); };
+        s.onerror = function(){ tryLoad(i+1); };
+        document.head.appendChild(s);
+    })(0);
+}
+
+function copyQrUrl() {
+    if (!window.__latestQrUrl) {
+        alert('먼저 QR코드를 생성해주세요.');
+        return;
+    }
+    var text = window.__latestQrUrl;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function() {
+            showToast('✅ QR 주소가 복사되었습니다!');
+        }).catch(function() {
+            fallbackCopyText(text);
+        });
+    } else {
+        fallbackCopyText(text);
+    }
+}
+
+function fallbackCopyText(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); } catch(e) {}
+    document.body.removeChild(ta);
+    showToast('✅ QR 주소가 복사되었습니다!');
+}
+
+function downloadQRCodeImage() {
+    var qrcodeDiv = document.getElementById('qrcode');
+    if (!qrcodeDiv) return;
+
+    var canvas = qrcodeDiv.querySelector('canvas');
+    if (!canvas) {
+        alert('먼저 QR코드를 생성해주세요.');
+        return;
+    }
+
+    var dataUrl = canvas.toDataURL('image/png');
+
+    // iOS Safari는 download가 막힐 수 있어 새 창으로도 열어줌
+    var a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = 'pasis_sv3_qr.png';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    // 보조: 새 창 열기(아이폰에서 길게 눌러 저장)
+    try { window.open(dataUrl, '_blank'); } catch(e) {}
 }
 
 window.qrModeActive = false;
@@ -3738,10 +3854,18 @@ function requireQrBeforeSend() {
 // URL 파라미터 읽기 및 자동 설정
 function loadUrlParams() {
     var urlParams = new URLSearchParams(window.location.search);
-    var eventCode = urlParams.get('eventCode');
-    var webAppUrl = urlParams.get('webAppUrl');
-    
-    if (eventCode) {
+
+    // ✅ 신규(짧은) 파라미터 + 구버전 파라미터 모두 지원
+    var eventCode = urlParams.get('e') || urlParams.get('eventCode');
+    var wParam   = urlParams.get('w') || urlParams.get('webAppUrl'); // w = 배포ID 또는 전체 URL
+
+    // w가 "배포ID"만 들어온 경우(길고 스크립트 도메인 없는 경우) 전체 URL로 복원
+    var webAppUrl = wParam;
+    if (webAppUrl && !webAppUrl.includes('script.google.com')) {
+        webAppUrl = 'https://script.google.com/macros/s/' + webAppUrl + '/exec';
+    }
+
+if (eventCode) {
         var eventCodeInput = document.getElementById('eventCodeInput');
         if (eventCodeInput) {
             eventCodeInput.value = eventCode;
@@ -3873,7 +3997,19 @@ Apps Script 배포 후 생성된 웹앱 URL을 입력하세요.
 <p style="margin: 5px 0 !important;">1. 이 QR코드를 스캔하면 점수 입력 페이지가 열립니다</p>
 <p style="margin: 5px 0 !important;">2. 대회 코드와 웹앱 URL이 자동으로 설정됩니다</p>
 <p style="margin: 5px 0 !important;">3. 기록자가 바로 점수를 입력하고 전송할 수 있습니다</p>
+<p style="margin: 10px 0 6px 0 !important; font-weight: 800 !important; color:#343a40 !important;">🔎 QR에 들어가는 주소</p>
+<div id="qrUrlText" style="word-break: break-all !important; background:#ffffff !important; border:1px solid #ced4da !important; padding:8px 10px !important; border-radius:6px !important; font-size:12px !important; color:#212529 !important;">(QR 생성 후 여기에 표시됩니다)</div>
+</div></div>
+
+<div style="display:flex !important; gap:10px !important; justify-content:center !important; flex-wrap:wrap !important; margin-top:12px !important;">
+  <button type="button" onclick="copyQrUrl()" style="padding:12px 14px !important; background:#1565c0 !important; color:#fff !important; border:none !important; border-radius:8px !important; font-weight:900 !important; cursor:pointer !important;">🔗 URL 복사</button>
+  <button type="button" onclick="downloadQRCodeImage()" style="padding:12px 14px !important; background:#2e7d32 !important; color:#fff !important; border:none !important; border-radius:8px !important; font-weight:900 !important; cursor:pointer !important;">🖼️ QR PNG 저장</button>
 </div>
+
+<div style="margin-top:10px !important; font-size:12px !important; color:#6c757d !important; line-height:1.5 !important;">
+  ※ 아이폰은 “저장” 대신 이미지가 새 창에 뜰 수 있습니다. 그때는 이미지를 길게 눌러 ‘사진에 저장’ 하세요.
+</div>
+
 </div>
 </div>
 </div>
