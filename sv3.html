@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<title>파시스 sv3.0</title>
+<title>파시스 sv3.0 클럽대회용(40명 제한)</title>
 
 <style>
 /* ===== 2.0 기준 모바일 대형화 정밀 패치 ===== */
@@ -3533,47 +3533,61 @@ function toggleTeamAssignment() {
 
 // 조편성 실행
 function executeTeamAssignment() {
-    var playersPerTeam = parseInt(document.getElementById('playersPerTeam').value);
     var webAppUrl = localStorage.getItem('parkgolf_webapp_url');
-    
+    var eventCode = (document.getElementById('eventCodeInput')?.value || '').trim();
+
     if (!webAppUrl) {
         alert('❌ 먼저 웹앱 URL을 설정해주세요!');
         return;
     }
-    
-    if (confirm('접수명단을 기반으로 조편성을 실행합니다.\n\n조당 인원: ' + playersPerTeam + '명\n\n계속하시겠습니까?')) {
-        // 로딩 표시
+    if (!eventCode) {
+        alert('❌ 대회코드(eventCode)가 비어 있습니다.
+
+QR로 들어오거나, 화면 상단의 대회코드를 입력하세요.');
+        return;
+    }
+
+    // Apps Script: /exec?action=makeGroups&eventCode=...
+    var url = webAppUrl;
+    url += (url.indexOf('?') >= 0 ? '&' : '?') + 'action=makeGroups&eventCode=' + encodeURIComponent(eventCode);
+
+    if (confirm('접수명단 출결(P) 기반으로 조편성을 생성합니다.
+(4명씩 자동)
+
+대회코드: ' + eventCode + '
+
+계속하시겠습니까?')) {
         var resultDiv = document.getElementById('teamAssignmentResult');
-        resultDiv.style.display = 'block';
-        resultDiv.innerHTML = '<div style="text-align: center; padding: 20px; color: #00695c;"><strong>⏳ 조편성 진행 중...</strong></div>';
-        
-        // Apps Script로 조편성 요청
-        fetch(webAppUrl, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                action: 'teamAssignment',
-                playersPerTeam: playersPerTeam
-            })
-        })
-        .then(function() {
-            // no-cors 모드에서는 응답을 읽을 수 없으므로 성공으로 간주
-            resultDiv.innerHTML = '<div style="text-align: center; padding: 20px;">' +
-                '<div style="font-size: 18px; font-weight: bold; color: #00897b; margin-bottom: 10px;">✅ 조편성 완료!</div>' +
-                '<div style="font-size: 14px; color: #495057;">스프레드시트의 "조편성" 시트를 확인하세요.</div>' +
-                '</div>';
-        })
-        .catch(function(error) {
-            resultDiv.innerHTML = '<div style="text-align: center; padding: 20px; color: #dc3545;">' +
-                '<strong>❌ 오류 발생</strong><br>' +
-                '<small>' + error.message + '</small>' +
-                '</div>';
-        });
+        if (resultDiv) {
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<div style="text-align:center; padding:20px; color:#00695c; font-weight:900;">⏳ 조편성 생성 요청 중...</div>';
+        }
+
+        // no-cors로 호출(응답 읽지 못함) → 완료 안내만 표시
+        fetch(url, { method: 'GET', mode: 'no-cors' })
+          .then(function() {
+              if (resultDiv) {
+                  resultDiv.innerHTML =
+                      '<div style="text-align:center; padding:18px; border-radius:10px; background:#e8f5e9; border:2px solid #2e7d32;">' +
+                      '<div style="font-weight:900; font-size:18px; color:#1b5e20; margin-bottom:6px;">✅ 조편성 생성 요청 완료</div>' +
+                      '<div style="font-size:14px; color:#1b5e20;">구글시트 <b>조편성</b> 시트를 확인하세요.</div>' +
+                      '</div>';
+              }
+          })
+          .catch(function() {
+              // fetch가 막히면 새 탭으로 열어 실행
+              try { window.open(url, '_blank'); } catch(e) {}
+              if (resultDiv) {
+                  resultDiv.innerHTML =
+                      '<div style="text-align:center; padding:18px; border-radius:10px; background:#fff3cd; border:2px solid #ffb300;">' +
+                      '<div style="font-weight:900; font-size:18px; color:#7a5b00; margin-bottom:6px;">⚠ 브라우저 제한으로 직접 호출이 차단될 수 있습니다</div>' +
+                      '<div style="font-size:14px; color:#7a5b00;">새 탭으로 실행을 시도했습니다. 완료 후 <b>조편성</b> 시트를 확인하세요.</div>' +
+                      '</div>';
+              }
+          });
     }
 }
+
 
 // QR코드 생성 함수
 // QR 섹션 토글
@@ -3593,35 +3607,76 @@ function toggleQRSection() {
 
 // 파라미터 포함한 QR 코드 생성
 function generateQRCodeWithParams() {
-    var eventCode = document.getElementById('qrEventCode').value.trim();
-    var webAppUrl = document.getElementById('qrWebAppUrl').value.trim();
-    
+    var eventCode = (document.getElementById('qrEventCode')?.value || '').trim();
+    var webAppUrl = (document.getElementById('qrWebAppUrl')?.value || '').trim();
+
+    // 결과 영역 먼저 열기(라이브러리 미로딩이어도 "무응답"처럼 보이지 않게)
+    var display = document.getElementById('qrcodeDisplay');
+    if (display) display.style.display = 'block';
+
+    var qc = document.getElementById('qrcode');
+    if (qc) qc.innerHTML = '<div style="padding:10px; font-weight:700;">QR 생성 준비 중...</div>';
+
     if (!eventCode) {
         alert('대회 코드를 입력해주세요.');
+        if (qc) qc.innerHTML = '<p style="color:#dc3545; font-weight:700;">대회 코드를 입력해주세요.</p>';
         return;
     }
-    
+
     if (!webAppUrl) {
         alert('웹앱 URL을 입력해주세요.');
+        if (qc) qc.innerHTML = '<p style="color:#dc3545; font-weight:700;">웹앱 URL을 입력해주세요.</p>';
         return;
     }
-    
+
     if (!webAppUrl.includes('script.google.com')) {
         alert('올바른 Google Apps Script 웹앱 URL을 입력해주세요.');
+        if (qc) qc.innerHTML = '<p style="color:#dc3545; font-weight:700;">올바른 Google Apps Script 웹앱 URL이 아닙니다.</p>';
         return;
     }
-    
+
     // 현재 페이지 URL에 파라미터 추가
     var baseUrl = window.location.origin + window.location.pathname;
     var qrUrl = baseUrl + '?eventCode=' + encodeURIComponent(eventCode) + '&webAppUrl=' + encodeURIComponent(webAppUrl);
-    
-    // QR 코드 생성
-    var qc = document.getElementById('qrcode');
-    qc.innerHTML = '';
-    
-    if (typeof QRCode !== 'undefined') {
 
-        // 1단계: 숨겨진 임시 div에 QR 코드 생성
+    // QR 라이브러리 로더(모바일/현장 LTE에서 jsdelivr가 막히는 경우 대비)
+    function ensureQRCodeLib(cb) {
+        if (typeof QRCode !== 'undefined') { cb(true); return; }
+
+        // 1) 이미 로드 시도 중이면 잠시 기다림
+        if (window.__qrLibLoading) {
+            setTimeout(function(){ cb(typeof QRCode !== 'undefined'); }, 300);
+            return;
+        }
+        window.__qrLibLoading = true;
+
+        // 2) 대체 CDN 로드
+        var s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+        s.async = true;
+        s.onload = function() { cb(true); };
+        s.onerror = function() { cb(false); };
+        document.head.appendChild(s);
+    }
+
+    ensureQRCodeLib(function(ok){
+        if (!ok || typeof QRCode === 'undefined') {
+            // 라이브러리가 안되면 "그대로 링크"를 보여주고 복사하도록 유도
+            if (qc) {
+                qc.innerHTML =
+                    '<div style="padding:12px; border:2px dashed #dc3545; border-radius:10px; background:#fff5f5;">' +
+                    '<div style="font-weight:900; color:#b71c1c; margin-bottom:8px;">⚠ QR 라이브러리를 불러오지 못했습니다.</div>' +
+                    '<div style="font-size:14px; line-height:1.4; margin-bottom:8px;">네트워크(LTE/와이파이) 상태에서 다시 시도하거나, 아래 주소를 복사해 사용하세요.</div>' +
+                    '<textarea readonly style="width:100%; height:84px; font-size:13px; padding:10px; border-radius:8px; border:1px solid #ddd;">' + qrUrl + '</textarea>' +
+                    '</div>';
+            }
+            return;
+        }
+
+        // 정상 QR 생성(중앙 대회코드 합성)
+        if (qc) qc.innerHTML = '';
+
+        // 숨겨진 임시 div에 QR 코드 생성
         var tempDiv = document.createElement('div');
         tempDiv.style.position = 'absolute';
         tempDiv.style.left = '-9999px';
@@ -3636,31 +3691,30 @@ function generateQRCodeWithParams() {
             correctLevel: QRCode.CorrectLevel.H
         });
 
-        // 2단계: QRCode.js 렌더링 완료 후 canvas에 텍스트 합성
+        // QRCode.js 렌더링 완료 후 canvas 합성
         setTimeout(function() {
             var srcCanvas = tempDiv.querySelector('canvas');
             if (!srcCanvas) {
                 document.body.removeChild(tempDiv);
-                qc.innerHTML = '<p style="color:#dc3545;">QR 코드 생성 실패</p>';
+                if (qc) qc.innerHTML = '<p style="color:#dc3545; font-weight:900;">QR 코드 생성 실패</p>';
                 return;
             }
 
-            // 3단계: 최종 출력용 새 canvas 생성
             var finalCanvas = document.createElement('canvas');
-            var padding = 30;                       // 흰 여백
+            var padding = 30;
             var size = srcCanvas.width;
             finalCanvas.width  = size + padding * 2;
             finalCanvas.height = size + padding * 2;
             var ctx = finalCanvas.getContext('2d');
 
-            // 4단계: 흰 배경
+            // 흰 배경
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
 
-            // 5단계: QR 이미지 복사
+            // QR 이미지
             ctx.drawImage(srcCanvas, padding, padding);
 
-            // 6단계: 중앙에 대회코드 박스 + 텍스트
+            // 중앙 박스 + 텍스트(대회코드)
             var cx = finalCanvas.width  / 2;
             var cy = finalCanvas.height / 2;
 
@@ -3670,38 +3724,29 @@ function generateQRCodeWithParams() {
             var boxW = textWidth + 32;
             var boxH = fontSize + 20;
 
-            // 흰 배경 박스 (둥근 모서리 효과)
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(cx - boxW / 2 - 2, cy - boxH / 2 - 2, boxW + 4, boxH + 4);
 
-            // 청록색 테두리
             ctx.strokeStyle = '#00897b';
             ctx.lineWidth = 4;
             ctx.strokeRect(cx - boxW / 2, cy - boxH / 2, boxW, boxH);
 
-            // 대회코드 텍스트
             ctx.fillStyle = '#004d40';
             ctx.font = 'bold ' + fontSize + 'px Arial, sans-serif';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText(eventCode, cx, cy);
 
-            // 7단계: 최종 canvas를 화면에 표시
-            qc.innerHTML = '';
-            finalCanvas.style.maxWidth = '100%';
-            finalCanvas.style.borderRadius = '8px';
-            qc.appendChild(finalCanvas);
+            if (qc) {
+                qc.innerHTML = '';
+                finalCanvas.style.maxWidth = '100%';
+                finalCanvas.style.borderRadius = '8px';
+                qc.appendChild(finalCanvas);
+            }
 
-            // 8단계: 임시 div 제거
             document.body.removeChild(tempDiv);
-
-            document.getElementById('qrcodeDisplay').style.display = 'block';
-
-        }, 300);
-
-    } else {
-        qc.innerHTML = '<p style="color:#dc3545;">QR 코드 라이브러리를 불러올 수 없습니다.</p>';
-    }
+        }, 350);
+    });
 }
 
 window.qrModeActive = false;
@@ -3852,7 +3897,20 @@ Apps Script 배포 후 생성된 웹앱 URL을 입력하세요.
 <!-- QR 섹션 -->
 <div id="qrSection" style="display: none !important; margin-bottom: 20px !important;">
 <div style="background: #f8f9fa !important; padding: 20px !important; border-radius: 8px !important;">
-<h4 style="color: #495057 !important; margin-bottom: 15px !important; font-size: 17px !important; font-weight: 700 !important; text-align: center !important;">QR코드 설정</h4>
+<h4 style="color: #495057 !important; margin-bottom: 15px !important; font-size: 17px !important; font-weight: 700 !important; text-align: center !important;">
+<!-- 순위집계 섹션(40명까지) -->
+<div style="background:#f8f9fa !important; padding:18px !important; border-radius:10px !important; border:2px solid #e9ecef !important; margin-bottom:18px !important;">
+  <div style="font-size:16px !important; font-weight:900 !important; color:#1f2937 !important; margin-bottom:8px !important;">🏆 순위집계 (무료: 대회당 40명까지 자동)</div>
+  <div style="font-size:13px !important; color:#4b5563 !important; line-height:1.45 !important; margin-bottom:12px !important;">
+    • 전송/저장은 인원 제한 없이 됩니다.<br>
+    • <b>40명 초과</b> 시에는 자동 순위집계만 제한됩니다(관리자가 수동 집계 가능).
+  </div>
+  <button onclick="executeMakeRank()" style="width:100% !important; padding:16px !important; background:#0d47a1 !important; color:white !important; border:none !important; border-radius:10px !important; font-size:18px !important; font-weight:900 !important; cursor:pointer !important;">
+    🏆 순위집계 생성(관리자)
+  </button>
+  <div id="makeRankResult" style="display:none !important; margin-top:12px !important;"></div>
+</div>
+QR코드 설정</h4>
 
 <div style="margin-bottom: 15px !important;">
 <label style="display: block !important; margin-bottom: 5px !important; color: #495057 !important; font-size: 14px !important; font-weight: 600 !important;">대회 코드</label>
@@ -3972,6 +4030,45 @@ Apps Script 배포 후 생성된 웹앱 URL을 입력하세요.
   }
   watchModal('scoreModal');
 })();
+
+function executeMakeRank() {
+    var webAppUrl = localStorage.getItem('parkgolf_webapp_url');
+    var eventCode = (document.getElementById('eventCodeInput')?.value || '').trim();
+    var resultDiv = document.getElementById('makeRankResult');
+
+    if (!webAppUrl) { alert('❌ 먼저 웹앱 URL을 설정해주세요!'); return; }
+    if (!eventCode) { alert('❌ 대회코드(eventCode)가 비어 있습니다.\n\nQR로 들어오거나, 화면 상단의 대회코드를 입력하세요.'); return; }
+
+    var url = webAppUrl;
+    url += (url.indexOf('?') >= 0 ? '&' : '?') + 'action=makeRank&eventCode=' + encodeURIComponent(eventCode);
+
+    if (resultDiv) {
+        resultDiv.style.display = 'block';
+        resultDiv.innerHTML = '<div style="text-align:center; padding:18px; color:#0d47a1; font-weight:900;">⏳ 순위집계 생성 요청 중...</div>';
+    }
+
+    fetch(url, { method:'GET', mode:'no-cors' })
+      .then(function(){
+          if (resultDiv) {
+              resultDiv.innerHTML =
+                '<div style="text-align:center; padding:18px; border-radius:10px; background:#e3f2fd; border:2px solid #1565c0;">' +
+                '<div style="font-weight:900; font-size:18px; color:#0d47a1; margin-bottom:6px;">✅ 순위집계 생성 요청 완료</div>' +
+                '<div style="font-size:14px; color:#0d47a1;">구글시트 <b>순위집계</b> 시트를 확인하세요.</div>' +
+                '</div>';
+          }
+      })
+      .catch(function(){
+          try { window.open(url, '_blank'); } catch(e) {}
+          if (resultDiv) {
+              resultDiv.innerHTML =
+                '<div style="text-align:center; padding:18px; border-radius:10px; background:#fff3cd; border:2px solid #ffb300;">' +
+                '<div style="font-weight:900; font-size:18px; color:#7a5b00; margin-bottom:6px;">⚠ 브라우저 제한으로 직접 호출이 차단될 수 있습니다</div>' +
+                '<div style="font-size:14px; color:#7a5b00;">새 탭으로 실행을 시도했습니다. 완료 후 <b>순위집계</b> 시트를 확인하세요.</div>' +
+                '</div>';
+          }
+      });
+}
+
 </script>
 
 </body>
