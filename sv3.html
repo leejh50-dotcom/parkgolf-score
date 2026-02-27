@@ -3770,15 +3770,15 @@ function loadUrlParams() {
 function saveURL() {
     var url = document.getElementById('webAppUrl').value.trim();
     if (!url) {
-        alert('URL을 입력해주세요.');
+        (typeof showToast==='function'?showToast('URL을 입력해주세요.'):alert('URL을 입력해주세요.'));
         return;
     }
     if (!url.includes('script.google.com')) {
-        alert('올바른 Google Apps Script 웹앱 URL을 입력해주세요.');
+        (typeof showToast==='function'?showToast('올바른 Google Apps Script 웹앱 URL을 입력해주세요.'):alert('올바른 Google Apps Script 웹앱 URL을 입력해주세요.'));
         return;
     }
     localStorage.setItem('parkgolf_webapp_url', url);
-    alert('URL이 저장되었습니다!');
+    (typeof showToast==='function'?showToast('✅ URL이 저장되었습니다!'):alert('URL이 저장되었습니다!'));
 }
 </script>
 </div>
@@ -3788,6 +3788,7 @@ function saveURL() {
 <div id="adminModal" style="display: none !important; position: fixed !important; z-index: 99999 !important; left: 0 !important; top: 0 !important; width: 100% !important; height: 100% !important; background: rgba(0, 0, 0, 0.6) !important; overflow: auto !important; padding: 20px !important;">
 <div style="background: white !important; margin: 50px auto !important; padding: 30px !important; border-radius: 12px !important; max-width: 800px !important; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;">
 <h3 style="text-align: center !important; color: #1e3c72 !important; margin-bottom: 25px !important; font-size: 22px !important; font-weight: 900 !important;">대회 관리자 전용 관리자 도구 열기</h3>
+<div style=\"margin:-8px 0 14px 0; font-size:12px; color:#6c757d;\">패치 확인표시: <b>ADMIN-PATCH v3</b> (이 글자가 보이면 최신 파일입니다)</div>
 
 <!-- 웹앱 URL 설정 섹션 -->
 <div style="background: #f8f9fa !important; padding: 20px !important; border-radius: 8px !important; margin-bottom: 20px !important;">
@@ -4010,6 +4011,26 @@ Apps Script 배포 후 생성된 웹앱 URL을 입력하세요.
 #adminModal { pointer-events:auto !important; }
 #adminModal * { pointer-events:auto !important; }
 </style>
+
+
+<script>
+// === ADMIN 모달 버튼 탭 감지용(진단) ===
+document.addEventListener('DOMContentLoaded', function() {
+  var m = document.getElementById('adminModal');
+  if (!m) return;
+  // 캡처 단계에서 먼저 잡아서, 어떤 경우든 '클릭이 들어오는지' 확인
+  m.addEventListener('click', function(e){
+    var t = e.target;
+    // 버튼 또는 버튼처럼 생긴 요소
+    if (t && (t.tagName === 'BUTTON' || t.closest('button'))) {
+      var btn = t.tagName === 'BUTTON' ? t : t.closest('button');
+      var label = (btn.innerText || btn.textContent || '').trim().slice(0, 30);
+      if (typeof showToast === 'function') showToast('버튼 클릭 감지: ' + (label || '(빈라벨)'));
+      console.log('[ADMIN] button click:', label);
+    }
+  }, true);
+});
+</script>
 
 </body>
 </html>
