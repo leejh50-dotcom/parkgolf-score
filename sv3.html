@@ -1,7 +1,344 @@
-<p data-ke-size="size16">클럽대회용 sv3.0 스텐다드</p>
+<!doctype html>
+<html lang="ko">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>파시스 sv3.0</title>
+
+<style>
+/* ===== 2.0 기준 모바일 대형화 정밀 패치 ===== */
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+  -webkit-text-size-adjust: 100% !important;
+}
+
+.parkgolf-app, .parkgolf-app * { box-sizing: border-box !important; }
+
+@media (max-width: 768px) {
+  .parkgolf-app {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin: 0 auto !important;
+  }
+
+  .parkgolf-app .container,
+  .container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+    margin: 0 !important;
+  }
+
+  /* 상단 입력부 */
+  .parkgolf-app input[type="text"],
+  .parkgolf-app input[type="date"],
+  .parkgolf-app select,
+  .parkgolf-app textarea {
+    min-height: 58px !important;
+    font-size: 22px !important;
+    font-weight: 700 !important;
+    padding: 12px 14px !important;
+    border-radius: 10px !important;
+  }
+
+  #eventCodeInput, #teamNameInput, #eventNameInput, #locationInput {
+    min-height: 58px !important;
+    font-size: 22px !important;
+    font-weight: 700 !important;
+  }
+
+  /* 제목/섹션 */
+  .parkgolf-app h1,
+  .parkgolf-app .main-title,
+  .parkgolf-app .section-title,
+  .parkgolf-app .player-title,
+  .parkgolf-app .summary-title {
+    font-size: 28px !important;
+    line-height: 1.35 !important;
+    margin-bottom: 12px !important;
+    font-weight: 800 !important;
+  }
+
+  .parkgolf-app .section,
+  .parkgolf-app .score-section,
+  .parkgolf-app .button-section,
+  .parkgolf-app .player-card,
+  .parkgolf-app .summary-card {
+    padding: 12px !important;
+    margin-bottom: 14px !important;
+    border-radius: 12px !important;
+  }
+
+  /* 버튼 */
+  .parkgolf-app button,
+  .parkgolf-app .sheet-btn,
+  .parkgolf-app .action-btn {
+    min-height: 60px !important;
+    font-size: 21px !important;
+    font-weight: 800 !important;
+    padding: 12px 14px !important;
+    border-radius: 10px !important;
+  }
+
+  .parkgolf-app .course-btn,
+  .parkgolf-app .save-btn,
+  .parkgolf-app .load-btn,
+  .parkgolf-app .clear-btn {
+    min-height: 64px !important;
+    font-size: 21px !important;
+  }
+
+  /* 점수표: 2.0 감각으로 확대 */
+  .parkgolf-app .course-table,
+  .parkgolf-app .score-table,
+  .parkgolf-app .summary-table-new {
+    width: 100% !important;
+    table-layout: fixed !important;
+  }
+
+  .parkgolf-app .course-table thead th {
+    font-size: 16px !important;
+    padding: 10px 2px !important;
+    white-space: nowrap !important;
+  }
+
+  .parkgolf-app .course-table thead th:nth-child(1),
+  .parkgolf-app .course-table thead th:nth-child(2),
+  .parkgolf-app .hole-cell,
+  .parkgolf-app .par-cell {
+    width: 34px !important;
+    min-width: 34px !important;
+    max-width: 34px !important;
+    font-size: 16px !important;
+  }
+
+  .parkgolf-app .score-cell {
+    width: calc((100% - 68px) / 4) !important;
+    min-width: 92px !important;
+    max-width: none !important;
+  }
+
+  .parkgolf-app .score-input,
+  .parkgolf-app .course-table input,
+  .parkgolf-app .score-table input,
+  .parkgolf-app td input[type="number"],
+  .parkgolf-app td input[type="text"] {
+    min-height: 46px !important;
+    height: 46px !important;
+    font-size: 24px !important;
+    font-weight: 800 !important;
+    padding: 4px !important;
+    text-align: center !important;
+  }
+
+  .parkgolf-app .course-table td,
+  .parkgolf-app .score-table td {
+    min-height: 52px !important;
+    height: 52px !important;
+    font-size: 20px !important;
+    padding: 6px 2px !important;
+  }
+
+  /* 요약표 */
+  .parkgolf-app .summary-table-new th:first-child,
+  .parkgolf-app .summary-table-new td:first-child {
+    width: 42px !important;
+    min-width: 42px !important;
+    max-width: 42px !important;
+    padding: 8px 0 !important;
+  }
+
+  .parkgolf-app .summary-table-new th,
+  .parkgolf-app .summary-table-new td {
+    font-size: 15px !important;
+    padding: 8px 2px !important;
+  }
+
+  .parkgolf-app .summary-table-new th:not(:first-child),
+  .parkgolf-app .summary-table-new td:not(:first-child) {
+    min-width: 108px !important;
+  }
+
+  /* 선수명/안내문 */
+  .parkgolf-app .player-name-col,
+  .parkgolf-app .player-name,
+  .parkgolf-app .team-input {
+    font-size: 20px !important;
+    font-weight: 700 !important;
+  }
+
+  #qrGuideMessage,
+  #eventCodeLockNote {
+    font-size: 16px !important;
+    line-height: 1.5 !important;
+  }
+}
+</style>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="파시스 sv3.0">
+<link rel="manifest" href="manifest-sv3.json">
+<link rel="apple-touch-icon" sizes="180x180" href="sv3-180-v2.png">
+<link rel="icon" type="image/png" sizes="192x192" href="sv3-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="sv3-512.png">
+<meta name="theme-color" content="#0f9d58">
+<style>
+/* ===== 모달 가운데 정렬 보정 ===== */
+#adminModal, .modal {
+  left: 0 !important;
+  right: 0 !important;
+  margin: 0 auto !important;
+}
+#adminModal .modal-content, .modal .modal-content {
+  margin: 0 auto !important;
+}
+</style>
+
+<style>
+/* ===== 관리자 도구 모달: 모바일 중앙정렬/넘침 방지 최종 패치 ===== */
+#adminModal {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  display: none;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 14px !important;
+  background: rgba(0,0,0,0.45) !important;
+  z-index: 99999 !important;
+  box-sizing: border-box !important;
+}
+
+#adminModal .modal-content {
+  width: min(640px, 92vw) !important;
+  max-height: 88vh !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  margin: 0 !important;
+  border-radius: 14px !important;
+  box-sizing: border-box !important;
+  padding: 16px !important;
+}
+
+#adminModal .modal-content * {
+  box-sizing: border-box !important;
+}
+
+#adminModal .modal-content button,
+#adminModal .modal-content .btn,
+#adminModal .modal-content .sheet-btn,
+#adminModal .modal-content .action-btn {
+  width: 100% !important;
+  display: block !important;
+  margin: 10px 0 !important;
+  white-space: normal !important;
+}
+
+#adminModal .modal-content input,
+#adminModal .modal-content textarea,
+#adminModal .modal-content select {
+  width: 100% !important;
+}
+
+@media (max-width: 768px) {
+  #adminModal { padding: 10px !important; }
+  #adminModal .modal-content {
+    width: 94vw !important;
+    max-height: 90vh !important;
+    padding: 14px !important;
+  }
+}
+</style>
+
+
+<style>
+/* ===== 모달 열렸을 때 배경 스크롤 잠금 ===== */
+body.modal-open {
+  overflow: hidden !important;
+  touch-action: none !important;
+}
+
+#adminModal {
+  overscroll-behavior: contain !important;
+}
+
+#adminModal .modal-content {
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-y !important;
+}
+</style>
+
+
+<style>
+/* ===== 점수 입력 모달(키패드) 안정화: 배경 스크롤 방지 + 키패드 고정 ===== */
+#scoreModal {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  display: none;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 10px !important;
+  background: rgba(0,0,0,0.45) !important;
+  z-index: 99998 !important;
+  box-sizing: border-box !important;
+}
+
+#scoreModal .modal-content {
+  width: min(520px, 94vw) !important;
+  max-height: 92vh !important;
+  overflow: hidden !important;            /* 내부 레이아웃에서 키패드는 고정 */
+  display: flex !important;
+  flex-direction: column !important;
+  border-radius: 14px !important;
+  padding: 14px !important;
+  box-sizing: border-box !important;
+}
+
+#scoreModal h3 { margin: 0 0 10px 0 !important; }
+
+#scoreModal .score-input-row { flex: 0 0 auto !important; }
+
+#scoreModal .keyboard {
+  flex: 1 1 auto !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  padding-bottom: 12px !important;
+}
+
+/* 키패드 버튼 터치 안정화 */
+#scoreModal .key-btn, #scoreModal button {
+  touch-action: manipulation !important;
+}
+
+/* 하단 버튼(지우기/닫기)이 가려지지 않게 */
+#scoreModal .modal-close,
+#scoreModal .delete-btn,
+#scoreModal .clear-btn {
+  width: 100% !important;
+  display: block !important;
+  margin-top: 10px !important;
+}
+
+@media (max-width: 768px) {
+  #scoreModal { padding: 8px !important; }
+  #scoreModal .modal-content { width: 96vw !important; max-height: 94vh !important; }
+  #scoreModal .key-btn { min-height: 56px !important; font-size: 22px !important; }
+}
+</style>
+
+</head>
+<body>
+클럽대회용 sv3.0 스텐다드
+
 <p data-ke-size="size16">&nbsp;</p>
-<p data-ke-size="size16">&nbsp;</p>
-<div>
+<p data-ke-size="size16"></p>
 <style>
 @media (max-width: 767px) {
     .parkgolf-app {
@@ -1105,22 +1442,404 @@
   .parkgolf-app #teamNameInput{ font-size: 17px !important; }
 }
 
+
+/* ===== 가독성 확장 패치 (기능 로직 미수정 / CSS만 추가) ===== */
+.parkgolf-app {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.parkgolf-app .container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    box-sizing: border-box !important;
+}
+
+.parkgolf-app .section,
+.parkgolf-app .score-section,
+.parkgolf-app .player-card,
+.parkgolf-app .summary-card,
+.parkgolf-app .team-info,
+.parkgolf-app .event-info,
+.parkgolf-app .button-section {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.parkgolf-app table,
+.parkgolf-app .score-table {
+    width: 100% !important;
+    table-layout: fixed !important;
+}
+
+.parkgolf-app th,
+.parkgolf-app td {
+    word-break: keep-all !important;
+}
+
+.parkgolf-app input,
+.parkgolf-app select,
+.parkgolf-app button,
+.parkgolf-app textarea {
+    font-size: 17px !important;
+}
+
+.parkgolf-app .section-title,
+.parkgolf-app .player-title,
+.parkgolf-app .total-score,
+.parkgolf-app .summary-title {
+    font-size: 20px !important;
+}
+
+@media (min-width: 768px) {
+    .parkgolf-app .container {
+        max-width: 1180px !important;
+        padding-left: 18px !important;
+        padding-right: 18px !important;
+    }
+}
+
+@media (min-width: 1200px) {
+    .parkgolf-app .container {
+        max-width: 1280px !important;
+    }
+}
+
+
+/* ===== 모바일 세로 가독성 강화 패치 ===== */
+@media (max-width: 768px) {
+    body {
+        font-size: 18px !important;
+        line-height: 1.55 !important;
+    }
+
+    .parkgolf-app,
+    .parkgolf-app .container {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        box-sizing: border-box !important;
+    }
+
+    .parkgolf-app .section,
+    .parkgolf-app .score-section,
+    .parkgolf-app .player-card,
+    .parkgolf-app .summary-card,
+    .parkgolf-app .team-info,
+    .parkgolf-app .event-info,
+    .parkgolf-app .button-section {
+        margin-bottom: 18px !important;
+        padding: 14px !important;
+        border-radius: 12px !important;
+    }
+
+    .parkgolf-app h1,
+    .parkgolf-app .main-title,
+    .parkgolf-app .section-title,
+    .parkgolf-app .player-title,
+    .parkgolf-app .summary-title {
+        font-size: 28px !important;
+        line-height: 1.35 !important;
+        margin-bottom: 14px !important;
+    }
+
+    .parkgolf-app h2,
+    .parkgolf-app h3 {
+        font-size: 22px !important;
+        line-height: 1.4 !important;
+    }
+
+    .parkgolf-app input,
+    .parkgolf-app select,
+    .parkgolf-app textarea {
+        min-height: 56px !important;
+        font-size: 22px !important;
+        padding: 14px 16px !important;
+        border-radius: 10px !important;
+    }
+
+    .parkgolf-app button,
+    .parkgolf-app .sheet-btn,
+    .parkgolf-app .action-btn {
+        min-height: 58px !important;
+        font-size: 21px !important;
+        font-weight: 800 !important;
+        border-radius: 10px !important;
+        padding: 14px 16px !important;
+    }
+
+    .parkgolf-app .course-btn,
+    .parkgolf-app .save-btn,
+    .parkgolf-app .load-btn,
+    .parkgolf-app .clear-btn {
+        min-height: 64px !important;
+        font-size: 20px !important;
+    }
+
+    .parkgolf-app .date-box,
+    .parkgolf-app .event-box,
+    .parkgolf-app .location-box {
+        min-height: 58px !important;
+        font-size: 24px !important;
+        font-weight: 700 !important;
+    }
+
+    .parkgolf-app .player-number,
+    .parkgolf-app .badge,
+    .parkgolf-app .num-circle {
+        width: 38px !important;
+        height: 38px !important;
+        min-width: 38px !important;
+        min-height: 38px !important;
+        font-size: 20px !important;
+        line-height: 38px !important;
+    }
+
+    .parkgolf-app table,
+    .parkgolf-app .score-table {
+        width: 100% !important;
+        table-layout: fixed !important;
+    }
+
+    .parkgolf-app th {
+        font-size: 16px !important;
+        padding: 10px 4px !important;
+        line-height: 1.35 !important;
+    }
+
+    .parkgolf-app td {
+        font-size: 20px !important;
+        padding: 10px 4px !important;
+        min-height: 48px !important;
+        line-height: 1.4 !important;
+    }
+
+    .parkgolf-app .score-table input,
+    .parkgolf-app td input {
+        min-height: 44px !important;
+        font-size: 22px !important;
+        padding: 6px !important;
+    }
+
+    .parkgolf-app .help-text,
+    .parkgolf-app .guide-text,
+    .parkgolf-app #qrGuideMessage,
+    .parkgolf-app #eventCodeLockNote {
+        font-size: 17px !important;
+        line-height: 1.55 !important;
+    }
+
+    .parkgolf-app .top-banner,
+    .parkgolf-app .header-box,
+    .parkgolf-app .hero {
+        padding-top: 22px !important;
+        padding-bottom: 22px !important;
+        border-radius: 14px !important;
+    }
+}
+
+
+/* ===== 초강화 모바일 확대 패치 ===== */
+@media (max-width: 768px) {
+  html, body {
+    -webkit-text-size-adjust: 100% !important;
+  }
+
+  body {
+    font-size: 20px !important;
+    line-height: 1.6 !important;
+  }
+
+  .parkgolf-app .container,
+  .container,
+  .wrap,
+  .app-container,
+  .main-container {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+    max-width: 100% !important;
+  }
+
+  .parkgolf-app .top-banner,
+  .parkgolf-app .header-box,
+  .parkgolf-app .hero,
+  .header,
+  .title-box {
+    padding-top: 26px !important;
+    padding-bottom: 26px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .parkgolf-app h1,
+  .parkgolf-app .main-title,
+  .main-title,
+  .title,
+  .page-title {
+    font-size: 34px !important;
+    line-height: 1.3 !important;
+    font-weight: 800 !important;
+  }
+
+  .parkgolf-app h2,
+  .parkgolf-app h3,
+  .section-title,
+  .player-title,
+  .summary-title {
+    font-size: 26px !important;
+    line-height: 1.35 !important;
+    font-weight: 800 !important;
+  }
+
+  .parkgolf-app .section,
+  .section,
+  .card,
+  .box,
+  .panel {
+    padding: 16px !important;
+    margin-bottom: 16px !important;
+    border-radius: 14px !important;
+  }
+
+  .parkgolf-app input,
+  .parkgolf-app select,
+  .parkgolf-app textarea,
+  input,
+  select,
+  textarea {
+    min-height: 62px !important;
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    padding: 16px 18px !important;
+    border-radius: 12px !important;
+  }
+
+  #eventCodeInput,
+  #teamNameInput,
+  #eventNameInput,
+  #locationInput {
+    min-height: 62px !important;
+    font-size: 24px !important;
+  }
+
+  .parkgolf-app button,
+  .parkgolf-app .sheet-btn,
+  .parkgolf-app .action-btn,
+  button {
+    min-height: 66px !important;
+    font-size: 24px !important;
+    font-weight: 800 !important;
+    padding: 16px 18px !important;
+    border-radius: 12px !important;
+  }
+
+  .course-btn,
+  .save-btn,
+  .load-btn,
+  .clear-btn {
+    min-height: 72px !important;
+    font-size: 22px !important;
+    line-height: 1.35 !important;
+  }
+
+  .date-box,
+  .event-box,
+  .location-box,
+  .datetime-box {
+    min-height: 64px !important;
+    font-size: 28px !important;
+    font-weight: 800 !important;
+  }
+
+  .player-number,
+  .badge,
+  .num-circle,
+  .player-index {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    line-height: 44px !important;
+    font-size: 22px !important;
+    font-weight: 800 !important;
+  }
+
+  .parkgolf-app table,
+  .parkgolf-app .score-table,
+  table {
+    width: 100% !important;
+    table-layout: fixed !important;
+  }
+
+  .parkgolf-app th,
+  th {
+    font-size: 17px !important;
+    font-weight: 800 !important;
+    padding: 12px 4px !important;
+    line-height: 1.35 !important;
+  }
+
+  .parkgolf-app td,
+  td {
+    font-size: 22px !important;
+    font-weight: 700 !important;
+    padding: 8px 4px !important;
+    min-height: 54px !important;
+    height: 54px !important;
+    line-height: 1.35 !important;
+  }
+
+  .parkgolf-app td input,
+  .parkgolf-app .score-table input,
+  td input {
+    min-height: 48px !important;
+    height: 48px !important;
+    font-size: 24px !important;
+    font-weight: 800 !important;
+    padding: 4px !important;
+  }
+
+  .help-text,
+  .guide-text,
+  #qrGuideMessage,
+  #eventCodeLockNote {
+    font-size: 18px !important;
+    line-height: 1.6 !important;
+  }
+}
+
 </style>
-</div>
+
+
 <div class="parkgolf-app" style="padding: 0px !important; margin: 0 !important; max-width: 100% !important; width: 100% !important; background-color: #faf8f3 !important;">
 <div class="container" style="padding: 0px !important; margin: 0 !important; border-radius: 0 !important; box-shadow: none !important; max-width: 100% !important; background-color: #faf8f3 !important;">
 <div style="background: linear-gradient(135deg, #2d7a4f 0%, #1a5634 100%); padding: 30px 4px !important; border-radius: 12px; margin: 0 0 8px 0 !important; text-align: center;">
 <h1 style="color: #ffffff !important; margin: 0 0 14px 0 !important; font-size: 24px !important; font-weight: bold !important; letter-spacing: -0.5px !important;">파크골프 점수 기록표</h1>
-<div style="display: inline-block; background: rgba(255,255,255,0.3); padding: 8px 18px; border-radius: 8px;"><span style="font-size: 15px; color: #fff3e0; font-weight: 600; letter-spacing: 0.5px;">클럽대회용 sv3.0 스텐다드</span></div>
+<div style="display: inline-block; background: rgba(255,255,255,0.3); padding: 8px 18px; border-radius: 8px;">
+<span style="font-size: 15px; color: #fff3e0; font-weight: 600; letter-spacing: 0.5px;">클럽대회용 sv3.0 스텐다드</span>
+</div>
 </div>
 <div class="info-section" style="padding: 3px !important; margin: 0 0 8px 0 !important;">
-<div class="input-group"><input id="dateInput" style="text-align: center; font-weight: bold;" readonly="readonly" type="text" /></div>
-<div class="input-group location-with-map"><input id="locationInput" style="flex: 1; font-size: 17px !important; text-align: center !important; font-weight: 600 !important; padding: 12px !important;" type="text" placeholder="골프장 이름" /> <button class="map-link" style="margin-left: 8px; width: 60px; padding: 12px 8px; height: auto;">지도</button></div>
-<div class="input-group"><input id="eventNameInput" style="text-align: center !important; font-size: 17px !important; font-weight: 600 !important; padding: 12px !important;" type="text" placeholder="대회명" /></div>
-<div class="input-group"><input id="eventCodeInput" style="text-align: center !important; font-size: 17px !important; font-weight: 700 !important; padding: 12px !important; background: #f1f3f4 !important; color: #333 !important; border: 2px solid #d0d7de !important; cursor: not-allowed !important; -webkit-user-select: none !important; user-select: none !important;" tabindex="-1" readonly="readonly" type="text" placeholder="대회 코드" />
-<div id="qrGuideMessage" style="display: none; margin-top: 8px; padding: 10px 12px; border-radius: 8px; background: #fff3cd; color: #8a5a00; font-size: 15px; font-weight: bold; text-align: center; line-height: 1.5;">⚠️ QR코드를 먼저 스캔해야 전송할 수 있습니다.</div>
+<div class="input-group">
+<input id="dateInput" readonly="readonly" type="text" style="text-align: center; font-weight: bold;" />
 </div>
-<div class="input-group"><input id="teamNameInput" style="text-align: center !important; font-size: 17px !important; font-weight: 600 !important; padding: 12px !important;" type="text" placeholder="조명 넣기" /></div>
+<div class="input-group location-with-map">
+<input id="locationInput" type="text" placeholder="골프장 이름" style="flex: 1; font-size: 17px !important; text-align: center !important; font-weight: 600 !important; padding: 12px !important;" />
+<button class="map-link" onclick="openMap()" style="margin-left: 8px; width: 60px; padding: 12px 8px; height: auto;">지도</button>
+</div>
+<div class="input-group">
+<input id="eventNameInput" type="text" placeholder="대회명" style="text-align: center !important; font-size: 17px !important; font-weight: 600 !important; padding: 12px !important;" />
+</div>
+<div class="input-group">
+<input id="eventCodeInput" type="text" placeholder="대회 코드" readonly inputmode="none" tabindex="-1" style="text-align: center !important; font-size: 17px !important; font-weight: 700 !important; padding: 12px !important; background: #f1f3f4 !important; color: #333 !important; border: 2px solid #d0d7de !important; cursor: not-allowed !important; -webkit-user-select: none !important; user-select: none !important;" />
+<div id="qrGuideMessage" style="display:none; margin-top:8px; padding:10px 12px; border-radius:8px; background:#fff3cd; color:#8a5a00; font-size:15px; font-weight:700; text-align:center; line-height:1.5;">⚠️ QR코드를 먼저 스캔해야 전송할 수 있습니다.</div>
+</div>
+<div class="input-group">
+<input id="teamNameInput" type="text" placeholder="조명 넣기" style="text-align: center !important; font-size: 17px !important; font-weight: 600 !important; padding: 12px !important;" />
+</div>
 <div class="input-group" style="margin-top: 30px !important;"><label style="font-size: 21px !important; text-align: center; font-weight: 900;">경기자 이름 등록</label>
 <div class="players-section">
 <div class="player-input">
@@ -1137,168 +1856,203 @@
 <input id="player4" type="text" placeholder="경기자 4" /></div>
 </div>
 </div>
-<div class="button-group" style="grid-template-columns: 1fr 1fr; margin-bottom: 30px !important;"><button class="load-btn">이름<br />불러오기</button> <button class="clear-btn">이름<br />지우기</button></div>
+<div class="button-group" style="grid-template-columns: 1fr 1fr; margin-bottom: 30px !important;"><button class="load-btn" onclick="openNameListModal()">이름<br>불러오기</button> <button class="clear-btn" onclick="clearPlayerNames()">이름<br>지우기</button></div>
 <div class="input-group"><label style="display: block; margin-top: 0px !important; font-size: 21px !important; text-align: center; font-weight: 900;">사용 코스 선택</label>
 <div class="hole-selector">
-<div class="hole-option active">1코스<br />(9홀)</div>
-<div class="hole-option">2코스<br />(18홀)</div>
-<div class="hole-option">3코스<br />(27홀)</div>
-<div class="hole-option">4코스<br />(36홀)</div>
+<div class="hole-option active" onclick="selectHoles(9)">1코스<br />(9홀)</div>
+<div class="hole-option" onclick="selectHoles(18)">2코스<br />(18홀)</div>
+<div class="hole-option" onclick="selectHoles(27)">3코스<br />(27홀)</div>
+<div class="hole-option" onclick="selectHoles(36)">4코스<br />(36홀)</div>
 </div>
 </div>
 </div>
-<div id="coursesContainer" style="width: 100%; margin-bottom: 30px;">&nbsp;</div>
-<!-- ==================== 티스토리 광고 삽입 영역 시작 ==================== --> <!-- ==================== 티스토리 광고 삽입 영역 시작 ==================== -->
-<div id="adSection" style="margin: 30px auto; padding: 20px 10px; max-width: 100%; text-align: center;"><!-- 설명글 -->
-<div style="margin-bottom: 30px; padding: 25px; background: #f8f9fa; border-radius: 8px; font-size: 15px; line-height: 1.8; color: #333;">
-<p style="margin: 20px 0 15px 0 !important; font-weight: bold; color: #1e3c72; font-size: 17px;" data-ke-size="size16">파크골프 점수 기록의 모든 것</p>
-<p style="margin: 0;" data-ke-size="size16">위에서 각 코스별 상세 점수를 입력하셨나요? 아래에서 오늘의 경기 결과를 한눈에 확인하실 수 있습니다!</p>
+
+<div id="coursesContainer" style="width: 100%; margin-bottom: 30px;"></div>
+
+<!-- ==================== 티스토리 광고 삽입 영역 시작 ==================== -->
+<!-- ==================== 티스토리 광고 삽입 영역 시작 ==================== -->
+<div id="adSection" style="margin: 30px auto; padding: 20px 10px; max-width: 100%; text-align: center;">
+    
+    <!-- 설명글 -->
+    <div style="margin-bottom: 30px; padding: 25px; background: #f8f9fa; border-radius: 8px; font-size: 15px; line-height: 1.8; color: #333;">
+        <p style="margin: 20px 0 15px 0 !important; font-weight: bold; color: #1e3c72; font-size: 17px;">파크골프 점수 기록의 모든 것</p>
+        <p style="margin: 0;">위에서 각 코스별 상세 점수를 입력하셨나요? 아래에서 오늘의 경기 결과를 한눈에 확인하실 수 있습니다!</p>
+    </div>
+    
+    <!-- ★★★ 애드센스 광고 코드는 아래 이 줄 바로 밑에 붙여넣으세요 ★★★ -->
+    
+    <!-- ★★★ 애드센스 광고 코드는 위 이 줄 바로 위에 붙여넣으세요 ★★★ -->
+    
 </div>
-<!-- ★★★ 애드센스 광고 코드는 아래 이 줄 바로 밑에 붙여넣으세요 ★★★ --> <!-- ★★★ 애드센스 광고 코드는 위 이 줄 바로 위에 붙여넣으세요 ★★★ --></div>
 <!-- ==================== 티스토리 광고 삽입 영역 끝 ==================== -->
+
 <div class="summary-section">
 <div id="resultCapture">
 <div style="text-align: center; margin-bottom: 25px; padding: 35px 30px; background: #f5f2eb; border-radius: 12px; border: 2px solid #2d7a4f;">
 <div style="font-size: 26px; font-weight: 900; color: #1a5634; margin-bottom: 15px;">오늘의 경기 결과</div>
 <div style="font-size: 18px; font-weight: 400; color: #495057; line-height: 1.6;">
-<div style="margin-bottom: 8px;">날짜: <span></span></div>
-<div style="margin-bottom: 8px;">장소: <span></span></div>
-<div style="margin-bottom: 8px;">대회명: <span></span></div>
-<div style="margin-bottom: 8px;">대회 코드: <span></span></div>
-<div>조(팀): <span></span></div>
+<div style="margin-bottom: 8px;">날짜: <span id="shareDate"></span></div>
+<div style="margin-bottom: 8px;">장소: <span id="shareLocation"></span></div>
+<div style="margin-bottom: 8px;">대회명: <span id="shareEventName"></span></div>
+<div style="margin-bottom: 8px;">대회 코드: <span id="shareEventCode"></span></div>
+<div>조(팀): <span id="shareTeamName"></span></div>
 </div>
 </div>
-<h2 style="text-align: center; color: #1a5634; margin: 40px 0 10px 0 !important; font-size: 21px; font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif !important; font-weight: 900 !important;" data-ke-size="size26">코스별 합계표</h2>
-<table class="summary-table-new" style="width: 100%; border-collapse: collapse; margin: 0; table-layout: fixed;" data-ke-align="alignLeft">
-<thead>
-<tr>
-<th style="background-color: #2d7a4f; color: white; padding: 8px 0px; border: 1px solid #ddd; font-size: 12px !important; width: 40px !important; min-width: 40px !important;">코스</th>
-<th style="background-color: #2d7a4f; color: white; padding: 8px 4px; border: 1px solid #ddd; font-size: 14px !important; width: auto !important; min-width: 110px !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">경기자 1</th>
-<th style="background-color: #2d7a4f; color: white; padding: 8px 4px; border: 1px solid #ddd; font-size: 14px !important; width: auto !important; min-width: 110px !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">경기자 2</th>
-<th style="background-color: #2d7a4f; color: white; padding: 8px 4px; border: 1px solid #ddd; font-size: 14px !important; width: auto !important; min-width: 110px !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">경기자 3</th>
-<th style="background-color: #2d7a4f; color: white; padding: 8px 4px; border: 1px solid #ddd; font-size: 14px !important; width: auto !important; min-width: 110px !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">경기자 4</th>
-</tr>
-</thead>
-<tbody id="summaryBodyNew">
-<tr>
-<td style="background-color: #e8ecf3; font-weight: bold; padding: 7px 0px; border: 1px solid #ddd; text-align: center; font-size: 14px !important; width: 40px !important; min-width: 40px !important;">A</td>
-<td id="score-A-1" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
-<td id="score-A-2" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
-<td id="score-A-3" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
-<td id="score-A-4" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
-</tr>
-<tr>
-<td style="background-color: #e8ecf3; font-weight: bold; padding: 7px 0px; border: 1px solid #ddd; text-align: center; font-size: 14px !important; width: 40px !important; min-width: 40px !important;">B</td>
-<td id="score-B-1" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
-<td id="score-B-2" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
-<td id="score-B-3" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
-<td id="score-B-4" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
-</tr>
-<tr>
-<td style="background-color: #e8ecf3; font-weight: bold; padding: 7px 0px; border: 1px solid #ddd; text-align: center; font-size: 14px !important; width: 40px !important; min-width: 40px !important;">C</td>
-<td id="score-C-1" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
-<td id="score-C-2" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
-<td id="score-C-3" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
-<td id="score-C-4" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
-</tr>
-<tr>
-<td style="background-color: #e8ecf3; font-weight: bold; padding: 7px 0px; border: 1px solid #ddd; text-align: center; font-size: 14px !important; width: 40px !important; min-width: 40px !important;">D</td>
-<td id="score-D-1" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
-<td id="score-D-2" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
-<td id="score-D-3" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
-<td id="score-D-4" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
-</tr>
-<tr>
-<td style="background-color: #e8ecf3; font-weight: bold; padding: 7px 0px; border: 1px solid #ddd; text-align: center; font-size: 14px !important; width: 40px !important; min-width: 40px !important;">총계</td>
-<td id="total-new-1" style="background-color: #fff9c4; font-weight: bold; padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 15px;">-</td>
-<td id="total-new-2" style="background-color: #fff9c4; font-weight: bold; padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 15px;">-</td>
-<td id="total-new-3" style="background-color: #fff9c4; font-weight: bold; padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 15px;">-</td>
-<td id="total-new-4" style="background-color: #fff9c4; font-weight: bold; padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 15px;">-</td>
-</tr>
-<tr>
-<td style="background-color: #e8ecf3; font-weight: bold; padding: 7px 0px; border: 1px solid #ddd; text-align: center; font-size: 14px !important; width: 40px !important; min-width: 40px !important;">순위</td>
-<td id="rank-new-1" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-weight: bold; font-size: 14px;">-</td>
-<td id="rank-new-2" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-weight: bold; font-size: 14px;">-</td>
-<td id="rank-new-3" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-weight: bold; font-size: 14px;">-</td>
-<td id="rank-new-4" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-weight: bold; font-size: 14px;">-</td>
-</tr>
-<tr>
-<td style="background-color: #e8ecf3; font-weight: normal !important; padding: 4px 0px; border: 1px solid #ddd; text-align: center; font-size: 12px !important; width: 40px !important; min-width: 40px !important; line-height: 1.2;">홀인원<br />수</td>
-<td id="holeinone-new-1" style="padding: 4px 4px; border: 1px solid #ddd; text-align: center; font-size: 11px;">-</td>
-<td id="holeinone-new-2" style="padding: 4px 4px; border: 1px solid #ddd; text-align: center; font-size: 11px;">-</td>
-<td id="holeinone-new-3" style="padding: 4px 4px; border: 1px solid #ddd; text-align: center; font-size: 11px;">-</td>
-<td id="holeinone-new-4" style="padding: 4px 4px; border: 1px solid #ddd; text-align: center; font-size: 11px;">-</td>
-</tr>
-<tr>
-<td style="background-color: #e8ecf3; font-weight: normal !important; padding: 4px 0px; border: 1px solid #ddd; text-align: center; font-size: 12px !important; width: 40px !important; min-width: 40px !important; line-height: 1.2;">OB/<br />벌타수</td>
-<td id="penalty-new-1" style="padding: 4px 4px; border: 1px solid #ddd; text-align: center; font-size: 11px;">-</td>
-<td id="penalty-new-2" style="padding: 4px 4px; border: 1px solid #ddd; text-align: center; font-size: 11px;">-</td>
-<td id="penalty-new-3" style="padding: 4px 4px; border: 1px solid #ddd; text-align: center; font-size: 11px;">-</td>
-<td id="penalty-new-4" style="padding: 4px 4px; border: 1px solid #ddd; text-align: center; font-size: 11px;">-</td>
-</tr>
-<tr>
-<td style="background-color: #e8ecf3; font-weight: normal !important; padding: 4px 0px; border: 1px solid #ddd; text-align: center; font-size: 12px !important; width: 40px !important; min-width: 40px !important;">참고</td>
-<td style="text-align: left; padding: 4px; border: 1px solid #ddd; vertical-align: top;" colspan="4">&nbsp;</td>
-</tr>
-</tbody>
+<h2 style="text-align: center; color: #1a5634; margin: 40px 0 10px 0 !important; font-size: 21px; font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif !important; font-weight: 900 !important;">코스별 합계표</h2>
+<table class="summary-table-new" style="width: 100%; border-collapse: collapse; margin: 0; table-layout: fixed;">
+    <thead>
+        <tr>
+            <th style="background-color: #2d7a4f; color: white; padding: 8px 0px; border: 1px solid #ddd; font-size: 12px !important; width: 40px !important; min-width: 40px !important;">코스</th>
+            <th style="background-color: #2d7a4f; color: white; padding: 8px 4px; border: 1px solid #ddd; font-size: 14px !important; width: auto !important; min-width: 110px !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">경기자 1</th>
+            <th style="background-color: #2d7a4f; color: white; padding: 8px 4px; border: 1px solid #ddd; font-size: 14px !important; width: auto !important; min-width: 110px !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">경기자 2</th>
+            <th style="background-color: #2d7a4f; color: white; padding: 8px 4px; border: 1px solid #ddd; font-size: 14px !important; width: auto !important; min-width: 110px !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">경기자 3</th>
+            <th style="background-color: #2d7a4f; color: white; padding: 8px 4px; border: 1px solid #ddd; font-size: 14px !important; width: auto !important; min-width: 110px !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">경기자 4</th>
+        </tr>
+    </thead>
+    <tbody id="summaryBodyNew">
+        <tr>
+            <td style="background-color: #E8ECF3; font-weight: bold; padding: 7px 0px; border: 1px solid #ddd; text-align: center; font-size: 14px !important; width: 40px !important; min-width: 40px !important;">A</td>
+            <td id="score-A-1" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
+            <td id="score-A-2" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
+            <td id="score-A-3" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
+            <td id="score-A-4" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
+        </tr>
+        <tr>
+            <td style="background-color: #E8ECF3; font-weight: bold; padding: 7px 0px; border: 1px solid #ddd; text-align: center; font-size: 14px !important; width: 40px !important; min-width: 40px !important;">B</td>
+            <td id="score-B-1" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
+            <td id="score-B-2" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
+            <td id="score-B-3" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
+            <td id="score-B-4" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
+        </tr>
+        <tr>
+            <td style="background-color: #E8ECF3; font-weight: bold; padding: 7px 0px; border: 1px solid #ddd; text-align: center; font-size: 14px !important; width: 40px !important; min-width: 40px !important;">C</td>
+            <td id="score-C-1" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
+            <td id="score-C-2" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
+            <td id="score-C-3" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
+            <td id="score-C-4" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
+        </tr>
+        <tr>
+            <td style="background-color: #E8ECF3; font-weight: bold; padding: 7px 0px; border: 1px solid #ddd; text-align: center; font-size: 14px !important; width: 40px !important; min-width: 40px !important;">D</td>
+            <td id="score-D-1" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
+            <td id="score-D-2" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
+            <td id="score-D-3" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
+            <td id="score-D-4" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 14px; font-weight: bold;">-</td>
+        </tr>
+        <tr>
+            <td style="background-color: #E8ECF3; font-weight: bold; padding: 7px 0px; border: 1px solid #ddd; text-align: center; font-size: 14px !important; width: 40px !important; min-width: 40px !important;">총계</td>
+            <td id="total-new-1" style="background-color: #FFF9C4; font-weight: bold; padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 15px;">-</td>
+            <td id="total-new-2" style="background-color: #FFF9C4; font-weight: bold; padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 15px;">-</td>
+            <td id="total-new-3" style="background-color: #FFF9C4; font-weight: bold; padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 15px;">-</td>
+            <td id="total-new-4" style="background-color: #FFF9C4; font-weight: bold; padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-size: 15px;">-</td>
+        </tr>
+        <tr>
+            <td style="background-color: #E8ECF3; font-weight: bold; padding: 7px 0px; border: 1px solid #ddd; text-align: center; font-size: 14px !important; width: 40px !important; min-width: 40px !important;">순위</td>
+            <td id="rank-new-1" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-weight: bold; font-size: 14px;">-</td>
+            <td id="rank-new-2" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-weight: bold; font-size: 14px;">-</td>
+            <td id="rank-new-3" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-weight: bold; font-size: 14px;">-</td>
+            <td id="rank-new-4" style="padding: 6px 4px; border: 1px solid #ddd; text-align: center; font-weight: bold; font-size: 14px;">-</td>
+        </tr>
+        <tr>
+            <td style="background-color: #E8ECF3; font-weight: normal !important; padding: 4px 0px; border: 1px solid #ddd; text-align: center; font-size: 12px !important; width: 40px !important; min-width: 40px !important; line-height: 1.2;">홀인원<br/>수</td>
+            <td id="holeinone-new-1" style="padding: 4px 4px; border: 1px solid #ddd; text-align: center; font-size: 11px;">-</td>
+            <td id="holeinone-new-2" style="padding: 4px 4px; border: 1px solid #ddd; text-align: center; font-size: 11px;">-</td>
+            <td id="holeinone-new-3" style="padding: 4px 4px; border: 1px solid #ddd; text-align: center; font-size: 11px;">-</td>
+            <td id="holeinone-new-4" style="padding: 4px 4px; border: 1px solid #ddd; text-align: center; font-size: 11px;">-</td>
+        </tr>
+        <tr>
+            <td style="background-color: #E8ECF3; font-weight: normal !important; padding: 4px 0px; border: 1px solid #ddd; text-align: center; font-size: 12px !important; width: 40px !important; min-width: 40px !important; line-height: 1.2;">OB/<br/>벌타수</td>
+            <td id="penalty-new-1" style="padding: 4px 4px; border: 1px solid #ddd; text-align: center; font-size: 11px;">-</td>
+            <td id="penalty-new-2" style="padding: 4px 4px; border: 1px solid #ddd; text-align: center; font-size: 11px;">-</td>
+            <td id="penalty-new-3" style="padding: 4px 4px; border: 1px solid #ddd; text-align: center; font-size: 11px;">-</td>
+            <td id="penalty-new-4" style="padding: 4px 4px; border: 1px solid #ddd; text-align: center; font-size: 11px;">-</td>
+        </tr>
+        <tr>
+            <td style="background-color: #E8ECF3; font-weight: normal !important; padding: 4px 0px; border: 1px solid #ddd; text-align: center; font-size: 12px !important; width: 40px !important; min-width: 40px !important;">참고</td>
+            <td colspan="4" style="text-align: left; padding: 4px; border: 1px solid #ddd; vertical-align: top;">
+                <textarea id="note-input-new" placeholder="참고사항 입력" style="width: 100%; border: none; outline: none; font-size: 13px; line-height: 1.3; padding: 4px; resize: none; font-family: 'Malgun Gothic', sans-serif; min-height: 36px; overflow: hidden;" rows="2"></textarea>
+            </td>
+        </tr>
+    </tbody>
 </table>
 </div>
-<div style="text-align: center; margin-top: 12px;">&nbsp;</div>
+<div style="text-align: center; margin-top: 12px;">
 </div>
-<div class="button-group" style="margin-top: 20px;"><button class="save-btn">저장하기</button> <button class="history-btn">저장된 기록<br />(<span>0</span>)</button> <button class="clear-btn">점수 지우기</button> <button class="share-btn">결과<br />공유하기</button></div>
+</div>
+
+<div class="button-group" style="margin-top: 20px;"><button class="save-btn" onclick="saveData()">저장하기</button> <button class="history-btn" onclick="openHistoryModal()">저장된 기록<br>(<span id="historyCount">0</span>)</button> <button class="clear-btn" onclick="clearAllScores()">점수 지우기</button> <button class="share-btn" onclick="shareResult()">결과<br/>공유하기</button></div>
+
 <!-- 구글시트로 보내기 버튼 -->
-<div style="margin-top: 30px !important; margin-bottom: 40px !important;"><button id="sendToSheetBtn" class="sheet-btn" style="width: 100% !important; padding: 18px !important; background: linear-gradient(135deg, #0f9d58 0%, #0b7a44 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">대회 집계(구글시트) 전송</button></div>
+<div style="margin-top: 30px !important; margin-bottom: 40px !important;">
+<button id="sendToSheetBtn" class="sheet-btn" onclick="sendToGoogleSheet();" style="width: 100% !important; padding: 18px !important; background: linear-gradient(135deg, #0f9d58 0%, #0b7a44 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">대회 집계(구글시트) 전송</button>
+</div>
+
 <!-- 구분선 -->
-<div style="border-top: 4px solid #999 !important; margin: 40px 0 !important; padding: 0 !important; height: 4px !important;">&nbsp;</div>
+<div style="border-top: 4px solid #999 !important; margin: 40px 0 !important; padding: 0 !important; height: 4px !important;"></div>
+
 <!-- 관리자 도구 버튼 -->
-<div style="margin-top: 40px !important; margin-bottom: 30px !important;"><button class="admin-btn" style="width: 100% !important; padding: 18px !important; background: linear-gradient(135deg, #f4b400 0%, #db9200 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">대회 관리자 전용 관리자 도구 열기</button></div>
+<div style="margin-top: 40px !important; margin-bottom: 30px !important;">
+<button class="admin-btn" onclick="document.getElementById('adminModal').style.display='flex';" style="width: 100% !important; padding: 18px !important; background: linear-gradient(135deg, #f4b400 0%, #db9200 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">대회 관리자 전용 관리자 도구 열기</button>
+</div>
+
 </div>
 <div id="parModal" class="modal">
 <div class="modal-content">
 <h3 data-ke-size="size23">파(PAR) 선택</h3>
-<div class="modal-buttons"><button class="modal-btn">3</button> <button class="modal-btn">4</button> <button class="modal-btn">5</button></div>
-<button class="modal-close">닫기</button></div>
+<div class="modal-buttons"><button class="modal-btn" onclick="setPar(3)">3</button> <button class="modal-btn" onclick="setPar(4)">4</button> <button class="modal-btn" onclick="setPar(5)">5</button></div>
+<button class="modal-close" onclick="closeModal()">닫기</button></div>
 </div>
 <div id="scoreModal" class="modal">
 <div class="modal-content">
 <h3 data-ke-size="size23">점수 입력</h3>
 <div class="score-input-row">
 <div id="scoreDisplay" class="input-display">-</div>
-<div class="button-group-side"><button class="confirm-btn-top">확인</button> <button class="penalty-btn-side">OB/벌타</button></div>
+<div class="button-group-side">
+<button class="confirm-btn-top" onclick="confirmScore()">확인</button>
+<button class="penalty-btn-side" onclick="togglePenalty()">OB/벌타</button>
 </div>
-<div class="keyboard"><button class="key-btn">1</button> <button class="key-btn">2</button> <button class="key-btn">3</button> <button class="key-btn">4</button> <button class="key-btn">5</button> <button class="key-btn">6</button> <button class="key-btn">7</button> <button class="key-btn">8</button> <button class="key-btn">9</button> <button class="key-btn">0</button> <button class="key-btn delete-btn">지우기</button></div>
-<button class="modal-close">취소</button></div>
+</div>
+<div class="keyboard"><button class="key-btn" onclick="addDigit('1')">1</button> <button class="key-btn" onclick="addDigit('2')">2</button> <button class="key-btn" onclick="addDigit('3')">3</button> <button class="key-btn" onclick="addDigit('4')">4</button> <button class="key-btn" onclick="addDigit('5')">5</button> <button class="key-btn" onclick="addDigit('6')">6</button> <button class="key-btn" onclick="addDigit('7')">7</button> <button class="key-btn" onclick="addDigit('8')">8</button> <button class="key-btn" onclick="addDigit('9')">9</button> <button class="key-btn" onclick="addDigit('0')">0</button> <button class="key-btn delete-btn" onclick="deleteDigit()">지우기</button></div>
+<button class="modal-close" onclick="closeModal()">취소</button></div>
 </div>
 <div id="toast" class="toast">&nbsp;</div>
+
 <div id="loadingModal" class="modal">
 <div class="modal-content" style="text-align: center; padding: 40px;">
 <div style="font-size: 48px; margin-bottom: 20px;">📸</div>
-<h3 data-ke-size="size23">이미지 생성 중...</h3>
-<p style="color: #6c757d; margin-top: 10px;" data-ke-size="size16">잠시만 기다려주세요</p>
+<h3>이미지 생성 중...</h3>
+<p style="color: #6c757d; margin-top: 10px;">잠시만 기다려주세요</p>
 </div>
 </div>
+
 <div id="historyModal" class="modal">
 <div class="modal-content" style="max-width: 95%; width: 500px;">
-<h3 data-ke-size="size23">저장된 경기 기록</h3>
-<div id="historyList" class="history-list">&nbsp;</div>
-<button class="modal-close">닫기</button></div>
+<h3>저장된 경기 기록</h3>
+<div id="historyList" class="history-list"></div>
+<button class="modal-close" onclick="closeHistoryModal()">닫기</button>
 </div>
+</div>
+
 <div id="shareSelectModal" class="modal">
 <div class="modal-content" style="max-width: 90%; width: 400px; padding: 40px 30px;">
-<h3 style="margin: 0; padding: 0 0 40px 0; font-size: 21px; text-align: center; color: #1e3c72; font-weight: bold;" data-ke-size="size23">공유 옵션 선택</h3>
-<button style="width: 100%; padding: 22px; background: #2d7a4f; color: white; border: none; border-radius: 12px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: all 0.2s; margin: 0; display: block;">코스별 합계표만 보내기</button>
-<div style="height: 25px;">&nbsp;</div>
-<button style="width: 100%; padding: 22px 22px 28px 22px; background: #28a745; color: white; border: none; border-radius: 12px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: all 0.2s; margin: 0; display: block;">모두 보내기<br /><span style="font-size: 14px; font-weight: normal; opacity: 0.95; display: block; margin-top: 6px;">(합계표 + 코스별 점수표)</span></button>
-<div style="height: 30px;">&nbsp;</div>
-<button class="modal-close" style="margin: 0; padding: 17px; font-size: 16px; display: block; width: 100%;">취소</button></div>
+<h3 style="margin: 0; padding: 0 0 40px 0; font-size: 21px; text-align: center; color: #1e3c72; font-weight: bold;">공유 옵션 선택</h3>
+<button onclick="shareOnlySummary()" style="width: 100%; padding: 22px; background: #2d7a4f; color: white; border: none; border-radius: 12px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: all 0.2s; margin: 0; display: block;">코스별 합계표만 보내기</button>
+<div style="height: 25px;"></div>
+<button onclick="shareAll()" style="width: 100%; padding: 22px 22px 28px 22px; background: #28a745; color: white; border: none; border-radius: 12px; font-size: 18px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: all 0.2s; margin: 0; display: block;">모두 보내기<br/><span style="font-size: 14px; font-weight: normal; opacity: 0.95; display: block; margin-top: 6px;">(합계표 + 코스별 점수표)</span></button>
+<div style="height: 30px;"></div>
+<button class="modal-close" onclick="closeShareSelectModal()" style="margin: 0; padding: 17px; font-size: 16px; display: block; width: 100%;">취소</button>
 </div>
-<div id="nameListModal" class="modal name-list-modal">
+</div>
+
+<div id="nameListModal" class="modal name-list-modal" onclick="if(event.target === this) closeNameListModal()">
 <div class="modal-content" style="padding: 0; display: flex; flex-direction: column; max-height: 80vh;">
-<h3 style="text-align: center; margin: 20px 0; padding: 0 20px; color: #1e3c72;" data-ke-size="size23">저장된 이름 목록</h3>
-<div id="nameListContainer" style="overflow-y: auto; flex: 1; padding: 0 20px;">&nbsp;</div>
-<div style="padding: 15px 20px 20px 20px; background: white; border-top: 1px solid #eee;"><button id="nameListCloseBtn" class="modal-close" style="margin-top: 0;" type="button">닫기</button></div>
+<h3 style="text-align: center; margin: 20px 0; padding: 0 20px; color: #1e3c72;">저장된 이름 목록</h3>
+<div id="nameListContainer" style="overflow-y: auto; flex: 1; padding: 0 20px;"></div>
+<div style="padding: 15px 20px 20px 20px; background: white; border-top: 1px solid #eee;">
+<button id="nameListCloseBtn" class="modal-close" type="button" style="margin-top: 0;">닫기</button>
 </div>
 </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
         // html2canvas 로드 확인 및 재시도
@@ -2733,7 +3487,9 @@
             }
         }
     </script>
+
 <!-- 관리자 도구 모달 -->
+
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script>
 // 템플릿 복사 함수 (모바일 개선)
@@ -3027,54 +3783,196 @@ function saveURL() {
 }
 </script>
 </div>
+</div>
+
 <!-- 관리자 도구 모달 (parkgolf-app 밖에 배치) -->
 <div id="adminModal" style="display: none !important; position: fixed !important; z-index: 99999 !important; left: 0 !important; top: 0 !important; width: 100% !important; height: 100% !important; background: rgba(0, 0, 0, 0.6) !important; overflow: auto !important; padding: 20px !important;">
 <div style="background: white !important; margin: 50px auto !important; padding: 30px !important; border-radius: 12px !important; max-width: 800px !important; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;">
-<h3 style="text-align: center !important; color: #1e3c72 !important; margin-bottom: 25px !important; font-size: 22px !important; font-weight: 900 !important;" data-ke-size="size23">대회 관리자 전용 관리자 도구 열기</h3>
+<h3 style="text-align: center !important; color: #1e3c72 !important; margin-bottom: 25px !important; font-size: 22px !important; font-weight: 900 !important;">대회 관리자 전용 관리자 도구 열기</h3>
+
 <!-- 웹앱 URL 설정 섹션 -->
 <div style="background: #f8f9fa !important; padding: 20px !important; border-radius: 8px !important; margin-bottom: 20px !important;">
-<h4 style="color: #495057 !important; margin-bottom: 15px !important; font-size: 17px !important; font-weight: 700 !important;" data-ke-size="size20">웹앱 URL 설정</h4>
-<p style="font-size: 14px !important; color: #6c757d !important; margin-bottom: 10px !important;" data-ke-size="size16">Apps Script 배포 후 생성된 웹앱 URL을 입력하세요.</p>
-<input id="webAppUrl" style="width: 100% !important; padding: 14px !important; margin-bottom: 12px !important; border: 2px solid #dee2e6 !important; border-radius: 8px !important; font-size: 14px !important; font-weight: 600 !important; font-family: 'Malgun Gothic', sans-serif !important; box-sizing: border-box !important;" type="text" placeholder="https://script.google.com/macros/s/YOUR_ID/exec" /> <button style="width: 100% !important; padding: 16px !important; background: #28a745 !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 16px !important; font-weight: 900 !important; cursor: pointer !important;">URL 저장</button></div>
-<!-- 템플릿 복사 버튼 (모바일 개선) --> <button style="width: 100% !important; padding: 18px !important; margin-bottom: 15px !important; background: linear-gradient(135deg, #4285f4 0%, #3367d6 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important;">템플릿 복사</button> <!-- 템플릿 URL 안내 -->
+<h4 style="color: #495057 !important; margin-bottom: 15px !important; font-size: 17px !important; font-weight: 700 !important;">웹앱 URL 설정</h4>
+<p style="font-size: 14px !important; color: #6c757d !important; margin-bottom: 10px !important;">
+Apps Script 배포 후 생성된 웹앱 URL을 입력하세요.
+</p>
+<input type="text" id="webAppUrl" placeholder="https://script.google.com/macros/s/YOUR_ID/exec" 
+       style="width: 100% !important; padding: 14px !important; margin-bottom: 12px !important; border: 2px solid #dee2e6 !important; border-radius: 8px !important; font-size: 14px !important; font-weight: 600 !important; font-family: 'Malgun Gothic', sans-serif !important; box-sizing: border-box !important;">
+<button onclick="saveURL()" style="width: 100% !important; padding: 16px !important; background: #28a745 !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 16px !important; font-weight: 900 !important; cursor: pointer !important;">URL 저장</button>
+</div>
+
+<!-- 템플릿 복사 버튼 (모바일 개선) -->
+<button onclick="copyTemplate();" style="width: 100% !important; padding: 18px !important; margin-bottom: 15px !important; background: linear-gradient(135deg, #4285f4 0%, #3367d6 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important;">템플릿 복사</button>
+
+<!-- 템플릿 URL 안내 -->
 <div style="padding: 15px !important; margin-bottom: 15px !important; background: #f8f9fa !important; border-radius: 8px !important; border: 1px solid #e0e0e0 !important;">
-<div style="font-weight: bold !important; margin-bottom: 8px !important; color: #202124 !important;">📱 모바일 사용자:</div>
-<div style="font-size: 14px !important; color: #5f6368 !important; line-height: 1.6 !important;">위 버튼이 작동하지 않으면:<br />1. PC에서 템플릿 복사 권장<br />2. 또는 아래 URL을 복사하여<br />&nbsp;&nbsp;&nbsp;브라우저 주소창에 직접 입력</div>
-<input style="width: 100% !important; padding: 10px !important; margin-top: 10px !important; font-size: 12px !important; border: 1px solid #dadce0 !important; border-radius: 4px !important; background: white !important;" readonly="readonly" type="text" value="https://docs.google.com/spreadsheets/d/1lPB8pLFzoKVkKy4SPjoOWv_SfYwsJ6_TrIBALuobxko/copy" /></div>
-<!-- 조편성 버튼 --> <button style="width: 100% !important; padding: 18px !important; margin-bottom: 15px !important; background: linear-gradient(135deg, #00897b 0%, #00695c 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important;">⚡ 조편성</button> <!-- 조편성 섹션 -->
+    <div style="font-weight: bold !important; margin-bottom: 8px !important; color: #202124 !important;">📱 모바일 사용자:</div>
+    <div style="font-size: 14px !important; color: #5f6368 !important; line-height: 1.6 !important;">
+        위 버튼이 작동하지 않으면:<br>
+        1. PC에서 템플릿 복사 권장<br>
+        2. 또는 아래 URL을 복사하여<br>
+        &nbsp;&nbsp;&nbsp;브라우저 주소창에 직접 입력
+    </div>
+    <input type="text" readonly value="https://docs.google.com/spreadsheets/d/1lPB8pLFzoKVkKy4SPjoOWv_SfYwsJ6_TrIBALuobxko/copy" onclick="this.select(); document.execCommand('copy'); alert('URL이 복사되었습니다!');" style="width: 100% !important; padding: 10px !important; margin-top: 10px !important; font-size: 12px !important; border: 1px solid #dadce0 !important; border-radius: 4px !important; background: white !important;">
+</div>
+
+<!-- 조편성 버튼 -->
+<button onclick="toggleTeamAssignment()" style="width: 100% !important; padding: 18px !important; margin-bottom: 15px !important; background: linear-gradient(135deg, #00897b 0%, #00695c 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important;">⚡ 조편성</button>
+
+<!-- 조편성 섹션 -->
 <div id="teamAssignmentSection" style="display: none !important; margin-bottom: 20px !important;">
 <div style="background: #f8f9fa !important; padding: 20px !important; border-radius: 8px !important; border: 2px solid #00897b !important;">
-<h4 style="color: #00695c !important; margin-bottom: 15px !important; font-size: 17px !important; font-weight: 700 !important; text-align: center !important;" data-ke-size="size20">⚡ 자동 조편성</h4>
+<h4 style="color: #00695c !important; margin-bottom: 15px !important; font-size: 17px !important; font-weight: 700 !important; text-align: center !important;">⚡ 자동 조편성</h4>
+
 <div style="margin-bottom: 15px !important; padding: 12px !important; background: #e0f2f1 !important; border-radius: 6px !important;">
-<p style="margin: 0 !important; font-size: 14px !important; color: #00695c !important; line-height: 1.6 !important;" data-ke-size="size16">📋 접수명단 시트의 참가자를 자동으로 조편성합니다.<br />👥 한 조당 인원수를 선택하세요.</p>
+<p style="margin: 0 !important; font-size: 14px !important; color: #00695c !important; line-height: 1.6 !important;">
+📋 접수명단 시트의 참가자를 자동으로 조편성합니다.<br>
+👥 한 조당 인원수를 선택하세요.
+</p>
 </div>
-<div style="margin-bottom: 15px !important;"><label style="display: block !important; margin-bottom: 5px !important; color: #495057 !important; font-size: 14px !important; font-weight: 600 !important;">조당 인원 수</label><select id="playersPerTeam" style="width: 100% !important; padding: 12px !important; border: 2px solid #dee2e6 !important; border-radius: 6px !important; font-size: 15px !important; font-weight: 600 !important; box-sizing: border-box !important;">
+
+<div style="margin-bottom: 15px !important;">
+<label style="display: block !important; margin-bottom: 5px !important; color: #495057 !important; font-size: 14px !important; font-weight: 600 !important;">조당 인원 수</label>
+<select id="playersPerTeam" style="width: 100% !important; padding: 12px !important; border: 2px solid #dee2e6 !important; border-radius: 6px !important; font-size: 15px !important; font-weight: 600 !important; box-sizing: border-box !important;">
 <option value="4">4명 (권장)</option>
 <option value="3">3명</option>
 <option value="2">2명</option>
-</select></div>
-<button style="width: 100% !important; padding: 14px !important; background: #00897b !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 16px !important; font-weight: 900 !important; cursor: pointer !important; margin-bottom: 10px !important;">🎯 조편성 실행</button>
-<div id="teamAssignmentResult" style="margin-top: 15px !important; padding: 12px !important; background: white !important; border-radius: 6px !important; display: none !important; max-height: 300px !important; overflow-y: auto !important;">&nbsp;</div>
+</select>
+</div>
+
+<button onclick="executeTeamAssignment()" style="width: 100% !important; padding: 14px !important; background: #00897b !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 16px !important; font-weight: 900 !important; cursor: pointer !important; margin-bottom: 10px !important;">🎯 조편성 실행</button>
+
+<div id="teamAssignmentResult" style="margin-top: 15px !important; padding: 12px !important; background: white !important; border-radius: 6px !important; display: none !important; max-height: 300px !important; overflow-y: auto !important;"></div>
 </div>
 </div>
-<!-- QR코드 생성하기 버튼 --> <button style="width: 100% !important; padding: 18px !important; margin-bottom: 15px !important; background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important;">QR코드 생성하기</button> <!-- QR 섹션 -->
+
+<!-- QR코드 생성하기 버튼 -->
+<button onclick="toggleQRSection()" style="width: 100% !important; padding: 18px !important; margin-bottom: 15px !important; background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important;">QR코드 생성하기</button>
+
+<!-- QR 섹션 -->
 <div id="qrSection" style="display: none !important; margin-bottom: 20px !important;">
 <div style="background: #f8f9fa !important; padding: 20px !important; border-radius: 8px !important;">
-<h4 style="color: #495057 !important; margin-bottom: 15px !important; font-size: 17px !important; font-weight: 700 !important; text-align: center !important;" data-ke-size="size20">QR코드 설정</h4>
-<div style="margin-bottom: 15px !important;"><label style="display: block !important; margin-bottom: 5px !important; color: #495057 !important; font-size: 14px !important; font-weight: 600 !important;">대회 코드</label> <input id="qrEventCode" style="width: 100% !important; padding: 12px !important; border: 2px solid #dee2e6 !important; border-radius: 6px !important; font-size: 15px !important; font-weight: 600 !important; box-sizing: border-box !important;" type="text" placeholder="예: 2026spring" /></div>
-<div style="margin-bottom: 15px !important;"><label style="display: block !important; margin-bottom: 5px !important; color: #495057 !important; font-size: 14px !important; font-weight: 600 !important;">웹앱 URL</label> <input id="qrWebAppUrl" style="width: 100% !important; padding: 12px !important; border: 2px solid #dee2e6 !important; border-radius: 6px !important; font-size: 15px !important; font-weight: 600 !important; box-sizing: border-box !important;" type="text" placeholder="https://script.google.com/macros/s/..." /></div>
-<button style="width: 100% !important; padding: 14px !important; background: #9c27b0 !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 16px !important; font-weight: 900 !important; cursor: pointer !important; margin-bottom: 15px !important;">QR 코드 생성</button>
+<h4 style="color: #495057 !important; margin-bottom: 15px !important; font-size: 17px !important; font-weight: 700 !important; text-align: center !important;">QR코드 설정</h4>
+
+<div style="margin-bottom: 15px !important;">
+<label style="display: block !important; margin-bottom: 5px !important; color: #495057 !important; font-size: 14px !important; font-weight: 600 !important;">대회 코드</label>
+<input type="text" id="qrEventCode" placeholder="예: 2026spring" style="width: 100% !important; padding: 12px !important; border: 2px solid #dee2e6 !important; border-radius: 6px !important; font-size: 15px !important; font-weight: 600 !important; box-sizing: border-box !important;">
+</div>
+
+<div style="margin-bottom: 15px !important;">
+<label style="display: block !important; margin-bottom: 5px !important; color: #495057 !important; font-size: 14px !important; font-weight: 600 !important;">웹앱 URL</label>
+<input type="text" id="qrWebAppUrl" placeholder="https://script.google.com/macros/s/..." style="width: 100% !important; padding: 12px !important; border: 2px solid #dee2e6 !important; border-radius: 6px !important; font-size: 15px !important; font-weight: 600 !important; box-sizing: border-box !important;">
+</div>
+
+<button onclick="generateQRCodeWithParams()" style="width: 100% !important; padding: 14px !important; background: #9c27b0 !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 16px !important; font-weight: 900 !important; cursor: pointer !important; margin-bottom: 15px !important;">QR 코드 생성</button>
+
 <div id="qrcodeDisplay" style="display: none !important; text-align: center !important; margin-top: 20px !important;">
-<div id="qrcode" style="margin: 20px auto !important; padding: 15px !important; background: white !important; display: inline-block !important; border: 2px solid #dee2e6 !important; border-radius: 8px !important;">&nbsp;</div>
+<div id="qrcode" style="margin: 20px auto !important; padding: 15px !important; background: white !important; display: inline-block !important; border: 2px solid #dee2e6 !important; border-radius: 8px !important;"></div>
 <div id="qrInfo" style="padding: 15px !important; background: #e9ecef !important; border-radius: 6px !important; font-size: 13px !important; margin-top: 15px !important; text-align: left !important;">
-<p style="margin: 5px 0 !important; font-weight: 600 !important;" data-ke-size="size16">📱 QR코드 사용 방법:</p>
-<p style="margin: 5px 0 !important;" data-ke-size="size16">1. 이 QR코드를 스캔하면 점수 입력 페이지가 열립니다</p>
-<p style="margin: 5px 0 !important;" data-ke-size="size16">2. 대회 코드와 웹앱 URL이 자동으로 설정됩니다</p>
-<p style="margin: 5px 0 !important;" data-ke-size="size16">3. 기록자가 바로 점수를 입력하고 전송할 수 있습니다</p>
+<p style="margin: 5px 0 !important; font-weight: 600 !important;">📱 QR코드 사용 방법:</p>
+<p style="margin: 5px 0 !important;">1. 이 QR코드를 스캔하면 점수 입력 페이지가 열립니다</p>
+<p style="margin: 5px 0 !important;">2. 대회 코드와 웹앱 URL이 자동으로 설정됩니다</p>
+<p style="margin: 5px 0 !important;">3. 기록자가 바로 점수를 입력하고 전송할 수 있습니다</p>
 </div>
 </div>
 </div>
 </div>
-<button style="width: 100% !important; padding: 16px !important; background: #6c757d !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 16px !important; font-weight: 900 !important; cursor: pointer !important;">닫기</button></div>
+
+<button onclick="document.getElementById('adminModal').style.display='none';" style="width: 100% !important; padding: 16px !important; background: #6c757d !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 16px !important; font-weight: 900 !important; cursor: pointer !important;">닫기</button>
 </div>
+</div>
+
 <p data-ke-size="size16">&nbsp;</p>
+
+<script>
+/* ===== 모달 배경 스크롤 잠금/복원 ===== */
+(function() {
+  var _scrollY = 0;
+
+  window.__lockBodyScrollForModal = function() {
+    try {
+      _scrollY = window.scrollY || window.pageYOffset || 0;
+      document.body.classList.add('modal-open');
+      document.body.style.position = 'fixed';
+      document.body.style.top = (-_scrollY) + 'px';
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.width = '100%';
+    } catch (e) {}
+  };
+
+  window.__unlockBodyScrollForModal = function() {
+    try {
+      document.body.classList.remove('modal-open');
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
+      window.scrollTo(0, _scrollY);
+    } catch (e) {}
+  };
+
+  // adminModal이 열릴 때/닫힐 때 자동 적용 (표준 함수명이 있을 경우 우선 적용)
+  var openNames = ['openAdminModal', 'showAdminModal', 'openAdminTool', 'openAdminToolModal'];
+  var closeNames = ['closeAdminModal', 'hideAdminModal', 'closeAdminTool', 'closeAdminToolModal'];
+
+  openNames.forEach(function(fn) {
+    if (typeof window[fn] === 'function') {
+      var _orig = window[fn];
+      window[fn] = function() {
+        var r = _orig.apply(this, arguments);
+        window.__lockBodyScrollForModal();
+        return r;
+      };
+    }
+  });
+
+  closeNames.forEach(function(fn) {
+    if (typeof window[fn] === 'function') {
+      var _orig = window[fn];
+      window[fn] = function() {
+        var r = _orig.apply(this, arguments);
+        window.__unlockBodyScrollForModal();
+        return r;
+      };
+    }
+  });
+
+  // 안전장치: adminModal display가 flex로 바뀌면 잠금, none이면 해제
+  try {
+    var modal = document.getElementById('adminModal');
+    if (modal) {
+      var obs = new MutationObserver(function() {
+        var d = (modal.style && modal.style.display) ? modal.style.display : '';
+        if (d && d !== 'none') window.__lockBodyScrollForModal();
+        if (d === 'none') window.__unlockBodyScrollForModal();
+      });
+      obs.observe(modal, { attributes: true, attributeFilter: ['style'] });
+    }
+  } catch (e) {}
+})();
+</script>
+
+
+<script>
+/* ===== 점수모달 열림/닫힘에 배경 스크롤 잠금 연동 ===== */
+(function() {
+  function watchModal(id) {
+    try {
+      var modal = document.getElementById(id);
+      if (!modal) return;
+      var obs = new MutationObserver(function() {
+        var d = (modal.style && modal.style.display) ? modal.style.display : '';
+        if (d && d !== 'none') window.__lockBodyScrollForModal && window.__lockBodyScrollForModal();
+        if (d === 'none') window.__unlockBodyScrollForModal && window.__unlockBodyScrollForModal();
+      });
+      obs.observe(modal, { attributes: true, attributeFilter: ['style'] });
+    } catch (e) {}
+  }
+  watchModal('scoreModal');
+})();
+</script>
+
+</body>
+</html>
