@@ -260,7 +260,7 @@ html, body {
 /* ===== 모달 열렸을 때 배경 스크롤 잠금 ===== */
 body.modal-open {
   overflow: hidden !important;
-  touch-action: none !important;
+  /* NOTE: touch-action:none 는 iOS에서 버튼 탭까지 막는 경우가 있어 제거 */
 }
 
 #adminModal {
@@ -3404,7 +3404,7 @@ body.modal-open {
             
             const modal = document.getElementById('adminModal');
             if (modal) {
-                modal.style.display = 'block';
+                modal.style.display = 'flex';
                 console.log('모달 표시됨');
             } else {
                 console.error('adminModal을 찾을 수 없습니다');
@@ -3494,8 +3494,7 @@ body.modal-open {
 <script>
 // 템플릿 복사 함수 (모바일 개선)
 function copyTemplate() {
-    var templateUrl = 'https://docs.google.com/spreadsheets/d/1lHdoNk-NDZixpmSbcd5X76rOlXeSYJnngkKMY4WCST8
-/copy';
+    var templateUrl = 'https://docs.google.com/spreadsheets/d/1lPB8pLFzoKVkKy4SPjoOWv_SfYwsJ6_TrIBALuobxko/copy';
     
     // 모바일 감지
     var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
