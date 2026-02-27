@@ -260,8 +260,7 @@ html, body {
 /* ===== 모달 열렸을 때 배경 스크롤 잠금 ===== */
 body.modal-open {
   overflow: hidden !important;
-  /* NOTE: touch-action:none 는 iOS에서 버튼 탭까지 막는 경우가 있어 제거 */
-}
+  }
 
 #adminModal {
   overscroll-behavior: contain !important;
@@ -3893,22 +3892,16 @@ Apps Script 배포 후 생성된 웹앱 URL을 입력하세요.
     try {
       _scrollY = window.scrollY || window.pageYOffset || 0;
       document.body.classList.add('modal-open');
-      document.body.style.position = 'fixed';
-      document.body.style.top = (-_scrollY) + 'px';
-      document.body.style.left = '0';
-      document.body.style.right = '0';
-      document.body.style.width = '100%';
+      // iOS/Safari에서 body를 fixed로 잠그면 모달 내 버튼 탭이 먹통이 되는 경우가 있어
+      // overflow만 잠그는 방식으로 변경합니다.
+      document.body.style.overflow = 'hidden';
     } catch (e) {}
   };
 
   window.__unlockBodyScrollForModal = function() {
     try {
       document.body.classList.remove('modal-open');
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.left = '';
-      document.body.style.right = '';
-      document.body.style.width = '';
+      document.body.style.overflow = '';
       window.scrollTo(0, _scrollY);
     } catch (e) {}
   };
@@ -3973,6 +3966,50 @@ Apps Script 배포 후 생성된 웹앱 URL을 입력하세요.
   watchModal('scoreModal');
 })();
 </script>
+
+
+<script>
+/* ===== (진단용) 관리자 모달 버튼 탭 감지 + 오류 표시 ===== */
+(function(){
+  function toast(msg){
+    try{
+      var t=document.getElementById('__toast');
+      if(!t){
+        t=document.createElement('div');
+        t.id='__toast';
+        t.style.cssText='position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:rgba(0,0,0,0.78);color:#fff;padding:10px 14px;border-radius:10px;z-index:2147483647;font-size:14px;font-weight:700;max-width:92vw;text-align:center;display:none;';
+        document.body.appendChild(t);
+      }
+      t.textContent=msg;
+      t.style.display='block';
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer=setTimeout(function(){t.style.display='none';},1200);
+    }catch(e){}
+  }
+
+  function wrap(name, label){
+    var fn=window[name];
+    if(typeof fn!=='function') return;
+    window[name]=function(){
+      toast(label+' 클릭');
+      try{ return fn.apply(this, arguments); }
+      catch(e){ alert(label+' 오류: '+(e && e.message ? e.message : e)); throw e; }
+    };
+  }
+
+  // 버튼들 래핑
+  wrap('saveURL','URL 저장');
+  wrap('copyTemplate','템플릿 복사');
+  wrap('toggleTeamAssignment','조편성');
+  wrap('toggleQRSection','QR코드');
+  wrap('executeTeamAssignment','조편성 실행');
+})();
+</script>
+<style>
+/* 모달 클릭/탭 보강 */
+#adminModal { pointer-events:auto !important; }
+#adminModal * { pointer-events:auto !important; }
+</style>
 
 </body>
 </html>
