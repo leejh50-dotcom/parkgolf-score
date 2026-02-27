@@ -2047,7 +2047,7 @@ body.modal-open {
 <div class="modal-content" style="padding: 0; display: flex; flex-direction: column; max-height: 80vh;">
 <h3 style="text-align: center; margin: 20px 0; padding: 0 20px; color: #1e3c72;">저장된 이름 목록</h3>
 <div id="nameListContainer" style="overflow-y: auto; flex: 1; padding: 0 20px;"></div>
-<div style="padding: 15px 20px 20px 20px; background: white; border-top: 1px solid #eee;">
+<div class="modal-content" style="position: relative !important; padding: 15px 20px 20px 20px; background: white; border-top: 1px solid #eee;>
 <button id="nameListCloseBtn" class="modal-close" type="button" style="margin-top: 0;">닫기</button>
 </div>
 </div>
@@ -3276,10 +3276,8 @@ body.modal-open {
             
             fetch(webAppUrl, {
                 method: 'POST',
-                mode: 'no-cors', // CORS 문제 해결
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                mode: 'no-cors',
+                headers: {'Content-Type': 'text/plain;charset=utf-8'},
                 body: JSON.stringify(data)
             })
             .then(function(response) {
@@ -3404,7 +3402,7 @@ body.modal-open {
             
             const modal = document.getElementById('adminModal');
             if (modal) {
-                modal.style.display = 'block';
+                modal.style.display = 'flex';
                 console.log('모달 표시됨');
             } else {
                 console.error('adminModal을 찾을 수 없습니다');
@@ -3414,6 +3412,39 @@ body.modal-open {
         window.closeAdminModal = function() {
             document.getElementById('adminModal').style.display = 'none';
         };
+
+        // ✅ 모달 닫기 버튼/바깥 클릭/ESC 닫기 (최종 패치)
+        (function() {
+          var modal = document.getElementById('adminModal');
+          if (!modal) return;
+
+          // 닫기 버튼
+          var btn = document.getElementById('adminModalCloseBtn');
+          if (btn) {
+            btn.addEventListener('click', function(e){
+              e.preventDefault();
+              if (window.closeAdminModal) window.closeAdminModal();
+              else modal.style.display = 'none';
+            });
+          }
+
+          // 바깥(오버레이) 클릭 닫기
+          modal.addEventListener('click', function(e){
+            if (e.target === modal) {
+              if (window.closeAdminModal) window.closeAdminModal();
+              else modal.style.display = 'none';
+            }
+          });
+
+          // ESC 키 닫기
+          document.addEventListener('keydown', function(e){
+            if (e.key === 'Escape' && modal.style.display !== 'none') {
+              if (window.closeAdminModal) window.closeAdminModal();
+              else modal.style.display = 'none';
+            }
+          });
+        })();
+
 
         window.saveWebAppUrl = function() {
             const url = document.getElementById('webAppUrl').value.trim();
@@ -3559,9 +3590,7 @@ function executeTeamAssignment() {
         fetch(webAppUrl, {
             method: 'POST',
             mode: 'no-cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: {'Content-Type': 'text/plain;charset=utf-8'},
             body: JSON.stringify({
                 action: 'teamAssignment',
                 playersPerTeam: playersPerTeam
@@ -3910,8 +3939,14 @@ function saveURL() {
 </div>
 
 <!-- 관리자 도구 모달 (parkgolf-app 밖에 배치) -->
-<div id="adminModal" style="display: none !important; position: fixed !important; z-index: 99999 !important; left: 0 !important; top: 0 !important; width: 100% !important; height: 100% !important; background: rgba(0, 0, 0, 0.6) !important; overflow: auto !important; padding: 20px !important;">
+<div id="adminModal" style="display: none; position: fixed !important; z-index: 99999 !important; left: 0 !important; top: 0 !important; width: 100% !important; height: 100% !important; background: rgba(0, 0, 0, 0.6) !important; overflow: auto !important; padding: 20px !important;">
 <div style="background: white !important; margin: 50px auto !important; padding: 30px !important; border-radius: 12px !important; max-width: 800px !important; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;">
+  <button type="button" id="adminModalCloseBtn" aria-label="닫기" style="
+    position: absolute; top: 10px; right: 10px;
+    width: 44px; height: 44px; border-radius: 12px;
+    border: 1px solid #d0d7de; background: #fff;
+    font-size: 22px; line-height: 1; cursor: pointer;">✕</button>
+
 <h3 style="text-align: center !important; color: #1e3c72 !important; margin-bottom: 25px !important; font-size: 22px !important; font-weight: 900 !important;">대회 관리자 전용 관리자 도구 열기</h3>
 
 <!-- 웹앱 URL 설정 섹션 -->
