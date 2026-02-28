@@ -190,6 +190,12 @@ input, textarea, select {
   pointer-events: auto;
 }
 
+
+/* v5.3 iOS tap + modal UX */
+button, .btn, .big-btn, .action-btn, .modal button { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+input, textarea, select { font-size: 16px; } /* prevent iOS zoom */
+.modal { -webkit-overflow-scrolling: touch; }
+.admin-ver{ display:inline-block; margin-left:8px; padding:2px 8px; border-radius:999px; font-size:12px; font-weight:800; background:#eef2ff; color:#3730a3; vertical-align:middle;}
 </style>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -3866,7 +3872,7 @@ function saveURL() {
   <div class="modal-content">
     <div class="admin-head">
       <div>
-        <h3 class="admin-title">대회 관리자 도구</h3>
+        <h3 class="admin-title">대회 관리자 도구 <span class="admin-ver">v5.3</span></h3>
         <div class="admin-sub">휴대폰에서 바로 진행할 수 있도록 순서를 위에 배치했습니다. PC 안내는 아래에서 펼쳐서 확인하세요.</div>
       </div>
       <button type="button" class="close-x" onclick="closeAdminModalQuick()" aria-label="닫기">×</button>
@@ -4089,5 +4095,7 @@ function closeAdminModalQuick(){
 })();
 
 </script>
+
+<div id="buildTag" style="position:fixed;right:10px;bottom:10px;z-index:9999;font-size:12px;font-weight:800;background:rgba(0,0,0,.45);color:#fff;padding:6px 10px;border-radius:999px;">sv3 v5.3</div>
 </body>
 </html>
