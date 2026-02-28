@@ -1,7 +1,7 @@
 {
   "name": "파시스 sv3.0",
   "short_name": "파시스3",
-  "start_url": "./sv3.html",
+  "start_url": "/parkgolf-score/sv3.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#0f9d58",
