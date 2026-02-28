@@ -2062,7 +2062,7 @@ body.modal-open {
 
 <!-- 관리자 도구 버튼 -->
 <div style="margin-top: 40px !important; margin-bottom: 30px !important;">
-<button class="admin-btn" onclick="document.getElementById('adminModal').style.display='flex';" style="width: 100% !important; padding: 18px !important; background: linear-gradient(135deg, #f4b400 0%, #db9200 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">대회 관리자 전용 관리자 도구 열기</button>
+<button id="openAdminToolBtn" type="button" class="admin-btn" onclick="openAdminModalSafe(event);" style="width: 100% !important; padding: 18px !important; background: linear-gradient(135deg, #f4b400 0%, #db9200 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">대회 관리자 전용 관리자 도구 열기</button>
 </div>
 
 </div>
@@ -3960,6 +3960,32 @@ function saveURL() {
 </div>
 
 <script>
+
+/* ===== 관리자 도구 열기: iOS 터치/클릭 안정화 ===== */
+function openAdminModalSafe(e){
+  try{
+    if(e){ e.preventDefault(); e.stopPropagation(); }
+    var m = document.getElementById('adminModal');
+    if(!m) return;
+    m.style.display = 'flex';
+    // 배경 스크롤 잠금
+    if(typeof window.__lockBodyScrollForModal === 'function'){ window.__lockBodyScrollForModal(); }
+  }catch(err){}
+}
+document.addEventListener('DOMContentLoaded', function(){
+  var btn = document.getElementById('openAdminToolBtn');
+  if(btn){
+    // iOS에서 click 지연/누락 방지
+    btn.style.touchAction = 'manipulation';
+    btn.addEventListener('touchstart', function(ev){
+      ev.preventDefault();
+      ev.stopPropagation();
+      openAdminModalSafe(ev);
+    }, {passive:false});
+    btn.addEventListener('click', openAdminModalSafe, {passive:false});
+  }
+});
+
 /* ===== 모달 배경 스크롤 잠금/복원 ===== */
 (function() {
   var _scrollY = 0;
@@ -4071,7 +4097,7 @@ function closeAdminModalQuick(){
     });
   }
   document.addEventListener('DOMContentLoaded', function(){
-    bindFastTap('.key-btn, .confirm-btn-top, .penalty-btn-side, .back-btn, .clear-btn');
+    bindFastTap('.key-btn, .confirm-btn-top, .penalty-btn-side, .back-btn, .clear-btn, .admin-btn');
   });
 })();
 
