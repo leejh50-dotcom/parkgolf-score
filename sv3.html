@@ -196,6 +196,19 @@ button, .btn, .big-btn, .action-btn, .modal button { touch-action: manipulation;
 input, textarea, select { font-size: 16px; } /* prevent iOS zoom */
 .modal { -webkit-overflow-scrolling: touch; }
 .admin-ver{ display:inline-block; margin-left:8px; padding:2px 8px; border-radius:999px; font-size:12px; font-weight:800; background:#eef2ff; color:#3730a3; vertical-align:middle;}
+
+/* iOS에서 '지도' 버튼 줄바꿈 방지 */
+@media (max-width: 768px) {
+  .parkgolf-app .map-link{
+    width: 76px !important;
+    padding: 12px 6px !important;
+    font-size: 18px !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+    line-height: 1 !important;
+  }
+}
+
 </style>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -215,6 +228,19 @@ input, textarea, select { font-size: 16px; } /* prevent iOS zoom */
 #adminModal .modal-content, .modal .modal-content {
   margin: 0 auto !important;
 }
+
+/* iOS에서 '지도' 버튼 줄바꿈 방지 */
+@media (max-width: 768px) {
+  .parkgolf-app .map-link{
+    width: 76px !important;
+    padding: 12px 6px !important;
+    font-size: 18px !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+    line-height: 1 !important;
+  }
+}
+
 </style>
 
 <style>
@@ -272,6 +298,19 @@ input, textarea, select { font-size: 16px; } /* prevent iOS zoom */
     padding: 14px !important;
   }
 }
+
+/* iOS에서 '지도' 버튼 줄바꿈 방지 */
+@media (max-width: 768px) {
+  .parkgolf-app .map-link{
+    width: 76px !important;
+    padding: 12px 6px !important;
+    font-size: 18px !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+    line-height: 1 !important;
+  }
+}
+
 </style>
 <style>
 /* ===== 관리자 모달: 휴대폰(모바일) 중심 재구성 v5.1 ===== */
@@ -311,6 +350,19 @@ input, textarea, select { font-size: 16px; } /* prevent iOS zoom */
   padding-top: 10px;
   background: linear-gradient(to top, #ffffff 70%, rgba(255,255,255,0));
 }
+
+/* iOS에서 '지도' 버튼 줄바꿈 방지 */
+@media (max-width: 768px) {
+  .parkgolf-app .map-link{
+    width: 76px !important;
+    padding: 12px 6px !important;
+    font-size: 18px !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+    line-height: 1 !important;
+  }
+}
+
 </style>
 
 <style>
@@ -319,6 +371,19 @@ input, textarea, select { font-size: 16px; } /* prevent iOS zoom */
   touch-action: manipulation !important;
   -webkit-tap-highlight-color: transparent !important;
 }
+
+/* iOS에서 '지도' 버튼 줄바꿈 방지 */
+@media (max-width: 768px) {
+  .parkgolf-app .map-link{
+    width: 76px !important;
+    padding: 12px 6px !important;
+    font-size: 18px !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+    line-height: 1 !important;
+  }
+}
+
 </style>
 
 
@@ -337,6 +402,19 @@ body.modal-open {
   -webkit-overflow-scrolling: touch !important;
   touch-action: pan-y !important;
 }
+
+/* iOS에서 '지도' 버튼 줄바꿈 방지 */
+@media (max-width: 768px) {
+  .parkgolf-app .map-link{
+    width: 76px !important;
+    padding: 12px 6px !important;
+    font-size: 18px !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+    line-height: 1 !important;
+  }
+}
+
 </style>
 
 
@@ -397,6 +475,19 @@ body.modal-open {
   #scoreModal .modal-content { width: 96vw !important; max-height: 94vh !important; }
   #scoreModal .key-btn { min-height: 56px !important; font-size: 22px !important; }
 }
+
+/* iOS에서 '지도' 버튼 줄바꿈 방지 */
+@media (max-width: 768px) {
+  .parkgolf-app .map-link{
+    width: 76px !important;
+    padding: 12px 6px !important;
+    font-size: 18px !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+    line-height: 1 !important;
+  }
+}
+
 </style>
 
 </head>
@@ -1882,6 +1973,19 @@ body.modal-open {
   }
 }
 
+
+/* iOS에서 '지도' 버튼 줄바꿈 방지 */
+@media (max-width: 768px) {
+  .parkgolf-app .map-link{
+    width: 76px !important;
+    padding: 12px 6px !important;
+    font-size: 18px !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+    line-height: 1 !important;
+  }
+}
+
 </style>
 
 
@@ -1899,7 +2003,7 @@ body.modal-open {
 </div>
 <div class="input-group location-with-map">
 <input id="locationInput" type="text" placeholder="골프장 이름" style="flex: 1; font-size: 17px !important; text-align: center !important; font-weight: 600 !important; padding: 12px !important;" />
-<button class="map-link" onclick="openMap()" style="margin-left: 8px; width: 60px; padding: 12px 8px; height: auto;">지도</button>
+<button class="map-link" onclick="openMap()" type="button">지도</button>
 </div>
 <div class="input-group">
 <input id="eventNameInput" type="text" placeholder="대회명" style="text-align: center !important; font-size: 17px !important; font-weight: 600 !important; padding: 12px !important;" />
@@ -3672,119 +3776,159 @@ function toggleQRSection() {
     }
 }
 
-// 파라미터 포함한 QR 코드 생성
+// 파라미터 포함한 QR 코드 생성 (iOS 호환 강화)
 function generateQRCodeWithParams() {
     try { showToast('QR 코드 생성 클릭'); } catch(e) {}
-    var eventCode = document.getElementById('qrEventCode').value.trim();
-    var webAppUrl = document.getElementById('qrWebAppUrl').value.trim();
-    
-    if (!eventCode) {
-        alert('대회 코드를 입력해주세요.');
-        return;
-    }
-    
-    if (!webAppUrl) {
-        alert('웹앱 URL을 입력해주세요.');
-        return;
-    }
-    
+
+    var eventCode = (document.getElementById('qrEventCode').value || '').trim();
+    var webAppUrl = (document.getElementById('qrWebAppUrl').value || '').trim();
+
+    if (!eventCode) { alert('대회 코드를 입력해주세요.'); return; }
+    if (!webAppUrl) { alert('웹앱 URL을 입력해주세요.'); return; }
     if (!webAppUrl.includes('script.google.com')) {
         alert('올바른 Google Apps Script 웹앱 URL을 입력해주세요.');
         return;
     }
-    
+
     // 현재 페이지 URL에 파라미터 추가
     var baseUrl = window.location.origin + window.location.pathname;
     var qrUrl = baseUrl + '?eventCode=' + encodeURIComponent(eventCode) + '&webAppUrl=' + encodeURIComponent(webAppUrl);
-    
-    // QR 코드 생성
-    var qc = document.getElementById('qrcode');
-    qc.innerHTML = '';
-    
-    if (typeof QRCode !== 'undefined') {
 
-        // 1단계: 숨겨진 임시 div에 QR 코드 생성
+    var qc = document.getElementById('qrcode');
+    var displayWrap = document.getElementById('qrcodeDisplay');
+
+    // 먼저 표시 영역을 확실히 열어둠(생성 실패 시에도 에러를 보여주기 위함)
+    if (displayWrap) displayWrap.style.display = 'block';
+    qc.innerHTML = '';
+
+    // QRCode 라이브러리 동적 로딩(예상치 못한 로딩 실패 대비)
+    function ensureQrLib(cb) {
+        if (typeof QRCode !== 'undefined') return cb(true);
+
+        var s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js';
+        s.onload = function(){ cb(typeof QRCode !== 'undefined'); };
+        s.onerror = function(){ cb(false); };
+        document.head.appendChild(s);
+    }
+
+    // QRCode.js가 canvas 또는 img로 렌더링하므로 둘 다 대응
+    function renderToCanvasFromTemp(tempDiv, done) {
+        var canvas = tempDiv.querySelector('canvas');
+        if (canvas) return done(canvas);
+
+        var img = tempDiv.querySelector('img');
+        if (img) {
+            // 이미지가 아직 로딩 중일 수 있음
+            if (!img.complete) {
+                img.onload = function(){ renderToCanvasFromTemp(tempDiv, done); };
+                img.onerror = function(){ done(null); };
+                return;
+            }
+            try {
+                var c = document.createElement('canvas');
+                c.width = img.naturalWidth || 512;
+                c.height = img.naturalHeight || 512;
+                var ctx = c.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                return done(c);
+            } catch (e) {
+                return done(null);
+            }
+        }
+        done(null);
+    }
+
+    ensureQrLib(function(ok){
+        if (!ok) {
+            qc.innerHTML = '<p style="color:#dc3545;font-weight:700;">QR 코드 라이브러리를 불러올 수 없습니다.</p>';
+            return;
+        }
+
+        // 1) 임시 영역에 먼저 생성(렌더 방식(canvas/img)에 상관없이 캡처 가능)
         var tempDiv = document.createElement('div');
         tempDiv.style.position = 'absolute';
         tempDiv.style.left = '-9999px';
+        tempDiv.style.top = '0';
         document.body.appendChild(tempDiv);
 
-        new QRCode(tempDiv, {
-            text: qrUrl,
-            width: 512,
-            height: 512,
-            colorDark: '#000000',
-            colorLight: '#ffffff',
-            correctLevel: QRCode.CorrectLevel.H
-        });
-
-        // 2단계: QRCode.js 렌더링 완료 후 canvas에 텍스트 합성
-        setTimeout(function() {
-            var srcCanvas = tempDiv.querySelector('canvas');
-            if (!srcCanvas) {
-                document.body.removeChild(tempDiv);
-                qc.innerHTML = '<p style="color:#dc3545;">QR 코드 생성 실패</p>';
-                return;
-            }
-
-            // 3단계: 최종 출력용 새 canvas 생성
-            var finalCanvas = document.createElement('canvas');
-            var padding = 30;                       // 흰 여백
-            var size = srcCanvas.width;
-            finalCanvas.width  = size + padding * 2;
-            finalCanvas.height = size + padding * 2;
-            var ctx = finalCanvas.getContext('2d');
-
-            // 4단계: 흰 배경
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
-
-            // 5단계: QR 이미지 복사
-            ctx.drawImage(srcCanvas, padding, padding);
-
-            // 6단계: 중앙에 대회코드 박스 + 텍스트
-            var cx = finalCanvas.width  / 2;
-            var cy = finalCanvas.height / 2;
-
-            var fontSize = Math.floor(size * 0.068);
-            ctx.font = 'bold ' + fontSize + 'px Arial, sans-serif';
-            var textWidth = ctx.measureText(eventCode).width;
-            var boxW = textWidth + 32;
-            var boxH = fontSize + 20;
-
-            // 흰 배경 박스 (둥근 모서리 효과)
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(cx - boxW / 2 - 2, cy - boxH / 2 - 2, boxW + 4, boxH + 4);
-
-            // 청록색 테두리
-            ctx.strokeStyle = '#00897b';
-            ctx.lineWidth = 4;
-            ctx.strokeRect(cx - boxW / 2, cy - boxH / 2, boxW, boxH);
-
-            // 대회코드 텍스트
-            ctx.fillStyle = '#004d40';
-            ctx.font = 'bold ' + fontSize + 'px Arial, sans-serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(eventCode, cx, cy);
-
-            // 7단계: 최종 canvas를 화면에 표시
-            qc.innerHTML = '';
-            finalCanvas.style.maxWidth = '100%';
-            finalCanvas.style.borderRadius = '8px';
-            qc.appendChild(finalCanvas);
-
-            // 8단계: 임시 div 제거
+        try {
+            new QRCode(tempDiv, {
+                text: qrUrl,
+                width: 512,
+                height: 512,
+                colorDark: '#000000',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        } catch(e) {
             document.body.removeChild(tempDiv);
+            qc.innerHTML = '<p style="color:#dc3545;font-weight:700;">QR 코드 생성 중 오류가 발생했습니다.</p>';
+            return;
+        }
 
-            document.getElementById('qrcodeDisplay').style.display = 'block';
+        // 2) 렌더 완료 대기(아이폰에서 300ms로 부족한 경우가 있어 재시도)
+        var tries = 0;
+        (function waitRender(){
+            tries++;
+            renderToCanvasFromTemp(tempDiv, function(srcCanvas){
+                if (!srcCanvas) {
+                    if (tries < 20) return setTimeout(waitRender, 80); // 최대 1.6초 대기
+                    document.body.removeChild(tempDiv);
+                    qc.innerHTML = '<p style="color:#dc3545;font-weight:700;">QR 코드 생성 실패 (렌더링 지연)</p>';
+                    return;
+                }
 
-        }, 300);
+                // 3) (기존 기능 유지) 중앙 대회코드 박스 합성
+                var finalCanvas = document.createElement('canvas');
+                var padding = 30;
+                var size = srcCanvas.width || 512;
+                finalCanvas.width  = size + padding * 2;
+                finalCanvas.height = size + padding * 2;
+                var ctx = finalCanvas.getContext('2d');
 
-    } else {
-        qc.innerHTML = '<p style="color:#dc3545;">QR 코드 라이브러리를 불러올 수 없습니다.</p>';
-    }
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+                ctx.drawImage(srcCanvas, padding, padding);
+
+                var cx = finalCanvas.width / 2;
+                var cy = finalCanvas.height / 2;
+
+                var fontSize = Math.floor(size * 0.068);
+                ctx.font = 'bold ' + fontSize + 'px Arial, sans-serif';
+                var textWidth = ctx.measureText(eventCode).width;
+                var boxW = textWidth + 32;
+                var boxH = fontSize + 20;
+
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(cx - boxW/2 - 2, cy - boxH/2 - 2, boxW + 4, boxH + 4);
+
+                ctx.strokeStyle = '#00897b';
+                ctx.lineWidth = 4;
+                ctx.strokeRect(cx - boxW/2, cy - boxH/2, boxW, boxH);
+
+                ctx.fillStyle = '#004d40';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(eventCode, cx, cy);
+
+                // 4) 화면에 표시
+                qc.innerHTML = '';
+                finalCanvas.style.maxWidth = '100%';
+                finalCanvas.style.borderRadius = '8px';
+                finalCanvas.style.display = 'block';
+                finalCanvas.style.margin = '0 auto';
+                qc.appendChild(finalCanvas);
+
+                document.body.removeChild(tempDiv);
+
+                // 보기 좋게 QR 영역으로 스크롤
+                try { qc.scrollIntoView({behavior:'smooth', block:'center'}); } catch(e) {}
+            });
+        })();
+    });
 }
+
 
 window.qrModeActive = false;
 
