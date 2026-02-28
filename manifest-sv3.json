@@ -1,7 +1,7 @@
 {
   "name": "파시스3 (SV3.0 클럽대항용)",
   "short_name": "파시스3",
-  "start_url": "./",
+ "start_url": "/parkgolf-score/sv3.html",
   "scope": "/피클클프접수/",
   "display": "standalone",
   "background_color": "#15803d",
