@@ -3608,6 +3608,7 @@ function toggleQRSection() {
 
 // 파라미터 포함한 QR 코드 생성
 function generateQRCodeWithParams() {
+    try { showToast('QR 코드 생성 클릭'); } catch(e) {}
     var eventCode = document.getElementById('qrEventCode').value.trim();
     var webAppUrl = document.getElementById('qrWebAppUrl').value.trim();
     
@@ -3865,7 +3866,7 @@ Apps Script 배포 후 생성된 웹앱 URL을 입력하세요.
 <button onclick="toggleQRSection()" style="width: 100% !important; padding: 18px !important; margin-bottom: 15px !important; background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important;">QR코드 생성하기</button>
 
 <!-- QR 섹션 -->
-<div id="qrSection" style="display: none !important; margin-bottom: 20px !important;">
+<div id="qrSection" style="display: none; margin-bottom: 20px !important;">
 <div style="background: #f8f9fa !important; padding: 20px !important; border-radius: 8px !important;">
 <h4 style="color: #495057 !important; margin-bottom: 15px !important; font-size: 17px !important; font-weight: 700 !important; text-align: center !important;">QR코드 설정</h4>
 
@@ -3879,9 +3880,9 @@ Apps Script 배포 후 생성된 웹앱 URL을 입력하세요.
 <input type="text" id="qrWebAppUrl" placeholder="https://script.google.com/macros/s/..." style="width: 100% !important; padding: 12px !important; border: 2px solid #dee2e6 !important; border-radius: 6px !important; font-size: 15px !important; font-weight: 600 !important; box-sizing: border-box !important;">
 </div>
 
-<button onclick="generateQRCodeWithParams()" style="width: 100% !important; padding: 14px !important; background: #9c27b0 !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 16px !important; font-weight: 900 !important; cursor: pointer !important; margin-bottom: 15px !important;">QR 코드 생성</button>
+<button type="button" onclick="generateQRCodeWithParams(); return false;" style="width: 100% !important; padding: 14px !important; background: #9c27b0 !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 16px !important; font-weight: 900 !important; cursor: pointer !important; margin-bottom: 15px !important;">QR 코드 생성</button>
 
-<div id="qrcodeDisplay" style="display: none !important; text-align: center !important; margin-top: 20px !important;">
+<div id="qrcodeDisplay" style="display: none; text-align: center !important; margin-top: 20px !important;">
 <div id="qrcode" style="margin: 20px auto !important; padding: 15px !important; background: white !important; display: inline-block !important; border: 2px solid #dee2e6 !important; border-radius: 8px !important;"></div>
 <div id="qrInfo" style="padding: 15px !important; background: #e9ecef !important; border-radius: 6px !important; font-size: 13px !important; margin-top: 15px !important; text-align: left !important;">
 <p style="margin: 5px 0 !important; font-weight: 600 !important;">📱 QR코드 사용 방법:</p>
@@ -3909,25 +3910,24 @@ Apps Script 배포 후 생성된 웹앱 URL을 입력하세요.
 
   window.__lockBodyScrollForModal = function() {
     try {
-      _scrollY = window.scrollY || window.pageYOffset || 0;
+      // iOS/PWA에서 position:fixed + touch-action 조합은 클릭을 막는 경우가 있어
+      // 가장 안전한 방식(overflow hidden)으로만 배경 스크롤을 잠금
       document.body.classList.add('modal-open');
-      document.body.style.position = 'fixed';
-      document.body.style.top = (-_scrollY) + 'px';
-      document.body.style.left = '0';
-      document.body.style.right = '0';
-      document.body.style.width = '100%';
+      document.documentElement.classList.add('modal-open');
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+      // iOS bounce 방지
+      document.body.style.webkitOverflowScrolling = 'auto';
     } catch (e) {}
   };
 
   window.__unlockBodyScrollForModal = function() {
     try {
       document.body.classList.remove('modal-open');
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.left = '';
-      document.body.style.right = '';
-      document.body.style.width = '';
-      window.scrollTo(0, _scrollY);
+      document.documentElement.classList.remove('modal-open');
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+      document.body.style.webkitOverflowScrolling = '';
     } catch (e) {}
   };
 
