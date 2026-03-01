@@ -3687,11 +3687,11 @@ function generateQRCodeWithParams() {
         return;
     }
 
-    // QR에 담을 주소 (현재 페이지 URL + 파라미터)
     var baseUrl = window.location.origin + window.location.pathname;
-    var qrUrl = baseUrl + '?eventCode=' + encodeURIComponent(eventCode) + '&webAppUrl=' + encodeURIComponent(webAppUrl);
 
-    // QRCodeJS가 로드되어 있는지 확인
+    // 1) "전체 QR"(eventCode+webAppUrl) 시도
+    var fullUrl = baseUrl + '?eventCode=' + encodeURIComponent(eventCode) + '&webAppUrl=' + encodeURIComponent(webAppUrl);
+
     if (typeof QRCode === 'undefined') {
         qc.innerHTML = '<p style="color:#dc3545; font-weight:800;">QR 코드 라이브러리를 불러올 수 없습니다.</p>';
         return;
@@ -3706,9 +3706,12 @@ function generateQRCodeWithParams() {
     var box = document.createElement('div');
     box.style.cssText = 'position:relative; width:320px; max-width:92vw; background:#fff; border-radius:14px; padding:10px; box-shadow:0 6px 20px rgba(0,0,0,0.18);';
 
-    // QR이 실제로 그려질 컨테이너 (QRCodeJS가 img/canvas를 생성)
+    // QR 컨테이너(크기 고정)
     var qrDiv = document.createElement('div');
     qrDiv.id = 'qrLocal';
+    qrDiv.style.width = '320px';
+    qrDiv.style.height = '320px';
+    qrDiv.style.margin = '0 auto';
     box.appendChild(qrDiv);
 
     // 중앙 라벨(대회코드) 오버레이
@@ -3717,59 +3720,85 @@ function generateQRCodeWithParams() {
     label.style.cssText =
         'position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);' +
         'background:#ffffff; border:3px solid #10a37f; border-radius:10px;' +
-        'padding:6px 10px; font-weight:900; font-size:20px; line-height:1; color:#0f5f4a;';
+        'padding:6px 10px; font-weight:900; font-size:20px; line-height:1; color:#0f5f4a;' +
+        'pointer-events:none;';
     box.appendChild(label);
 
     wrap.appendChild(box);
     qc.appendChild(wrap);
 
-    // 로컬 생성 (외부 이미지 요청 없음 → 깨짐 방지)
-// QRCodeJS는 데이터가 너무 길면(특히 보정레벨 H) "code length overflow" 에러가 날 수 있습니다.
-// 그래서 H→M→L 순으로 자동 재시도합니다.
-try {
-    new QRCode(qrDiv, {
-        text: qrUrl,
-        width: 320,
-        height: 320,
-        correctLevel: QRCode.CorrectLevel.H
-    });
-} catch (e1) {
-    try {
+    // QR 생성 시도 함수(생성 후 실제 요소가 생겼는지 검증)
+    function tryMake(text, level) {
         qrDiv.innerHTML = '';
         new QRCode(qrDiv, {
-            text: qrUrl,
+            text: text,
             width: 320,
             height: 320,
-            correctLevel: QRCode.CorrectLevel.M
+            correctLevel: level
         });
-    } catch (e2) {
+
+        // QRCodeJS는 실패해도 예외를 안 던지는 경우가 있어 "생성 결과"를 점검
+        var hasNode = qrDiv.querySelector('img,canvas,table');
+        if (!hasNode) throw new Error('QR_NOT_RENDERED');
+
+        // img가 있는데 깨진 경우(가끔) 대비: 크기 체크
+        var w = hasNode.width || hasNode.offsetWidth || 0;
+        var h = hasNode.height || hasNode.offsetHeight || 0;
+        if (w < 50 || h < 50) throw new Error('QR_RENDER_TOO_SMALL');
+        return true;
+    }
+
+    var usedUrl = fullUrl;
+    var isShortFallback = false;
+
+    try {
+        // 용량 여유를 위해 L부터(가장 잘 됨) → M → H 순
+        tryMake(fullUrl, QRCode.CorrectLevel.L);
+    } catch(eL) {
         try {
-            qrDiv.innerHTML = '';
-            new QRCode(qrDiv, {
-                text: qrUrl,
-                width: 320,
-                height: 320,
-                correctLevel: QRCode.CorrectLevel.L
-            });
-        } catch (e3) {
-            // 최종 실패: URL이 너무 김
-            qc.innerHTML =
-                '<div style="padding:12px; border-radius:10px; background:#fff3cd; border:2px solid #ffb300; text-align:left; font-size:14px; line-height:1.6;">' +
-                '<div style="font-weight:900; color:#7a5b00; margin-bottom:6px;">⚠️ QR 데이터가 너무 길어서 생성에 실패했습니다.</div>' +
-                '<div style="color:#7a5b00;">해결 방법<br>' +
-                '1) 웹앱 URL을 QR에 넣지 말고(추천) <b>대회코드만 QR</b>로 만들기<br>' +
-                '2) 또는 웹앱 URL을 더 짧은 주소로 바꾸기<br>' +
-                '</div>' +
-                '</div>';
-            return;
+            tryMake(fullUrl, QRCode.CorrectLevel.M);
+        } catch(eM) {
+            try {
+                tryMake(fullUrl, QRCode.CorrectLevel.H);
+            } catch(eH) {
+                // 2) 최종 실패면 "짧은 QR"(eventCode만)로 자동 전환
+                var shortUrl = baseUrl + '?eventCode=' + encodeURIComponent(eventCode);
+                usedUrl = shortUrl;
+                isShortFallback = true;
+
+                // 다시 렌더(짧은 건 거의 항상 성공)
+                try {
+                    tryMake(shortUrl, QRCode.CorrectLevel.L);
+                } catch(eShort) {
+                    // 여기까지 실패면 DOM/라이브러리 문제
+                    qc.innerHTML =
+                      '<div style="padding:12px; border-radius:10px; background:#fdecea; border:2px solid #f28b82; text-align:left; font-size:14px; line-height:1.6;">' +
+                      '<div style="font-weight:900; color:#b00020; margin-bottom:6px;">❌ QR 생성 실패</div>' +
+                      '<div style="color:#b00020;">화면을 새로고침(F5) 후 다시 시도해 주세요. 계속되면 알려주세요.</div>' +
+                      '</div>';
+                    return;
+                }
+            }
         }
     }
-}// 연결주소 표시
+
+    // 연결주소 표시 + 안내
     var info = document.createElement('div');
-    info.style.cssText = 'margin-top:10px; font-size:12px; color:#666; word-break:break-all;';
-    info.innerHTML = '연결주소: <span style="font-weight:700;">' + qrUrl + '</span>';
+    info.style.cssText = 'margin-top:10px; font-size:12px; color:#666; word-break:break-all; text-align:left;';
+    info.innerHTML = '연결주소: <span style="font-weight:700;">' + usedUrl + '</span>';
     qc.appendChild(info);
+
+    if (isShortFallback) {
+        var warn = document.createElement('div');
+        warn.style.cssText = 'margin-top:8px; padding:10px 12px; border-radius:10px; background:#fff3cd; border:2px solid #ffb300; color:#7a5b00; font-size:13px; line-height:1.5; text-align:left;';
+        warn.innerHTML =
+          '<b>⚠ QR이 너무 길어 자동으로 "대회코드만" QR로 만들었습니다.</b><br>' +
+          '- 새 기기(처음 쓰는 폰)에서는 관리자 도구에서 <b>웹앱 URL</b>을 한 번 저장해야 전송이 됩니다.<br>' +
+          '- 가능한 해결: QR에 webAppUrl을 넣지 않고 대회코드만 사용하는 방식이 가장 안정적입니다.';
+        qc.appendChild(warn);
+    }
 }
+
 
 
 window.qrModeActive = false;
