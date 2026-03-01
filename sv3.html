@@ -3661,7 +3661,7 @@ body.modal-open {
                     height: 512,             // 256 → 512로 증가
                     colorDark: '#000000',
                     colorLight: '#ffffff',
-                    correctLevel: QRCode.CorrectLevel.H,
+                    correctLevel: QRCode.CorrectLevel.L,
                     margin: 4                // 여백 추가
                 });
                 
@@ -3790,9 +3790,28 @@ function generateQRCodeWithParams() {
         return;
     }
 
-    // 현재 페이지 URL에 파라미터 추가
+    // 현재 페이지 URL에 파라미터 추가 (길이 최소화: e, s 파라미터 사용)
     var baseUrl = window.location.origin + window.location.pathname;
-    var qrUrl = baseUrl + '?eventCode=' + encodeURIComponent(eventCode) + '&webAppUrl=' + encodeURIComponent(webAppUrl);
+
+    // webAppUrl에서 배포 ID만 추출해서 QR에 담기(길이/호환성 문제 방지)
+    // 예: https://script.google.com/macros/s/AKfy.../exec  ->  AKfy...
+    var depId = '';
+    try {
+        var m = webAppUrl.match(/macros\/s\/([^\/]+)\//);
+        if (m && m[1]) depId = m[1];
+    } catch(e) {}
+
+    // QR URL 구성: e=대회코드, s=배포ID (depId가 없으면 webAppUrl을 w로 넣되, 너무 길면 안내)
+    var qrUrl = '';
+    if (depId) {
+        qrUrl = baseUrl + '?e=' + encodeURIComponent(eventCode) + '&s=' + encodeURIComponent(depId);
+    } else {
+        // fallback: 그대로 넣기(일부 환경에서 너무 길면 QR 생성이 실패할 수 있음)
+        qrUrl = baseUrl + '?e=' + encodeURIComponent(eventCode) + '&w=' + encodeURIComponent(webAppUrl);
+    }
+if (qrUrl && qrUrl.length > 1000) {
+        alert('QR에 담을 데이터가 너무 깁니다.\n웹앱 URL은 반드시 \/exec 형태만 넣어주세요.\n(또는 배포ID만 추출되도록 올바른 URL인지 확인)');
+    }
 
     var qc = document.getElementById('qrcode');
     var displayWrap = document.getElementById('qrcodeDisplay');
@@ -3873,7 +3892,7 @@ function generateQRCodeWithParams() {
                 height: 512,
                 colorDark: '#000000',
                 colorLight: '#ffffff',
-                correctLevel: QRCode.CorrectLevel.H
+                correctLevel: QRCode.CorrectLevel.L
             });
         } catch(e) {
             document.body.removeChild(tempDiv);
@@ -3978,9 +3997,17 @@ function requireQrBeforeSend() {
 // URL 파라미터 읽기 및 자동 설정
 function loadUrlParams() {
     var urlParams = new URLSearchParams(window.location.search);
-    var eventCode = urlParams.get('eventCode');
-    var webAppUrl = urlParams.get('webAppUrl');
-    
+
+    // 신규(짧은) 파라미터 우선: e=eventCode, s=deploymentId, w=webAppUrl(fallback)
+    var eventCode = urlParams.get('e') || urlParams.get('eventCode');
+    var depId = urlParams.get('s');
+    var webAppUrl = urlParams.get('w') || urlParams.get('webAppUrl');
+
+    // depId가 있으면 전체 웹앱 URL로 복원
+    if (depId && !webAppUrl) {
+        webAppUrl = 'https://script.google.com/macros/s/' + depId + '/exec';
+    }
+
     if (eventCode) {
         var eventCodeInput = document.getElementById('eventCodeInput');
         if (eventCodeInput) {
@@ -3988,23 +4015,12 @@ function loadUrlParams() {
             updateEventCode();
         }
     }
-    
+
     if (webAppUrl) {
         localStorage.setItem('parkgolf_webapp_url', webAppUrl);
-        var webAppUrlInput = document.getElementById('webAppUrl');
-        if (webAppUrlInput) {
-            webAppUrlInput.value = webAppUrl;
-        }
+        var webAppUrlInput = document.getElementById('webAppUrlInput');
+        if (webAppUrlInput) webAppUrlInput.value = webAppUrl;
     }
-    
-    // 파라미터가 있으면 안내 메시지
-    if (eventCode && webAppUrl) {
-        setTimeout(function() {
-            showToast('✅ 대회 설정이 완료되었습니다!\n대회 코드: ' + eventCode);
-        }, 500);
-    }
-
-    updateQrSendGuardUI();
 }
 
 // URL 저장 함수
