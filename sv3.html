@@ -3330,42 +3330,71 @@ body.modal-open {
         function checkDuplicateSubmission(data) {
             const submissionHistory = JSON.parse(localStorage.getItem('submission_history') || '[]');
             const duplicatePlayers = [];
-            
+
+            // 비교할 선수 목록(유효 이름만)
             const players = [
-                data.player1.name,
-                data.player2.name,
-                data.player3.name,
-                data.player4.name
-            ];
-            
-            // 기존 전송 기록과 비교
+                data.player1 && data.player1.name,
+                data.player2 && data.player2.name,
+                data.player3 && data.player3.name,
+                data.player4 && data.player4.name
+            ].filter(function(name){
+                return name && !String(name).startsWith('경기자') && String(name).trim() !== '';
+            });
+
+            // 조명이 비어 있으면(현장 실수 방지): 중복차단을 걸지 않음
+            const team = (data.teamName || '').trim();
+            if (!team) {
+                return { allowed: true, message: '' };
+            }
+
+            // 같은 대회코드 + 같은 날짜 + 같은 조 에서만 중복 차단
             for (let record of submissionHistory) {
-                if (record.eventCode === data.eventCode && record.teamName === data.teamName) {
-                    // 같은 대회, 같은 조인 경우
+                if (record && record.eventCode === data.eventCode && record.date === data.date && record.teamName === team) {
                     for (let playerName of players) {
-                        if (playerName && !playerName.startsWith('경기자') && 
-                            playerName.trim() !== '' &&
-                            record.players && record.players.indexOf(playerName) !== -1) {
-                            if (duplicatePlayers.indexOf(playerName) === -1) {
-                                duplicatePlayers.push(playerName);
-                            }
+                        if (record.players && record.players.indexOf(playerName) !== -1) {
+                            if (duplicatePlayers.indexOf(playerName) === -1) duplicatePlayers.push(playerName);
                         }
                     }
                 }
             }
-            
+
             if (duplicatePlayers.length > 0) {
                 return {
-                    hasDuplicate: true,
-                    message: '중복 경기자: ' + duplicatePlayers.join(', ') + 
-                            '\n대회: ' + data.eventCode + 
-                            '\n조: ' + data.teamName
+                    allowed: false,
+                    message:
+                      '중복 경기자: ' + duplicatePlayers.join(', ') +
+                      '
+대회코드: ' + data.eventCode +
+                      '
+날짜: ' + data.date +
+                      '
+조: ' + team +
+                      '
+
+(해결)
+- 다른 조라면 조명을 정확히 입력하세요.
+- 새 대회라면 대회코드를 새로 발급하거나
+  관리자 도구에서 [전송기록 초기화]를 누르세요.'
                 };
             }
-            
-            return { hasDuplicate: false, message: '' };
+
+            return { allowed: true, message: '' };
         }
-        
+
+        // 전송 기록 초기화(이 기기/브라우저)
+        function resetSubmissionHistory() {
+            try {
+                localStorage.removeItem('submission_history');
+                // 과거 키 방식이 있을 수 있어 sent: 로 시작하는 것들도 제거
+                Object.keys(localStorage).forEach(function(k){
+                    if (k && k.indexOf('sent:') === 0) localStorage.removeItem(k);
+                });
+                alert('✅ 전송기록을 초기화했습니다.\n\n이제 같은 이름이라도 새로 전송할 수 있습니다.');
+            } catch(e) {
+                alert('❌ 초기화 실패: ' + (e && e.message ? e.message : e));
+            }
+        }
+
         // 전송 기록 저장 함수
         function saveSubmissionRecord(data) {
             const submissionHistory = JSON.parse(localStorage.getItem('submission_history') || '[]');
