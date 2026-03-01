@@ -3914,29 +3914,31 @@ function saveURL() {
       </button>
 
       <div id="qrSection" style="display:none; margin-top:12px;">
-        <div style="font-weigh
-        <button type="button" onclick="downloadQRCodeImage()"
-          style="width:100% !important; margin-top:10px !important; padding:14px !important; border:2px solid #7b1fa2 !important; border-radius:12px !important; background:#fff !important; color:#7b1fa2 !important; font-size:16px !important; font-weight:900 !important; cursor:pointer;">
-          QR 저장(이미지)
-        </button>
-t:900; margin-bottom:6px;">대회 코드</div>
+        <div style="font-weight:900; margin-bottom:6px;">대회 코드</div>
         <input type="text" id="qrEventCode" placeholder="예: 2026A001"
           style="width:100% !important; padding:12px !important; border:2px solid #dee2e6 !important; border-radius:10px !important; font-size:15px !important;">
+
         <div style="height:12px;"></div>
+
         <div style="font-weight:900; margin-bottom:6px;">웹앱 URL</div>
         <input type="text" id="qrWebAppUrl" placeholder="https://script.google.com/macros/s/.../exec"
           style="width:100% !important; padding:12px !important; border:2px solid #dee2e6 !important; border-radius:10px !important; font-size:15px !important;">
+
         <button type="button" onclick="generateQRCodeWithParams()"
           style="width:100% !important; margin-top:10px !important; padding:16px !important; border:none !important; border-radius:12px !important; background:#7b1fa2 !important; color:#fff !important; font-size:17px !important; font-weight:900 !important; cursor:pointer;">
           QR 코드 생성
         </button>
 
-        <div id="qrcodeDisplay" style="margin-top:16px; text-align:center;">
+        <button type="button" onclick="downloadQRCodeImage()"
+          style="width:100% !important; margin-top:10px !important; padding:14px !important; border:2px solid #7b1fa2 !important; border-radius:12px !important; background:#fff !important; color:#7b1fa2 !important; font-size:16px !important; font-weight:900 !important; cursor:pointer;">
+          QR 저장(이미지)
+        </button>
+
+        <div id="qrcodeDisplay" style="margin-top:16px; text-align:center; display:none;">
           <div id="qrcode" style="display:inline-block;"></div>
           <div id="qrInfo" style="margin-top:10px; color:#555; font-size:13px;"></div>
         </div>
       </div>
-
       <div style="height:6px;"></div>
     </details>
 
