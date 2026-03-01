@@ -3330,71 +3330,42 @@ body.modal-open {
         function checkDuplicateSubmission(data) {
             const submissionHistory = JSON.parse(localStorage.getItem('submission_history') || '[]');
             const duplicatePlayers = [];
-
-            // 비교할 선수 목록(유효 이름만)
+            
             const players = [
-                data.player1 && data.player1.name,
-                data.player2 && data.player2.name,
-                data.player3 && data.player3.name,
-                data.player4 && data.player4.name
-            ].filter(function(name){
-                return name && !String(name).startsWith('경기자') && String(name).trim() !== '';
-            });
-
-            // 조명이 비어 있으면(현장 실수 방지): 중복차단을 걸지 않음
-            const team = (data.teamName || '').trim();
-            if (!team) {
-                return { allowed: true, message: '' };
-            }
-
-            // 같은 대회코드 + 같은 날짜 + 같은 조 에서만 중복 차단
+                data.player1.name,
+                data.player2.name,
+                data.player3.name,
+                data.player4.name
+            ];
+            
+            // 기존 전송 기록과 비교
             for (let record of submissionHistory) {
-                if (record && record.eventCode === data.eventCode && record.date === data.date && record.teamName === team) {
+                if (record.eventCode === data.eventCode && record.teamName === data.teamName) {
+                    // 같은 대회, 같은 조인 경우
                     for (let playerName of players) {
-                        if (record.players && record.players.indexOf(playerName) !== -1) {
-                            if (duplicatePlayers.indexOf(playerName) === -1) duplicatePlayers.push(playerName);
+                        if (playerName && !playerName.startsWith('경기자') && 
+                            playerName.trim() !== '' &&
+                            record.players && record.players.indexOf(playerName) !== -1) {
+                            if (duplicatePlayers.indexOf(playerName) === -1) {
+                                duplicatePlayers.push(playerName);
+                            }
                         }
                     }
                 }
             }
-
+            
             if (duplicatePlayers.length > 0) {
                 return {
-                    allowed: false,
-                    message:
-                      '중복 경기자: ' + duplicatePlayers.join(', ') +
-                      '
-대회코드: ' + data.eventCode +
-                      '
-날짜: ' + data.date +
-                      '
-조: ' + team +
-                      '
-
-(해결)
-- 다른 조라면 조명을 정확히 입력하세요.
-- 새 대회라면 대회코드를 새로 발급하거나
-  관리자 도구에서 [전송기록 초기화]를 누르세요.'
+                    hasDuplicate: true,
+                    message: '중복 경기자: ' + duplicatePlayers.join(', ') + 
+                            '\n대회: ' + data.eventCode + 
+                            '\n조: ' + data.teamName
                 };
             }
-
-            return { allowed: true, message: '' };
+            
+            return { hasDuplicate: false, message: '' };
         }
-
-        // 전송 기록 초기화(이 기기/브라우저)
-        function resetSubmissionHistory() {
-            try {
-                localStorage.removeItem('submission_history');
-                // 과거 키 방식이 있을 수 있어 sent: 로 시작하는 것들도 제거
-                Object.keys(localStorage).forEach(function(k){
-                    if (k && k.indexOf('sent:') === 0) localStorage.removeItem(k);
-                });
-                alert('✅ 전송기록을 초기화했습니다.\n\n이제 같은 이름이라도 새로 전송할 수 있습니다.');
-            } catch(e) {
-                alert('❌ 초기화 실패: ' + (e && e.message ? e.message : e));
-            }
-        }
-
+        
         // 전송 기록 저장 함수
         function saveSubmissionRecord(data) {
             const submissionHistory = JSON.parse(localStorage.getItem('submission_history') || '[]');
@@ -3665,25 +3636,28 @@ function generateQRCodeWithParams() {
     var eventCode = (document.getElementById('qrEventCode')?.value || '').trim();
     var webAppUrl = (document.getElementById('qrWebAppUrl')?.value || '').trim();
 
+    // 결과 영역 먼저 열기(라이브러리 미로딩이어도 "무응답"처럼 보이지 않게)
     var display = document.getElementById('qrcodeDisplay');
     if (display) display.style.display = 'block';
 
     var qc = document.getElementById('qrcode');
-    if (qc) qc.innerHTML = '<div style="padding:10px; font-weight:800;">QR 생성 중...</div>';
+    if (qc) qc.innerHTML = '<div style="padding:10px; font-weight:700;">QR 생성 준비 중...</div>';
 
     if (!eventCode) {
         alert('대회 코드를 입력해주세요.');
-        if (qc) qc.innerHTML = '<p style="color:#dc3545; font-weight:800;">대회 코드를 입력해주세요.</p>';
+        if (qc) qc.innerHTML = '<p style="color:#dc3545; font-weight:700;">대회 코드를 입력해주세요.</p>';
         return;
     }
+
     if (!webAppUrl) {
-        alert('웹앱 URL(/exec)을 입력해주세요.');
-        if (qc) qc.innerHTML = '<p style="color:#dc3545; font-weight:800;">웹앱 URL(/exec)을 입력해주세요.</p>';
+        alert('웹앱 URL을 입력해주세요.');
+        if (qc) qc.innerHTML = '<p style="color:#dc3545; font-weight:700;">웹앱 URL을 입력해주세요.</p>';
         return;
     }
+
     if (!webAppUrl.includes('script.google.com')) {
         alert('올바른 Google Apps Script 웹앱 URL을 입력해주세요.');
-        if (qc) qc.innerHTML = '<p style="color:#dc3545; font-weight:800;">올바른 웹앱 URL이 아닙니다.</p>';
+        if (qc) qc.innerHTML = '<p style="color:#dc3545; font-weight:700;">올바른 Google Apps Script 웹앱 URL이 아닙니다.</p>';
         return;
     }
 
@@ -3691,24 +3665,114 @@ function generateQRCodeWithParams() {
     var baseUrl = window.location.origin + window.location.pathname;
     var qrUrl = baseUrl + '?eventCode=' + encodeURIComponent(eventCode) + '&webAppUrl=' + encodeURIComponent(webAppUrl);
 
-    // 외부 JS 라이브러리 없이도 동작하도록 Google Chart QR API 사용
-    // (네트워크 제한/차단 환경에서도 "무응답"이 덜 발생)
-    var imgSrc = 'https://chart.googleapis.com/chart?cht=qr&chs=700x700&chld=H|1&chl=' + encodeURIComponent(qrUrl);
+    // QR 라이브러리 로더(모바일/현장 LTE에서 jsdelivr가 막히는 경우 대비)
+    function ensureQRCodeLib(cb) {
+        if (typeof QRCode !== 'undefined') { cb(true); return; }
 
-    if (qc) {
-        qc.innerHTML =
-          '<div style="display:flex; justify-content:center;">' +
-            '<div style="position:relative; width:320px; max-width:92vw;">' +
-              '<img id="qrImg" src="' + imgSrc + '" alt="QR" style="width:100%; height:auto; display:block; border:6px solid #fff; border-radius:14px; box-shadow:0 6px 20px rgba(0,0,0,0.18);"/>' +
-              '<div style="position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); background:#ffffff; border:3px solid #10a37f; border-radius:10px; padding:6px 10px; font-weight:900; font-size:20px; line-height:1; color:#0f5f4a;">' +
-                eventCode +
-              '</div>' +
-            '</div>' +
-          '</div>' +
-          '<div style="margin-top:10px; font-size:12px; color:#666; word-break:break-all;">' +
-            '연결주소: <span style="font-weight:700;">' + qrUrl + '</span>' +
-          '</div>';
+        // 1) 이미 로드 시도 중이면 잠시 기다림
+        if (window.__qrLibLoading) {
+            setTimeout(function(){ cb(typeof QRCode !== 'undefined'); }, 300);
+            return;
+        }
+        window.__qrLibLoading = true;
+
+        // 2) 대체 CDN 로드
+        var s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+        s.async = true;
+        s.onload = function() { cb(true); };
+        s.onerror = function() { cb(false); };
+        document.head.appendChild(s);
     }
+
+    ensureQRCodeLib(function(ok){
+        if (!ok || typeof QRCode === 'undefined') {
+            // 라이브러리가 안되면 "그대로 링크"를 보여주고 복사하도록 유도
+            if (qc) {
+                qc.innerHTML =
+                    '<div style="padding:12px; border:2px dashed #dc3545; border-radius:10px; background:#fff5f5;">' +
+                    '<div style="font-weight:900; color:#b71c1c; margin-bottom:8px;">⚠ QR 라이브러리를 불러오지 못했습니다.</div>' +
+                    '<div style="font-size:14px; line-height:1.4; margin-bottom:8px;">네트워크(LTE/와이파이) 상태에서 다시 시도하거나, 아래 주소를 복사해 사용하세요.</div>' +
+                    '<textarea readonly style="width:100%; height:84px; font-size:13px; padding:10px; border-radius:8px; border:1px solid #ddd;">' + qrUrl + '</textarea>' +
+                    '</div>';
+            }
+            return;
+        }
+
+        // 정상 QR 생성(중앙 대회코드 합성)
+        if (qc) qc.innerHTML = '';
+
+        // 숨겨진 임시 div에 QR 코드 생성
+        var tempDiv = document.createElement('div');
+        tempDiv.style.position = 'absolute';
+        tempDiv.style.left = '-9999px';
+        document.body.appendChild(tempDiv);
+
+        new QRCode(tempDiv, {
+            text: qrUrl,
+            width: 512,
+            height: 512,
+            colorDark: '#000000',
+            colorLight: '#ffffff',
+            correctLevel: QRCode.CorrectLevel.H
+        });
+
+        // QRCode.js 렌더링 완료 후 canvas 합성
+        setTimeout(function() {
+            var srcCanvas = tempDiv.querySelector('canvas');
+            if (!srcCanvas) {
+                document.body.removeChild(tempDiv);
+                if (qc) qc.innerHTML = '<p style="color:#dc3545; font-weight:900;">QR 코드 생성 실패</p>';
+                return;
+            }
+
+            var finalCanvas = document.createElement('canvas');
+            var padding = 30;
+            var size = srcCanvas.width;
+            finalCanvas.width  = size + padding * 2;
+            finalCanvas.height = size + padding * 2;
+            var ctx = finalCanvas.getContext('2d');
+
+            // 흰 배경
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+
+            // QR 이미지
+            ctx.drawImage(srcCanvas, padding, padding);
+
+            // 중앙 박스 + 텍스트(대회코드)
+            var cx = finalCanvas.width  / 2;
+            var cy = finalCanvas.height / 2;
+
+            var fontSize = Math.floor(size * 0.068);
+            ctx.font = 'bold ' + fontSize + 'px Arial, sans-serif';
+            var textWidth = ctx.measureText(eventCode).width;
+            var boxW = textWidth + 32;
+            var boxH = fontSize + 20;
+
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(cx - boxW / 2 - 2, cy - boxH / 2 - 2, boxW + 4, boxH + 4);
+
+            ctx.strokeStyle = '#00897b';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(cx - boxW / 2, cy - boxH / 2, boxW, boxH);
+
+            ctx.fillStyle = '#004d40';
+            ctx.font = 'bold ' + fontSize + 'px Arial, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(eventCode, cx, cy);
+
+            if (qc) {
+                qc.innerHTML = '';
+                finalCanvas.style.maxWidth = '100%';
+                finalCanvas.style.borderRadius = '8px';
+                qc.appendChild(finalCanvas);
+            }
+
+            document.body.removeChild(tempDiv);
+        }, 350);
+    });
 }
 
 window.qrModeActive = false;
@@ -4093,23 +4157,32 @@ function openAdminSheet(){
 
 /* ===== QR 저장(이미지 다운로드) ===== */
 function downloadQRCodeImage() {
-    var img = document.getElementById('qrImg');
-    if (!img || !img.src) {
-        alert('먼저 QR 코드를 생성해주세요.');
-        return;
+  try {
+    var box = document.getElementById('qrcode');
+    if (!box) { alert('QR 영역이 없습니다.'); return; }
+
+    var img = box.querySelector('img');
+    var canvas = box.querySelector('canvas');
+
+    var dataUrl = '';
+    if (img && img.src) {
+      dataUrl = img.src;
+    } else if (canvas) {
+      dataUrl = canvas.toDataURL('image/png');
     }
 
-    // iOS Safari는 강제 다운로드가 막히는 경우가 많아서, 새 탭으로 열어 저장을 유도
-    try {
-        var a = document.createElement('a');
-        a.href = img.src;
-        a.download = '파시스_sv3_QR.png';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-    } catch (e) {
-        window.open(img.src, '_blank');
-    }
+    if (!dataUrl) { alert('먼저 QR을 생성해주세요.'); return; }
+
+    var eventCode = (document.getElementById('qrEventCode')?.value || document.getElementById('eventCodeInput')?.value || 'event').trim();
+    var a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = 'sv3_QR_' + (eventCode || 'event') + '.png';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  } catch(e) {
+    alert('QR 저장 중 오류: ' + e);
+  }
 }
 
 </script>
