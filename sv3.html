@@ -191,7 +191,7 @@ input, textarea, select {
 }
 
 
-/* v5.6 iOS tap + modal UX */
+/* v5.3 iOS tap + modal UX */
 button, .btn, .big-btn, .action-btn, .modal button { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
 input, textarea, select { font-size: 16px; } /* prevent iOS zoom */
 .modal { -webkit-overflow-scrolling: touch; }
@@ -208,13 +208,6 @@ input, textarea, select { font-size: 16px; } /* prevent iOS zoom */
     line-height: 1 !important;
   }
 }
-
-
-/* v5.6 patch: hide top X, improve iOS taps */
-.close-x{display:none !important;}
-
-.admin-btn{touch-action:manipulation !important;-webkit-tap-highlight-color: transparent !important;}
-#openAdminToolBtn{position:relative !important; z-index:50 !important;}
 
 </style>
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -2173,7 +2166,7 @@ body.modal-open {
 
 <!-- 관리자 도구 버튼 -->
 <div style="margin-top: 40px !important; margin-bottom: 30px !important;">
-<button id="openAdminToolBtn" type="button" class="admin-btn" onclick="openAdminModalSafe(event);" style="width: 100% !important; padding: 18px !important; background: linear-gradient(135deg, #f4b400 0%, #db9200 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;" id="openAdminModalBtn" type="button" ontouchstart="openAdminModalSafe(event);event.preventDefault();" onpointerdown="openAdminModalSafe(event);" ontouchstart="openAdminModalSafe(event);event.preventDefault();" onpointerdown="openAdminModalSafe(event);">대회 관리자 전용 관리자 도구 열기</button>
+<button id="openAdminToolBtn" type="button" class="admin-btn" onclick="openAdminModalSafe(event);" style="width: 100% !important; padding: 18px !important; background: linear-gradient(135deg, #f4b400 0%, #db9200 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">대회 관리자 전용 관리자 도구 열기</button>
 </div>
 
 </div>
@@ -2230,7 +2223,7 @@ body.modal-open {
 <h3 style="text-align: center; margin: 20px 0; padding: 0 20px; color: #1e3c72;">저장된 이름 목록</h3>
 <div id="nameListContainer" style="overflow-y: auto; flex: 1; padding: 0 20px;"></div>
 <div style="padding: 15px 20px 20px 20px; background: white; border-top: 1px solid #eee;">
-<button id="nameListCloseBtn" class="modal-close" type="button" style="margin-top: 0;" onclick="closeNameListModal()" ontouchstart="closeNameListModal();event.preventDefault();">닫기</button>
+<button id="nameListCloseBtn" class="modal-close" type="button" style="margin-top: 0;">닫기</button>
 </div>
 </div>
 </div>
@@ -4023,7 +4016,7 @@ function saveURL() {
   <div class="modal-content">
     <div class="admin-head">
       <div>
-        <h3 class="admin-title">대회 관리자 도구 <span class="admin-ver">v5.6</span></h3>
+        <h3 class="admin-title">대회 관리자 도구 <span class="admin-ver">v5.3</span></h3>
         <div class="admin-sub">휴대폰에서 바로 진행할 수 있도록 순서를 위에 배치했습니다. PC 안내는 아래에서 펼쳐서 확인하세요.</div>
       </div>
       <button type="button" class="close-x" onclick="closeAdminModalQuick()" aria-label="닫기">×</button>
@@ -4273,34 +4266,6 @@ function closeAdminModalQuick(){
 
 </script>
 
-<div id="buildTag" style="position:fixed;right:10px;bottom:10px;z-index:9999;font-size:12px;font-weight:800;background:rgba(0,0,0,.45);color:#fff;padding:6px 10px;border-radius:999px;">sv3 v5.6</div>
-
-<script>
-/* v5.6: iOS 탭 안정화(관리자/이름목록 닫기) */
-(function(){
-  function bind(el, handler){
-    if(!el) return;
-    // 캡처 단계에서 먼저 잡아서 스크롤/오버레이에 먹히는 문제를 줄임
-    ['pointerdown','touchstart','click'].forEach(function(evt){
-      el.addEventListener(evt, function(e){
-        try{ handler(e); }catch(err){ console.log(err); }
-        // touchstart/pointerdown은 기본동작을 막아 "눌렀는데 스크롤" 되는 현상을 완화
-        if(evt !== 'click') { e.preventDefault(); }
-        e.stopPropagation();
-      }, {capture:true, passive:false});
-    });
-  }
-
-  document.addEventListener('DOMContentLoaded', function(){
-    // 이름 목록 닫기
-    bind(document.getElementById('nameListCloseBtn'), function(){ if(typeof closeNameListModal==='function') closeNameListModal(); });
-
-    // 관리자 도구 열기 버튼(가운데 클릭이 안 먹는 현상 대비)
-    var adminBtn = document.getElementById('openAdminToolBtn') || document.getElementById('openAdminModalBtn');
-    bind(adminBtn, function(e){ if(typeof openAdminModalSafe==='function') openAdminModalSafe(e); });
-  });
-})();
-</script>
-
+<div id="buildTag" style="position:fixed;right:10px;bottom:10px;z-index:9999;font-size:12px;font-weight:800;background:rgba(0,0,0,.45);color:#fff;padding:6px 10px;border-radius:999px;">sv3 v5.3</div>
 </body>
 </html>
