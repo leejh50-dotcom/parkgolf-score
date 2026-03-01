@@ -342,7 +342,7 @@ body.modal-open {
 
 </head>
 <body>
-클럽대회용 sv3.0 스텐다드
+파시스 sv3.0 클럽대회용
 
 <p>&nbsp;</p>
 <p></p>
@@ -1826,7 +1826,7 @@ body.modal-open {
 <div style="background: linear-gradient(135deg, #2d7a4f 0%, #1a5634 100%); padding: 30px 4px !important; border-radius: 12px; margin: 0 0 8px 0 !important; text-align: center;">
 <h1 style="color: #ffffff !important; margin: 0 0 14px 0 !important; font-size: 24px !important; font-weight: bold !important; letter-spacing: -0.5px !important;">파크골프 점수 기록표</h1>
 <div style="display: inline-block; background: rgba(255,255,255,0.3); padding: 8px 18px; border-radius: 8px;">
-<span style="font-size: 15px; color: #fff3e0; font-weight: 600; letter-spacing: 0.5px;">클럽대회용 sv3.0 스텐다드</span>
+<span style="font-size: 15px; color: #fff3e0; font-weight: 600; letter-spacing: 0.5px;">파시스 sv3.0 클럽대회용</span>
 </div>
 </div>
 <div class="info-section" style="padding: 3px !important; margin: 0 0 8px 0 !important;">
@@ -3669,47 +3669,75 @@ function generateQRCodeWithParams() {
     if (display) display.style.display = 'block';
 
     var qc = document.getElementById('qrcode');
-    if (qc) qc.innerHTML = '<div style="padding:10px; font-weight:800;">QR 생성 중...</div>';
+    if (!qc) return;
 
     if (!eventCode) {
         alert('대회 코드를 입력해주세요.');
-        if (qc) qc.innerHTML = '<p style="color:#dc3545; font-weight:800;">대회 코드를 입력해주세요.</p>';
+        qc.innerHTML = '<p style="color:#dc3545; font-weight:800;">대회 코드를 입력해주세요.</p>';
         return;
     }
     if (!webAppUrl) {
         alert('웹앱 URL(/exec)을 입력해주세요.');
-        if (qc) qc.innerHTML = '<p style="color:#dc3545; font-weight:800;">웹앱 URL(/exec)을 입력해주세요.</p>';
+        qc.innerHTML = '<p style="color:#dc3545; font-weight:800;">웹앱 URL(/exec)을 입력해주세요.</p>';
         return;
     }
     if (!webAppUrl.includes('script.google.com')) {
         alert('올바른 Google Apps Script 웹앱 URL을 입력해주세요.');
-        if (qc) qc.innerHTML = '<p style="color:#dc3545; font-weight:800;">올바른 웹앱 URL이 아닙니다.</p>';
+        qc.innerHTML = '<p style="color:#dc3545; font-weight:800;">올바른 웹앱 URL이 아닙니다.</p>';
         return;
     }
 
-    // 현재 페이지 URL에 파라미터 추가
+    // QR에 담을 주소 (현재 페이지 URL + 파라미터)
     var baseUrl = window.location.origin + window.location.pathname;
     var qrUrl = baseUrl + '?eventCode=' + encodeURIComponent(eventCode) + '&webAppUrl=' + encodeURIComponent(webAppUrl);
 
-    // 외부 JS 라이브러리 없이도 동작하도록 Google Chart QR API 사용
-    // (네트워크 제한/차단 환경에서도 "무응답"이 덜 발생)
-    var imgSrc = 'https://chart.googleapis.com/chart?cht=qr&chs=700x700&chld=H|1&chl=' + encodeURIComponent(qrUrl);
-
-    if (qc) {
-        qc.innerHTML =
-          '<div style="display:flex; justify-content:center;">' +
-            '<div style="position:relative; width:320px; max-width:92vw;">' +
-              '<img id="qrImg" src="' + imgSrc + '" alt="QR" style="width:100%; height:auto; display:block; border:6px solid #fff; border-radius:14px; box-shadow:0 6px 20px rgba(0,0,0,0.18);"/>' +
-              '<div style="position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); background:#ffffff; border:3px solid #10a37f; border-radius:10px; padding:6px 10px; font-weight:900; font-size:20px; line-height:1; color:#0f5f4a;">' +
-                eventCode +
-              '</div>' +
-            '</div>' +
-          '</div>' +
-          '<div style="margin-top:10px; font-size:12px; color:#666; word-break:break-all;">' +
-            '연결주소: <span style="font-weight:700;">' + qrUrl + '</span>' +
-          '</div>';
+    // QRCodeJS가 로드되어 있는지 확인
+    if (typeof QRCode === 'undefined') {
+        qc.innerHTML = '<p style="color:#dc3545; font-weight:800;">QR 코드 라이브러리를 불러올 수 없습니다.</p>';
+        return;
     }
+
+    // 화면 초기화
+    qc.innerHTML = '';
+
+    // 감싸는 박스
+    var wrap = document.createElement('div');
+    wrap.style.cssText = 'display:flex; justify-content:center;';
+    var box = document.createElement('div');
+    box.style.cssText = 'position:relative; width:320px; max-width:92vw; background:#fff; border-radius:14px; padding:10px; box-shadow:0 6px 20px rgba(0,0,0,0.18);';
+
+    // QR이 실제로 그려질 컨테이너 (QRCodeJS가 img/canvas를 생성)
+    var qrDiv = document.createElement('div');
+    qrDiv.id = 'qrLocal';
+    box.appendChild(qrDiv);
+
+    // 중앙 라벨(대회코드) 오버레이
+    var label = document.createElement('div');
+    label.textContent = eventCode;
+    label.style.cssText =
+        'position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);' +
+        'background:#ffffff; border:3px solid #10a37f; border-radius:10px;' +
+        'padding:6px 10px; font-weight:900; font-size:20px; line-height:1; color:#0f5f4a;';
+    box.appendChild(label);
+
+    wrap.appendChild(box);
+    qc.appendChild(wrap);
+
+    // 로컬 생성 (외부 이미지 요청 없음 → 깨짐 방지)
+    new QRCode(qrDiv, {
+        text: qrUrl,
+        width: 320,
+        height: 320,
+        correctLevel: QRCode.CorrectLevel.H
+    });
+
+    // 연결주소 표시
+    var info = document.createElement('div');
+    info.style.cssText = 'margin-top:10px; font-size:12px; color:#666; word-break:break-all;';
+    info.innerHTML = '연결주소: <span style="font-weight:700;">' + qrUrl + '</span>';
+    qc.appendChild(info);
 }
+
 
 window.qrModeActive = false;
 
@@ -4093,8 +4121,19 @@ function openAdminSheet(){
 
 /* ===== QR 저장(이미지 다운로드) ===== */
 function downloadQRCodeImage() {
-    var img = document.getElementById('qrImg');
-    if (!img || !img.src) {
+    var qc = document.getElementById('qrcode');
+    if (!qc) { alert('먼저 QR 코드를 생성해주세요.'); return; }
+
+    // QRCodeJS가 만든 요소는 img 또는 canvas일 수 있음
+    var canvas = qc.querySelector('#qrLocal canvas') || qc.querySelector('canvas');
+    var img = qc.querySelector('#qrLocal img') || qc.querySelector('img');
+
+    var dataUrl = '';
+    if (canvas && canvas.toDataURL) {
+        dataUrl = canvas.toDataURL('image/png');
+    } else if (img && img.src) {
+        dataUrl = img.src; // data:image/png;base64,... 형태가 보통임
+    } else {
         alert('먼저 QR 코드를 생성해주세요.');
         return;
     }
@@ -4102,15 +4141,17 @@ function downloadQRCodeImage() {
     // iOS Safari는 강제 다운로드가 막히는 경우가 많아서, 새 탭으로 열어 저장을 유도
     try {
         var a = document.createElement('a');
-        a.href = img.src;
+        a.href = dataUrl;
         a.download = '파시스_sv3_QR.png';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
     } catch (e) {
-        window.open(img.src, '_blank');
+        window.open(dataUrl, '_blank');
     }
 }
+
+
 
 </script>
 
