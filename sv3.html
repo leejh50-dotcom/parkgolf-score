@@ -3361,20 +3361,17 @@ body.modal-open {
             if (duplicatePlayers.length > 0) {
                 return {
                     allowed: false,
-                    message:
-                      '중복 경기자: ' + duplicatePlayers.join(', ') +
-                      '
-대회코드: ' + data.eventCode +
-                      '
-날짜: ' + data.date +
-                      '
-조: ' + team +
-                      '
+                    message: `중복 전송이 감지되었습니다.
+
+중복 경기자: ${duplicatePlayers.join(', ')}
+대회코드: ${data.eventCode}
+날짜: ${data.date}
+조: ${team}
 
 (해결)
 - 다른 조라면 조명을 정확히 입력하세요.
 - 새 대회라면 대회코드를 새로 발급하거나
-  관리자 도구에서 [전송기록 초기화]를 누르세요.'
+  관리자 도구에서 [전송기록 초기화]를 누르세요.`
                 };
             }
 
