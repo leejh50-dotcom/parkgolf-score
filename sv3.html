@@ -177,6 +177,13 @@ html, body {
     line-height: 1.5 !important;
   }
 }
+
+/* ===== 관리자 모달: 내부 스크롤(배경 스크롤 방지) ===== */
+#adminModal .modal-content{
+  max-height: 86vh !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
 </style>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -3207,32 +3214,33 @@ body.modal-open {
         // 구글시트로 보내기
         window.sendToGoogleSheet = function() {
             const webAppUrl = localStorage.getItem('parkgolf_webapp_url');
-            
+
             if (!webAppUrl) {
                 alert('먼저 관리자 도구에서 웹앱 URL을 설정해주세요.');
                 openAdminModal();
                 return;
             }
-            
+
             // ========================================
             // 필수 입력 체크
             // ========================================
             const teamName = document.getElementById('teamNameInput').value || '';
             const eventCode = document.getElementById('eventCodeInput').value || '';
-            
+
             if (!teamName || teamName.trim() === '' || teamName === '미입력') {
                 alert('❌ 조명을 입력해주세요!\n\n조명은 필수 입력 항목입니다.\n예: 1조, A조, 3조');
                 document.getElementById('teamNameInput').focus();
                 return;
             }
-            
+
             if (!eventCode || eventCode.trim() === '' || eventCode === '미입력') {
                 alert('❌ 대회코드를 입력해주세요!\n\n대회코드는 필수 입력 항목입니다.\nQR 코드를 스캔하면 자동으로 입력됩니다.');
                 document.getElementById('eventCodeInput').focus();
                 return;
             }
             // ========================================
-            
+
+            // 기존 UI/중복체크용 원본 구조는 유지
             const data = {
                 date: document.getElementById('dateInput').value,
                 location: document.getElementById('locationInput').value || '미입력',
@@ -3245,54 +3253,79 @@ body.modal-open {
                 player3: getPlayerData(3),
                 player4: getPlayerData(4)
             };
-            
+
             // ========================================
-            // 중복 전송 체크
+            // 중복 전송 차단(기존 로직 유지)
             // ========================================
             const duplicateCheck = checkDuplicateSubmission(data);
-            if (duplicateCheck.hasDuplicate) {
-                // 선택권 없이 무조건 차단!
-                alert('❌ 중복 전송 차단!\n\n' + duplicateCheck.message + 
+            if (!duplicateCheck.allowed) {
+                alert('❌ 중복 전송 차단!\n\n' + duplicateCheck.message +
                       '\n\n이미 전송된 경기자입니다.\n전송이 차단되었습니다.\n\n' +
                       '※ 점수 수정이 필요하면\n   대회 관리자에게 직접 문의하세요!');
-                return; // 전송 중단
+                return;
             }
             // ========================================
-            
-            const sendingNames = [
-                data.player1.name,
-                data.player2.name,
-                data.player3.name,
-                data.player4.name
-            ].filter(function(name) {
-                return name && String(name).trim() !== '' && !String(name).startsWith('경기자');
-            });
 
-            const firstName = sendingNames.length > 0 ? sendingNames[0] : '대표선수';
-            const extraCount = sendingNames.length > 1 ? (' 외 ' + (sendingNames.length - 1) + '명') : '';
+            // ✅ Apps Script(1줄=1명) 형식으로 "선수별" 전송 payload 만들기
+            const base = {
+                date: data.date,
+                location: data.location,
+                teamName: data.teamName,
+                eventName: data.eventName,
+                eventCode: data.eventCode,
+                note: data.note
+            };
+
+            const players = [data.player1, data.player2, data.player3, data.player4]
+              .filter(function(p){
+                return p && p.name && String(p.name).trim() !== '' && !String(p.name).startsWith('경기자');
+              });
+
+            if (players.length === 0) {
+                alert('❌ 경기자 이름이 비어 있습니다.\n\n경기자 이름을 먼저 입력해주세요.');
+                return;
+            }
+
+            const firstName = players[0].name;
+            const extraCount = players.length > 1 ? (' 외 ' + (players.length - 1) + '명') : '';
             const teamLabel = (data.teamName && String(data.teamName).trim() !== '') ? String(data.teamName).trim() : '조명없음';
 
             showToast(teamLabel + ' / ' + firstName + extraCount + ' 전송 중입니다...');
-            
-            fetch(webAppUrl, {
-                method: 'POST',
-                mode: 'no-cors', // CORS 문제 해결
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(function(response) {
-                // no-cors 모드에서는 응답을 읽을 수 없으므로
-                // 전송이 완료되면 성공으로 간주
+
+            // no-cors 특성상 "도착 여부"를 브라우저가 확인할 수 없음 → 선수별로 전송만 보장
+            const sendOne = function(payload) {
+                return fetch(webAppUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+            };
+
+            // 순차 전송(4명까지라 안전)
+            let chain = Promise.resolve();
+            players.forEach(function(p){
+                const payload = Object.assign({}, base, {
+                    playerName: p.name,
+                    aCourseTotal: p.courseA,
+                    bCourseTotal: p.courseB,
+                    cCourseTotal: p.courseC,
+                    dCourseTotal: p.courseD,
+                    totalScore: p.total,
+                    holeInOne: p.holeInOne,
+                    penalty: p.penalty
+                });
+                chain = chain.then(function(){ return sendOne(payload); });
+            });
+
+            chain.then(function(){
+                // 전송 후 중복 저장
                 saveSubmissionRecord(data);
-                alert('✅ 전송이 정상적으로 완료되었습니다!\n\n대회: ' + data.eventCode + '\n조: ' + data.teamName);
-            })
-            .catch(function(error) {
+                alert('✅ 전송 요청 완료!\n\n대회코드: ' + data.eventCode + '\n조: ' + data.teamName + '\n전송 인원: ' + players.length + '명\n\n※ 원본데이터 탭에 1줄=1명으로 들어옵니다.\n(네트워크 환경에 따라 1~3초 지연될 수 있어요)');
+            }).catch(function(error){
                 alert('❌ 전송 실패!\n\n' + error.message + '\n\n인터넷 연결을 확인하고 다시 시도해주세요.');
             });
-        };
-        
+        };        
         // 중복 전송 체크 함수
         function checkDuplicateSubmission(data) {
             const submissionHistory = JSON.parse(localStorage.getItem('submission_history') || '[]');
@@ -3917,7 +3950,12 @@ function saveURL() {
       </button>
 
       <div id="qrSection" style="display:none; margin-top:12px;">
-        <div style="font-weight:900; margin-bottom:6px;">대회 코드</div>
+        <div style="font-weigh
+        <button type="button" onclick="downloadQRCodeImage()"
+          style="width:100% !important; margin-top:10px !important; padding:14px !important; border:2px solid #7b1fa2 !important; border-radius:12px !important; background:#fff !important; color:#7b1fa2 !important; font-size:16px !important; font-weight:900 !important; cursor:pointer;">
+          QR 저장(이미지)
+        </button>
+t:900; margin-bottom:6px;">대회 코드</div>
         <input type="text" id="qrEventCode" placeholder="예: 2026A001"
           style="width:100% !important; padding:12px !important; border:2px solid #dee2e6 !important; border-radius:10px !important; font-size:15px !important;">
         <div style="height:12px;"></div>
@@ -4113,6 +4151,37 @@ function openAdminSheet(){
     window.open(v, '_blank');
   }catch(e){
     alert('시트를 여는 중 오류가 발생했습니다.');
+  }
+}
+
+
+/* ===== QR 저장(이미지 다운로드) ===== */
+function downloadQRCodeImage() {
+  try {
+    var box = document.getElementById('qrcode');
+    if (!box) { alert('QR 영역이 없습니다.'); return; }
+
+    var img = box.querySelector('img');
+    var canvas = box.querySelector('canvas');
+
+    var dataUrl = '';
+    if (img && img.src) {
+      dataUrl = img.src;
+    } else if (canvas) {
+      dataUrl = canvas.toDataURL('image/png');
+    }
+
+    if (!dataUrl) { alert('먼저 QR을 생성해주세요.'); return; }
+
+    var eventCode = (document.getElementById('qrEventCode')?.value || document.getElementById('eventCodeInput')?.value || 'event').trim();
+    var a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = 'sv3_QR_' + (eventCode || 'event') + '.png';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  } catch(e) {
+    alert('QR 저장 중 오류: ' + e);
   }
 }
 
