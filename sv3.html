@@ -3756,16 +3756,18 @@ function executeTeamAssignment() {
         resultDiv.style.display = 'block';
         resultDiv.innerHTML = '<div style="text-align: center; padding: 20px; color: #00695c;"><strong>⏳ 조편성 진행 중...</strong></div>';
         
-        // Apps Script로 조편성 요청
+        // Apps Script로 조편성 요청 (eventCode 포함 전송)
+        var eventCodeForGroup = (document.getElementById('eventCodeInput').value || '').trim();
         fetch(webAppUrl, {
             method: 'POST',
             mode: 'no-cors',
             headers: {
-                'Content-Type': 'text/plain',  // no-cors 호환 (application/json은 브라우저 차단)
+                'Content-Type': 'text/plain',
             },
             body: JSON.stringify({
                 action: 'teamAssignment',
-                playersPerTeam: playersPerTeam
+                playersPerTeam: playersPerTeam,
+                eventCode: eventCodeForGroup
             })
         })
         .then(function() {
