@@ -2230,6 +2230,37 @@ body.modal-open {
 
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
+/* ===== iOS/사파리 디버그: 화면에 JS 오류 표시 ===== */
+(function(){
+  function addBox(){
+    var box = document.getElementById('jsErrorBox');
+    if (!box) {
+      box = document.createElement('div');
+      box.id = 'jsErrorBox';
+      box.style.cssText = 'position:fixed;left:8px;right:8px;bottom:8px;z-index:99999;max-height:40vh;overflow:auto;background:rgba(0,0,0,.85);color:#fff;padding:10px;border-radius:10px;font-size:12px;line-height:1.35;display:none;white-space:pre-wrap;';
+      document.body.appendChild(box);
+    }
+    return box;
+  }
+  function log(msg){
+    try{
+      var b = addBox();
+      b.style.display = 'block';
+      b.textContent += (b.textContent ? '\n' : '') + msg;
+    }catch(e){}
+  }
+  window.addEventListener('error', function(ev){
+    var m = '[JS ERROR] ' + (ev && ev.message ? ev.message : ev);
+    if (ev && ev.filename) m += '\n' + ev.filename + ':' + ev.lineno + ':' + ev.colno;
+    log(m);
+  });
+  window.addEventListener('unhandledrejection', function(ev){
+    var r = ev && ev.reason ? ev.reason : ev;
+    log('[PROMISE REJECTION] ' + (r && r.message ? r.message : String(r)));
+  });
+})();
+</script>
+
         // html2canvas 로드 확인 및 재시도
         (function checkHtml2Canvas() {
             if (typeof html2canvas === 'undefined') {
@@ -3483,7 +3514,7 @@ window.sendToGoogleSheet = function() {
                     if (ok) {
                         showToast('✅ 전송 요청(Beacon) 전송됨');
                         // Beacon은 응답 확인 불가 → 실행로그로 확인
-                        setTimeout(() => showToast('※ Apps Script 실행로그에서 doPost 기록을 확인하세요'), 800);
+                        setTimeout(function(){ showToast('※ Apps Script 실행로그에서 doPost 기록을 확인하세요'); }, 800);
                         return;
                     }
                 }
@@ -3497,9 +3528,9 @@ window.sendToGoogleSheet = function() {
                 mode: 'no-cors',
                 body: JSON.stringify(data)
             })
-            .then(() => {
+            .then(function(){
                 showToast('✅ 전송 요청(fetch) 전송됨');
-                setTimeout(() => showToast('※ Apps Script 실행로그에서 doPost 기록을 확인하세요'), 800);
+                setTimeout(function(){ showToast('※ Apps Script 실행로그에서 doPost 기록을 확인하세요'); }, 800);
             })
             .catch((error) => {
                 console.error('❌ 전송 실패:', error);
