@@ -3471,11 +3471,13 @@ window.sendToGoogleSheet = function() {
 
             showToast(teamLabel + ' / ' + firstName + extraCount + ' 전송 중입니다...');
             
+            // ⚠️ no-cors 모드에서 Content-Type: application/json 은 브라우저가 차단함
+            // → text/plain 으로 전송해야 Apps Script가 body를 정상 수신
             fetch(webAppUrl, {
                 method: 'POST',
-                mode: 'no-cors', // CORS 문제 해결
+                mode: 'no-cors',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'text/plain'
                 },
                 body: JSON.stringify(data)
             })
@@ -3759,7 +3761,7 @@ function executeTeamAssignment() {
             method: 'POST',
             mode: 'no-cors',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'text/plain',  // no-cors 호환 (application/json은 브라우저 차단)
             },
             body: JSON.stringify({
                 action: 'teamAssignment',
