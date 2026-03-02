@@ -3471,23 +3471,41 @@ window.sendToGoogleSheet = function() {
 
             showToast(teamLabel + ' / ' + firstName + extraCount + ' 전송 중입니다...');
             
+            
+            // ✅ 디버그: 실제 전송 대상 URL 확인
+            console.log('[SV3] 전송 대상 웹앱 URL =', webAppUrl);
+
+            // 1) sendBeacon 우선 시도 (iOS/PWA에서 안정적, CORS 영향 적음)
+            try {
+                if (navigator.sendBeacon) {
+                    var blob = new Blob([JSON.stringify(data)], { type: 'text/plain;charset=UTF-8' });
+                    var ok = navigator.sendBeacon(webAppUrl, blob);
+                    if (ok) {
+                        showToast('✅ 전송 요청(Beacon) 전송됨');
+                        // Beacon은 응답 확인 불가 → 실행로그로 확인
+                        setTimeout(() => showToast('※ Apps Script 실행로그에서 doPost 기록을 확인하세요'), 800);
+                        return;
+                    }
+                }
+            } catch (e) {
+                console.warn('[SV3] sendBeacon 실패:', e);
+            }
+
+            // 2) fetch fallback (헤더 제거해서 "단순 요청"으로 보내기)
             fetch(webAppUrl, {
                 method: 'POST',
-                mode: 'no-cors', // CORS 문제 해결
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                mode: 'no-cors',
                 body: JSON.stringify(data)
             })
-            .then(function(response) {
-                // no-cors 모드에서는 응답을 읽을 수 없으므로
-                // 전송이 완료되면 성공으로 간주
-                saveSubmissionRecord(data);
-                alert('✅ 전송이 정상적으로 완료되었습니다!\n\n대회: ' + data.eventCode + '\n조: ' + data.teamName);
+            .then(() => {
+                showToast('✅ 전송 요청(fetch) 전송됨');
+                setTimeout(() => showToast('※ Apps Script 실행로그에서 doPost 기록을 확인하세요'), 800);
             })
-            .catch(function(error) {
-                alert('❌ 전송 실패!\n\n' + error.message + '\n\n인터넷 연결을 확인하고 다시 시도해주세요.');
+            .catch((error) => {
+                console.error('❌ 전송 실패:', error);
+                showToast('❌ 전송 실패: ' + (error && error.message ? error.message : error));
             });
+});
         };
         
         // 중복 전송 체크 함수
@@ -4047,7 +4065,8 @@ function loadUrlParams() {
 
 // URL 저장 함수
 function saveURL() {
-    var url = normalizeWebAppUrl(document.getElementById('webAppUrl').value);
+    var el = document.getElementById('webAppUrlInput') || document.getElementById('webAppUrl');
+    var url = normalizeWebAppUrl(el ? el.value : '');
     if (!url) {
         alert('URL을 입력해주세요.');
         return;
@@ -4057,7 +4076,9 @@ function saveURL() {
         return;
     }
     localStorage.setItem('parkgolf_webapp_url', url);
-    alert('URL이 저장되었습니다!');
+    var el2 = document.getElementById('webAppUrlInput') || document.getElementById('webAppUrl');
+    if (el2) el2.value = url;
+    alert('URL이 저장되었습니다!\n\n현재 저장된 웹앱URL:\n' + url);
 }
 </script>
 </div>
