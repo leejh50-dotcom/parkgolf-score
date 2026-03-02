@@ -3380,8 +3380,27 @@ body.modal-open {
         // ========== 새로 추가된 기능들 ==========
         
         // 구글시트로 보내기
-        window.sendToGoogleSheet = function() {
-            const webAppUrl = localStorage.getItem('parkgolf_webapp_url');
+        
+// ✅ Google Apps Script WebApp URL 정규화 (/exec 누락, /dev, 공백/개행 제거)
+function normalizeWebAppUrl(url) {
+    if (!url) return '';
+    url = String(url).trim().replace(/\s+/g, '');
+    // /dev → /exec
+    url = url.replace(/\/dev\b/, '/exec');
+    // https://script.google.com/macros/s/<ID> 또는 .../<ID>/ 형태면 /exec 보정
+    if (/^https:\/\/script\.google\.com\/macros\/s\/[^\/]+\/?$/.test(url)) {
+        url = url.replace(/\/?$/, '/') + 'exec';
+    }
+    // .../macros/s/<ID>/... 형태면 <ID>/exec 로 고정
+    var m = url.match(/^(https:\/\/script\.google\.com\/macros\/s\/[^\/]+)(?:\/.*)?$/);
+    if (m && m[1]) {
+        url = m[1] + '/exec';
+    }
+    return url;
+}
+
+window.sendToGoogleSheet = function() {
+            let webAppUrl = normalizeWebAppUrl(localStorage.getItem('parkgolf_webapp_url'));
             
             if (!webAppUrl) {
                 alert('먼저 관리자 도구에서 웹앱 URL을 설정해주세요.');
@@ -3389,7 +3408,10 @@ body.modal-open {
                 return;
             }
             
-            // ========================================
+                        // 정규화된 URL을 다시 저장
+            localStorage.setItem('parkgolf_webapp_url', webAppUrl);
+
+// ========================================
             // 필수 입력 체크
             // ========================================
             const teamName = document.getElementById('teamNameInput').value || '';
@@ -4025,7 +4047,7 @@ function loadUrlParams() {
 
 // URL 저장 함수
 function saveURL() {
-    var url = document.getElementById('webAppUrl').value.trim();
+    var url = normalizeWebAppUrl(document.getElementById('webAppUrl').value);
     if (!url) {
         alert('URL을 입력해주세요.');
         return;
