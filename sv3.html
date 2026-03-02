@@ -2230,7 +2230,7 @@ body.modal-open {
 
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
-/* ===== iOS/사파리 디버그: 화면에 JS 오류 표시 ===== */
+/* ===== iOS/사파리 디버그: 화면에 JS 오류 표시 (v5.11) ===== */
 (function(){
   function addBox(){
     var box = document.getElementById('jsErrorBox');
@@ -2238,7 +2238,9 @@ body.modal-open {
       box = document.createElement('div');
       box.id = 'jsErrorBox';
       box.style.cssText = 'position:fixed;left:8px;right:8px;bottom:8px;z-index:99999;max-height:40vh;overflow:auto;background:rgba(0,0,0,.85);color:#fff;padding:10px;border-radius:10px;font-size:12px;line-height:1.35;display:none;white-space:pre-wrap;';
-      document.body.appendChild(box);
+      document.addEventListener('DOMContentLoaded', function(){
+        try{ document.body.appendChild(box); }catch(e){}
+      });
     }
     return box;
   }
@@ -2258,8 +2260,10 @@ body.modal-open {
     var r = ev && ev.reason ? ev.reason : ev;
     log('[PROMISE REJECTION] ' + (r && r.message ? r.message : String(r)));
   });
+  // 간단 버전 표시
+  try{ console.log('SV3 v5.11 loaded'); }catch(e){}
 })();
-</script>
+
 
         // html2canvas 로드 확인 및 재시도
         (function checkHtml2Canvas() {
