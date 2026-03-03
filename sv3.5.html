@@ -420,129 +420,61 @@ body.modal-open {
 
 
 <style>
-/* ===== 점수 입력 모달(키패드) 안정화 v5.3-fix2 ===== */
+/* ===== 점수 입력 모달(키패드) 안정화: 배경 스크롤 방지 + 키패드 고정 ===== */
 #scoreModal {
   position: fixed !important;
   inset: 0 !important;
-  width: 100% !important;
-  /* svh: iOS Safari 주소창 포함 실제 보이는 뷰포트 높이 */
-  height: 100svh !important;
-  height: 100dvh !important;     /* fallback 순서 반대: 브라우저가 마지막 지원값 사용 */
-  height: 100vh !important;      /* 구형 브라우저 fallback */
+  width: 100vw !important;
+  height: 100vh !important;
   display: none;
-  align-items: flex-start !important;   /* center 대신 flex-start: 주소창 아래에 모달 배치 */
+  align-items: center !important;
   justify-content: center !important;
-  padding-top: max(10px, env(safe-area-inset-top)) !important;
-  padding-bottom: max(10px, env(safe-area-inset-bottom)) !important;
-  padding-left: 8px !important;
-  padding-right: 8px !important;
-  background: rgba(0,0,0,0.5) !important;
+  padding: 10px !important;
+  background: rgba(0,0,0,0.45) !important;
   z-index: 99998 !important;
   box-sizing: border-box !important;
-  overflow: hidden !important;
 }
 
 #scoreModal .modal-content {
-  width: min(520px, 96vw) !important;
-  /* 전체 모달 높이 - 상하 패딩 - safe-area 를 빼서 절대 넘치지 않게 */
-  max-height: calc(100svh - 20px - env(safe-area-inset-top) - env(safe-area-inset-bottom)) !important;
-  max-height: calc(100dvh - 20px) !important;
-  max-height: calc(var(--vh, 1vh) * 100 - 20px) !important;
-  overflow: hidden !important;
+  width: min(520px, 94vw) !important;
+  max-height: 92vh !important;
+  overflow: hidden !important;            /* 내부 레이아웃에서 키패드는 고정 */
   display: flex !important;
   flex-direction: column !important;
   border-radius: 14px !important;
-  padding: 14px 14px 10px !important;
+  padding: 14px !important;
   box-sizing: border-box !important;
-  background: white !important;
 }
 
-#scoreModal h3 {
-  flex: 0 0 auto !important;
-  margin: 0 0 10px 0 !important;
-}
+#scoreModal h3 { margin: 0 0 10px 0 !important; }
 
-/* 입력행: 고정 높이 */
-#scoreModal .score-input-row {
-  flex: 0 0 auto !important;
-  display: flex !important;
-  align-items: stretch !important;
-  gap: 10px !important;
-  height: 110px !important;
-  margin-bottom: 10px !important;
-}
+#scoreModal .score-input-row { flex: 0 0 auto !important; }
 
-#scoreModal .input-display {
-  flex: 1 !important;
-  height: 100% !important;
-  min-height: unset !important;
-}
-
-#scoreModal .button-group-side {
-  display: flex !important;
-  flex-direction: column !important;
-  height: 100% !important;
-  gap: 6px !important;
-  width: 90px !important;
-  flex-shrink: 0 !important;
-}
-
-#scoreModal .confirm-btn-top {
-  flex: 2 !important;
-  min-height: unset !important;
-  height: unset !important;
-  padding: 0 8px !important;
-}
-
-#scoreModal .penalty-btn-side {
-  flex: 1 !important;
-  min-height: unset !important;
-  height: unset !important;
-  padding: 0 4px !important;
-  font-size: 14px !important;
-  line-height: 1.2 !important;
-  white-space: nowrap !important;
-}
-
-/* 키패드: 나머지 공간 차지 + 스크롤 */
 #scoreModal .keyboard {
-  flex: 1 1 0 !important;          /* 1 1 auto 대신 0: 남은 공간만큼만 */
-  min-height: 0 !important;        /* ← flex 아이템 스크롤의 핵심 */
+  flex: 1 1 auto !important;
   overflow-y: auto !important;
-  overflow-x: hidden !important;
   -webkit-overflow-scrolling: touch !important;
-  overscroll-behavior: contain !important;
-  touch-action: pan-y !important;
-  padding-bottom: 4px !important;
+  padding-bottom: 12px !important;
 }
 
-/* 취소 버튼: 하단 고정 */
-#scoreModal .modal-close {
-  flex: 0 0 auto !important;
-  width: 100% !important;
-  margin-top: 8px !important;
-  min-height: 48px !important;
-  display: block !important;
-}
-
-/* 버튼 터치 안정화 */
+/* 키패드 버튼 터치 안정화 */
 #scoreModal .key-btn, #scoreModal button {
   touch-action: manipulation !important;
-  -webkit-tap-highlight-color: transparent !important;
+}
+
+/* 하단 버튼(지우기/닫기)이 가려지지 않게 */
+#scoreModal .modal-close,
+#scoreModal .delete-btn,
+#scoreModal .clear-btn {
+  width: 100% !important;
+  display: block !important;
+  margin-top: 10px !important;
 }
 
 @media (max-width: 768px) {
-  #scoreModal .key-btn {
-    min-height: 54px !important;
-    font-size: 22px !important;
-    padding: 0 !important;
-    border-radius: 10px !important;
-  }
-  #scoreModal .modal-close {
-    min-height: 50px !important;
-    font-size: 17px !important;
-    border-radius: 10px !important;
-  }
+  #scoreModal { padding: 8px !important; }
+  #scoreModal .modal-content { width: 96vw !important; max-height: 94vh !important; }
+  #scoreModal .key-btn { min-height: 56px !important; font-size: 22px !important; }
 }
 
 /* iOS에서 '지도' 버튼 줄바꿈 방지 */
@@ -559,6 +491,113 @@ body.modal-open {
 
 </style>
 
+
+<style>
+/* ===== scoreModal 모바일 UI 수정 v5.3-fix : sv2.0 화면 기준 ===== */
+
+/* ── 1. 모달 오버레이: 배경 스크롤 완전 차단 ── */
+#scoreModal {
+  overscroll-behavior: contain !important;
+}
+
+/* ── 2. 모달 컨텐츠 전체 flex 세로 정렬 ── */
+#scoreModal .modal-content {
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  padding: 14px 14px 10px !important;
+}
+
+@media (max-width: 768px) {
+  /* ── 3. 모달 전체 높이 ── */
+  #scoreModal .modal-content {
+    max-height: 96vh !important;
+  }
+
+  /* ── 4. 점수 입력행: 고정 높이 110px, align-items:stretch ── */
+  #scoreModal .score-input-row {
+    flex: 0 0 auto !important;
+    display: flex !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+    height: 110px !important;
+    margin-bottom: 10px !important;
+  }
+
+  /* ── 5. 점수 표시창: 입력행 전체 높이 채움 ── */
+  #scoreModal .input-display {
+    flex: 1 !important;
+    height: 100% !important;
+    min-height: unset !important;
+    font-size: 40px !important;
+    border-radius: 12px !important;
+  }
+
+  /* ── 6. 우측 버튼 그룹: flex 세로, 높이 채움 ── */
+  #scoreModal .button-group-side {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    gap: 6px !important;
+    min-width: 88px !important;
+    width: 88px !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* ── 7. 확인 버튼: 전체의 2/3 (flex:2) ── */
+  #scoreModal .confirm-btn-top {
+    flex: 2 !important;
+    height: unset !important;
+    min-height: unset !important;
+    padding: 0 8px !important;
+    font-size: 19px !important;
+    font-weight: 900 !important;
+    border-radius: 10px !important;
+  }
+
+  /* ── 8. OB/벌타 버튼: 확인의 절반 (flex:1) ── */
+  #scoreModal .penalty-btn-side {
+    flex: 1 !important;
+    height: unset !important;
+    min-height: unset !important;
+    padding: 0 4px !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+    line-height: 1.2 !important;
+    border-radius: 10px !important;
+    white-space: nowrap !important;
+  }
+
+  /* ── 9. 키패드: 스크롤 가능 + 배경 고정 ── */
+  #scoreModal .keyboard {
+    flex: 1 1 auto !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: contain !important;
+    touch-action: pan-y !important;
+    padding-bottom: 8px !important;
+  }
+
+  /* ── 10. 키패드 버튼 높이 ── */
+  #scoreModal .key-btn {
+    min-height: 54px !important;
+    font-size: 22px !important;
+    padding: 0 !important;
+    border-radius: 10px !important;
+  }
+
+  /* ── 11. 취소(닫기) 버튼: 하단 고정 ── */
+  #scoreModal .modal-close {
+    flex: 0 0 auto !important;
+    margin-top: 8px !important;
+    min-height: 50px !important;
+    font-size: 17px !important;
+    border-radius: 10px !important;
+    padding: 0 !important;
+  }
+}
+</style>
 
 <script>
 /* ===== scoreModal show 클래스 감지 → 배경 스크롤 잠금 연동 ===== */
@@ -4426,18 +4465,5 @@ function closeAdminModalQuick(){
 </script>
 
 <div id="buildTag" style="position:fixed;right:10px;bottom:10px;z-index:9999;font-size:12px;font-weight:800;background:rgba(0,0,0,.45);color:#fff;padding:6px 10px;border-radius:999px;">sv3 v5.3</div>
-
-<script>
-/* ===== iOS Safari vh 보정 (svh 미지원 기기 대비) ===== */
-(function setVh() {
-  function update() {
-    var vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty('--vh', vh + 'px');
-  }
-  update();
-  window.addEventListener('resize', update);
-  window.addEventListener('orientationchange', function(){ setTimeout(update, 200); });
-})();
-</script>
 </body>
 </html>
