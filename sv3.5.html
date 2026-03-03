@@ -211,8 +211,9 @@ input, textarea, select { font-size: 16px; } /* prevent iOS zoom */
 
 </style>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="파시스 sv3.0">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="파시스 sv3.5">
+<meta name="mobile-web-app-capable" content="yes">
 <link rel="manifest" href="manifest-sv3.json">
 <link rel="apple-touch-icon" sizes="180x180" href="sv3-180-v2.png">
 <link rel="icon" type="image/png" sizes="192x192" href="sv3-192.png">
@@ -419,61 +420,155 @@ body.modal-open {
 
 
 <style>
-/* ===== 점수 입력 모달(키패드) 안정화: 배경 스크롤 방지 + 키패드 고정 ===== */
+/* ===== 점수 입력 키패드: 전체화면 핏 (iOS dvh + 스크롤 없음) ===== */
+
+/* iOS Safari dvh 지원: JS로 --vh 변수 설정 */
 #scoreModal {
   position: fixed !important;
-  inset: 0 !important;
-  width: 100vw !important;
+  top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
+  width: 100% !important;
   height: 100vh !important;
+  height: 100dvh !important;          /* iOS 15.4+ 주소창 제외 실제 높이 */
   display: none;
   align-items: center !important;
   justify-content: center !important;
-  padding: 10px !important;
-  background: rgba(0,0,0,0.45) !important;
+  padding: 8px 8px env(safe-area-inset-bottom, 8px) 8px !important;
+  background: rgba(0,0,0,0.55) !important;
   z-index: 99998 !important;
   box-sizing: border-box !important;
+  overflow: hidden !important;
+  touch-action: none !important;       /* 배경 스크롤 완전 차단 */
 }
 
 #scoreModal .modal-content {
-  width: min(520px, 94vw) !important;
-  max-height: 92vh !important;
-  overflow: hidden !important;            /* 내부 레이아웃에서 키패드는 고정 */
+  width: min(400px, 96vw) !important;
+  /* 높이를 화면에 꽉 맞게 - 스크롤 없음 */
+  height: auto !important;
+  max-height: calc(100dvh - 20px) !important;
+  max-height: calc(var(--vh, 1vh) * 100 - 20px) !important;
+  overflow: hidden !important;
   display: flex !important;
   flex-direction: column !important;
-  border-radius: 14px !important;
-  padding: 14px !important;
+  border-radius: 18px !important;
+  padding: 12px 12px 10px !important;
   box-sizing: border-box !important;
+  gap: 8px !important;
 }
 
-#scoreModal h3 { margin: 0 0 10px 0 !important; }
+/* 제목 */
+#scoreModal h3 {
+  margin: 0 !important;
+  flex: 0 0 auto !important;
+  font-size: 18px !important;
+  text-align: center !important;
+  padding-bottom: 4px !important;
+}
 
-#scoreModal .score-input-row { flex: 0 0 auto !important; }
+/* 점수표시 + 확인/OB 버튼 행 */
+#scoreModal .score-input-row {
+  flex: 0 0 auto !important;
+  display: flex !important;
+  align-items: stretch !important;
+  gap: 10px !important;
+  margin-bottom: 0 !important;
+}
 
+/* 숫자 표시창 */
+#scoreModal .input-display {
+  flex: 1 !important;
+  min-height: 64px !important;
+  max-height: 72px !important;
+  font-size: 38px !important;
+  padding: 8px !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* 우측 확인/OB 버튼 세로 배치 */
+#scoreModal .button-group-side {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+  flex: 0 0 auto !important;
+}
+
+#scoreModal .confirm-btn-top {
+  flex: 1 !important;
+  min-width: 78px !important;
+  font-size: 17px !important;
+  padding: 0 14px !important;
+  border-radius: 10px !important;
+}
+
+#scoreModal .penalty-btn-side {
+  flex: 1 !important;
+  min-width: 78px !important;
+  font-size: 14px !important;
+  padding: 0 10px !important;
+  border-radius: 10px !important;
+  white-space: nowrap !important;
+}
+
+/* 키패드 그리드 - flex:1로 남은 공간 채움 */
 #scoreModal .keyboard {
   flex: 1 1 auto !important;
-  overflow-y: auto !important;
-  -webkit-overflow-scrolling: touch !important;
-  padding-bottom: 12px !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 7px !important;
+  overflow: hidden !important;         /* 절대 스크롤 없음 */
+  padding-bottom: 0 !important;
+  align-content: stretch !important;
 }
 
-/* 키패드 버튼 터치 안정화 */
-#scoreModal .key-btn, #scoreModal button {
+/* 키패드 버튼 - 그리드 내 꽉 채우기 */
+#scoreModal .key-btn {
+  padding: 0 !important;
+  min-height: 52px !important;
+  height: 100% !important;
+  font-size: 24px !important;
+  font-weight: 900 !important;
+  border-radius: 10px !important;
+  border: 2px solid #dee2e6 !important;
+  background: #f8f9fa !important;
+  color: #1e3c72 !important;
   touch-action: manipulation !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
-/* 하단 버튼(지우기/닫기)이 가려지지 않게 */
-#scoreModal .modal-close,
-#scoreModal .delete-btn,
-#scoreModal .clear-btn {
+#scoreModal .delete-btn {
+  background: #ffc107 !important;
+  color: #000 !important;
+  border-color: #ffc107 !important;
+  font-size: 18px !important;
+  grid-column: 2 / 4 !important;
+}
+
+/* 0 버튼 */
+#scoreModal .keyboard button:nth-child(10) {
+  grid-column: 1 / 2 !important;
+}
+
+/* 취소 버튼 */
+#scoreModal .modal-close {
+  flex: 0 0 auto !important;
+  margin-top: 0 !important;
+  padding: 12px !important;
+  font-size: 15px !important;
+  border-radius: 10px !important;
   width: 100% !important;
   display: block !important;
-  margin-top: 10px !important;
 }
 
-@media (max-width: 768px) {
-  #scoreModal { padding: 8px !important; }
-  #scoreModal .modal-content { width: 96vw !important; max-height: 94vh !important; }
-  #scoreModal .key-btn { min-height: 56px !important; font-size: 22px !important; }
+/* 모바일 세밀 조정 */
+@media (max-height: 680px) {
+  #scoreModal .input-display { min-height: 52px !important; max-height: 58px !important; font-size: 30px !important; }
+  #scoreModal .key-btn { min-height: 44px !important; font-size: 20px !important; }
+  #scoreModal .modal-close { padding: 8px !important; }
+  #scoreModal h3 { font-size: 15px !important; }
 }
 
 /* iOS에서 '지도' 버튼 줄바꿈 방지 */
@@ -2174,8 +2269,20 @@ body.modal-open {
 <button class="penalty-btn-side" onclick="togglePenalty()">OB/벌타</button>
 </div>
 </div>
-<div class="keyboard"><button class="key-btn" onclick="addDigit('1')">1</button> <button class="key-btn" onclick="addDigit('2')">2</button> <button class="key-btn" onclick="addDigit('3')">3</button> <button class="key-btn" onclick="addDigit('4')">4</button> <button class="key-btn" onclick="addDigit('5')">5</button> <button class="key-btn" onclick="addDigit('6')">6</button> <button class="key-btn" onclick="addDigit('7')">7</button> <button class="key-btn" onclick="addDigit('8')">8</button> <button class="key-btn" onclick="addDigit('9')">9</button> <button class="key-btn" onclick="addDigit('0')">0</button> <button class="key-btn delete-btn" onclick="deleteDigit()">지우기</button></div>
-<button class="modal-close" onclick="closeModal()">취소</button></div>
+<div class="keyboard">
+<button class="key-btn" onclick="addDigit('1')">1</button>
+<button class="key-btn" onclick="addDigit('2')">2</button>
+<button class="key-btn" onclick="addDigit('3')">3</button>
+<button class="key-btn" onclick="addDigit('4')">4</button>
+<button class="key-btn" onclick="addDigit('5')">5</button>
+<button class="key-btn" onclick="addDigit('6')">6</button>
+<button class="key-btn" onclick="addDigit('7')">7</button>
+<button class="key-btn" onclick="addDigit('8')">8</button>
+<button class="key-btn" onclick="addDigit('9')">9</button>
+<button class="key-btn" onclick="addDigit('0')">0</button>
+<button class="key-btn delete-btn" onclick="deleteDigit()">지우기</button>
+</div>
+<button class="modal-close" onclick="closeModal()">닫기</button></div>
 </div>
 <div id="toast" class="toast">&nbsp;</div>
 
@@ -4318,6 +4425,46 @@ function closeAdminModalQuick(){
       try { prevUnlock(); } catch(e) {}
     }
   };
+})();
+
+/* ===== iOS Safari 키패드 전체화면 핏: --vh 동적 설정 ===== */
+(function(){
+  function setVH(){
+    var vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', vh + 'px');
+  }
+  setVH();
+  window.addEventListener('resize', setVH);
+  window.addEventListener('orientationchange', function(){ setTimeout(setVH, 200); });
+
+  /* scoreModal 열릴 때 배경 완전 고정 */
+  var scoreModal = document.getElementById('scoreModal');
+  if(scoreModal){
+    var obs = new MutationObserver(function(){
+      var isOpen = scoreModal.classList.contains('show') ||
+                   (scoreModal.style.display && scoreModal.style.display !== 'none');
+      if(isOpen){
+        setVH();
+        /* 배경 스크롤 차단 */
+        document.body.style.overflow = 'hidden';
+        document.documentElement.style.overflow = 'hidden';
+        /* iOS bounce 방지 */
+        document.addEventListener('touchmove', preventScroll, {passive: false});
+      } else {
+        document.body.style.overflow = '';
+        document.documentElement.style.overflow = '';
+        document.removeEventListener('touchmove', preventScroll);
+      }
+    });
+    obs.observe(scoreModal, {attributes: true, attributeFilter: ['class','style']});
+  }
+
+  function preventScroll(e){
+    /* scoreModal 내부 터치는 허용 */
+    var modal = document.getElementById('scoreModal');
+    if(modal && modal.contains(e.target)) return;
+    e.preventDefault();
+  }
 })();
 
 </script>
