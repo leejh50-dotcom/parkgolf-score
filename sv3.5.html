@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<title>파시스 sv3.0 심플</title>
+<title>파시스 sv3.5</title>
 
 <style>
 /* ===== 2.0 기준 모바일 대형화 정밀 패치 ===== */
@@ -211,9 +211,8 @@ input, textarea, select { font-size: 16px; } /* prevent iOS zoom */
 
 </style>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="파시스 sv3.5">
-<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="파시스 sv3.0">
 <link rel="manifest" href="manifest-sv3.json">
 <link rel="apple-touch-icon" sizes="180x180" href="sv3-180-v2.png">
 <link rel="icon" type="image/png" sizes="192x192" href="sv3-192.png">
@@ -366,64 +365,32 @@ input, textarea, select { font-size: 16px; } /* prevent iOS zoom */
 
 </style>
 
-
-
 <style>
-/* ===== scoreModal 전용 오버라이드 (sv2 기반 최소 수정) ===== */
-
-/* 좌(점수창) : 우(확인+OB) = 1:1 동일 너비 */
-#scoreModal .input-display {
-  flex: 1 1 0% !important;
-  min-width: 0 !important;
-}
-#scoreModal .button-group-side {
-  flex: 1 1 0% !important;
-  min-width: 0 !important;
-}
-
-/* score-input-row 높이 고정 → 좌우 높이 동일 */
-#scoreModal .score-input-row {
-  align-items: stretch !important;
-  height: 110px !important;
-  margin-bottom: 14px !important;
-}
-
-/* 확인 버튼 크게 */
-#scoreModal .confirm-btn-top {
-  flex: 1 !important;
-  font-size: 22px !important;
-  padding: 0 !important;
-  min-width: 0 !important;
-}
-
-/* OB/벌타 버튼 */
-#scoreModal .penalty-btn-side {
-  flex: 1 !important;
-  font-size: 15px !important;
-  padding: 0 !important;
-  min-width: 0 !important;
-}
-
-/* 키패드 버튼 더 크게 */
-#scoreModal .key-btn {
-  padding: 22px !important;
-  font-size: 26px !important;
-  min-height: 64px !important;
-}
-
-/* 지우기 버튼 */
-#scoreModal .delete-btn {
-  font-size: 18px !important;
-}
-
-/* touch-action 명시 */
-#scoreModal button {
+/* ===== 점수 입력(키패드) 터치 반응 개선 v5.1 ===== */
+.key-btn, .confirm-btn-top, .penalty-btn-side, .back-btn, .clear-btn {
   touch-action: manipulation !important;
   -webkit-tap-highlight-color: transparent !important;
 }
+
+/* iOS에서 '지도' 버튼 줄바꿈 방지 */
+@media (max-width: 768px) {
+  .parkgolf-app .map-link{
+    width: 76px !important;
+    padding: 12px 6px !important;
+    font-size: 18px !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+    line-height: 1 !important;
+  }
+}
+
 </style>
 
 
+
+<style>
+/* ===== 모달 열렸을 때 배경 스크롤 잠금 ===== */
+body.modal-open {
   overflow: hidden !important;
   }
 
@@ -451,14 +418,91 @@ input, textarea, select { font-size: 16px; } /* prevent iOS zoom */
 </style>
 
 
+<style>
+/* ===== 점수 입력 모달(키패드) 안정화: 배경 스크롤 방지 + 키패드 고정 ===== */
+#scoreModal {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  display: none;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 10px !important;
+  background: rgba(0,0,0,0.45) !important;
+  z-index: 99998 !important;
+  box-sizing: border-box !important;
+}
 
+#scoreModal .modal-content {
+  width: min(520px, 94vw) !important;
+  max-height: 92vh !important;
+  overflow: hidden !important;            /* 내부 레이아웃에서 키패드는 고정 */
+  display: flex !important;
+  flex-direction: column !important;
+  border-radius: 14px !important;
+  padding: 14px !important;
+  box-sizing: border-box !important;
+}
 
+#scoreModal h3 { margin: 0 0 10px 0 !important; }
+
+#scoreModal .score-input-row { flex: 0 0 auto !important; }
+
+#scoreModal .keyboard {
+  flex: 1 1 auto !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  padding-bottom: 12px !important;
+}
+
+/* 키패드 버튼 터치 안정화 */
+#scoreModal .key-btn, #scoreModal button {
+  touch-action: manipulation !important;
+}
+
+/* 하단 버튼(지우기/닫기)이 가려지지 않게 */
+#scoreModal .modal-close,
+#scoreModal .delete-btn,
+#scoreModal .clear-btn {
+  width: 100% !important;
+  display: block !important;
+  margin-top: 10px !important;
+}
+
+@media (max-width: 768px) {
+  #scoreModal { padding: 8px !important; }
+  #scoreModal .modal-content { width: 96vw !important; max-height: 94vh !important; }
+  #scoreModal .key-btn { min-height: 56px !important; font-size: 22px !important; }
+}
+
+/* iOS에서 '지도' 버튼 줄바꿈 방지 */
+@media (max-width: 768px) {
+  .parkgolf-app .map-link{
+    width: 76px !important;
+    padding: 12px 6px !important;
+    font-size: 18px !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+    line-height: 1 !important;
+  }
+}
+
+</style>
+
+<style>
+/* scoreModal 키패드: 좌우 1:1 균형 + 버튼 크기 */
+#scoreModal .score-input-row { align-items: stretch !important; height: 112px !important; }
+#scoreModal .input-display   { flex: 1 1 0% !important; }
+#scoreModal .button-group-side { flex: 1 1 0% !important; display: flex !important; flex-direction: column !important; gap: 7px !important; }
+#scoreModal .confirm-btn-top  { flex: 1 !important; padding: 0 !important; font-size: 22px !important; }
+#scoreModal .penalty-btn-side { flex: 1 !important; padding: 0 !important; font-size: 16px !important; }
+#scoreModal .key-btn          { padding: 20px !important; font-size: 26px !important; min-height: 62px !important; }
+#scoreModal .delete-btn       { font-size: 19px !important; }
+#scoreModal button            { touch-action: manipulation !important; -webkit-tap-highlight-color: transparent !important; }
+</style>
 </head>
 <body>
-파시스 sv3.0 클럽대회용
-
-<p data-ke-size="size16">&nbsp;</p>
-<p data-ke-size="size16"></p>
 <style>
 @media (max-width: 767px) {
     .parkgolf-app {
@@ -1957,14 +2001,13 @@ input, textarea, select { font-size: 16px; } /* prevent iOS zoom */
 <div style="background: linear-gradient(135deg, #2d7a4f 0%, #1a5634 100%); padding: 30px 4px !important; border-radius: 12px; margin: 0 0 8px 0 !important; text-align: center;">
 <h1 style="color: #ffffff !important; margin: 0 0 14px 0 !important; font-size: 24px !important; font-weight: bold !important; letter-spacing: -0.5px !important;">파크골프 점수 기록표</h1>
 <div style="display: inline-block; background: rgba(255,255,255,0.3); padding: 8px 18px; border-radius: 8px;">
-<span style="font-size: 15px; color: #fff3e0; font-weight: 600; letter-spacing: 0.5px;">파시스 sv3.0 심플버전</span>
+<span style="font-size: 15px; color: #fff3e0; font-weight: 600; letter-spacing: 0.5px;">파시스 sv3.5</span>
 </div>
 </div>
 <div class="info-section" style="padding: 3px !important; margin: 0 0 8px 0 !important;">
 <div class="input-group">
 <input id="dateInput" readonly="readonly" type="text" style="text-align: center; font-weight: bold;" />
 </div>
-<!-- 골프장 이름 / 대회명 입력 UI 제거 (심플버전) -->
 <input id="locationInput" type="hidden" value="" />
 <input id="eventNameInput" type="hidden" value="" />
 <div class="input-group">
@@ -2018,12 +2061,7 @@ input, textarea, select { font-size: 16px; } /* prevent iOS zoom */
 
 <div class="summary-section">
 <div id="resultCapture">
-<!-- 오늘의 경기 결과 박스 제거 (심플버전) - JS 참조용 hidden span 유지 -->
-<span id="shareDate" style="display:none"></span>
-<span id="shareLocation" style="display:none"></span>
-<span id="shareEventName" style="display:none"></span>
-<span id="shareEventCode" style="display:none"></span>
-<span id="shareTeamName" style="display:none"></span>
+<span id="shareDate" style="display:none"></span><span id="shareLocation" style="display:none"></span><span id="shareEventName" style="display:none"></span><span id="shareEventCode" style="display:none"></span><span id="shareTeamName" style="display:none"></span>
 <h2 style="text-align: center; color: #1a5634; margin: 40px 0 10px 0 !important; font-size: 21px; font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif !important; font-weight: 900 !important;">코스별 합계표</h2>
 <table class="summary-table-new" style="width: 100%; border-collapse: collapse; margin: 0; table-layout: fixed;">
     <thead>
@@ -2137,20 +2175,8 @@ input, textarea, select { font-size: 16px; } /* prevent iOS zoom */
 <button class="penalty-btn-side" onclick="togglePenalty()">OB/벌타</button>
 </div>
 </div>
-<div class="keyboard">
-<button class="key-btn" onclick="addDigit('1')">1</button>
-<button class="key-btn" onclick="addDigit('2')">2</button>
-<button class="key-btn" onclick="addDigit('3')">3</button>
-<button class="key-btn" onclick="addDigit('4')">4</button>
-<button class="key-btn" onclick="addDigit('5')">5</button>
-<button class="key-btn" onclick="addDigit('6')">6</button>
-<button class="key-btn" onclick="addDigit('7')">7</button>
-<button class="key-btn" onclick="addDigit('8')">8</button>
-<button class="key-btn" onclick="addDigit('9')">9</button>
-<button class="key-btn" onclick="addDigit('0')">0</button>
-<button class="key-btn delete-btn" onclick="deleteDigit()">지우기</button>
-</div>
-<button class="modal-close" onclick="closeModal()">닫기</button></div>
+<div class="keyboard"><button class="key-btn" onclick="addDigit('1')">1</button> <button class="key-btn" onclick="addDigit('2')">2</button> <button class="key-btn" onclick="addDigit('3')">3</button> <button class="key-btn" onclick="addDigit('4')">4</button> <button class="key-btn" onclick="addDigit('5')">5</button> <button class="key-btn" onclick="addDigit('6')">6</button> <button class="key-btn" onclick="addDigit('7')">7</button> <button class="key-btn" onclick="addDigit('8')">8</button> <button class="key-btn" onclick="addDigit('9')">9</button> <button class="key-btn" onclick="addDigit('0')">0</button> <button class="key-btn delete-btn" onclick="deleteDigit()">지우기</button></div>
+<button class="modal-close" onclick="closeModal()">취소</button></div>
 </div>
 <div id="toast" class="toast">&nbsp;</div>
 
@@ -2994,8 +3020,6 @@ input, textarea, select { font-size: 16px; } /* prevent iOS zoom */
             }
             updateScoreDisplay();
             document.getElementById('scoreModal').classList.add('show');
-            document.body.style.overflow = 'hidden';
-            
         }
         
         function addDigit(digit) {
@@ -3049,7 +3073,6 @@ input, textarea, select { font-size: 16px; } /* prevent iOS zoom */
             document.getElementById('scoreModal').classList.remove('show');
             tempScore = '';
             isPenalty = false;
-            document.body.style.overflow = '';
         }
         
         function getPlayerName(playerNum) {
@@ -3269,14 +3292,7 @@ input, textarea, select { font-size: 16px; } /* prevent iOS zoom */
                 }, 100);
             }
             
-            // 장소 입력 (심플버전 - UI 제거됨)
-            const locationInputEl = document.getElementById('locationInput');
-            if (locationInputEl && locationInputEl.type !== 'hidden') {
-                locationInputEl.addEventListener('input', function() {
-                    const sl = document.getElementById('shareLocation');
-                    if (sl) sl.textContent = this.value || '미입력';
-                });
-            }
+            // 장소 입력 (hidden 처리됨)
             
             // 팀명 입력 시 결과표에도 실시간 반영
             const teamNameInput = document.getElementById('teamNameInput');
@@ -4040,46 +4056,59 @@ function saveURL() {
 <!-- 관리자 도구 모달 (parkgolf-app 밖에 배치) -->
 <div id="adminModal" class="modal">
   <div class="modal-content">
-
-    <!-- 타이틀 헤더 -->
     <div class="admin-head">
       <div>
-        <h3 class="admin-title">💻 대회 관리자 도구 <span class="admin-ver">v5.4</span></h3>
-        <div class="admin-sub">PC에서 대회 준비를 진행하는 순서입니다.</div>
+        <h3 class="admin-title">대회 관리자 도구 <span class="admin-ver">v5.3</span></h3>
+        <div class="admin-sub">휴대폰에서 바로 진행할 수 있도록 순서를 위에 배치했습니다. PC 안내는 아래에서 펼쳐서 확인하세요.</div>
       </div>
       <button type="button" class="close-x" onclick="closeAdminModalQuick()" aria-label="닫기">×</button>
     </div>
 
-    <!-- ① 템플릿 복사 + URL 저장 -->
     <div class="admin-section">
-      <div class="section-title">① 템플릿 복사 &amp; 웹앱 URL 저장</div>
-
-      <button type="button" onclick="copyTemplate();"
-              style="width:100% !important; padding:16px !important; background:#3b82f6 !important; color:#fff !important; border:none !important; border-radius:12px !important; font-size:17px !important; font-weight:900 !important; margin-bottom:8px !important;">
-        📋 템플릿 복사 (구글시트 사본 만들기)
-      </button>
-      <div class="hint" style="margin-bottom:12px;">
-        버튼 클릭 → 구글시트에서 웹앱 배포 → 생성된 URL을 아래에 붙여넣기 → 저장
-      </div>
-
-      <input type="text" id="webAppUrl" placeholder="웹앱 URL을 여기에 붙여넣기 하세요"
-             style="width:100% !important; padding:14px !important; border:2px solid #dee2e6 !important; border-radius:10px !important; font-size:14px !important; font-weight:700 !important; margin-bottom:8px !important;">
-      <button type="button" onclick="saveURL()"
-              style="width:100% !important; padding:16px !important; background:#28a745 !important; color:#fff !important; border:none !important; border-radius:12px !important; font-size:17px !important; font-weight:900 !important;">
-        💾 URL 저장
-      </button>
+      <div class="section-title">📱 휴대폰 진행 순서(권장)</div>
+      <ol class="steps">
+        <li><b>웹앱 URL 저장</b> (처음 1회)</li>
+        <li><b>템플릿 복사</b> (구글시트 사본 만들기)</li>
+        <li><b>조편성</b> (팀당 인원 설정 후 실행)</li>
+        <li><b>QR 코드 생성</b> (대회코드 + 웹앱URL)</li>
+      </ol>
     </div>
 
-    <!-- ② QR 코드 생성 -->
     <div class="admin-section">
-      <div class="section-title">② QR 코드 생성</div>
-      <button type="button" onclick="toggleQRSection()"
-              style="width:100% !important; padding:16px !important; background:#8e24aa !important; color:#fff !important; border:none !important; border-radius:12px !important; font-size:17px !important; font-weight:900 !important;">
-        🔲 QR코드 생성하기
-      </button>
+      <div class="section-title">1) 웹앱 URL 저장</div>
+      <input type="text" id="webAppUrl" placeholder="https://script.google.com/macros/s/YOUR_ID/exec"
+             style="width:100% !important; padding:14px !important; border:2px solid #dee2e6 !important; border-radius:10px !important; font-size:15px !important; font-weight:700 !important;">
+      <div class="admin-grid" style="margin-top:10px;">
+        <button type="button" onclick="saveURL()" style="padding:16px !important; background:#28a745 !important; color:#fff !important; border:none !important; border-radius:12px !important; font-size:16px !important; font-weight:900 !important;">URL 저장</button>
+        <button type="button" onclick="copyTemplate();" style="padding:16px !important; background:#3b82f6 !important; color:#fff !important; border:none !important; border-radius:12px !important; font-size:16px !important; font-weight:900 !important;">템플릿 복사</button>
+      </div>
+
+      <div class="hint">📌 모바일에서 “템플릿 복사”가 작동하지 않으면, 아래 URL을 길게 눌러 <b>복사</b>한 뒤 주소창에 붙여넣어 열어주세요.</div>
+      <input type="text" value="https://docs.google.com/spreadsheets/d/1lPB8pLFzoKVkKy4SPjoOWv_SfYwsJ6_TrIBALuobxko/copy" readonly
+             onclick="this.select(); document.execCommand('copy'); alert('URL이 복사되었습니다!');"
+             style="width:100% !important; padding:12px !important; margin-top:8px !important; border:2px solid #dee2e6 !important; border-radius:10px !important; font-size:13px !important; font-weight:700 !important;">
+    </div>
+
+    <div class="admin-section">
+      <div class="section-title">2) 조편성</div>
+      <button type="button" onclick="toggleTeamAssignment()" style="width:100% !important; padding:16px !important; background:#0f766e !important; color:#fff !important; border:none !important; border-radius:12px !important; font-size:17px !important; font-weight:900 !important;">⚡ 조편성</button>
+
+      <div id="teamAssignmentSection" style="display:none; margin-top:12px;">
+        <div class="hint" style="margin-top:0;">팀당 인원수를 입력하고 실행하세요.</div>
+        <input type="number" id="playersPerTeam" value="4" min="2" max="8"
+               style="width:100% !important; padding:12px !important; margin:10px 0 !important; border:2px solid #dee2e6 !important; border-radius:10px !important; font-size:15px !important; font-weight:800 !important;">
+        <button type="button" onclick="executeTeamAssignment()" style="width:100% !important; padding:16px !important; background:#0ea5a4 !important; color:#fff !important; border:none !important; border-radius:12px !important; font-size:16px !important; font-weight:900 !important;">조편성 실행</button>
+        <div id="teamAssignmentResult" style="margin-top:12px;"></div>
+      </div>
+    </div>
+
+    <div class="admin-section">
+      <div class="section-title">3) QR 코드 생성</div>
+      <button type="button" onclick="toggleQRSection()" style="width:100% !important; padding:16px !important; background:#8e24aa !important; color:#fff !important; border:none !important; border-radius:12px !important; font-size:17px !important; font-weight:900 !important;">QR코드 생성하기</button>
 
       <div id="qrSection" style="display:none; margin-top:12px;">
-        <div class="hint" style="margin-top:0;">대회코드와 웹앱 URL을 넣고 QR을 생성하세요.<br>생성된 QR을 인쇄하여 경기자에게 나눠주세요.</div>
+        <div class="hint" style="margin-top:0;">대회코드와 웹앱 URL을 넣고 QR을 생성하세요. (QR을 휴대폰 카메라로 스캔하면 자동 입력됩니다)</div>
+
         <div style="background:#fff !important; border:1px solid #e9ecef !important; border-radius:12px !important; padding:12px !important; margin-top:10px;">
           <div style="font-weight:900; margin-bottom:6px;">대회 코드</div>
           <input type="text" id="qrEventCode" placeholder="예: 123456QW"
@@ -4089,6 +4118,7 @@ function saveURL() {
                  style="width:100% !important; padding:12px !important; border:2px solid #dee2e6 !important; border-radius:10px !important; font-size:13px !important; font-weight:800 !important;">
           <button type="button" onclick="generateQRCodeWithParams(); return false;"
                   style="width:100% !important; margin-top:12px !important; padding:16px !important; background:#8e24aa !important; color:#fff !important; border:none !important; border-radius:12px !important; font-size:16px !important; font-weight:900 !important;">QR 코드 생성</button>
+
           <div id="qrcodeDisplay" style="display:none; margin-top:14px; text-align:center;">
             <div id="qrcode" style="display:inline-block;"></div>
             <div id="qrInfo" style="margin-top:10px;"></div>
@@ -4099,41 +4129,19 @@ function saveURL() {
       </div>
     </div>
 
-    <!-- ③ 조편성 안내 -->
-    <div class="admin-section" style="background:#f0faf4 !important; border:2px solid #2d7a4f !important;">
-      <div class="section-title" style="color:#1a5634 !important;">③ 조편성</div>
-      <div style="font-size:16px; font-weight:800; color:#1a5634; text-align:center; padding:10px 0;">
-        📊 조편성은 템플릿에서 진행하세요
-      </div>
-      <div class="hint" style="text-align:center; margin-top:4px;">
-        복사한 구글시트 템플릿의 조편성 시트를 이용하세요.
-      </div>
-      <!-- JS 오류 방지용 hidden 요소 유지 -->
-      <div id="teamAssignmentSection" style="display:none;">
-        <input type="number" id="playersPerTeam" value="4" min="2" max="8">
-        <div id="teamAssignmentResult"></div>
-      </div>
-    </div>
-
-    <!-- 휴대폰 진행 안내 (접기/펼치기) -->
-    <details style="margin-top:8px;">
-      <summary style="cursor:pointer; font-size:15px; font-weight:900; color:#495057; padding:12px 4px; list-style:none;">
-        📱 휴대폰 진행 안내 (필요 시 펼치기) ▾
-      </summary>
-      <div class="hint" style="margin-top:10px; background:#f8f9fa; border-radius:10px; padding:14px; line-height:1.8;">
-        <b>① 웹앱 URL 저장</b> — URL 입력란에 붙여넣기 후 저장<br>
-        <b>② QR코드 스캔</b> — 카메라로 QR 스캔 → 대회코드 자동 입력<br>
-        <b>③ 조(팀) 확인</b> — 배정된 조 이름 입력<br>
-        <b>④ 경기자 이름 등록</b> → 코스 선택 → 점수 입력 → 전송
+    <details>
+      <summary>💻 PC 사용자 안내(필요 시 펼치기)</summary>
+      <div class="hint" style="margin-top:8px;">
+        위 버튼이 휴대폰에서 작동하지 않으면<br>
+        1) <b>PC에서 “템플릿 복사”</b>를 먼저 진행하고<br>
+        2) 생성된 사본 스프레드시트를 휴대폰에서 열어 계속 진행하세요.
       </div>
     </details>
 
-    <!-- 닫기 -->
     <div class="sticky-close">
       <button type="button" onclick="closeAdminModalQuick()"
               style="width:100% !important; padding:16px !important; background:#6c757d !important; color:#fff !important; border:none !important; border-radius:12px !important; font-size:16px !important; font-weight:900 !important;">닫기</button>
     </div>
-
   </div>
 </div>
 
@@ -4286,6 +4294,7 @@ function closeAdminModalQuick(){
   window.__unlockBodyScrollForModal = function(){
     try{
       document.body.classList.remove('modal-open');
+      // 혹시 남아있는 인라인 스타일 정리
       document.body.style.overflow = '';
       document.body.style.position = '';
       document.body.style.top = '';
@@ -4297,12 +4306,8 @@ function closeAdminModalQuick(){
   };
 })();
 
-
-
 </script>
 
-
-
-<div id="buildTag" style="position:fixed;right:10px;bottom:10px;z-index:9999;font-size:12px;font-weight:800;background:rgba(0,0,0,.45);color:#fff;padding:6px 10px;border-radius:999px;">sv3 v5.4</div>
+<div id="buildTag" style="position:fixed;right:10px;bottom:10px;z-index:9999;font-size:12px;font-weight:800;background:rgba(0,0,0,.45);color:#fff;padding:6px 10px;border-radius:999px;">sv3 v5.3</div>
 </body>
 </html>
