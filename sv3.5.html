@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<title>파시스 sv3.0</title>
+<title>파시스 sv3.5</title>
 
 <style>
 /* ===== 2.0 기준 모바일 대형화 정밀 패치 ===== */
@@ -419,62 +419,158 @@ body.modal-open {
 
 
 <style>
-/* ===== 점수 입력 모달(키패드) 안정화: 배경 스크롤 방지 + 키패드 고정 ===== */
+/* ===== scoreModal: 전체화면 고정, 스크롤 없음 ===== */
 #scoreModal {
   position: fixed !important;
   inset: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
+  width: 100% !important; height: 100% !important;
   display: none;
   align-items: center !important;
   justify-content: center !important;
-  padding: 10px !important;
-  background: rgba(0,0,0,0.45) !important;
+  padding: 12px !important;
+  background: rgba(0,0,0,0.6) !important;
   z-index: 99998 !important;
   box-sizing: border-box !important;
 }
+#scoreModal.show { display: flex !important; }
 
 #scoreModal .modal-content {
-  width: min(520px, 94vw) !important;
-  max-height: 92vh !important;
-  overflow: hidden !important;            /* 내부 레이아웃에서 키패드는 고정 */
+  width: min(420px, 96vw) !important;
+  /* dvh = 주소바 제외 실제 높이 */
+  max-height: calc(100dvh - 24px) !important;
+  max-height: calc(100vh - 24px) !important;
+  overflow: hidden !important;      /* 스크롤바 없음 */
   display: flex !important;
   flex-direction: column !important;
-  border-radius: 14px !important;
-  padding: 14px !important;
+  border-radius: 16px !important;
+  padding: 16px !important;
   box-sizing: border-box !important;
+  background: #fff !important;
 }
 
-#scoreModal h3 { margin: 0 0 10px 0 !important; }
+/* 제목 */
+#scoreModal h3 {
+  flex: 0 0 auto !important;
+  margin: 0 0 12px 0 !important;
+  text-align: center !important;
+  font-size: 18px !important;
+  color: #1e3c72 !important;
+}
 
-#scoreModal .score-input-row { flex: 0 0 auto !important; }
+/* 상단 행: 점수창 + 버튼 그룹 */
+#scoreModal .score-input-row {
+  flex: 0 0 auto !important;
+  display: flex !important;
+  align-items: stretch !important;
+  gap: 10px !important;
+  /* 확인(3) + OB(2) = 5단위, 전체 높이 기준 */
+  height: calc((100dvh - 24px) * 0.22) !important;
+  height: calc((100vh - 24px) * 0.22) !important;
+  margin-bottom: 10px !important;
+}
 
+/* 좌: 점수 표시창 */
+#scoreModal .input-display {
+  flex: 1 1 0% !important;
+  background: #f8f9fa !important;
+  border: 3px solid #dee2e6 !important;
+  border-radius: 12px !important;
+  font-size: 42px !important;
+  font-weight: 900 !important;
+  color: #1e3c72 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* 우: 확인 + OB/벌타 (좌와 동일 너비) */
+#scoreModal .button-group-side {
+  flex: 1 1 0% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+}
+
+/* 확인 버튼: 3 비율 */
+#scoreModal .confirm-btn-top {
+  flex: 3 !important;
+  padding: 0 !important;
+  font-size: 22px !important;
+  font-weight: 900 !important;
+  background: #28a745 !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 10px !important;
+  touch-action: manipulation !important;
+  cursor: pointer !important;
+}
+
+/* OB/벌타 버튼: 2 비율 (확인의 2/3 높이) */
+#scoreModal .penalty-btn-side {
+  flex: 2 !important;
+  padding: 0 !important;
+  font-size: 15px !important;
+  font-weight: 900 !important;
+  background: #dc3545 !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 10px !important;
+  white-space: nowrap !important;
+  touch-action: manipulation !important;
+  cursor: pointer !important;
+}
+#scoreModal .penalty-btn-side.active { background: #bd2130 !important; }
+
+/* 키패드: 남은 공간 전부, 스크롤 없이 4행 */
 #scoreModal .keyboard {
   flex: 1 1 auto !important;
-  overflow-y: auto !important;
-  -webkit-overflow-scrolling: touch !important;
-  padding-bottom: 12px !important;
+  min-height: 0 !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  grid-template-rows: repeat(4, 1fr) !important;
+  gap: 7px !important;
+  overflow: hidden !important;    /* 스크롤바 제거 */
+}
+#scoreModal .keyboard button:nth-child(10) { grid-column: 1 / 2 !important; }
+#scoreModal .keyboard button:nth-child(11) {
+  grid-column: 2 / 4 !important;
+  background: #ffc107 !important;
+  color: #000 !important;
+  border-color: #ffc107 !important;
 }
 
-/* 키패드 버튼 터치 안정화 */
-#scoreModal .key-btn, #scoreModal button {
+#scoreModal .key-btn {
+  width: 100% !important; height: 100% !important;
+  padding: 0 !important;
+  background: #f8f9fa !important;
+  color: #1e3c72 !important;
+  font-size: 26px !important;
+  font-weight: 900 !important;
+  border-radius: 10px !important;
+  border: 2px solid #dee2e6 !important;
   touch-action: manipulation !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
-/* 하단 버튼(지우기/닫기)이 가려지지 않게 */
-#scoreModal .modal-close,
-#scoreModal .delete-btn,
-#scoreModal .clear-btn {
+/* 닫기 버튼 */
+#scoreModal .modal-close {
+  flex: 0 0 auto !important;
   width: 100% !important;
-  display: block !important;
-  margin-top: 10px !important;
+  margin-top: 8px !important;
+  padding: 11px !important;
+  background: #6c757d !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 10px !important;
+  font-size: 16px !important;
+  font-weight: 900 !important;
+  touch-action: manipulation !important;
+  cursor: pointer !important;
 }
-
-@media (max-width: 768px) {
-  #scoreModal { padding: 8px !important; }
-  #scoreModal .modal-content { width: 96vw !important; max-height: 94vh !important; }
-  #scoreModal .key-btn { min-height: 56px !important; font-size: 22px !important; }
-}
+</style>
 
 /* iOS에서 '지도' 버튼 줄바꿈 방지 */
 @media (max-width: 768px) {
@@ -488,14 +584,11 @@ body.modal-open {
   }
 }
 
-</style>
+
+
 
 </head>
 <body>
-파시스 sv3.0 클럽대회용
-
-<p data-ke-size="size16">&nbsp;</p>
-<p data-ke-size="size16"></p>
 <style>
 @media (max-width: 767px) {
     .parkgolf-app {
@@ -1994,20 +2087,15 @@ body.modal-open {
 <div style="background: linear-gradient(135deg, #2d7a4f 0%, #1a5634 100%); padding: 30px 4px !important; border-radius: 12px; margin: 0 0 8px 0 !important; text-align: center;">
 <h1 style="color: #ffffff !important; margin: 0 0 14px 0 !important; font-size: 24px !important; font-weight: bold !important; letter-spacing: -0.5px !important;">파크골프 점수 기록표</h1>
 <div style="display: inline-block; background: rgba(255,255,255,0.3); padding: 8px 18px; border-radius: 8px;">
-<span style="font-size: 15px; color: #fff3e0; font-weight: 600; letter-spacing: 0.5px;">파시스 sv3.0 클럽대회용</span>
+<span style="font-size: 15px; color: #fff3e0; font-weight: 600; letter-spacing: 0.5px;">파시스 sv3.5</span>
 </div>
 </div>
 <div class="info-section" style="padding: 3px !important; margin: 0 0 8px 0 !important;">
 <div class="input-group">
 <input id="dateInput" readonly="readonly" type="text" style="text-align: center; font-weight: bold;" />
 </div>
-<div class="input-group location-with-map">
-<input id="locationInput" type="text" placeholder="골프장 이름" style="flex: 1; font-size: 17px !important; text-align: center !important; font-weight: 600 !important; padding: 12px !important;" />
-<button class="map-link" onclick="openMap()" type="button">지도</button>
-</div>
-<div class="input-group">
-<input id="eventNameInput" type="text" placeholder="대회명" style="text-align: center !important; font-size: 17px !important; font-weight: 600 !important; padding: 12px !important;" />
-</div>
+<input id="locationInput" type="hidden" value="" />
+<input id="eventNameInput" type="hidden" value="" />
 <div class="input-group">
 <input id="eventCodeInput" type="text" placeholder="대회 코드" readonly inputmode="none" tabindex="-1" style="text-align: center !important; font-size: 17px !important; font-weight: 700 !important; padding: 12px !important; background: #f1f3f4 !important; color: #333 !important; border: 2px solid #d0d7de !important; cursor: not-allowed !important; -webkit-user-select: none !important; user-select: none !important;" />
 <div id="qrGuideMessage" style="display:none; margin-top:8px; padding:10px 12px; border-radius:8px; background:#fff3cd; color:#8a5a00; font-size:15px; font-weight:700; text-align:center; line-height:1.5;">⚠️ QR코드를 먼저 스캔해야 전송할 수 있습니다.</div>
@@ -2048,11 +2136,7 @@ body.modal-open {
 <!-- ==================== 티스토리 광고 삽입 영역 시작 ==================== -->
 <div id="adSection" style="margin: 30px auto; padding: 20px 10px; max-width: 100%; text-align: center;">
     
-    <!-- 설명글 -->
-    <div style="margin-bottom: 30px; padding: 25px; background: #f8f9fa; border-radius: 8px; font-size: 15px; line-height: 1.8; color: #333;">
-        <p style="margin: 20px 0 15px 0 !important; font-weight: bold; color: #1e3c72; font-size: 17px;">파크골프 점수 기록의 모든 것</p>
-        <p style="margin: 0;">위에서 각 코스별 상세 점수를 입력하셨나요? 아래에서 오늘의 경기 결과를 한눈에 확인하실 수 있습니다!</p>
-    </div>
+
     
     <!-- ★★★ 애드센스 광고 코드는 아래 이 줄 바로 밑에 붙여넣으세요 ★★★ -->
     
@@ -2063,16 +2147,7 @@ body.modal-open {
 
 <div class="summary-section">
 <div id="resultCapture">
-<div style="text-align: center; margin-bottom: 25px; padding: 35px 30px; background: #f5f2eb; border-radius: 12px; border: 2px solid #2d7a4f;">
-<div style="font-size: 26px; font-weight: 900; color: #1a5634; margin-bottom: 15px;">오늘의 경기 결과</div>
-<div style="font-size: 18px; font-weight: 400; color: #495057; line-height: 1.6;">
-<div style="margin-bottom: 8px;">날짜: <span id="shareDate"></span></div>
-<div style="margin-bottom: 8px;">장소: <span id="shareLocation"></span></div>
-<div style="margin-bottom: 8px;">대회명: <span id="shareEventName"></span></div>
-<div style="margin-bottom: 8px;">대회 코드: <span id="shareEventCode"></span></div>
-<div>조(팀): <span id="shareTeamName"></span></div>
-</div>
-</div>
+<span id="shareDate" style="display:none"></span><span id="shareLocation" style="display:none"></span><span id="shareEventName" style="display:none"></span><span id="shareEventCode" style="display:none"></span><span id="shareTeamName" style="display:none"></span>
 <h2 style="text-align: center; color: #1a5634; margin: 40px 0 10px 0 !important; font-size: 21px; font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif !important; font-weight: 900 !important;">코스별 합계표</h2>
 <table class="summary-table-new" style="width: 100%; border-collapse: collapse; margin: 0; table-layout: fixed;">
     <thead>
@@ -3031,6 +3106,10 @@ body.modal-open {
             }
             updateScoreDisplay();
             document.getElementById('scoreModal').classList.add('show');
+            // 배경 스크롤 차단 (iOS 포함)
+            document.body.style.overflow = 'hidden';
+            document.body.style.position = 'fixed';
+            document.body.style.width = '100%';
         }
         
         function addDigit(digit) {
@@ -3084,6 +3163,10 @@ body.modal-open {
             document.getElementById('scoreModal').classList.remove('show');
             tempScore = '';
             isPenalty = false;
+            // 배경 스크롤 복원
+            document.body.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.width = '';
         }
         
         function getPlayerName(playerNum) {
@@ -3303,10 +3386,7 @@ body.modal-open {
                 }, 100);
             }
             
-            // 장소 입력 시 결과표에도 실시간 반영
-            document.getElementById('locationInput').addEventListener('input', function() {
-                document.getElementById('shareLocation').textContent = this.value || '미입력';
-            });
+            // 장소 입력 (hidden 처리됨)
             
             // 팀명 입력 시 결과표에도 실시간 반영
             const teamNameInput = document.getElementById('teamNameInput');
@@ -4323,5 +4403,16 @@ function closeAdminModalQuick(){
 </script>
 
 <div id="buildTag" style="position:fixed;right:10px;bottom:10px;z-index:9999;font-size:12px;font-weight:800;background:rgba(0,0,0,.45);color:#fff;padding:6px 10px;border-radius:999px;">sv3 v5.3</div>
+
+<script>
+// iOS Safari 주소바 숨기기: 페이지 로드/방향전환 시 1px 스크롤
+(function(){
+  function hideBar(){
+    if(window.scrollY===0) window.scrollTo(0,1);
+  }
+  window.addEventListener('load', function(){ setTimeout(hideBar,300); });
+  window.addEventListener('orientationchange', function(){ setTimeout(hideBar,400); });
+})();
+</script>
 </body>
 </html>
