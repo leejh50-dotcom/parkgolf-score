@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<title>파시스 sv3.5</title>
+<title>파시스 sv3.0</title>
 
 <style>
 /* ===== 2.0 기준 모바일 대형화 정밀 패치 ===== */
@@ -490,19 +490,12 @@ body.modal-open {
 
 </style>
 
-<style>
-/* scoreModal 키패드: 좌우 1:1 균형 + 버튼 크기 */
-#scoreModal .score-input-row { align-items: stretch !important; height: 112px !important; }
-#scoreModal .input-display   { flex: 1 1 0% !important; }
-#scoreModal .button-group-side { flex: 1 1 0% !important; display: flex !important; flex-direction: column !important; gap: 7px !important; }
-#scoreModal .confirm-btn-top  { flex: 1 !important; padding: 0 !important; font-size: 22px !important; }
-#scoreModal .penalty-btn-side { flex: 1 !important; padding: 0 !important; font-size: 16px !important; }
-#scoreModal .key-btn          { padding: 20px !important; font-size: 26px !important; min-height: 62px !important; }
-#scoreModal .delete-btn       { font-size: 19px !important; }
-#scoreModal button            { touch-action: manipulation !important; -webkit-tap-highlight-color: transparent !important; }
-</style>
 </head>
 <body>
+파시스 sv3.0 클럽대회용
+
+<p data-ke-size="size16">&nbsp;</p>
+<p data-ke-size="size16"></p>
 <style>
 @media (max-width: 767px) {
     .parkgolf-app {
@@ -2001,15 +1994,20 @@ body.modal-open {
 <div style="background: linear-gradient(135deg, #2d7a4f 0%, #1a5634 100%); padding: 30px 4px !important; border-radius: 12px; margin: 0 0 8px 0 !important; text-align: center;">
 <h1 style="color: #ffffff !important; margin: 0 0 14px 0 !important; font-size: 24px !important; font-weight: bold !important; letter-spacing: -0.5px !important;">파크골프 점수 기록표</h1>
 <div style="display: inline-block; background: rgba(255,255,255,0.3); padding: 8px 18px; border-radius: 8px;">
-<span style="font-size: 15px; color: #fff3e0; font-weight: 600; letter-spacing: 0.5px;">파시스 sv3.5</span>
+<span style="font-size: 15px; color: #fff3e0; font-weight: 600; letter-spacing: 0.5px;">파시스 sv3.0 클럽대회용</span>
 </div>
 </div>
 <div class="info-section" style="padding: 3px !important; margin: 0 0 8px 0 !important;">
 <div class="input-group">
 <input id="dateInput" readonly="readonly" type="text" style="text-align: center; font-weight: bold;" />
 </div>
-<input id="locationInput" type="hidden" value="" />
-<input id="eventNameInput" type="hidden" value="" />
+<div class="input-group location-with-map">
+<input id="locationInput" type="text" placeholder="골프장 이름" style="flex: 1; font-size: 17px !important; text-align: center !important; font-weight: 600 !important; padding: 12px !important;" />
+<button class="map-link" onclick="openMap()" type="button">지도</button>
+</div>
+<div class="input-group">
+<input id="eventNameInput" type="text" placeholder="대회명" style="text-align: center !important; font-size: 17px !important; font-weight: 600 !important; padding: 12px !important;" />
+</div>
 <div class="input-group">
 <input id="eventCodeInput" type="text" placeholder="대회 코드" readonly inputmode="none" tabindex="-1" style="text-align: center !important; font-size: 17px !important; font-weight: 700 !important; padding: 12px !important; background: #f1f3f4 !important; color: #333 !important; border: 2px solid #d0d7de !important; cursor: not-allowed !important; -webkit-user-select: none !important; user-select: none !important;" />
 <div id="qrGuideMessage" style="display:none; margin-top:8px; padding:10px 12px; border-radius:8px; background:#fff3cd; color:#8a5a00; font-size:15px; font-weight:700; text-align:center; line-height:1.5;">⚠️ QR코드를 먼저 스캔해야 전송할 수 있습니다.</div>
@@ -2050,7 +2048,11 @@ body.modal-open {
 <!-- ==================== 티스토리 광고 삽입 영역 시작 ==================== -->
 <div id="adSection" style="margin: 30px auto; padding: 20px 10px; max-width: 100%; text-align: center;">
     
-
+    <!-- 설명글 -->
+    <div style="margin-bottom: 30px; padding: 25px; background: #f8f9fa; border-radius: 8px; font-size: 15px; line-height: 1.8; color: #333;">
+        <p style="margin: 20px 0 15px 0 !important; font-weight: bold; color: #1e3c72; font-size: 17px;">파크골프 점수 기록의 모든 것</p>
+        <p style="margin: 0;">위에서 각 코스별 상세 점수를 입력하셨나요? 아래에서 오늘의 경기 결과를 한눈에 확인하실 수 있습니다!</p>
+    </div>
     
     <!-- ★★★ 애드센스 광고 코드는 아래 이 줄 바로 밑에 붙여넣으세요 ★★★ -->
     
@@ -2061,7 +2063,16 @@ body.modal-open {
 
 <div class="summary-section">
 <div id="resultCapture">
-<span id="shareDate" style="display:none"></span><span id="shareLocation" style="display:none"></span><span id="shareEventName" style="display:none"></span><span id="shareEventCode" style="display:none"></span><span id="shareTeamName" style="display:none"></span>
+<div style="text-align: center; margin-bottom: 25px; padding: 35px 30px; background: #f5f2eb; border-radius: 12px; border: 2px solid #2d7a4f;">
+<div style="font-size: 26px; font-weight: 900; color: #1a5634; margin-bottom: 15px;">오늘의 경기 결과</div>
+<div style="font-size: 18px; font-weight: 400; color: #495057; line-height: 1.6;">
+<div style="margin-bottom: 8px;">날짜: <span id="shareDate"></span></div>
+<div style="margin-bottom: 8px;">장소: <span id="shareLocation"></span></div>
+<div style="margin-bottom: 8px;">대회명: <span id="shareEventName"></span></div>
+<div style="margin-bottom: 8px;">대회 코드: <span id="shareEventCode"></span></div>
+<div>조(팀): <span id="shareTeamName"></span></div>
+</div>
+</div>
 <h2 style="text-align: center; color: #1a5634; margin: 40px 0 10px 0 !important; font-size: 21px; font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif !important; font-weight: 900 !important;">코스별 합계표</h2>
 <table class="summary-table-new" style="width: 100%; border-collapse: collapse; margin: 0; table-layout: fixed;">
     <thead>
@@ -3292,7 +3303,10 @@ body.modal-open {
                 }, 100);
             }
             
-            // 장소 입력 (hidden 처리됨)
+            // 장소 입력 시 결과표에도 실시간 반영
+            document.getElementById('locationInput').addEventListener('input', function() {
+                document.getElementById('shareLocation').textContent = this.value || '미입력';
+            });
             
             // 팀명 입력 시 결과표에도 실시간 반영
             const teamNameInput = document.getElementById('teamNameInput');
