@@ -3567,37 +3567,47 @@ function openAdminModalSafe(e){
     if(typeof window.__lockBodyScrollForModal === 'function'){ window.__lockBodyScrollForModal(); }
   }catch(err){}
 }
-/* ===== 관리자 버튼: 3번 연속 탭 ===== */
+/* ===== 관리자 버튼: PC=클릭, 모바일=3번 탭 ===== */
 window.addEventListener('load', function() {
   var btn = document.getElementById('openAdminToolBtn');
   if (!btn) return;
-  var tapCount = 0;
-  var tapTimer = null;
 
-  /* click 완전 차단 */
-  btn.addEventListener('click', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-  }, true);
+  var isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
-  /* touchend 만 카운트 */
-  btn.addEventListener('touchend', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    tapCount++;
-    clearTimeout(tapTimer);
-    if (tapCount >= 3) {
-      tapCount = 0;
-      btn.textContent = '🔒 대회관리자 전용 — 3번 탭으로 열기';
+  if (!isTouchDevice) {
+    /* PC: 클릭 1번으로 열기 */
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
       openAdminModalSafe(null);
-      return;
-    }
-    btn.textContent = '🔒 대회관리자 전용 (' + tapCount + '/3)';
-    tapTimer = setTimeout(function() {
-      tapCount = 0;
-      btn.textContent = '🔒 대회관리자 전용 — 3번 탭으로 열기';
-    }, 2500);
-  }, {passive: false});
+    });
+  } else {
+    /* 모바일: 3번 탭으로 열기 */
+    var tapCount = 0;
+    var tapTimer = null;
+
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }, true);
+
+    btn.addEventListener('touchend', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      tapCount++;
+      clearTimeout(tapTimer);
+      if (tapCount >= 3) {
+        tapCount = 0;
+        btn.textContent = '🔒 대회관리자 전용 — 3번 탭으로 열기';
+        openAdminModalSafe(null);
+        return;
+      }
+      btn.textContent = '🔒 대회관리자 전용 (' + tapCount + '/3)';
+      tapTimer = setTimeout(function() {
+        tapCount = 0;
+        btn.textContent = '🔒 대회관리자 전용 — 3번 탭으로 열기';
+      }, 2500);
+    }, {passive: false});
+  }
 });
 (function() {
   var _scrollY = 0;
