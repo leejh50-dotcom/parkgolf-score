@@ -957,7 +957,6 @@ body.modal-open {
     font-size: 36px !important;
     font-weight: 900 !important;
     color: #1e3c72;
-    min-height: 80px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -1612,11 +1611,12 @@ body.modal-open {
     align-items: center !important;
     justify-content: center !important;
     overscroll-behavior: contain !important;
-    touch-action: none !important;
 }
 #scoreModal .modal-content {
     touch-action: pan-y !important;
+    -webkit-overflow-scrolling: touch !important;
     overscroll-behavior: contain !important;
+    overflow-y: auto !important;
 }
 #scoreModal.show {
     display: flex !important;
@@ -1642,7 +1642,7 @@ body.modal-open {
     align-items: stretch !important;
     gap: 12px !important;
     margin-bottom: 20px !important;
-    min-height: 100px !important;
+    min-height: 110px !important;
 }
 #scoreModal .input-display {
     flex: 1 !important;
@@ -1653,7 +1653,6 @@ body.modal-open {
     font-size: 36px !important;
     font-weight: 900 !important;
     color: #1e3c72 !important;
-    min-height: 80px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -1666,7 +1665,7 @@ body.modal-open {
     align-self: stretch !important;
 }
 #scoreModal .confirm-btn-top {
-    flex: 2 !important;
+    flex: 3 !important;
     background: #28a745 !important;
     color: white !important;
     font-size: 20px !important;
@@ -1681,7 +1680,7 @@ body.modal-open {
     padding: 0 16px !important;
 }
 #scoreModal .penalty-btn-side {
-    flex: 1 !important;
+    flex: 2 !important;
     padding: 0 16px !important;
     background: #dc3545 !important;
     color: white !important;
