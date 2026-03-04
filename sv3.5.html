@@ -2678,18 +2678,15 @@ body.modal-open {
             }
             updateScoreDisplay();
             window.__smScrollY = window.pageYOffset || 0;
+            document.documentElement.style.overflow = 'hidden';
             document.body.style.overflow = 'hidden';
-            document.body.style.position = 'fixed';
-            document.body.style.top = '-' + window.__smScrollY + 'px';
-            document.body.style.width = '100%';
             var modal = document.getElementById('scoreModal');
             var mc = modal.querySelector('.modal-content');
             if (mc) {
-                var avail = window.innerHeight;
-                mc.style.maxHeight = Math.min(580, Math.floor(avail * 0.86)) + 'px';
+                mc.style.maxHeight = Math.min(580, Math.floor(window.innerHeight * 0.88)) + 'px';
             }
             modal.classList.add('show');
-        }        function addDigit(digit) {
+        }      function addDigit(digit) {
             if (tempScore.length < 1) {
                 tempScore += digit;
                 updateScoreDisplay();
@@ -2740,12 +2737,10 @@ body.modal-open {
             document.getElementById('scoreModal').classList.remove('show');
             tempScore = '';
             isPenalty = false;
+            document.documentElement.style.overflow = '';
             document.body.style.overflow = '';
-            document.body.style.position = '';
-            document.body.style.top = '';
-            document.body.style.width = '';
             window.scrollTo(0, sy);
-        }   
+        } 
         function getPlayerName(playerNum) {
             const name = document.getElementById('player' + playerNum).value;
             return name || '경기자 ' + playerNum;
