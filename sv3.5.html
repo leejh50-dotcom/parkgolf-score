@@ -1650,7 +1650,7 @@ body.modal-open {
     align-items: stretch !important;
     gap: 10px !important;
     margin-bottom: 12px !important;
-    min-height: 96px !important;
+    min-height: 88px !important;
 }
 #scoreModal .input-display {
     flex: 1 !important;
@@ -1688,7 +1688,7 @@ body.modal-open {
     padding: 0 16px !important;
 }
 #scoreModal .penalty-btn-side {
-    flex: 2 !important;
+    flex: 1 !important;
     padding: 0 16px !important;
     background: #dc3545 !important;
     color: white !important;
@@ -1753,8 +1753,6 @@ body.modal-open {
     margin-top: 0 !important;
 }
 
-/* 주소창 숨김 여백 */
-html, body { min-height: calc(100vh + 56px) !important; }
 </style>
 </head>
 <body>
@@ -2679,12 +2677,11 @@ html, body { min-height: calc(100vh + 56px) !important; }
             var modal = document.getElementById('scoreModal');
             var mc = modal.querySelector('.modal-content');
             if (mc) {
-                var vh = window.innerHeight;
-                mc.style.maxHeight = Math.min(600, Math.floor(vh * 0.88)) + 'px';
+                var avail = window.innerHeight;
+                mc.style.maxHeight = Math.min(580, Math.floor(avail * 0.86)) + 'px';
             }
             modal.classList.add('show');
-        } 
-        function addDigit(digit) {
+        }        function addDigit(digit) {
             if (tempScore.length < 2) {
                 tempScore += digit;
                 updateScoreDisplay();
@@ -3740,16 +3737,5 @@ function closeAdminModalQuick(){
   </div>
 </div>
 
-<script>
-(function(){
-  function hideAddressBar(){
-    if(document.documentElement.scrollHeight > window.innerHeight){
-      setTimeout(function(){ window.scrollTo(0, 1); }, 100);
-    }
-  }
-  if(document.readyState === 'complete') hideAddressBar();
-  else window.addEventListener('load', hideAddressBar);
-})();
-</script>
 </body>
 </html>
