@@ -1733,6 +1733,8 @@ body.modal-open {
     font-weight: 900 !important;
     cursor: pointer !important;
     touch-action: manipulation !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
 }
 #scoreModal .key-btn:active {
     background: #e0e0e0 !important;
@@ -2688,7 +2690,7 @@ body.modal-open {
             }
             modal.classList.add('show');
         }        function addDigit(digit) {
-            if (tempScore.length < 2) {
+            if (tempScore.length < 1) {
                 tempScore += digit;
                 updateScoreDisplay();
             }
