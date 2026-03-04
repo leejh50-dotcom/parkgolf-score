@@ -289,138 +289,7 @@ body.modal-open {
 @media (max-width: 768px) {
   
 }
-#scoreModal {
-  position: fixed !important;
-  inset: 0 !important;
-  width: 100% !important; height: 100% !important;
-  display: none;
-  align-items: center !important;
-  justify-content: center !important;
-  padding: 8px !important;
-  background: rgba(0,0,0,0.6) !important;
-  z-index: 99998 !important;
-  box-sizing: border-box !important;
-}
-#scoreModal.show { display: flex !important; }
-#scoreModal .modal-content {
-  width: min(420px, 96vw) !important;
-  
-  max-height: calc(100dvh - 56px) !important;
-  max-height: calc(100vh - 56px) !important;
-  overflow: hidden !important;      
-  display: flex !important;
-  flex-direction: column !important;
-  border-radius: 16px !important;
-  padding: 16px !important;
-  box-sizing: border-box !important;
-  background: #fff !important;
-}
-#scoreModal h3 {
-  flex: 0 0 auto !important;
-  margin: 0 0 12px 0 !important;
-  text-align: center !important;
-  font-size: 18px !important;
-  color: #1e3c72 !important;
-}
-#scoreModal .score-input-row {
-  flex: 0 0 auto !important;
-  display: flex !important;
-  align-items: stretch !important;
-  gap: 10px !important;
-  
-  height: calc((100dvh - 56px) * 0.20) !important;
-  height: calc((100vh - 56px) * 0.20) !important;
-  margin-bottom: 10px !important;
-}
-#scoreModal .input-display {
-  flex: 1 1 0% !important;
-  background: #f8f9fa !important;
-  border: 3px solid #dee2e6 !important;
-  border-radius: 12px !important;
-  font-size: 42px !important;
-  font-weight: 900 !important;
-  color: #1e3c72 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-#scoreModal .button-group-side {
-  flex: 1 1 0% !important;
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 6px !important;
-}
-#scoreModal .confirm-btn-top {
-  flex: 3 !important;
-  padding: 0 !important;
-  font-size: 22px !important;
-  font-weight: 900 !important;
-  background: #28a745 !important;
-  color: #fff !important;
-  border: none !important;
-  border-radius: 10px !important;
-  touch-action: manipulation !important;
-  cursor: pointer !important;
-}
-#scoreModal .penalty-btn-side {
-  flex: 1 !important;
-  padding: 0 !important;
-  font-size: 15px !important;
-  font-weight: 900 !important;
-  background: #dc3545 !important;
-  color: #fff !important;
-  border: none !important;
-  border-radius: 10px !important;
-  white-space: nowrap !important;
-  touch-action: manipulation !important;
-  cursor: pointer !important;
-}
-#scoreModal .penalty-btn-side.active { background: #bd2130 !important; }
-#scoreModal .keyboard {
-  flex: 1 1 auto !important;
-  min-height: 0 !important;
-  display: grid !important;
-  grid-template-columns: repeat(3, 1fr) !important;
-  grid-template-rows: repeat(4, 1fr) !important;
-  gap: 7px !important;
-  overflow: hidden !important;    
-}
-#scoreModal .keyboard button:nth-child(10) { grid-column: 1 / 2 !important; }
-#scoreModal .keyboard button:nth-child(11) {
-  grid-column: 2 / 4 !important;
-  background: #ffc107 !important;
-  color: #000 !important;
-  border-color: #ffc107 !important;
-}
-#scoreModal .key-btn {
-  width: 100% !important; height: 100% !important;
-  padding: 0 !important;
-  background: #f8f9fa !important;
-  color: #1e3c72 !important;
-  font-size: 26px !important;
-  font-weight: 900 !important;
-  border-radius: 10px !important;
-  border: 2px solid #dee2e6 !important;
-  touch-action: manipulation !important;
-  cursor: pointer !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-#scoreModal .modal-close {
-  flex: 0 0 auto !important;
-  width: 100% !important;
-  margin-top: 8px !important;
-  padding: 11px !important;
-  background: #6c757d !important;
-  color: #fff !important;
-  border: none !important;
-  border-radius: 10px !important;
-  font-size: 16px !important;
-  font-weight: 900 !important;
-  touch-action: manipulation !important;
-  cursor: pointer !important;
-}
+
 @media (max-width: 767px) {
     .parkgolf-app {
         padding: 0 !important;
@@ -1730,6 +1599,150 @@ body.modal-open {
 }
 
 .parkgolf-app #teamNameInput { font-size: 24px !important; font-weight: 800 !important; text-align: center !important; }
+
+
+/* ===== 점수 입력 모달 (sv3.5) ===== */
+#scoreModal {
+  position: fixed !important;
+  top: 0 !important; left: 0 !important;
+  width: 100% !important; height: 100% !important;
+  display: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba(0,0,0,0.55) !important;
+  z-index: 99998 !important;
+  padding: 12px !important;
+  box-sizing: border-box !important;
+}
+#scoreModal.show {
+  display: flex !important;
+}
+#scoreModal > .modal-content {
+  width: min(400px, 94vw) !important;
+  max-width: 400px !important;
+  height: auto !important;
+  max-height: none !important;
+  background: #fff !important;
+  border-radius: 20px !important;
+  padding: 16px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25) !important;
+  overflow: visible !important;
+  box-sizing: border-box !important;
+}
+#scoreModal > .modal-content > h3 {
+  margin: 0 0 4px 0 !important;
+  text-align: center !important;
+  font-size: 18px !important;
+  font-weight: 900 !important;
+  color: #1e3c72 !important;
+}
+#scoreModal .score-input-row {
+  display: flex !important;
+  align-items: stretch !important;
+  gap: 10px !important;
+  height: 88px !important;
+  flex-shrink: 0 !important;
+}
+#scoreModal .input-display {
+  flex: 1 !important;
+  background: #f8f9fa !important;
+  border: 3px solid #dee2e6 !important;
+  border-radius: 14px !important;
+  font-size: 44px !important;
+  font-weight: 900 !important;
+  color: #1e3c72 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 0 !important;
+}
+#scoreModal .button-group-side {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 7px !important;
+  width: 88px !important;
+  flex-shrink: 0 !important;
+}
+#scoreModal .confirm-btn-top {
+  flex: 3 !important;
+  background: #28a745 !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 12px !important;
+  font-size: 22px !important;
+  font-weight: 900 !important;
+  cursor: pointer !important;
+  touch-action: manipulation !important;
+  padding: 0 !important;
+}
+#scoreModal .penalty-btn-side {
+  flex: 1 !important;
+  background: #dc3545 !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 12px !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+  white-space: nowrap !important;
+  cursor: pointer !important;
+  touch-action: manipulation !important;
+  padding: 0 !important;
+}
+#scoreModal .penalty-btn-side.active {
+  background: #bd2130 !important;
+}
+#scoreModal .keyboard {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  grid-auto-rows: 64px !important;
+  gap: 8px !important;
+}
+#scoreModal .keyboard button:nth-child(10) {
+  grid-column: 1 / 2 !important;
+}
+#scoreModal .keyboard button:nth-child(11) {
+  grid-column: 2 / 4 !important;
+  background: #ffc107 !important;
+  color: #111 !important;
+  border-color: #ffc107 !important;
+  font-size: 20px !important;
+  font-weight: 900 !important;
+}
+#scoreModal .key-btn {
+  background: #f8f9fa !important;
+  color: #1e3c72 !important;
+  font-size: 26px !important;
+  font-weight: 900 !important;
+  border-radius: 12px !important;
+  border: 2px solid #dee2e6 !important;
+  cursor: pointer !important;
+  touch-action: manipulation !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  padding: 0 !important;
+}
+#scoreModal .key-btn:active {
+  background: #dde2e8 !important;
+}
+#scoreModal .modal-close {
+  background: #6c757d !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: 12px !important;
+  font-size: 16px !important;
+  font-weight: 900 !important;
+  cursor: pointer !important;
+  touch-action: manipulation !important;
+  width: 100% !important;
+  padding: 13px !important;
+  margin-top: 0 !important;
+}
 </style>
 </head>
 <body>
@@ -2623,17 +2636,21 @@ body.modal-open {
         
         function setPar(par) {
             coursePars[currentParCourse][currentParHole] = par;
+            var _sy = window.__scoreModalScrollY || 0;
             closeModal();
             renderAllCourses();
             updateSummary();
             autoSave();
+            requestAnimationFrame(function(){
+                window.scrollTo({ top: _sy, behavior: 'instant' });
+            });
         }
         
         function openScoreModal(course, player, hole) {
             currentScoreCourse = course;
             currentScorePlayer = player;
             currentScoreHole = hole;
-            const currentValue = scores[course][player][hole];
+            var currentValue = scores[course][player][hole];
             if (currentValue) {
                 isPenalty = currentValue.includes(')');
                 tempScore = currentValue.replace(')', '');
@@ -2642,14 +2659,10 @@ body.modal-open {
                 isPenalty = false;
             }
             updateScoreDisplay();
-            document.getElementById('scoreModal').classList.add('show');
-            window.__scoreModalScrollY = window.scrollY || window.pageYOffset || 0;
+            window.__smScrollY = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
             document.body.style.overflow = 'hidden';
-            document.body.style.position = 'fixed';
-            document.body.style.top = '-' + window.__scoreModalScrollY + 'px';
-            document.body.style.width = '100%';
-        }
-        
+            document.getElementById('scoreModal').classList.add('show');
+        }       
         function addDigit(digit) {
             if (tempScore.length < 2) {
                 tempScore += digit;
@@ -2685,6 +2698,7 @@ body.modal-open {
         }
         
         function confirmScore() {
+            var sy = window.__smScrollY || 0;
             if (tempScore) {
                 scores[currentScoreCourse][currentScorePlayer][currentScoreHole] = tempScore + (isPenalty ? ')' : '');
             } else {
@@ -2694,22 +2708,15 @@ body.modal-open {
             renderAllCourses();
             updateSummary();
             autoSave();
-        }
-        
+            setTimeout(function(){ window.scrollTo(0, sy); }, 20);
+        }       
         function closeModal() {
             document.getElementById('parModal').classList.remove('show');
             document.getElementById('scoreModal').classList.remove('show');
             tempScore = '';
             isPenalty = false;
             document.body.style.overflow = '';
-            document.body.style.position = '';
-            document.body.style.top = '';
-            document.body.style.width = '';
-            if (window.__scoreModalScrollY !== undefined) {
-                window.scrollTo(0, window.__scoreModalScrollY);
-            }
-        }
-        
+        }       
         function getPlayerName(playerNum) {
             const name = document.getElementById('player' + playerNum).value;
             return name || '경기자 ' + playerNum;
