@@ -3317,6 +3317,28 @@ window.sendToGoogleSheet = function() {
                 qrContainer.innerHTML = '<p style="color: #dc3545;">QR 코드 라이브러리를 불러올 수 없습니다.</p>';
             }
         }
+
+function loadUrlParams() {
+    var urlParams = new URLSearchParams(window.location.search);
+    var eventCode = urlParams.get('e') || urlParams.get('eventCode');
+    var depId = urlParams.get('s');
+    var webAppUrl = urlParams.get('w') || urlParams.get('webAppUrl');
+    if (depId && !webAppUrl) {
+        webAppUrl = 'https://script.google.com/macros/s/' + depId + '/exec';
+    }
+    if (eventCode) {
+        var eventCodeInput = document.getElementById('eventCodeInput');
+        if (eventCodeInput) {
+            eventCodeInput.value = eventCode;
+            updateEventCode();
+        }
+    }
+    if (webAppUrl) {
+        localStorage.setItem('parkgolf_webapp_url', webAppUrl);
+        var webAppUrlInput = document.getElementById('webAppUrlInput');
+        if (webAppUrlInput) webAppUrlInput.value = webAppUrl;
+    }
+}
 </script>
 
 <!-- 관리자 도구 모달 -->
@@ -3522,27 +3544,7 @@ function requireQrBeforeSend() {
     updateQrSendGuardUI();
     return false;
 }
-function loadUrlParams() {
-    var urlParams = new URLSearchParams(window.location.search);
-    var eventCode = urlParams.get('e') || urlParams.get('eventCode');
-    var depId = urlParams.get('s');
-    var webAppUrl = urlParams.get('w') || urlParams.get('webAppUrl');
-    if (depId && !webAppUrl) {
-        webAppUrl = 'https://script.google.com/macros/s/' + depId + '/exec';
-    }
-    if (eventCode) {
-        var eventCodeInput = document.getElementById('eventCodeInput');
-        if (eventCodeInput) {
-            eventCodeInput.value = eventCode;
-            updateEventCode();
-        }
-    }
-    if (webAppUrl) {
-        localStorage.setItem('parkgolf_webapp_url', webAppUrl);
-        var webAppUrlInput = document.getElementById('webAppUrlInput');
-        if (webAppUrlInput) webAppUrlInput.value = webAppUrl;
-    }
-}
+
 function saveURL() {
     var url = normalizeWebAppUrl(document.getElementById('webAppUrl').value);
     if (!url) {
@@ -3565,17 +3567,24 @@ function openAdminModalSafe(e){
     if(typeof window.__lockBodyScrollForModal === 'function'){ window.__lockBodyScrollForModal(); }
   }catch(err){}
 }
-/* ===== 관리자 버튼: 3번 연속 탭으로만 열림 ===== */
+/* ===== 관리자 버튼: 3번 연속 탭 ===== */
 window.addEventListener('load', function() {
   var btn = document.getElementById('openAdminToolBtn');
   if (!btn) return;
   var tapCount = 0;
   var tapTimer = null;
-  function handleTap(e) {
+
+  /* click 완전 차단 */
+  btn.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }, true);
+
+  /* touchend 만 카운트 */
+  btn.addEventListener('touchend', function(e) {
     e.preventDefault();
     e.stopPropagation();
     tapCount++;
-    btn.textContent = '🔒 대회관리자 전용 (' + tapCount + '/3)';
     clearTimeout(tapTimer);
     if (tapCount >= 3) {
       tapCount = 0;
@@ -3583,26 +3592,12 @@ window.addEventListener('load', function() {
       openAdminModalSafe(null);
       return;
     }
+    btn.textContent = '🔒 대회관리자 전용 (' + tapCount + '/3)';
     tapTimer = setTimeout(function() {
       tapCount = 0;
       btn.textContent = '🔒 대회관리자 전용 — 3번 탭으로 열기';
-    }, 2000);
-  }
-  btn.addEventListener('click', handleTap);
-  btn.addEventListener('touchend', handleTap, {passive: false});
-});
-
-
-document.addEventListener('DOMContentLoaded', function(){
-  var btn = document.getElementById('openAdminToolBtn');
-  if(btn){
-    btn.style.touchAction = 'manipulation';
-    btn.addEventListener('touchstart', function(ev){
-      ev.preventDefault();
-      ev.stopPropagation();
-      openAdminModalSafe(ev);
-    }, {passive:false});
-  }
+    }, 2500);
+  }, {passive: false});
 });
 (function() {
   var _scrollY = 0;
