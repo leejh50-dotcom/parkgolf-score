@@ -1611,6 +1611,12 @@ body.modal-open {
     z-index: 99998 !important;
     align-items: center !important;
     justify-content: center !important;
+    overscroll-behavior: contain !important;
+    touch-action: none !important;
+}
+#scoreModal .modal-content {
+    touch-action: pan-y !important;
+    overscroll-behavior: contain !important;
 }
 #scoreModal.show {
     display: flex !important;
@@ -1633,9 +1639,10 @@ body.modal-open {
 }
 #scoreModal .score-input-row {
     display: flex !important;
-    align-items: center !important;
+    align-items: stretch !important;
     gap: 12px !important;
     margin-bottom: 20px !important;
+    min-height: 100px !important;
 }
 #scoreModal .input-display {
     flex: 1 !important;
@@ -1656,9 +1663,10 @@ body.modal-open {
     display: flex !important;
     flex-direction: column !important;
     gap: 8px !important;
+    align-self: stretch !important;
 }
 #scoreModal .confirm-btn-top {
-    padding: 16px 20px !important;
+    flex: 2 !important;
     background: #28a745 !important;
     color: white !important;
     font-size: 20px !important;
@@ -1670,12 +1678,14 @@ body.modal-open {
     white-space: nowrap !important;
     min-width: 80px !important;
     touch-action: manipulation !important;
+    padding: 0 16px !important;
 }
 #scoreModal .penalty-btn-side {
-    padding: 10px 20px !important;
+    flex: 1 !important;
+    padding: 0 16px !important;
     background: #dc3545 !important;
     color: white !important;
-    font-size: 15px !important;
+    font-size: 14px !important;
     font-weight: bold !important;
     border: none !important;
     border-radius: 8px !important;
@@ -2651,8 +2661,13 @@ body.modal-open {
                 isPenalty = false;
             }
             updateScoreDisplay();
+            window.__smScrollY = window.pageYOffset || 0;
+            document.body.style.overflow = 'hidden';
+            document.body.style.position = 'fixed';
+            document.body.style.top = '-' + window.__smScrollY + 'px';
+            document.body.style.width = '100%';
             document.getElementById('scoreModal').classList.add('show');
-        }     
+        }   
         function addDigit(digit) {
             if (tempScore.length < 2) {
                 tempScore += digit;
@@ -2688,7 +2703,6 @@ body.modal-open {
         }
         
         function confirmScore() {
-            var _scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
             if (tempScore) {
                 scores[currentScoreCourse][currentScorePlayer][currentScoreHole] = tempScore + (isPenalty ? ')' : '');
             } else {
@@ -2698,14 +2712,19 @@ body.modal-open {
             renderAllCourses();
             updateSummary();
             autoSave();
-            setTimeout(function(){ window.scrollTo(0, _scrollY); }, 30);
-        }     
+        }   
         function closeModal() {
+            var sy = window.__smScrollY || 0;
             document.getElementById('parModal').classList.remove('show');
             document.getElementById('scoreModal').classList.remove('show');
             tempScore = '';
             isPenalty = false;
-        }     
+            document.body.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.width = '';
+            window.scrollTo(0, sy);
+        }   
         function getPlayerName(playerNum) {
             const name = document.getElementById('player' + playerNum).value;
             return name || '경기자 ' + playerNum;
