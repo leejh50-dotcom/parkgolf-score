@@ -1997,7 +1997,7 @@ body {
 
 <!-- 관리자 도구 버튼 -->
 <div style="margin-top: 40px !important; margin-bottom: 30px !important;">
-<button id="openAdminToolBtn" type="button" class="admin-btn" style="width: 100% !important; padding: 18px !important; background: linear-gradient(135deg, #f4b400 0%, #db9200 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">🔒 대회관리자 전용 — 길게 누르면 열림</button>
+<button id="openAdminToolBtn" type="button" class="admin-btn" style="width: 100% !important; padding: 18px !important; background: linear-gradient(135deg, #f4b400 0%, #db9200 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">🔒 대회관리자 전용 — 3번 탭으로 열기</button>
 </div>
 
 </div>
@@ -3565,35 +3565,34 @@ function openAdminModalSafe(e){
     if(typeof window.__lockBodyScrollForModal === 'function'){ window.__lockBodyScrollForModal(); }
   }catch(err){}
 }
-/* 관리자 버튼 - 길게 누르기(700ms) 방식 */
-(function(){
+/* ===== 관리자 버튼: 3번 연속 탭으로만 열림 ===== */
+window.addEventListener('load', function() {
   var btn = document.getElementById('openAdminToolBtn');
-  if(!btn) return;
-  var timer = null;
-  var DELAY = 700;
-  function startPress(e){
+  if (!btn) return;
+  var tapCount = 0;
+  var tapTimer = null;
+  function handleTap(e) {
     e.preventDefault();
-    btn.style.opacity = '0.6';
-    btn.style.transition = 'opacity 0.7s';
-    timer = setTimeout(function(){
-      btn.style.opacity = '';
-      btn.style.transition = '';
+    e.stopPropagation();
+    tapCount++;
+    btn.textContent = '🔒 대회관리자 전용 (' + tapCount + '/3)';
+    clearTimeout(tapTimer);
+    if (tapCount >= 3) {
+      tapCount = 0;
+      btn.textContent = '🔒 대회관리자 전용 — 3번 탭으로 열기';
       openAdminModalSafe(null);
-    }, DELAY);
+      return;
+    }
+    tapTimer = setTimeout(function() {
+      tapCount = 0;
+      btn.textContent = '🔒 대회관리자 전용 — 3번 탭으로 열기';
+    }, 2000);
   }
-  function cancelPress(){
-    clearTimeout(timer);
-    btn.style.opacity = '';
-    btn.style.transition = '';
-  }
-  btn.addEventListener('touchstart', startPress, {passive:false});
-  btn.addEventListener('touchend', cancelPress, {passive:true});
-  btn.addEventListener('touchcancel', cancelPress, {passive:true});
-  btn.addEventListener('mousedown', startPress);
-  btn.addEventListener('mouseup', cancelPress);
-  btn.addEventListener('mouseleave', cancelPress);
-  btn.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); });
-})();
+  btn.addEventListener('click', handleTap);
+  btn.addEventListener('touchend', handleTap, {passive: false});
+});
+
+
 document.addEventListener('DOMContentLoaded', function(){
   var btn = document.getElementById('openAdminToolBtn');
   if(btn){
