@@ -3332,11 +3332,11 @@ function toggleQRSection() {
 function generateQRCodeWithParams() {
     try { showToast('QR 코드 생성 클릭'); } catch(e) {}
     var eventCode = (document.getElementById('qrEventCode').value || '').trim();
-    var webAppUrl = (document.getElementById('qrWebAppUrl').value || '').trim();
+    var webAppUrl = (localStorage.getItem('parkgolf_webapp_url') || '').trim();
     if (!eventCode) { alert('대회 코드를 입력해주세요.'); return; }
-    if (!webAppUrl) { alert('웹앱 URL을 입력해주세요.'); return; }
+    if (!webAppUrl) { alert('웹앱 URL이 없습니다.\n① 단계에서 URL을 먼저 저장해주세요.'); return; }
     if (!webAppUrl.includes('script.google.com')) {
-        alert('올바른 Google Apps Script 웹앱 URL을 입력해주세요.');
+        alert('저장된 URL이 올바르지 않습니다.\n① 단계에서 URL을 다시 저장해주세요.');
         return;
     }
     var baseUrl = window.location.origin + window.location.pathname;
@@ -3680,7 +3680,14 @@ function closeAdminModalQuick(){
     <div class="admin-section">
       <div class="section-title">① 템플릿 복사 &amp; URL 저장</div>
       <button type="button" class="adm-btn adm-btn-blue" onclick="copyTemplate();">📋 템플릿 복사 (구글시트 사본 만들기)</button>
-      <div class="hint adm-mt">PC에서 클릭하면 구글시트 사본이 생성됩니다. 사본을 웹앱으로 배포한 후, 발급된 URL을 아래에 붙여넣고 저장하세요.</div>
+      <div class="hint adm-mt">PC에서 클릭하면 구글시트 사본이 생성됩니다. <span style="font-size:13px; line-height:1.9; color:#444;">
+📌 <b>PC 진행 순서</b><br>
+&nbsp;① 아래 버튼 클릭 → 구글시트 사본 생성<br>
+&nbsp;② 생성된 시트 → <b>확장 프로그램</b> → <b>새 배포</b><br>
+&nbsp;③ 웹앱 URL 복사<br>
+&nbsp;④ 아래 입력란에 붙여넣기 → <b>💾 URL 저장</b><br>
+&nbsp;⑤ QR코드 생성 (대회코드만 입력하면 됨)
+</span></div>
       <input type="text" id="webAppUrl" class="adm-input adm-input-url" placeholder="웹앱 URL 붙여넣기 (배포 후 복사한 URL)">
       <button type="button" class="adm-btn adm-btn-green adm-mt" onclick="saveURL();">💾 URL 저장</button>
     </div>
@@ -3694,8 +3701,7 @@ function closeAdminModalQuick(){
         <div style="background:#fff; border:1px solid #e9ecef; border-radius:12px; padding:12px; margin-top:10px;">
           <div style="font-weight:900; margin-bottom:6px;">대회 코드</div>
           <input type="text" id="qrEventCode" class="adm-input" placeholder="예: 123456QW">
-          <div style="font-weight:900; margin:12px 0 6px;">웹앱 URL</div>
-          <input type="text" id="qrWebAppUrl" class="adm-input adm-input-url" placeholder="https://script.google.com/macros/s/.../exec">
+          <div class="hint adm-mt" style="color:#6c757d; font-size:13px;">웹앱 URL은 ①에서 저장된 URL이 자동 사용됩니다</div>
           <button type="button" class="adm-btn adm-btn-purple adm-mt12" onclick="generateQRCodeWithParams(); return false;">QR 코드 생성</button>
           <div id="qrcodeDisplay" style="display:none; margin-top:14px; text-align:center;">
             <div id="qrcode" style="display:inline-block;"></div>
