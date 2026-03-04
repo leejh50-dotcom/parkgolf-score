@@ -1997,7 +1997,7 @@ body {
 
 <!-- 관리자 도구 버튼 -->
 <div style="margin-top: 40px !important; margin-bottom: 30px !important;">
-<button id="openAdminToolBtn" type="button" class="admin-btn" onclick="openAdminModalSafe(event);" style="width: 100% !important; padding: 18px !important; background: linear-gradient(135deg, #f4b400 0%, #db9200 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">대회관리자 전용 (관리자 도구) 열기</button>
+<button id="openAdminToolBtn" type="button" class="admin-btn" style="width: 100% !important; padding: 18px !important; background: linear-gradient(135deg, #f4b400 0%, #db9200 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">🔒 대회관리자 전용 — 길게 누르면 열림</button>
 </div>
 
 </div>
@@ -3565,6 +3565,35 @@ function openAdminModalSafe(e){
     if(typeof window.__lockBodyScrollForModal === 'function'){ window.__lockBodyScrollForModal(); }
   }catch(err){}
 }
+/* 관리자 버튼 - 길게 누르기(700ms) 방식 */
+(function(){
+  var btn = document.getElementById('openAdminToolBtn');
+  if(!btn) return;
+  var timer = null;
+  var DELAY = 700;
+  function startPress(e){
+    e.preventDefault();
+    btn.style.opacity = '0.6';
+    btn.style.transition = 'opacity 0.7s';
+    timer = setTimeout(function(){
+      btn.style.opacity = '';
+      btn.style.transition = '';
+      openAdminModalSafe(null);
+    }, DELAY);
+  }
+  function cancelPress(){
+    clearTimeout(timer);
+    btn.style.opacity = '';
+    btn.style.transition = '';
+  }
+  btn.addEventListener('touchstart', startPress, {passive:false});
+  btn.addEventListener('touchend', cancelPress, {passive:true});
+  btn.addEventListener('touchcancel', cancelPress, {passive:true});
+  btn.addEventListener('mousedown', startPress);
+  btn.addEventListener('mouseup', cancelPress);
+  btn.addEventListener('mouseleave', cancelPress);
+  btn.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); });
+})();
 document.addEventListener('DOMContentLoaded', function(){
   var btn = document.getElementById('openAdminToolBtn');
   if(btn){
@@ -3574,7 +3603,6 @@ document.addEventListener('DOMContentLoaded', function(){
       ev.stopPropagation();
       openAdminModalSafe(ev);
     }, {passive:false});
-    btn.addEventListener('click', openAdminModalSafe, {passive:false});
   }
 });
 (function() {
@@ -3709,7 +3737,7 @@ function closeAdminModalQuick(){
       <button type="button" class="adm-btn adm-btn-blue" onclick="copyTemplate();">📋 템플릿 복사 (구글시트 사본 만들기)</button>
       <div class="hint adm-mt">PC에서 클릭하면 구글시트 사본이 생성됩니다. <span style="font-size:13px; line-height:1.9; color:#444;">
 📌 <b>PC 진행 순서</b><br>
-&nbsp;① 위 버튼 클릭 → 구글시트 사본 생성<br>
+&nbsp;① 아래 버튼 클릭 → 구글시트 사본 생성<br>
 &nbsp;② 생성된 시트 → <b>확장 프로그램</b> → <b>새 배포</b><br>
 &nbsp;③ 웹앱 URL 복사<br>
 &nbsp;④ 아래 입력란에 붙여넣기 → <b>💾 URL 저장</b><br>
