@@ -3567,6 +3567,42 @@ function openAdminModalSafe(e){
     if(typeof window.__lockBodyScrollForModal === 'function'){ window.__lockBodyScrollForModal(); }
   }catch(err){}
 }
+/* ===== 관리자: 대회 잠금 ===== */
+function lockEventFromAdmin() {
+  var eventCode = (document.getElementById('eventCodeInput') && document.getElementById('eventCodeInput').value || '').trim();
+  if (!eventCode) {
+    alert('❌ 대회코드가 입력되지 않았습니다.\n\n먼저 대회코드를 입력해주세요.');
+    return;
+  }
+
+  if (!confirm('🔒 [' + eventCode + '] 대회의\n점수 전송을 마감하시겠습니까?\n\n마감 후에는 전송이 차단됩니다.')) return;
+
+  var webAppUrl = localStorage.getItem('parkgolf_webapp_url');
+  if (!webAppUrl) {
+    alert('❌ 웹앱 URL이 없습니다.\n관리자 도구에서 URL을 먼저 저장해주세요.');
+    return;
+  }
+
+  var msgDiv = document.getElementById('lockStatusMsg');
+  if (msgDiv) { msgDiv.style.display = 'block'; msgDiv.textContent = '⏳ 잠금 처리 중...'; }
+
+  fetch(webAppUrl, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify({ action: 'lockEvent', eventCode: eventCode })
+  })
+  .then(function() {
+    var msg = '🔒 [' + eventCode + '] 점수집계가 마감되었습니다.';
+    if (msgDiv) { msgDiv.textContent = msg; msgDiv.style.color = '#b91c1c'; }
+    alert('✅ ' + msg + '\n\n이후 점수 전송은 차단됩니다.');
+  })
+  .catch(function(err) {
+    if (msgDiv) { msgDiv.textContent = '❌ 잠금 실패: ' + err.message; }
+    alert('❌ 잠금 실패\n\n' + err.message);
+  });
+}
+
 /* ===== 관리자 버튼: PC=클릭, 모바일=3번 탭 ===== */
 window.addEventListener('load', function() {
   var btn = document.getElementById('openAdminToolBtn');
@@ -3779,6 +3815,21 @@ function closeAdminModalQuick(){
         <span style="font-size:15px; font-weight:800; color:#15803d; line-height:1.5;">조편성은 <u>템플릿(구글시트)</u>에서 진행하세요</span>
       </div>
       <div class="hint adm-mt" style="color:#166534;">복사된 구글시트 사본을 열고, 시트 메뉴에서 조편성을 실행하세요.</div>
+    </div>
+
+    <!-- ④ 대회 잠금 -->
+    <div class="admin-section" style="background:#fff1f0; border:2px solid #fca5a5; border-radius:14px; padding:14px;">
+      <div class="section-title" style="color:#b91c1c;">④ 대회 잠금</div>
+      <div style="display:flex; align-items:center; gap:10px; padding:6px 0 6px;">
+        <span style="font-size:26px;">🔒</span>
+        <span style="font-size:15px; font-weight:800; color:#b91c1c; line-height:1.5;">점수 전송을 마감합니다</span>
+      </div>
+      <div class="hint adm-mt" style="color:#7f1d1d; margin-bottom:10px;">잠금 후에는 누구도 점수를 전송할 수 없습니다.<br>결과 확인이 끝난 후 눌러주세요.</div>
+      <div id="lockStatusMsg" style="display:none; text-align:center; padding:10px 0 4px; font-size:15px; font-weight:800; color:#b91c1c;"></div>
+      <button type="button" onclick="lockEventFromAdmin();"
+        style="width:100%; padding:14px; background:linear-gradient(135deg,#ef4444,#b91c1c); color:#fff; border:none; border-radius:10px; font-size:17px; font-weight:900; cursor:pointer; margin-top:2px;">
+        🔒 이 대회 점수 마감하기
+      </button>
     </div>
 
     <!-- 휴대폰 안내 (접기) -->
