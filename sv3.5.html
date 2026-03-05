@@ -1581,6 +1581,8 @@ body.modal-open {
 }
 .adm-input-url {
   font-size:13px; margin-top:10px;
+    border: 3px solid #1a6b2e !important;
+    box-shadow: 0 0 0 1px #1a6b2e !important;
 }
 .adm-mt { margin-top:8px; }
 .adm-mt10 { margin-top:10px; }
@@ -3564,14 +3566,30 @@ function openAdminModalSafe(e){
     var m = document.getElementById('adminModal');
     if(!m) return;
     m.style.display = 'flex';
+    // 대회코드 자동 채우기
+    var mainCode = (document.getElementById('eventCodeInput') && document.getElementById('eventCodeInput').value || '').trim();
+    var lockInput = document.getElementById('lockEventCodeInput');
+    if (lockInput && mainCode) lockInput.value = mainCode;
     if(typeof window.__lockBodyScrollForModal === 'function'){ window.__lockBodyScrollForModal(); }
   }catch(err){}
 }
 /* ===== 관리자: 대회 잠금 ===== */
+function syncLockCode(val) {
+  // 대회코드 입력 시 메인 대회코드 입력란과 동기화
+  var main = document.getElementById('eventCodeInput');
+  if (main && !val && main.value) {
+    document.getElementById('lockEventCodeInput').value = main.value;
+  }
+}
+
 function lockEventFromAdmin() {
-  var eventCode = (document.getElementById('eventCodeInput') && document.getElementById('eventCodeInput').value || '').trim();
+  // ① 잠금 섹션 입력란 우선, 없으면 메인 대회코드 사용
+  var lockInput = document.getElementById('lockEventCodeInput');
+  var mainInput = document.getElementById('eventCodeInput');
+  var eventCode = (lockInput && lockInput.value.trim()) || (mainInput && mainInput.value.trim()) || '';
   if (!eventCode) {
-    alert('❌ 대회코드가 입력되지 않았습니다.\n\n먼저 대회코드를 입력해주세요.');
+    alert('❌ 대회코드를 입력해주세요.');
+    if (lockInput) lockInput.focus();
     return;
   }
 
@@ -3820,14 +3838,15 @@ function closeAdminModalQuick(){
     <!-- ④ 대회 잠금 -->
     <div class="admin-section" style="background:#fff1f0; border:2px solid #fca5a5; border-radius:14px; padding:14px;">
       <div class="section-title" style="color:#b91c1c;">④ 대회 잠금</div>
-      <div style="display:flex; align-items:center; gap:10px; padding:6px 0 6px;">
-        <span style="font-size:26px;">🔒</span>
-        <span style="font-size:15px; font-weight:800; color:#b91c1c; line-height:1.5;">점수 전송을 마감합니다</span>
+      <div style="margin:8px 0 10px;">
+        <label style="display:block; font-size:13px; font-weight:800; color:#7f1d1d; margin-bottom:6px;">🔑 대회코드 입력 후 마감버튼 누르세요</label>
+        <input type="text" id="lockEventCodeInput" placeholder="예: 3월대회"
+          style="width:100%; box-sizing:border-box; padding:12px 14px; border:2px solid #fca5a5; border-radius:10px; font-size:16px; font-weight:700; color:#b91c1c; background:#fff8f8; outline:none;"
+          oninput="syncLockCode(this.value)">
       </div>
-      <div class="hint adm-mt" style="color:#7f1d1d; margin-bottom:10px;">잠금 후에는 누구도 점수를 전송할 수 없습니다.<br>결과 확인이 끝난 후 눌러주세요.</div>
-      <div id="lockStatusMsg" style="display:none; text-align:center; padding:10px 0 4px; font-size:15px; font-weight:800; color:#b91c1c;"></div>
+      <div id="lockStatusMsg" style="display:none; text-align:center; padding:6px 0 4px; font-size:15px; font-weight:800; color:#b91c1c;"></div>
       <button type="button" onclick="lockEventFromAdmin();"
-        style="width:100%; padding:14px; background:linear-gradient(135deg,#ef4444,#b91c1c); color:#fff; border:none; border-radius:10px; font-size:17px; font-weight:900; cursor:pointer; margin-top:2px;">
+        style="width:100%; padding:14px; background:linear-gradient(135deg,#ef4444,#b91c1c); color:#fff; border:none; border-radius:10px; font-size:17px; font-weight:900; cursor:pointer;">
         🔒 이 대회 점수 마감하기
       </button>
     </div>
