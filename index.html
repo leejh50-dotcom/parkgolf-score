@@ -293,7 +293,7 @@ body::after {
   <div class="cards">
 
     <!-- sv2.0 -->
-    <a class="ver-card card-v2" href="https://leejh50-dotcom.github.io/parkgolf-score/sv2.html" target="_blank" rel="noopener">
+    <a class="ver-card card-v2" href="https://leejh50-dotcom.github.io/parkgolf-score/sv2.html">
       <div class="card-top">
         <div class="card-emoji">📱</div>
         <div class="card-title-block">
@@ -311,7 +311,7 @@ body::after {
     </a>
 
     <!-- sv3.0 -->
-    <a class="ver-card card-v3" href="https://leejh50-dotcom.github.io/parkgolf-score/sv3.html" target="_blank" rel="noopener">
+    <a class="ver-card card-v3" href="https://leejh50-dotcom.github.io/parkgolf-score/sv3.html">
       <span class="hot-badge">★ 추천</span>
       <div class="card-top">
         <div class="card-emoji">🏆</div>
@@ -332,7 +332,7 @@ body::after {
     </a>
 
     <!-- sv4.0 -->
-    <a class="ver-card card-v4" href="https://leejh50-dotcom.github.io/parkgolf-score/sv4.html" target="_blank" rel="noopener">
+    <a class="ver-card card-v4" href="https://leejh50-dotcom.github.io/parkgolf-score/sv4.html">
       
       <div class="card-top">
         <div class="card-emoji">🚀</div>
@@ -356,27 +356,8 @@ body::after {
   <div style="width:100%; margin-top:32px; animation: fadeUp 0.6s 0.65s ease both; text-align:center;">
     <p style="font-family:'Montserrat',sans-serif; font-size:10px; font-weight:700; color:rgba(255,255,255,0.35); letter-spacing:3px; margin-bottom:18px;">▶ QR 스캔 → 버전 선택 → 실행</p>
 
-    <div style="display:inline-block; position:relative; background:#fff; padding:14px; border-radius:20px; box-shadow:0 8px 32px rgba(0,0,0,0.4);">
+    <div style="display:inline-block; background:#fff; padding:14px; border-radius:20px; box-shadow:0 8px 32px rgba(0,0,0,0.4);">
       <div id="qr-main"></div>
-      <!-- PASIS 로고 오버레이 -->
-      <div style="
-        position:absolute;
-        top:50%; left:50%;
-        transform:translate(-50%,-50%);
-        background:#1a5c35;
-        color:#f0d07a;
-        font-family:'Montserrat',sans-serif;
-        font-size:13px;
-        font-weight:900;
-        letter-spacing:2px;
-        padding:5px 11px;
-        border-radius:7px;
-        border:2px solid #fff;
-        box-shadow:0 2px 8px rgba(0,0,0,0.35);
-        pointer-events:none;
-        white-space:nowrap;
-        z-index:10;
-      ">PASIS</div>
     </div>
 
     <p style="font-size:11px; color:rgba(255,255,255,0.35); margin-top:14px; font-family:'Montserrat',sans-serif; letter-spacing:0.5px;">
@@ -391,6 +372,7 @@ body::after {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
   // QR 생성 후 중앙에 PASIS 로고 합성
+  var _qrDone = false;
   var _qrObj = new QRCode(document.getElementById('qr-main'), {
     text: 'https://leejh50-dotcom.github.io/parkgolf-score/',
     width: 220, height: 220,
@@ -399,24 +381,88 @@ body::after {
     correctLevel: QRCode.CorrectLevel.H  // 오류정정 최대 = 로고 삽입 안전
   });
 
+  function addLogoToQR() {
+    var el = document.getElementById('qr-main');
+    var srcCanvas = el.querySelector('canvas');
+    if (!srcCanvas) return;
 
+    var size = srcCanvas.width; // 220
+    var out = document.createElement('canvas');
+    out.width = out.height = size;
+    var ctx = out.getContext('2d');
+
+    // QR 그리기
+    ctx.drawImage(srcCanvas, 0, 0);
+
+    // 중앙 로고 영역 (size의 22%)
+    var lw = Math.round(size * 0.22);
+    var lh = Math.round(size * 0.14);
+    var lx = Math.round((size - lw) / 2);
+    var ly = Math.round((size - lh) / 2);
+    var r  = 8;
+
+    // 둥근 사각형 흰 배경 (그림자)
+    ctx.shadowColor = 'rgba(0,0,0,0.25)';
+    ctx.shadowBlur  = 6;
+    ctx.fillStyle   = '#ffffff';
+    ctx.beginPath();
+    ctx.moveTo(lx + r, ly);
+    ctx.lineTo(lx + lw - r, ly);
+    ctx.quadraticCurveTo(lx + lw, ly, lx + lw, ly + r);
+    ctx.lineTo(lx + lw, ly + lh - r);
+    ctx.quadraticCurveTo(lx + lw, ly + lh, lx + lw - r, ly + lh);
+    ctx.lineTo(lx + r, ly + lh);
+    ctx.quadraticCurveTo(lx, ly + lh, lx, ly + lh - r);
+    ctx.lineTo(lx, ly + r);
+    ctx.quadraticCurveTo(lx, ly, lx + r, ly);
+    ctx.closePath();
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // 초록 배경 채우기
+    ctx.fillStyle = '#1a5c35';
+    ctx.beginPath();
+    ctx.moveTo(lx + r, ly + 2);
+    ctx.lineTo(lx + lw - r, ly + 2);
+    ctx.quadraticCurveTo(lx + lw - 2, ly + 2, lx + lw - 2, ly + r);
+    ctx.lineTo(lx + lw - 2, ly + lh - r);
+    ctx.quadraticCurveTo(lx + lw - 2, ly + lh - 2, lx + lw - r, ly + lh - 2);
+    ctx.lineTo(lx + r, ly + lh - 2);
+    ctx.quadraticCurveTo(lx + 2, ly + lh - 2, lx + 2, ly + lh - r);
+    ctx.lineTo(lx + 2, ly + r);
+    ctx.quadraticCurveTo(lx + 2, ly + 2, lx + r, ly + 2);
+    ctx.closePath();
+    ctx.fill();
+
+    // PASIS 텍스트
+    var fs = Math.round(lh * 0.62);
+    ctx.font = '900 ' + fs + 'px Montserrat, sans-serif';
+    ctx.fillStyle = '#f0d07a';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('PASIS', lx + lw / 2, ly + lh / 2 + 1);
+
+    // 원본 canvas 교체
+    srcCanvas.getContext('2d').clearRect(0, 0, size, size);
+    srcCanvas.getContext('2d').drawImage(out, 0, 0);
+    _qrDone = true;
+  }
+
+  setTimeout(addLogoToQR, 300);
 
   function dlQR() {
     setTimeout(function() {
+      if (!_qrDone) addLogoToQR();
       var el = document.getElementById('qr-main');
       var srcCanvas = el.querySelector('canvas');
       var srcImg    = el.querySelector('img');
       var pad = 28;
       var size = srcCanvas ? srcCanvas.width : 220;
-
-      // 출력 canvas: 흰 배경 + 여백
       var out = document.createElement('canvas');
       out.width = out.height = size + pad * 2;
       var ctx = out.getContext('2d');
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, out.width, out.height);
-
-      // QR 그리기
       if (srcCanvas) {
         ctx.drawImage(srcCanvas, pad, pad);
       } else if (srcImg) {
@@ -427,49 +473,11 @@ body::after {
       } else {
         alert('잠시 후 다시 시도해 주세요.'); return;
       }
-
-      // 중앙 PASIS 로고 그리기
-      var cx = out.width / 2;
-      var cy = out.height / 2;
-      var lw = 58, lh = 24, r = 6;
-      var lx = cx - lw / 2, ly = cy - lh / 2;
-
-      // 흰 테두리
-      ctx.fillStyle = '#ffffff';
-      roundRect(ctx, lx - 2, ly - 2, lw + 4, lh + 4, r + 2);
-      ctx.fill();
-
-      // 초록 배경
-      ctx.fillStyle = '#1a5c35';
-      roundRect(ctx, lx, ly, lw, lh, r);
-      ctx.fill();
-
-      // 골드 텍스트
-      ctx.fillStyle = '#f0d07a';
-      ctx.font = '900 13px Montserrat, Arial, sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText('PASIS', cx, cy + 1);
-
       var a = document.createElement('a');
       a.href = out.toDataURL('image/png');
       a.download = 'PASIS_QR.png';
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
     }, 200);
-  }
-
-  function roundRect(ctx, x, y, w, h, r) {
-    ctx.beginPath();
-    ctx.moveTo(x + r, y);
-    ctx.lineTo(x + w - r, y);
-    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-    ctx.lineTo(x + w, y + h - r);
-    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-    ctx.lineTo(x + r, y + h);
-    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
-    ctx.lineTo(x, y + r);
-    ctx.quadraticCurveTo(x, y, x + r, y);
-    ctx.closePath();
   }
 </script>
 
