@@ -74,10 +74,10 @@ html, body {
   .parkgolf-app button,
   .parkgolf-app .sheet-btn,
   .parkgolf-app .action-btn {
-    min-height: 25px !important;
-    font-size: 17px !important;
+    min-height: 30px !important;
+    font-size: 16px !important;
     font-weight: 800 !important;
-    padding: 4px 14px !important;
+    padding: 0px 14px !important;
     border-radius: 10px !important;
   }
   .parkgolf-app .course-btn,
@@ -423,9 +423,11 @@ body.modal-open {
         gap: 15px !important;
     }
     .parkgolf-app .hole-option {
-        padding: 2px 12px !important;
-        font-size: 15px !important;
-        min-height: 25px !important;
+        padding: 0px 6px !important;
+        height: 30px !important;
+        line-height: 30px !important;
+        font-size: 14px !important;
+        white-space: nowrap !important;
     }
     .parkgolf-app .course-header {
         padding: 14px !important;
@@ -632,7 +634,11 @@ body.modal-open {
     gap: 12px !important;
 }
 .parkgolf-app .hole-option {
-    padding: 2px 8px !important;
+    padding: 0px 6px !important;
+    height: 30px !important;
+    line-height: 30px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
     background: #fff !important;
     border: 3px solid #dee2e6 !important;
     border-radius: 10px !important;
@@ -1896,10 +1902,10 @@ body {
 <div class="button-group" style="grid-template-columns: 1fr 1fr; margin-bottom: 30px !important;"><button class="load-btn" onclick="openNameListModal()">이름<br>불러오기</button> <button class="clear-btn" onclick="clearPlayerNames()">이름<br>지우기</button></div>
 <div class="input-group"><label style="display: block; margin-top: 0px !important; font-size: 21px !important; text-align: center; font-weight: 900;">사용 코스 선택</label>
 <div class="hole-selector">
-<div class="hole-option active" onclick="selectHoles(9)">1코스<br />(9홀)</div>
-<div class="hole-option" onclick="selectHoles(18)">2코스<br />(18홀)</div>
-<div class="hole-option" onclick="selectHoles(27)">3코스<br />(27홀)</div>
-<div class="hole-option" onclick="selectHoles(36)">4코스<br />(36홀)</div>
+<div class="hole-option active" onclick="selectHoles(9)">1코스(9홀)</div>
+<div class="hole-option" onclick="selectHoles(18)">2코스(18홀)</div>
+<div class="hole-option" onclick="selectHoles(27)">3코스(27홀)</div>
+<div class="hole-option" onclick="selectHoles(36)">4코스(36홀)</div>
 </div>
 </div>
 </div>
@@ -2007,7 +2013,7 @@ body {
 
 <!-- 구글시트로 보내기 버튼 -->
 <div style="margin-top: 30px !important; margin-bottom: 40px !important;">
-<button id="sendToSheetBtn" class="sheet-btn" onclick="sendToGoogleSheet();" style="width: 100% !important; padding: 4px !important; min-height: 25px !important; background: linear-gradient(135deg, #0f9d58 0%, #0b7a44 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">대회 집계(구글시트) 전송</button>
+<button id="sendToSheetBtn" class="sheet-btn" onclick="sendToGoogleSheet();" style="width: 100% !important; padding: 0px 14px !important; height: 30px !important; line-height: 30px !important; background: linear-gradient(135deg, #0f9d58 0%, #0b7a44 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">대회 집계(구글시트) 전송</button>
 </div>
 
 <!-- 구분선 -->
@@ -2015,7 +2021,7 @@ body {
 
 <!-- 관리자 도구 버튼 -->
 <div style="margin-top: 40px !important; margin-bottom: 30px !important;">
-<button id="openAdminToolBtn" type="button" class="admin-btn" style="width: 100% !important; padding: 4px !important; min-height: 25px !important; background: linear-gradient(135deg, #f4b400 0%, #db9200 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">🔒 대회관리자 전용 — 3번 탭으로 열기</button>
+<button id="openAdminToolBtn" type="button" class="admin-btn" style="width: 100% !important; padding: 0px 14px !important; height: 30px !important; line-height: 30px !important; background: linear-gradient(135deg, #f4b400 0%, #db9200 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 18px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">🔒 관리자 전용 — 3번터치 열기</button>
 </div>
 
 </div>
@@ -3675,14 +3681,14 @@ window.addEventListener('load', function() {
       clearTimeout(tapTimer);
       if (tapCount >= 3) {
         tapCount = 0;
-        btn.textContent = '🔒 대회관리자 전용 — 3번 탭으로 열기';
+        btn.textContent = '🔒 관리자 전용 — 3번터치 열기';
         openAdminModalSafe(null);
         return;
       }
       btn.textContent = '🔒 대회관리자 전용 (' + tapCount + '/3)';
       tapTimer = setTimeout(function() {
         tapCount = 0;
-        btn.textContent = '🔒 대회관리자 전용 — 3번 탭으로 열기';
+        btn.textContent = '🔒 관리자 전용 — 3번터치 열기';
       }, 2500);
     }, {passive: false});
   }
