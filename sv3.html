@@ -2279,6 +2279,11 @@ body {
                                     text: '파크골프 경기 결과를 공유합니다.'
                                 }).then(function() {
                                 }).catch(function(error) {
+                        if (sendBtn) {
+                            sendBtn.disabled = false;
+                            sendBtn.style.opacity = '';
+                            sendBtn.textContent = '대회 집계(구글시트) 전송';
+                        }
                                     if (error.name !== 'AbortError') {
                                         tryClipboardShare(blob, canvas);
                                     }
@@ -3091,6 +3096,15 @@ function normalizeWebAppUrl(url) {
     return url;
 }
 window.sendToGoogleSheet = function() {
+            // ── 중복 전송 방지 ──────────────────────
+            const sendBtn = document.getElementById('sendToSheetBtn');
+            if (sendBtn && sendBtn.disabled) return;
+            if (sendBtn) {
+                sendBtn.disabled = true;
+                sendBtn.style.opacity = '0.5';
+                sendBtn.textContent = '⏳ 전송 중...';
+            }
+            // ────────────────────────────────────────
             let webAppUrl = normalizeWebAppUrl(localStorage.getItem('parkgolf_webapp_url'));
             
             if (!webAppUrl) {
@@ -3163,9 +3177,22 @@ window.sendToGoogleSheet = function() {
                 } else {
                     alert('✅ 전송이 정상적으로 완료되었습니다.');
                 }
+                // 버튼 복원
+                if (sendBtn) {
+                    setTimeout(function() {
+                        sendBtn.disabled = false;
+                        sendBtn.style.opacity = '';
+                        sendBtn.textContent = '대회 집계(구글시트) 전송';
+                    }, 2000);
+                }
             })
             .catch(function(error) {
                 alert('❌ 전송 실패!\n\n' + error.message + '\n\n인터넷 연결을 확인하고 다시 시도해주세요.');
+                if (sendBtn) {
+                    sendBtn.disabled = false;
+                    sendBtn.style.opacity = '';
+                    sendBtn.textContent = '대회 집계(구글시트) 전송';
+                }
             });
         };
         function checkDuplicateSubmission(data) {
