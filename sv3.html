@@ -3295,16 +3295,24 @@ window.sendToGoogleSheet = function() {
     var lockSection = document.getElementById('adminLockSection');
     if (!details) return;
     var isPC = window.innerWidth >= 768 && !('ontouchstart' in window);
+    var closeBtn = document.getElementById('adminCloseBtn');
     if (isPC) {
-      details.open = true;
-      if (arrow) arrow.textContent = '▲ 접기';
-      // PC에서는 잠금 섹션 숨김 (현장 마감은 휴대폰으로)
+      // PC: 잠금섹션 숨김, PC설정 완전히 펼침(summary도 숨김), X버튼 숨김
       if (lockSection) lockSection.style.display = 'none';
+      details.open = true;
+      details.style.border = 'none';
+      details.style.background = 'transparent';
+      details.style.padding = '0';
+      details.style.marginTop = '0';
+      var summary = details.querySelector('summary');
+      if (summary) summary.style.display = 'none';
+      if (closeBtn) closeBtn.style.display = 'none';
     } else {
+      // 모바일: 잠금섹션 표시, PC설정 접힘, X버튼 표시
+      if (lockSection) lockSection.style.display = 'block';
       details.open = false;
       if (arrow) arrow.textContent = '▼ 펼치기';
-      // 모바일에서는 잠금 섹션 표시
-      if (lockSection) lockSection.style.display = 'block';
+      if (closeBtn) closeBtn.style.display = 'flex';
     }
     // summary 클릭 시 화살표 토글
     var summary = details.querySelector('summary');
@@ -3905,15 +3913,15 @@ function closeAdminModalQuick(){
 
 <!-- 관리자 도구 모달 -->
 <div id="adminModal" class="modal" style="position:fixed !important;">
-  <!-- X 닫기 — 오버레이 우상단 절대 고정 -->
-  <div class="modal-content" style="position:relative !important;">
-    <!-- X 닫기 — modal-content 우상단 절대 고정 -->
-    <button type="button" onclick="closeAdminModalQuick()" aria-label="닫기"
-      style="position:absolute; top:-14px; right:-14px; z-index:10000;
-             background:#fff; border:2px solid #e5e7eb; border-radius:50%;
-             width:32px; height:32px; font-size:18px; font-weight:900;
-             color:#374151; cursor:pointer; line-height:28px; text-align:center;
-             padding:0; box-shadow:0 2px 10px rgba(0,0,0,0.2);">×</button>
+  <div class="modal-content" style="position:relative !important; padding-top:12px !important;">
+    <!-- X 닫기 — modal-content 우상단, 작게, 잠금박스와 분리 -->
+    <div id="adminCloseBtn" style="display:flex; justify-content:flex-end; margin-bottom:8px;">
+      <button type="button" onclick="closeAdminModalQuick()" aria-label="닫기"
+        style="background:#f3f4f6; border:1.5px solid #d1d5db; border-radius:50%;
+               width:28px; height:28px; font-size:16px; font-weight:900;
+               color:#6b7280; cursor:pointer; line-height:26px; text-align:center;
+               padding:0; flex-shrink:0; box-shadow:0 1px 4px rgba(0,0,0,0.12);">×</button>
+    </div>
     <!-- ④ 대회 잠금 — 최상단 크게 -->
     <div id="adminLockSection" class="admin-section" style="background:linear-gradient(135deg,#fff1f0,#ffe4e1); border:2px solid #ef4444; border-radius:14px; padding:18px; margin-bottom:4px;">
       <div class="section-title" style="color:#b91c1c; font-size:17px;">🔒 대회 점수 마감</div>
