@@ -448,7 +448,14 @@ body::after {
     _qrDone = true;
   }
 
-  setTimeout(addLogoToQR, 300);
+  // 폰트 로드 완료 후 QR 로고 합성
+  if (document.fonts && document.fonts.load) {
+    document.fonts.load('900 16px Montserrat').then(function() {
+      setTimeout(addLogoToQR, 400);
+    });
+  } else {
+    setTimeout(addLogoToQR, 1200);
+  }
 
   function dlQR() {
     setTimeout(function() {
