@@ -186,16 +186,18 @@ input, textarea, select { font-size: 16px; }
   width: 100vw !important;
   height: 100vh !important;
   display: none;
-  align-items: center !important;
+  align-items: flex-start !important;
   justify-content: center !important;
-  padding: 14px !important;
+  padding: 8px 12px !important;
   background: rgba(0,0,0,0.45) !important;
   z-index: 99999 !important;
   box-sizing: border-box !important;
+  overflow-y: auto !important;
 }
 #adminModal .modal-content {
   width: min(640px, 92vw) !important;
-  max-height: 88vh !important;
+  max-height: 96vh !important;
+  margin-top: 4px !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
   margin: 0 !important;
@@ -3283,6 +3285,9 @@ window.sendToGoogleSheet = function() {
             };
         }
         window.openAdminModal = function() {
+  // 배경 관리자 버튼 숨기기
+  var adminBtn = document.getElementById('openAdminToolBtn');
+  if (adminBtn) adminBtn.style.visibility = 'hidden';
   // PC면 PC설정 자동 펼침 / 모바일이면 닫힘 유지
   setTimeout(function() {
     var details = document.getElementById('pcSettingsDetails');
@@ -3847,6 +3852,8 @@ window.addEventListener('load', function() {
 function closeAdminModalQuick(){
   var m = document.getElementById('adminModal');
   if (m) m.style.display = 'none';
+  var adminBtn = document.getElementById('openAdminToolBtn');
+  if (adminBtn) adminBtn.style.visibility = '';
   try { if (typeof window.__unlockBodyScrollForModal === 'function') window.__unlockBodyScrollForModal(); } catch(e){}
 }
 (function(){
@@ -3891,16 +3898,15 @@ function closeAdminModalQuick(){
 </div>
 
 <!-- 관리자 도구 모달 -->
-<div id="adminModal" class="modal">
+<div id="adminModal" class="modal" style="position:fixed !important;">
+  <!-- X 닫기 — 오버레이 우상단 절대 고정 -->
+  <button type="button" onclick="closeAdminModalQuick()" aria-label="닫기"
+    style="position:absolute; top:6px; right:10px; z-index:9999;
+           background:rgba(255,255,255,0.92); border:none; border-radius:50%;
+           width:34px; height:34px; font-size:20px; font-weight:900;
+           color:#333; cursor:pointer; line-height:34px; text-align:center;
+           padding:0; box-shadow:0 2px 8px rgba(0,0,0,0.18);">×</button>
   <div class="modal-content">
-    <div class="admin-head">
-      <div>
-        <h3 class="admin-title">대회 관리자 도구 <span class="admin-ver">v5.3</span></h3>
-        <div class="admin-sub">💻 PC 작업 순서대로 진행하세요.</div>
-      </div>
-      <button type="button" class="close-x" onclick="closeAdminModalQuick()" aria-label="닫기">×</button>
-    </div>
-
     <!-- ④ 대회 잠금 — 최상단 크게 -->
     <div id="adminLockSection" class="admin-section" style="background:linear-gradient(135deg,#fff1f0,#ffe4e1); border:2px solid #ef4444; border-radius:14px; padding:18px; margin-bottom:4px;">
       <div class="section-title" style="color:#b91c1c; font-size:17px;">🔒 대회 점수 마감</div>
@@ -3932,7 +3938,12 @@ function closeAdminModalQuick(){
 📌 <b>PC 진행 순서</b><br>
 버튼 클릭 → 구글시트 사본 생성 → 대회 제목 넣기 → 확장 프로그램 → 새 배포 → 웹앱 URL 복사 → 아래 입력란에 붙여넣기 → 💾 URL 저장 → QR코드 생성하기 → 대회코드 입력 → QR코드 생성 → QR코드 이미지 저장
 </div>
-      <input type="text" id="webAppUrl" class="adm-input adm-input-url" placeholder="웹앱 URL 붙여넣기 (배포 후 복사한 URL)" style="font-size:12px !important;">
+      <div style="font-size:11px; color:#495057; font-weight:700; margin-bottom:4px;">
+  웹앱 URL 붙여넣기 <span style="font-weight:400; color:#868e96;">(배포 후 복사한 URL)</span>
+</div>
+<input type="text" id="webAppUrl" class="adm-input adm-input-url"
+  placeholder="https://script.google.com/..."
+  style="font-size:12px !important; height:44px !important; line-height:1.4 !important;">
       <button type="button" class="adm-btn adm-btn-green adm-mt" onclick="saveURL();">💾 URL 저장</button>
     </div>
 
