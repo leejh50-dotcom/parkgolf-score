@@ -371,40 +371,108 @@ body::after {
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-  new QRCode(document.getElementById('qr-main'), {
+  // QR 생성 후 중앙에 PASIS 로고 합성
+  var _qrDone = false;
+  var _qrObj = new QRCode(document.getElementById('qr-main'), {
     text: 'https://leejh50-dotcom.github.io/parkgolf-score/',
-    width: 200, height: 200,
+    width: 220, height: 220,
     colorDark: '#0f3320',
     colorLight: '#ffffff',
-    correctLevel: QRCode.CorrectLevel.M
+    correctLevel: QRCode.CorrectLevel.H  // 오류정정 최대 = 로고 삽입 안전
   });
+
+  function addLogoToQR() {
+    var el = document.getElementById('qr-main');
+    var srcCanvas = el.querySelector('canvas');
+    if (!srcCanvas) return;
+
+    var size = srcCanvas.width; // 220
+    var out = document.createElement('canvas');
+    out.width = out.height = size;
+    var ctx = out.getContext('2d');
+
+    // QR 그리기
+    ctx.drawImage(srcCanvas, 0, 0);
+
+    // 중앙 로고 영역 (size의 22%)
+    var lw = Math.round(size * 0.22);
+    var lh = Math.round(size * 0.14);
+    var lx = Math.round((size - lw) / 2);
+    var ly = Math.round((size - lh) / 2);
+    var r  = 8;
+
+    // 둥근 사각형 흰 배경 (그림자)
+    ctx.shadowColor = 'rgba(0,0,0,0.25)';
+    ctx.shadowBlur  = 6;
+    ctx.fillStyle   = '#ffffff';
+    ctx.beginPath();
+    ctx.moveTo(lx + r, ly);
+    ctx.lineTo(lx + lw - r, ly);
+    ctx.quadraticCurveTo(lx + lw, ly, lx + lw, ly + r);
+    ctx.lineTo(lx + lw, ly + lh - r);
+    ctx.quadraticCurveTo(lx + lw, ly + lh, lx + lw - r, ly + lh);
+    ctx.lineTo(lx + r, ly + lh);
+    ctx.quadraticCurveTo(lx, ly + lh, lx, ly + lh - r);
+    ctx.lineTo(lx, ly + r);
+    ctx.quadraticCurveTo(lx, ly, lx + r, ly);
+    ctx.closePath();
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // 초록 배경 채우기
+    ctx.fillStyle = '#1a5c35';
+    ctx.beginPath();
+    ctx.moveTo(lx + r, ly + 2);
+    ctx.lineTo(lx + lw - r, ly + 2);
+    ctx.quadraticCurveTo(lx + lw - 2, ly + 2, lx + lw - 2, ly + r);
+    ctx.lineTo(lx + lw - 2, ly + lh - r);
+    ctx.quadraticCurveTo(lx + lw - 2, ly + lh - 2, lx + lw - r, ly + lh - 2);
+    ctx.lineTo(lx + r, ly + lh - 2);
+    ctx.quadraticCurveTo(lx + 2, ly + lh - 2, lx + 2, ly + lh - r);
+    ctx.lineTo(lx + 2, ly + r);
+    ctx.quadraticCurveTo(lx + 2, ly + 2, lx + r, ly + 2);
+    ctx.closePath();
+    ctx.fill();
+
+    // PASIS 텍스트
+    var fs = Math.round(lh * 0.62);
+    ctx.font = '900 ' + fs + 'px Montserrat, sans-serif';
+    ctx.fillStyle = '#f0d07a';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('PASIS', lx + lw / 2, ly + lh / 2 + 1);
+
+    // 원본 canvas 교체
+    srcCanvas.getContext('2d').clearRect(0, 0, size, size);
+    srcCanvas.getContext('2d').drawImage(out, 0, 0);
+    _qrDone = true;
+  }
+
+  setTimeout(addLogoToQR, 300);
 
   function dlQR() {
     setTimeout(function() {
+      if (!_qrDone) addLogoToQR();
       var el = document.getElementById('qr-main');
       var srcCanvas = el.querySelector('canvas');
       var srcImg    = el.querySelector('img');
-
-      // 흰 배경 + 여백으로 합성
-      var pad = 24;
-      var size = srcCanvas ? srcCanvas.width : 200;
+      var pad = 28;
+      var size = srcCanvas ? srcCanvas.width : 220;
       var out = document.createElement('canvas');
-      out.width  = size + pad * 2;
-      out.height = size + pad * 2;
+      out.width = out.height = size + pad * 2;
       var ctx = out.getContext('2d');
-
-      // 흰 배경
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, out.width, out.height);
-
       if (srcCanvas) {
         ctx.drawImage(srcCanvas, pad, pad);
       } else if (srcImg) {
-        ctx.drawImage(srcImg, pad, pad, size, size);
+        var tmp = document.createElement('canvas');
+        tmp.width = tmp.height = size;
+        tmp.getContext('2d').drawImage(srcImg, 0, 0, size, size);
+        ctx.drawImage(tmp, pad, pad);
       } else {
         alert('잠시 후 다시 시도해 주세요.'); return;
       }
-
       var a = document.createElement('a');
       a.href = out.toDataURL('image/png');
       a.download = 'PASIS_QR.png';
