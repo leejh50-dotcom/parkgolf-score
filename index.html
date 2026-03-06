@@ -293,7 +293,7 @@ body::after {
   <div class="cards">
 
     <!-- sv2.0 -->
-    <a class="ver-card card-v2" href="https://leejh50-dotcom.github.io/parkgolf-score/sv2.html">
+    <a class="ver-card card-v2" href="https://leejh50-dotcom.github.io/parkgolf-score/sv2.html" target="_blank" rel="noopener">
       <div class="card-top">
         <div class="card-emoji">📱</div>
         <div class="card-title-block">
@@ -311,7 +311,7 @@ body::after {
     </a>
 
     <!-- sv3.0 -->
-    <a class="ver-card card-v3" href="https://leejh50-dotcom.github.io/parkgolf-score/sv3.html">
+    <a class="ver-card card-v3" href="https://leejh50-dotcom.github.io/parkgolf-score/sv3.html" target="_blank" rel="noopener">
       <span class="hot-badge">★ 추천</span>
       <div class="card-top">
         <div class="card-emoji">🏆</div>
@@ -332,7 +332,7 @@ body::after {
     </a>
 
     <!-- sv4.0 -->
-    <a class="ver-card card-v4" href="https://leejh50-dotcom.github.io/parkgolf-score/sv4.html">
+    <a class="ver-card card-v4" href="https://leejh50-dotcom.github.io/parkgolf-score/sv4.html" target="_blank" rel="noopener">
       
       <div class="card-top">
         <div class="card-emoji">🚀</div>
@@ -408,11 +408,15 @@ body::after {
       var srcImg    = el.querySelector('img');
       var pad = 28;
       var size = srcCanvas ? srcCanvas.width : 220;
+
+      // 출력 canvas: 흰 배경 + 여백
       var out = document.createElement('canvas');
       out.width = out.height = size + pad * 2;
       var ctx = out.getContext('2d');
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(0, 0, out.width, out.height);
+
+      // QR 그리기
       if (srcCanvas) {
         ctx.drawImage(srcCanvas, pad, pad);
       } else if (srcImg) {
@@ -423,11 +427,49 @@ body::after {
       } else {
         alert('잠시 후 다시 시도해 주세요.'); return;
       }
+
+      // 중앙 PASIS 로고 그리기
+      var cx = out.width / 2;
+      var cy = out.height / 2;
+      var lw = 58, lh = 24, r = 6;
+      var lx = cx - lw / 2, ly = cy - lh / 2;
+
+      // 흰 테두리
+      ctx.fillStyle = '#ffffff';
+      roundRect(ctx, lx - 2, ly - 2, lw + 4, lh + 4, r + 2);
+      ctx.fill();
+
+      // 초록 배경
+      ctx.fillStyle = '#1a5c35';
+      roundRect(ctx, lx, ly, lw, lh, r);
+      ctx.fill();
+
+      // 골드 텍스트
+      ctx.fillStyle = '#f0d07a';
+      ctx.font = '900 13px Montserrat, Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('PASIS', cx, cy + 1);
+
       var a = document.createElement('a');
       a.href = out.toDataURL('image/png');
       a.download = 'PASIS_QR.png';
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
     }, 200);
+  }
+
+  function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
   }
 </script>
 
