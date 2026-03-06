@@ -3287,14 +3287,19 @@ window.sendToGoogleSheet = function() {
   setTimeout(function() {
     var details = document.getElementById('pcSettingsDetails');
     var arrow   = document.getElementById('pcSettingsArrow');
+    var lockSection = document.getElementById('adminLockSection');
     if (!details) return;
     var isPC = window.innerWidth >= 768 && !('ontouchstart' in window);
     if (isPC) {
       details.open = true;
       if (arrow) arrow.textContent = '▲ 접기';
+      // PC에서는 잠금 섹션 숨김 (현장 마감은 휴대폰으로)
+      if (lockSection) lockSection.style.display = 'none';
     } else {
       details.open = false;
       if (arrow) arrow.textContent = '▼ 펼치기';
+      // 모바일에서는 잠금 섹션 표시
+      if (lockSection) lockSection.style.display = 'block';
     }
     // summary 클릭 시 화살표 토글
     var summary = details.querySelector('summary');
@@ -3897,7 +3902,7 @@ function closeAdminModalQuick(){
     </div>
 
     <!-- ④ 대회 잠금 — 최상단 크게 -->
-    <div class="admin-section" style="background:linear-gradient(135deg,#fff1f0,#ffe4e1); border:2px solid #ef4444; border-radius:14px; padding:18px; margin-bottom:4px;">
+    <div id="adminLockSection" class="admin-section" style="background:linear-gradient(135deg,#fff1f0,#ffe4e1); border:2px solid #ef4444; border-radius:14px; padding:18px; margin-bottom:4px;">
       <div class="section-title" style="color:#b91c1c; font-size:17px;">🔒 대회 점수 마감</div>
       <div style="margin:10px 0 12px;">
         <label style="display:block; font-size:13px; font-weight:800; color:#7f1d1d; margin-bottom:6px;">🔑 대회코드 입력 후 마감버튼 누르세요</label>
@@ -3927,7 +3932,7 @@ function closeAdminModalQuick(){
 📌 <b>PC 진행 순서</b><br>
 버튼 클릭 → 구글시트 사본 생성 → 대회 제목 넣기 → 확장 프로그램 → 새 배포 → 웹앱 URL 복사 → 아래 입력란에 붙여넣기 → 💾 URL 저장 → QR코드 생성하기 → 대회코드 입력 → QR코드 생성 → QR코드 이미지 저장
 </div>
-      <input type="text" id="webAppUrl" class="adm-input adm-input-url" placeholder="웹앱 URL 붙여넣기 (배포 후 복사한 URL)">
+      <input type="text" id="webAppUrl" class="adm-input adm-input-url" placeholder="웹앱 URL 붙여넣기 (배포 후 복사한 URL)" style="font-size:12px !important;">
       <button type="button" class="adm-btn adm-btn-green adm-mt" onclick="saveURL();">💾 URL 저장</button>
     </div>
 
@@ -3971,6 +3976,23 @@ function closeAdminModalQuick(){
     </div>
 
           </div>
+
+      <!-- 휴대폰·태블릿 Chrome PC버전 안내 -->
+      <div style="margin-top:12px; background:#fffbeb; border:1px solid #f59e0b; border-radius:12px; padding:14px;">
+        <div style="font-size:13px; font-weight:900; color:#92400e; margin-bottom:8px;">📱 태블릿 · 휴대폰에서 진행할 경우</div>
+        <div style="background:#fef3c7; border-left:3px solid #f59e0b; padding:8px 10px; border-radius:6px; font-size:12px; color:#78350f; margin-bottom:8px; line-height:1.7;">
+          ⚠️ <b>반드시 Chrome 브라우저 사용</b><br>
+          Chrome 우측 상단 <b>⋮</b> → <b>"PC 버전 사이트 요청"</b> 체크<br>
+          → 구글시트에서 <b>확장 프로그램</b> 메뉴가 활성화됩니다
+        </div>
+        <div style="font-size:11px; color:#92400e; line-height:1.8;">
+          ① 템플릿 복사 탭 → 사본 생성<br>
+          ② Chrome PC버전으로 구글시트 열기 → 확장 프로그램 → Apps Script → 배포<br>
+          ③ 웹앱 URL 복사 → 위 입력란에 붙여넣기 → 💾 저장<br>
+          ④ QR코드 생성 → 이미지 저장
+        </div>
+      </div>
+
     </details>
 
 <div class="sticky-close">
