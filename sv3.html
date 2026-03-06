@@ -1878,6 +1878,24 @@ body {
 </head>
 <body>
 
+<!-- ── 인덱스 복귀 버튼 (항상 표시) ── -->
+<button id="closeTabBtn" onclick="closeThisTab()"
+  style="position:fixed; top:10px; left:10px; z-index:99999;
+         background:rgba(0,0,0,0.55); color:#fff; border:none; border-radius:20px;
+         padding:7px 16px; font-size:14px; font-weight:700; cursor:pointer;
+         box-shadow:0 2px 8px rgba(0,0,0,0.35); letter-spacing:0.5px;">
+  ← 목록
+</button>
+<script>
+window.closeThisTab = function() {
+  if (window.opener) {
+    window.close();
+  } else {
+    window.history.back();
+  }
+};
+</script>
+
 <div class="parkgolf-app" style="padding: 0px !important; margin: 0 !important; max-width: 100% !important; width: 100% !important; background-color: #faf8f3 !important;">
 <div class="container" style="padding: 0px !important; margin: 0 !important; border-radius: 0 !important; box-shadow: none !important; max-width: 100% !important; background-color: #faf8f3 !important;">
 <div style="background: linear-gradient(135deg, #2d7a4f 0%, #1a5634 100%); padding: 30px 4px !important; border-radius: 12px; margin: 0 0 8px 0 !important; text-align: center;">
