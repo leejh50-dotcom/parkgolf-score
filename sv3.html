@@ -3295,24 +3295,25 @@ window.sendToGoogleSheet = function() {
     var lockSection = document.getElementById('adminLockSection');
     if (!details) return;
     var isPC = window.innerWidth >= 768 && !('ontouchstart' in window);
-    var closeBtn = document.getElementById('adminCloseBtn');
+    var closeBtn  = document.getElementById('adminCloseBtn');
+    var pcOnly    = document.getElementById('pcSettingsPC');
+    var mobileOnly= document.getElementById('pcSettingsDetails');
     if (isPC) {
-      // PC: 잠금섹션 숨김, PC설정 완전히 펼침(summary도 숨김), X버튼 숨김
-      if (lockSection) lockSection.style.display = 'none';
-      details.open = true;
-      details.style.border = 'none';
-      details.style.background = 'transparent';
-      details.style.padding = '0';
-      details.style.marginTop = '0';
-      var summary = details.querySelector('summary');
-      if (summary) summary.style.display = 'none';
-      if (closeBtn) closeBtn.style.display = 'none';
+      // PC: 잠금섹션 숨김, X버튼 숨김, PC전용 div 표시, 모바일 details 숨김
+      if (lockSection)  lockSection.style.display  = 'none';
+      if (closeBtn)     closeBtn.style.display      = 'none';
+      if (pcOnly)       pcOnly.style.display        = 'block';
+      if (mobileOnly)   mobileOnly.style.display    = 'none';
     } else {
-      // 모바일: 잠금섹션 표시, PC설정 접힘, X버튼 표시
-      if (lockSection) lockSection.style.display = 'block';
-      details.open = false;
-      if (arrow) arrow.textContent = '▼ 펼치기';
-      if (closeBtn) closeBtn.style.display = 'flex';
+      // 모바일: 잠금섹션 표시, X버튼 표시, 모바일 details 표시, PC전용 숨김
+      if (lockSection)  lockSection.style.display  = 'block';
+      if (closeBtn)     closeBtn.style.display      = 'flex';
+      if (pcOnly)       pcOnly.style.display        = 'none';
+      if (mobileOnly) {
+        mobileOnly.style.display = 'block';
+        mobileOnly.open = false;
+        if (arrow) arrow.textContent = '▼ 펼치기';
+      }
     }
     // summary 클릭 시 화살표 토글
     var summary = details.querySelector('summary');
@@ -3939,6 +3940,85 @@ function closeAdminModalQuick(){
     </div>
 
     <!-- PC 설정 — 접기 -->
+    <!-- PC: 항상 펼쳐진 상태 (summary 없음) -->
+    <div id="pcSettingsPC" style="display:none;">
+      <div style="margin-top:10px;">
+<!-- ① 템플릿 복사 & URL 저장 -->
+    <div class="admin-section">
+      <div class="section-title">① 템플릿 복사 &amp; URL 저장</div>
+      <button type="button" class="adm-btn adm-btn-blue" onclick="copyTemplate();">📋 템플릿 복사 (구글시트 사본 만들기)</button>
+      <div class="hint adm-mt" style="font-size:12px; line-height:1.7; color:#444; padding:6px 0;">
+📌 <b>PC 진행 순서</b><br>
+버튼 클릭 → 구글시트 사본 생성 → 대회 제목 넣기 → 확장 프로그램 → 새 배포 → 웹앱 URL 복사 → 아래 입력란에 붙여넣기 → 💾 URL 저장 → QR코드 생성하기 → 대회코드 입력 → QR코드 생성 → QR코드 이미지 저장
+</div>
+      <div style="font-size:11px; color:#495057; font-weight:700; margin-bottom:4px;">
+  웹앱 URL 붙여넣기 <span style="font-weight:400; color:#868e96;">(배포 후 복사한 URL)</span>
+</div>
+<input type="text" id="webAppUrl" class="adm-input adm-input-url"
+  placeholder="https://script.google.com/..."
+  style="font-size:12px !important; height:44px !important; line-height:1.4 !important;">
+      <button type="button" class="adm-btn adm-btn-green adm-mt" onclick="saveURL();">💾 URL 저장</button>
+    </div>
+
+    <!-- ② QR 코드 생성 -->
+    <div class="admin-section">
+      <div class="section-title">② QR 코드 생성</div>
+      <button type="button" class="adm-btn adm-btn-purple adm-btn-lg" onclick="toggleQRSection();">📱 QR코드 생성하기</button>
+      <div id="qrSection" style="display:none;" class="adm-mt12">
+        <div class="hint">대회코드와 웹앱 URL을 넣고 QR을 생성하세요. (QR을 휴대폰 카메라로 스캔하면 자동 입력됩니다)</div>
+        <div style="background:#fff; border:1px solid #e9ecef; border-radius:12px; padding:12px; margin-top:10px;">
+          <div style="font-weight:900; margin-bottom:6px;">대회 코드</div>
+          <input type="text" id="qrEventCode" class="adm-input" placeholder="예: 123456QW">
+          <div class="hint adm-mt" style="color:#6c757d; font-size:13px;">웹앱 URL은 ①에서 저장된 URL이 자동 사용됩니다</div>
+          <button type="button" class="adm-btn adm-btn-purple adm-mt12" onclick="generateQRCodeWithParams(); return false;">QR 코드 생성</button>
+          <div id="qrcodeDisplay" style="display:none; margin-top:14px; text-align:center;">
+            <div id="qrcode" style="display:inline-block;"></div>
+            <div id="qrInfo" style="margin-top:10px;"></div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px;">
+              <button type="button" class="adm-btn" onclick="saveQrImage();"
+                style="background:linear-gradient(135deg,#0f9d58,#0b7a44); color:#fff; border:none; border-radius:10px; font-size:14px; font-weight:900; padding:10px 6px; cursor:pointer;">
+                📥 이미지 저장
+              </button>
+              <button type="button" class="adm-btn adm-btn-dark" onclick="closeQrOnly();"
+                style="font-size:14px; padding:10px 6px;">
+                ✕ 닫기
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ③ 조편성 안내 -->
+    <div class="admin-section" style="background:#f0fdf4; border:2px solid #bbf7d0; border-radius:14px; padding:14px;">
+      <div class="section-title" style="color:#15803d;">③ 조편성</div>
+      <div style="display:flex; align-items:center; gap:10px; padding:6px 0 2px;">
+        <span style="font-size:26px;">📊</span>
+        <span style="font-size:15px; font-weight:800; color:#15803d; line-height:1.5;">조편성은 <u>템플릿(구글시트)</u>에서 진행하세요</span>
+      </div>
+      <div class="hint adm-mt" style="color:#166534;">복사된 구글시트 사본을 열고, 시트 메뉴에서 조편성을 실행하세요.</div>
+    </div>
+
+          </div>
+
+      <!-- 휴대폰·태블릿 Chrome PC버전 안내 -->
+      <div style="margin-top:12px; background:#fffbeb; border:1px solid #f59e0b; border-radius:12px; padding:14px;">
+        <div style="font-size:13px; font-weight:900; color:#92400e; margin-bottom:8px;">📱 태블릿 · 휴대폰에서 진행할 경우</div>
+        <div style="background:#fef3c7; border-left:3px solid #f59e0b; padding:8px 10px; border-radius:6px; font-size:12px; color:#78350f; margin-bottom:8px; line-height:1.7;">
+          ⚠️ <b>반드시 Chrome 브라우저 사용</b><br>
+          Chrome 우측 상단 <b>⋮</b> → <b>"PC 버전 사이트 요청"</b> 체크<br>
+          → 구글시트에서 <b>확장 프로그램</b> 메뉴가 활성화됩니다
+        </div>
+        <div style="font-size:11px; color:#92400e; line-height:1.8;">
+          ① 템플릿 복사 탭 → 사본 생성<br>
+          ② Chrome PC버전으로 구글시트 열기 → 확장 프로그램 → Apps Script → 배포<br>
+          ③ 웹앱 URL 복사 → 위 입력란에 붙여넣기 → 💾 저장<br>
+          ④ QR코드 생성 → 이미지 저장
+        </div>
+      </div>
+    </div>
+
+    <!-- 모바일: 접기/펼치기 -->
     <details id="pcSettingsDetails" style="margin-top:8px;">
       <summary style="cursor:pointer; padding:13px 16px; background:linear-gradient(135deg,#e8f4fd,#dbeafe); border:1px solid #93c5fd; border-radius:12px; font-size:14px; font-weight:900; color:#1e40af; list-style:none; display:flex; align-items:center; justify-content:space-between;">
         <span>💻 PC 설정 (템플릿·URL·QR·조편성)</span>
@@ -4018,7 +4098,6 @@ function closeAdminModalQuick(){
           ④ QR코드 생성 → 이미지 저장
         </div>
       </div>
-
     </details>
 
 <div class="sticky-close">
