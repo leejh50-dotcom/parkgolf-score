@@ -263,23 +263,26 @@ input, textarea, select { font-size: 16px; }
 @media (min-width: 640px){
   #adminModal .admin-grid{grid-template-columns:1fr 1fr;}
 }
+
+/* ── 관리자 모달 PC/모바일 자동 전환 ── */
+.admin-pc-content     { display: none !important; }
+.admin-mobile-content { display: flex !important; flex-direction: column; }
+@media (min-width: 768px) {
+  .admin-pc-content     { display: flex !important; flex-direction: column; }
+  .admin-mobile-content { display: none !important; }
+}
+
 #adminModal .sticky-close{
   position: sticky;
   bottom: 0;
   padding-top: 10px;
   background: linear-gradient(to top, #ffffff 70%, rgba(255,255,255,0));
 }
-/* ── PC/모바일 관리자 모달 분기 (CSS) ── */
-/* 기본(모바일): PC전용 숨김 */
-#pcSettingsPC   { display: none !important; }
-#pcSettingsDetails { display: block !important; }
 /* PC(768px↑): 잠금+X숨김, PC전용 표시, 모바일details 숨김 */
 @media (min-width: 768px) {
   #adminLockSection  { display: none !important; }
   #adminCloseBtn     { display: none !important; }
-  #pcSettingsPC      { display: block !important; }
-  #pcSettingsDetails { display: none !important; }
-}
+  }
 @media (max-width: 767px) {
   
 }
@@ -3926,35 +3929,10 @@ function closeAdminModalQuick(){
 
 <!-- 관리자 도구 모달 -->
 <div id="adminModal" class="modal" style="position:fixed !important;">
-  <div class="modal-content" style="position:relative !important; padding-top:12px !important;">
-    <!-- X 닫기 — modal-content 우상단, 작게, 잠금박스와 분리 -->
-    <div id="adminCloseBtn" style="display:flex; justify-content:flex-end; margin-bottom:8px;">
-      <button type="button" onclick="closeAdminModalQuick()" aria-label="닫기"
-        style="background:#f3f4f6; border:1.5px solid #d1d5db; border-radius:50%;
-               width:28px; height:28px; font-size:16px; font-weight:900;
-               color:#6b7280; cursor:pointer; line-height:26px; text-align:center;
-               padding:0; flex-shrink:0; box-shadow:0 1px 4px rgba(0,0,0,0.12);">×</button>
-    </div>
-    <!-- ④ 대회 잠금 — 최상단 크게 -->
-    <div id="adminLockSection" class="admin-section" style="background:linear-gradient(135deg,#fff1f0,#ffe4e1); border:2px solid #ef4444; border-radius:14px; padding:18px; margin-bottom:4px;">
-      <div class="section-title" style="color:#b91c1c; font-size:17px;">🔒 대회 점수 마감</div>
-      <div style="margin:10px 0 12px;">
-        <label style="display:block; font-size:13px; font-weight:800; color:#7f1d1d; margin-bottom:6px;">🔑 대회코드 입력 후 마감버튼 누르세요</label>
-        <input type="text" id="lockEventCodeInput" placeholder="예: 3월대회"
-          style="width:100%; box-sizing:border-box; padding:12px 14px; border:2px solid #fca5a5; border-radius:10px; font-size:16px; font-weight:700; color:#b91c1c; background:#fff8f8; outline:none;"
-          oninput="syncLockCode(this.value)">
-      </div>
-      <div id="lockStatusMsg" style="display:none; text-align:center; padding:6px 0 4px; font-size:15px; font-weight:800; color:#b91c1c;"></div>
-      <button type="button" onclick="lockEventFromAdmin();"
-        style="width:100%; padding:16px; background:linear-gradient(135deg,#ef4444,#b91c1c); color:#fff; border:none; border-radius:12px; font-size:18px; font-weight:900; cursor:pointer; box-shadow:0 4px 16px rgba(239,68,68,0.4);">
-        🔒 이 대회 점수 마감하기
-      </button>
-    </div>
 
-    <!-- PC 설정 — 접기 -->
-    <!-- PC: 항상 펼쳐진 상태 (summary 없음) -->
-    <div id="pcSettingsPC" style="display:none;">
-      <div style="margin-top:10px;">
+  <!-- ══════ PC 전용 (768px↑): 잠금없음, 설정 바로 펼침 ══════ -->
+  <div class="modal-content admin-pc-content" style="position:relative !important;">
+    <div style="margin-top:10px;">
 <!-- ① 템플릿 복사 & URL 저장 -->
     <div class="admin-section">
       <div class="section-title">① 템플릿 복사 &amp; URL 저장</div>
@@ -4028,9 +4006,33 @@ function closeAdminModalQuick(){
           ④ QR코드 생성 → 이미지 저장
         </div>
       </div>
+    <div class="sticky-close">
+      <button type="button" class="adm-btn adm-btn-gray" onclick="closeAdminModalQuick();">닫기</button>
     </div>
+  </div>
 
-    <!-- 모바일: 접기/펼치기 -->
+  <!-- ══════ 모바일 전용 (~767px): 잠금 최상단, 설정 접기 ══════ -->
+  <div class="modal-content admin-mobile-content" style="position:relative !important; padding-top:12px !important;">
+    <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
+      <button type="button" onclick="closeAdminModalQuick()" aria-label="닫기"
+        style="background:#f3f4f6; border:1.5px solid #d1d5db; border-radius:50%;
+               width:28px; height:28px; font-size:16px; font-weight:900;
+               color:#6b7280; cursor:pointer; line-height:26px; text-align:center; padding:0;">×</button>
+    </div>
+    <div id="adminLockSection" class="admin-section" style="background:linear-gradient(135deg,#fff1f0,#ffe4e1); border:2px solid #ef4444; border-radius:14px; padding:18px; margin-bottom:4px;">
+      <div class="section-title" style="color:#b91c1c; font-size:17px;">🔒 대회 점수 마감</div>
+      <div style="margin:10px 0 12px;">
+        <label style="display:block; font-size:13px; font-weight:800; color:#7f1d1d; margin-bottom:6px;">🔑 대회코드 입력 후 마감버튼 누르세요</label>
+        <input type="text" id="lockEventCodeInput" placeholder="예: 3월대회"
+          style="width:100%; box-sizing:border-box; padding:12px 14px; border:2px solid #fca5a5; border-radius:10px; font-size:16px; font-weight:700; color:#b91c1c; background:#fff8f8; outline:none;"
+          oninput="syncLockCode(this.value)">
+      </div>
+      <div id="lockStatusMsg" style="display:none; text-align:center; padding:6px 0 4px; font-size:15px; font-weight:800; color:#b91c1c;"></div>
+      <button type="button" onclick="lockEventFromAdmin();"
+        style="width:100%; padding:16px; background:linear-gradient(135deg,#ef4444,#b91c1c); color:#fff; border:none; border-radius:12px; font-size:18px; font-weight:900; cursor:pointer; box-shadow:0 4px 16px rgba(239,68,68,0.4);">
+        🔒 이 대회 점수 마감하기
+      </button>
+    </div>
     <details id="pcSettingsDetails" style="margin-top:8px;">
       <summary style="cursor:pointer; padding:13px 16px; background:linear-gradient(135deg,#e8f4fd,#dbeafe); border:1px solid #93c5fd; border-radius:12px; font-size:14px; font-weight:900; color:#1e40af; list-style:none; display:flex; align-items:center; justify-content:space-between;">
         <span>💻 PC 설정 (템플릿·URL·QR·조편성)</span>
@@ -4111,12 +4113,9 @@ function closeAdminModalQuick(){
         </div>
       </div>
     </details>
-
-<div class="sticky-close">
+    <div class="sticky-close">
       <button type="button" class="adm-btn adm-btn-gray" onclick="closeAdminModalQuick();">닫기</button>
     </div>
   </div>
-</div>
 
-</body>
-</html>
+</div>>
