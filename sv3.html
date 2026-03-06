@@ -3692,10 +3692,33 @@ function openAdminModalSafe(e){
     if(e){ e.preventDefault(); e.stopPropagation(); }
     var m = document.getElementById('adminModal');
     if(!m) return;
-    // 배경 관리자 버튼 숨기기 (비침 방지)
+    // 배경 관리자 버튼 숨기기
     var adminBtn = document.getElementById('openAdminToolBtn');
     if (adminBtn) adminBtn.style.visibility = 'hidden';
     m.style.display = 'flex';
+
+    // ── PC / 모바일 분기 ─────────────────────────────
+    var isPC = window.innerWidth >= 768 && !('ontouchstart' in window);
+    var lockSection = document.getElementById('adminLockSection');
+    var closeBtn    = document.getElementById('adminCloseBtn');
+    var pcOnly      = document.getElementById('pcSettingsPC');
+    var mobileOnly  = document.getElementById('pcSettingsDetails');
+
+    if (isPC) {
+      // PC: 잠금섹션 숨김, X버튼 숨김, PC전용 div 표시
+      if (lockSection) lockSection.style.display = 'none';
+      if (closeBtn)    closeBtn.style.display    = 'none';
+      if (pcOnly)      pcOnly.style.display      = 'block';
+      if (mobileOnly)  mobileOnly.style.display  = 'none';
+    } else {
+      // 모바일: 잠금섹션 표시, X버튼 표시, 모바일 details 표시
+      if (lockSection) lockSection.style.display = 'block';
+      if (closeBtn)    closeBtn.style.display    = 'flex';
+      if (pcOnly)      pcOnly.style.display      = 'none';
+      if (mobileOnly) { mobileOnly.style.display = 'block'; mobileOnly.open = false; }
+    }
+    // ────────────────────────────────────────────────
+
     // 대회코드 자동 채우기
     var mainCode = (document.getElementById('eventCodeInput') && document.getElementById('eventCodeInput').value || '').trim();
     var lockInput = document.getElementById('lockEventCodeInput');
