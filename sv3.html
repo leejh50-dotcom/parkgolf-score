@@ -3283,6 +3283,27 @@ window.sendToGoogleSheet = function() {
             };
         }
         window.openAdminModal = function() {
+  // PC면 PC설정 자동 펼침 / 모바일이면 닫힘 유지
+  setTimeout(function() {
+    var details = document.getElementById('pcSettingsDetails');
+    var arrow   = document.getElementById('pcSettingsArrow');
+    if (!details) return;
+    var isPC = window.innerWidth >= 768 && !('ontouchstart' in window);
+    if (isPC) {
+      details.open = true;
+      if (arrow) arrow.textContent = '▲ 접기';
+    } else {
+      details.open = false;
+      if (arrow) arrow.textContent = '▼ 펼치기';
+    }
+    // summary 클릭 시 화살표 토글
+    var summary = details.querySelector('summary');
+    summary.onclick = function() {
+      setTimeout(function() {
+        if (arrow) arrow.textContent = details.open ? '▲ 접기' : '▼ 펼치기';
+      }, 10);
+    };
+  }, 50);
             const savedUrl = localStorage.getItem('parkgolf_webapp_url');
             if (savedUrl) {
                 document.getElementById('webAppUrl').value = savedUrl;
@@ -3875,7 +3896,30 @@ function closeAdminModalQuick(){
       <button type="button" class="close-x" onclick="closeAdminModalQuick()" aria-label="닫기">×</button>
     </div>
 
-    <!-- ① 템플릿 복사 & URL 저장 -->
+    <!-- ④ 대회 잠금 — 최상단 크게 -->
+    <div class="admin-section" style="background:linear-gradient(135deg,#fff1f0,#ffe4e1); border:2px solid #ef4444; border-radius:14px; padding:18px; margin-bottom:4px;">
+      <div class="section-title" style="color:#b91c1c; font-size:17px;">🔒 대회 점수 마감</div>
+      <div style="margin:10px 0 12px;">
+        <label style="display:block; font-size:13px; font-weight:800; color:#7f1d1d; margin-bottom:6px;">🔑 대회코드 입력 후 마감버튼 누르세요</label>
+        <input type="text" id="lockEventCodeInput" placeholder="예: 3월대회"
+          style="width:100%; box-sizing:border-box; padding:12px 14px; border:2px solid #fca5a5; border-radius:10px; font-size:16px; font-weight:700; color:#b91c1c; background:#fff8f8; outline:none;"
+          oninput="syncLockCode(this.value)">
+      </div>
+      <div id="lockStatusMsg" style="display:none; text-align:center; padding:6px 0 4px; font-size:15px; font-weight:800; color:#b91c1c;"></div>
+      <button type="button" onclick="lockEventFromAdmin();"
+        style="width:100%; padding:16px; background:linear-gradient(135deg,#ef4444,#b91c1c); color:#fff; border:none; border-radius:12px; font-size:18px; font-weight:900; cursor:pointer; box-shadow:0 4px 16px rgba(239,68,68,0.4);">
+        🔒 이 대회 점수 마감하기
+      </button>
+    </div>
+
+    <!-- PC 설정 — 접기 -->
+    <details id="pcSettingsDetails" style="margin-top:8px;">
+      <summary style="cursor:pointer; padding:13px 16px; background:linear-gradient(135deg,#e8f4fd,#dbeafe); border:1px solid #93c5fd; border-radius:12px; font-size:14px; font-weight:900; color:#1e40af; list-style:none; display:flex; align-items:center; justify-content:space-between;">
+        <span>💻 PC 설정 (템플릿·URL·QR·조편성)</span>
+        <span id="pcSettingsArrow" style="font-size:12px; color:#3b82f6; font-weight:700;">▼ 펼치기</span>
+      </summary>
+      <div style="margin-top:10px;">
+<!-- ① 템플릿 복사 & URL 저장 -->
     <div class="admin-section">
       <div class="section-title">① 템플릿 복사 &amp; URL 저장</div>
       <button type="button" class="adm-btn adm-btn-blue" onclick="copyTemplate();">📋 템플릿 복사 (구글시트 사본 만들기)</button>
@@ -3926,41 +3970,10 @@ function closeAdminModalQuick(){
       <div class="hint adm-mt" style="color:#166534;">복사된 구글시트 사본을 열고, 시트 메뉴에서 조편성을 실행하세요.</div>
     </div>
 
-    <!-- ④ 대회 잠금 -->
-    <div class="admin-section" style="background:#fff1f0; border:2px solid #fca5a5; border-radius:14px; padding:14px;">
-      <div class="section-title" style="color:#b91c1c;">④ 대회 잠금</div>
-      <div style="margin:8px 0 10px;">
-        <label style="display:block; font-size:13px; font-weight:800; color:#7f1d1d; margin-bottom:6px;">🔑 대회코드 입력 후 마감버튼 누르세요</label>
-        <input type="text" id="lockEventCodeInput" placeholder="예: 3월대회"
-          style="width:100%; box-sizing:border-box; padding:12px 14px; border:2px solid #fca5a5; border-radius:10px; font-size:16px; font-weight:700; color:#b91c1c; background:#fff8f8; outline:none;"
-          oninput="syncLockCode(this.value)">
-      </div>
-      <div id="lockStatusMsg" style="display:none; text-align:center; padding:6px 0 4px; font-size:15px; font-weight:800; color:#b91c1c;"></div>
-      <button type="button" onclick="lockEventFromAdmin();"
-        style="width:100%; padding:14px; background:linear-gradient(135deg,#ef4444,#b91c1c); color:#fff; border:none; border-radius:10px; font-size:17px; font-weight:900; cursor:pointer;">
-        🔒 이 대회 점수 마감하기
-      </button>
-    </div>
-
-    <!-- 휴대폰 안내 (접기) -->
-    <details style="margin-top:4px;">
-      <summary style="cursor:pointer; padding:12px 14px; background:#f8f9fa; border-radius:10px; font-size:15px; font-weight:800; color:#495057;">
-        📱 휴대폰 진행 안내 (필요 시 펼치기)
-      </summary>
-      <div class="hint" style="margin-top:8px; background:#fff3cd; border:1px solid #ffc107; border-radius:10px; padding:12px;">
-        <b>휴대폰에서 직접 진행할 경우:</b><br><br>
-        1) <b>템플릿 복사</b> 버튼 탭 → 사본 생성<br>
-        &nbsp;&nbsp;&nbsp;(안되면 아래 URL 길게 눌러 복사 후 주소창에 붙여넣기)<br>
-        <input type="text" class="adm-input adm-mt" style="font-size:11px;" value="https://docs.google.com/spreadsheets/d/1lPB8pLFzoKVkKy4SPjoOWv_SfYwsJ6_TrIBALuobxko/copy" readonly
-               onclick="this.select(); document.execCommand('copy'); alert('URL이 복사되었습니다!');"><br>
-        2) 사본에서 <b>웹앱 URL 배포</b> → URL 복사<br>
-        3) 위 URL 입력박스에 <b>붙여넣고 저장</b><br>
-        4) <b>QR코드 생성</b> → 참가자에게 공유<br>
-        5) <b>조편성</b>은 구글시트 사본에서 진행
-      </div>
+          </div>
     </details>
 
-    <div class="sticky-close">
+<div class="sticky-close">
       <button type="button" class="adm-btn adm-btn-gray" onclick="closeAdminModalQuick();">닫기</button>
     </div>
   </div>
