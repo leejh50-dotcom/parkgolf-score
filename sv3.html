@@ -3713,23 +3713,76 @@ function getClubKey_(code) {
     return code.replace(/[\d]+월?$/, '').trim() || code.trim();
 }
 window.showSavedUrls = function() {
-    var msg = '📋 저장된 URL 목록\n\n';
-    var found = false;
-    // 클럽별 URL
+    var items = [];
     Object.keys(localStorage).filter(function(k){ return k.startsWith('parkgolf_url_'); })
     .forEach(function(k) {
-        msg += '▶ [클럽] ' + k.replace('parkgolf_url_','') + '\n   ' + localStorage.getItem(k) + '\n\n';
-        found = true;
+        items.push({ club: k.replace('parkgolf_url_',''), url: localStorage.getItem(k) });
     });
-    // 기본 저장 URL
     var basic = localStorage.getItem('parkgolf_webapp_url');
-    if (basic) {
-        msg += '▶ [기본] ' + basic + '\n\n';
-        found = true;
+
+    var overlay = document.createElement('div');
+    overlay.id = 'urlListOverlay';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999999;display:flex;align-items:center;justify-content:center;padding:16px;';
+
+    var box = document.createElement('div');
+    box.style.cssText = 'background:#fff;border-radius:16px;padding:20px;width:100%;max-width:420px;max-height:80vh;overflow-y:auto;';
+
+    var title = document.createElement('div');
+    title.style.cssText = 'font-weight:900;font-size:16px;margin-bottom:14px;';
+    title.textContent = '📋 저장된 URL 목록';
+    box.appendChild(title);
+
+    function makeRow(club, url, color) {
+        var row = document.createElement('div');
+        row.style.marginBottom = '14px';
+        var label = document.createElement('div');
+        label.style.cssText = 'font-size:12px;font-weight:700;color:' + color + ';margin-bottom:4px;';
+        label.textContent = '▶ ' + club;
+        var wrap = document.createElement('div');
+        wrap.style.cssText = 'display:flex;gap:6px;align-items:center;';
+        var inp = document.createElement('input');
+        inp.readOnly = true;
+        inp.value = url;
+        inp.style.cssText = 'flex:1;font-size:11px;padding:7px 8px;border:1px solid #dee2e6;border-radius:8px;color:#333;background:#f8f9fa;min-width:0;';
+        inp.addEventListener('click', function(){ this.select(); });
+        var btn = document.createElement('button');
+        btn.textContent = '복사';
+        btn.style.cssText = 'padding:7px 12px;background:' + color + ';color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;';
+        btn.addEventListener('click', function() {
+            inp.select();
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(url).then(function(){ showToast('복사됨!'); });
+            } else {
+                document.execCommand('copy');
+                showToast('복사됨!');
+            }
+        });
+        wrap.appendChild(inp); wrap.appendChild(btn);
+        row.appendChild(label); row.appendChild(wrap);
+        box.appendChild(row);
     }
-    if (!found) { alert('저장된 URL이 없습니다.\n\nURL 입력 후 💾 URL 저장 버튼을 누르세요.'); return; }
-    msg += '※ 대회코드 입력 후 저장하면 클럽별로 분리 저장됩니다.';
-    alert(msg);
+
+    if (items.length === 0 && !basic) {
+        var empty = document.createElement('div');
+        empty.style.cssText = 'color:#888;font-size:14px;';
+        empty.textContent = '저장된 URL이 없습니다.';
+        box.appendChild(empty);
+    } else {
+        items.forEach(function(it) { makeRow(it.club, it.url, '#1a5c35'); });
+        if (basic && !items.find(function(i){ return i.url === basic; })) {
+            makeRow('기본', basic, '#555');
+        }
+    }
+
+    var closeBtn = document.createElement('button');
+    closeBtn.textContent = '닫기';
+    closeBtn.style.cssText = 'width:100%;padding:12px;background:#6c757d;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;margin-top:6px;';
+    closeBtn.addEventListener('click', function(){ overlay.remove(); });
+    box.appendChild(closeBtn);
+
+    overlay.appendChild(box);
+    overlay.addEventListener('click', function(e){ if(e.target===overlay) overlay.remove(); });
+    document.body.appendChild(overlay);
 };
 function openAdminModalSafe(e){
   try{
