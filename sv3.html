@@ -3971,22 +3971,29 @@ function closeAdminModalQuick(){
 📌 <b>PC 진행 순서</b><br>
 버튼 클릭 → 구글시트 사본 생성 → 확장 프로그램 → 새 배포 → 웹앱 URL 복사 → 대회코드·URL 입력 → 💾 URL 저장 → QR코드 생성 → 이미지 저장
 </div>
-      <!-- 대회코드 + URL 2열 입력 -->
-      <div style="display:grid; grid-template-columns:1fr 2fr; gap:10px; margin-top:8px; align-items:end;">
+      <!-- URL 전체 너비 입력 -->
+      <div style="margin-top:8px;">
+        <div style="font-size:11px; color:#495057; font-weight:700; margin-bottom:4px;">웹앱 URL <span style="font-weight:400; color:#868e96;">(배포 후 복사한 URL)</span></div>
+        <input type="text" id="webAppUrl" class="adm-input adm-input-url"
+          placeholder="https://script.google.com/..."
+          style="font-size:12px !important; height:44px !important; width:100% !important;">
+      </div>
+      <!-- 대회코드(좌) + 저장버튼(우) 2열 -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; align-items:end;">
         <div>
           <div style="font-size:11px; color:#495057; font-weight:700; margin-bottom:4px;">대회코드</div>
           <input type="text" id="adminEventCode" class="adm-input"
             placeholder="예: 한마음4월"
-            style="font-size:13px !important; height:44px !important; text-align:center !important; font-weight:900 !important;">
+            style="font-size:13px !important; height:44px !important; text-align:center !important; font-weight:900 !important; width:100% !important;">
         </div>
         <div>
-          <div style="font-size:11px; color:#495057; font-weight:700; margin-bottom:4px;">웹앱 URL <span style="font-weight:400; color:#868e96;">(배포 후 복사)</span></div>
-          <input type="text" id="webAppUrl" class="adm-input adm-input-url"
-            placeholder="https://script.google.com/..."
-            style="font-size:12px !important; height:44px !important;">
+          <button type="button" class="adm-btn adm-btn-green"
+            onclick="saveURL();"
+            style="width:100% !important; height:44px !important; font-size:15px !important; margin:0 !important;">
+            💾 저장
+          </button>
         </div>
       </div>
-      <button type="button" class="adm-btn adm-btn-green adm-mt" onclick="saveURL();">💾 URL 저장</button>
       <button type="button" class="adm-btn adm-mt" onclick="showSavedUrls()"
         style="background:#6c757d !important; color:#fff !important; font-size:12px !important;">📋 저장된 URL 목록</button>
     </div>
@@ -4086,22 +4093,29 @@ function closeAdminModalQuick(){
 📌 <b>PC 진행 순서</b><br>
 버튼 클릭 → 구글시트 사본 생성 → 확장 프로그램 → 새 배포 → 웹앱 URL 복사 → 대회코드·URL 입력 → 💾 URL 저장 → QR코드 생성 → 이미지 저장
 </div>
-      <!-- 대회코드 + URL 2열 입력 -->
-      <div style="display:grid; grid-template-columns:1fr 2fr; gap:10px; margin-top:8px; align-items:end;">
+      <!-- URL 전체 너비 입력 -->
+      <div style="margin-top:8px;">
+        <div style="font-size:11px; color:#495057; font-weight:700; margin-bottom:4px;">웹앱 URL <span style="font-weight:400; color:#868e96;">(배포 후 복사한 URL)</span></div>
+        <input type="text" id="webAppUrl" class="adm-input adm-input-url"
+          placeholder="https://script.google.com/..."
+          style="font-size:12px !important; height:44px !important; width:100% !important;">
+      </div>
+      <!-- 대회코드(좌) + 저장버튼(우) 2열 -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; align-items:end;">
         <div>
           <div style="font-size:11px; color:#495057; font-weight:700; margin-bottom:4px;">대회코드</div>
           <input type="text" id="adminEventCode" class="adm-input"
             placeholder="예: 한마음4월"
-            style="font-size:13px !important; height:44px !important; text-align:center !important; font-weight:900 !important;">
+            style="font-size:13px !important; height:44px !important; text-align:center !important; font-weight:900 !important; width:100% !important;">
         </div>
         <div>
-          <div style="font-size:11px; color:#495057; font-weight:700; margin-bottom:4px;">웹앱 URL <span style="font-weight:400; color:#868e96;">(배포 후 복사)</span></div>
-          <input type="text" id="webAppUrl" class="adm-input adm-input-url"
-            placeholder="https://script.google.com/..."
-            style="font-size:12px !important; height:44px !important;">
+          <button type="button" class="adm-btn adm-btn-green"
+            onclick="saveURL();"
+            style="width:100% !important; height:44px !important; font-size:15px !important; margin:0 !important;">
+            💾 저장
+          </button>
         </div>
       </div>
-      <button type="button" class="adm-btn adm-btn-green adm-mt" onclick="saveURL();">💾 URL 저장</button>
       <button type="button" class="adm-btn adm-mt" onclick="showSavedUrls()"
         style="background:#6c757d !important; color:#fff !important; font-size:12px !important;">📋 저장된 URL 목록</button>
     </div>
