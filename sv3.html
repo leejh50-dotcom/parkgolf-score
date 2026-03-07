@@ -3713,12 +3713,22 @@ function getClubKey_(code) {
     return code.replace(/[\d]+월?$/, '').trim() || code.trim();
 }
 window.showSavedUrls = function() {
-    var keys = Object.keys(localStorage).filter(function(k){ return k.startsWith('parkgolf_url_'); });
-    if (keys.length === 0) { alert('저장된 URL이 없습니다.'); return; }
-    var msg = '📋 저장된 클럽 URL 목록\n\n';
-    keys.forEach(function(k) {
-        msg += '▶ ' + k.replace('parkgolf_url_','') + '\n   ' + localStorage.getItem(k) + '\n\n';
+    var msg = '📋 저장된 URL 목록\n\n';
+    var found = false;
+    // 클럽별 URL
+    Object.keys(localStorage).filter(function(k){ return k.startsWith('parkgolf_url_'); })
+    .forEach(function(k) {
+        msg += '▶ [클럽] ' + k.replace('parkgolf_url_','') + '\n   ' + localStorage.getItem(k) + '\n\n';
+        found = true;
     });
+    // 기본 저장 URL
+    var basic = localStorage.getItem('parkgolf_webapp_url');
+    if (basic) {
+        msg += '▶ [기본] ' + basic + '\n\n';
+        found = true;
+    }
+    if (!found) { alert('저장된 URL이 없습니다.\n\nURL 입력 후 💾 URL 저장 버튼을 누르세요.'); return; }
+    msg += '※ 대회코드 입력 후 저장하면 클럽별로 분리 저장됩니다.';
     alert(msg);
 };
 function openAdminModalSafe(e){
