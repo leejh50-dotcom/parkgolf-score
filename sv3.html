@@ -3337,7 +3337,10 @@ window.sendToGoogleSheet = function() {
       }, 10);
     };
   }, 50);
-            const savedUrl = localStorage.getItem('parkgolf_webapp_url');
+            var _code = (document.getElementById('eventCodeInput') || {}).value || '';
+            var _clubKey = typeof getClubKey_ === 'function' ? getClubKey_(_code) : '';
+            var _clubUrl = _clubKey ? localStorage.getItem('parkgolf_url_' + _clubKey) : null;
+            var savedUrl = _clubUrl || localStorage.getItem('parkgolf_webapp_url');
             if (savedUrl) {
                 document.getElementById('webAppUrl').value = savedUrl;
             }
@@ -3690,17 +3693,34 @@ function requireQrBeforeSend() {
 
 function saveURL() {
     var url = normalizeWebAppUrl(document.getElementById('webAppUrl').value);
-    if (!url) {
-        alert('URL을 입력해주세요.');
-        return;
-    }
+    if (!url) { alert('URL을 입력해주세요.'); return; }
     if (!url.includes('script.google.com')) {
         alert('올바른 Google Apps Script 웹앱 URL을 입력해주세요.');
         return;
     }
     localStorage.setItem('parkgolf_webapp_url', url);
-    alert('URL이 저장되었습니다!');
+    var code = (document.getElementById('eventCodeInput') || {}).value || '';
+    var clubKey = getClubKey_(code);
+    if (clubKey) {
+        localStorage.setItem('parkgolf_url_' + clubKey, url);
+        alert('✅ URL 저장 완료!\n클럽: ' + clubKey + '\n\n다음엔 같은 클럽 대회코드 입력 시\n자동으로 이 URL이 불러와집니다.');
+    } else {
+        alert('✅ URL이 저장되었습니다!\n\nTIP: 대회코드 입력 후 저장하면\n클럽별로 자동 기억됩니다.');
+    }
 }
+function getClubKey_(code) {
+    if (!code) return '';
+    return code.replace(/[\d]+월?$/, '').trim() || code.trim();
+}
+window.showSavedUrls = function() {
+    var keys = Object.keys(localStorage).filter(function(k){ return k.startsWith('parkgolf_url_'); });
+    if (keys.length === 0) { alert('저장된 URL이 없습니다.'); return; }
+    var msg = '📋 저장된 클럽 URL 목록\n\n';
+    keys.forEach(function(k) {
+        msg += '▶ ' + k.replace('parkgolf_url_','') + '\n   ' + localStorage.getItem(k) + '\n\n';
+    });
+    alert(msg);
+};
 function openAdminModalSafe(e){
   try{
     if(e){ e.preventDefault(); e.stopPropagation(); }
@@ -3948,6 +3968,8 @@ function closeAdminModalQuick(){
   placeholder="https://script.google.com/..."
   style="font-size:12px !important; height:44px !important; line-height:1.4 !important;">
       <button type="button" class="adm-btn adm-btn-green adm-mt" onclick="saveURL();">💾 URL 저장</button>
+      <button type="button" class="adm-btn adm-mt" onclick="showSavedUrls()"
+        style="background:#6c757d !important; color:#fff !important; font-size:12px !important;">📋 저장된 URL 목록</button>
     </div>
 
     <!-- ② QR 코드 생성 -->
@@ -4054,6 +4076,8 @@ function closeAdminModalQuick(){
   placeholder="https://script.google.com/..."
   style="font-size:12px !important; height:44px !important; line-height:1.4 !important;">
       <button type="button" class="adm-btn adm-btn-green adm-mt" onclick="saveURL();">💾 URL 저장</button>
+      <button type="button" class="adm-btn adm-mt" onclick="showSavedUrls()"
+        style="background:#6c757d !important; color:#fff !important; font-size:12px !important;">📋 저장된 URL 목록</button>
     </div>
 
     <!-- ② QR 코드 생성 -->
