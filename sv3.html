@@ -3337,7 +3337,7 @@ window.sendToGoogleSheet = function() {
       }, 10);
     };
   }, 50);
-            var _code = (document.getElementById('eventCodeInput') || {}).value || '';
+            var _code = (document.getElementById('adminEventCode') || {}).value || '';
             var _clubKey = typeof getClubKey_ === 'function' ? getClubKey_(_code) : '';
             var _clubUrl = _clubKey ? localStorage.getItem('parkgolf_url_' + _clubKey) : null;
             var savedUrl = _clubUrl || localStorage.getItem('parkgolf_webapp_url');
@@ -3526,7 +3526,7 @@ function toggleQRSection() {
 }
 function generateQRCodeWithParams() {
     try { showToast('QR 코드 생성 클릭'); } catch(e) {}
-    var eventCode = (document.getElementById('qrEventCode').value || '').trim();
+    var eventCode = (document.getElementById('adminEventCode').value || '').trim();
     var webAppUrl = (localStorage.getItem('parkgolf_webapp_url') || '').trim();
     if (!eventCode) { alert('대회 코드를 입력해주세요.'); return; }
     if (!webAppUrl) { alert('웹앱 URL이 없습니다.\n① 단계에서 URL을 먼저 저장해주세요.'); return; }
@@ -3699,7 +3699,7 @@ function saveURL() {
         return;
     }
     localStorage.setItem('parkgolf_webapp_url', url);
-    var code = (document.getElementById('eventCodeInput') || {}).value || '';
+    var code = (document.getElementById('adminEventCode') || {}).value || '';
     var clubKey = getClubKey_(code);
     if (clubKey) {
         localStorage.setItem('parkgolf_url_' + clubKey, url);
@@ -3969,14 +3969,23 @@ function closeAdminModalQuick(){
       <button type="button" class="adm-btn adm-btn-blue" onclick="copyTemplate();">📋 템플릿 복사 (구글시트 사본 만들기)</button>
       <div class="hint adm-mt" style="font-size:12px; line-height:1.7; color:#444; padding:6px 0;">
 📌 <b>PC 진행 순서</b><br>
-버튼 클릭 → 구글시트 사본 생성 → 대회 제목 넣기 → 확장 프로그램 → 새 배포 → 웹앱 URL 복사 → 아래 입력란에 붙여넣기 → 💾 URL 저장 → QR코드 생성하기 → 대회코드 입력 → QR코드 생성 → QR코드 이미지 저장
+버튼 클릭 → 구글시트 사본 생성 → 확장 프로그램 → 새 배포 → 웹앱 URL 복사 → 대회코드·URL 입력 → 💾 URL 저장 → QR코드 생성 → 이미지 저장
 </div>
-      <div style="font-size:11px; color:#495057; font-weight:700; margin-bottom:4px;">
-  웹앱 URL 붙여넣기 <span style="font-weight:400; color:#868e96;">(배포 후 복사한 URL)</span>
-</div>
-<input type="text" id="webAppUrl" class="adm-input adm-input-url"
-  placeholder="https://script.google.com/..."
-  style="font-size:12px !important; height:44px !important; line-height:1.4 !important;">
+      <!-- 대회코드 + URL 2열 입력 -->
+      <div style="display:grid; grid-template-columns:1fr 2fr; gap:10px; margin-top:8px; align-items:end;">
+        <div>
+          <div style="font-size:11px; color:#495057; font-weight:700; margin-bottom:4px;">대회코드</div>
+          <input type="text" id="adminEventCode" class="adm-input"
+            placeholder="예: 한마음4월"
+            style="font-size:13px !important; height:44px !important; text-align:center !important; font-weight:900 !important;">
+        </div>
+        <div>
+          <div style="font-size:11px; color:#495057; font-weight:700; margin-bottom:4px;">웹앱 URL <span style="font-weight:400; color:#868e96;">(배포 후 복사)</span></div>
+          <input type="text" id="webAppUrl" class="adm-input adm-input-url"
+            placeholder="https://script.google.com/..."
+            style="font-size:12px !important; height:44px !important;">
+        </div>
+      </div>
       <button type="button" class="adm-btn adm-btn-green adm-mt" onclick="saveURL();">💾 URL 저장</button>
       <button type="button" class="adm-btn adm-mt" onclick="showSavedUrls()"
         style="background:#6c757d !important; color:#fff !important; font-size:12px !important;">📋 저장된 URL 목록</button>
@@ -3989,9 +3998,7 @@ function closeAdminModalQuick(){
       <div id="qrSection" style="display:none;" class="adm-mt12">
         <div class="hint">대회코드와 웹앱 URL을 넣고 QR을 생성하세요. (QR을 휴대폰 카메라로 스캔하면 자동 입력됩니다)</div>
         <div style="background:#fff; border:1px solid #e9ecef; border-radius:12px; padding:12px; margin-top:10px;">
-          <div style="font-weight:900; margin-bottom:6px;">대회 코드</div>
-          <input type="text" id="qrEventCode" class="adm-input" placeholder="예: 123456QW">
-          <div class="hint adm-mt" style="color:#6c757d; font-size:13px;">웹앱 URL은 ①에서 저장된 URL이 자동 사용됩니다</div>
+          <div class="hint" style="color:#6c757d; font-size:13px;">① 에서 입력한 대회코드와 저장된 URL로 QR을 생성합니다</div>
           <button type="button" class="adm-btn adm-btn-purple adm-mt12" onclick="generateQRCodeWithParams(); return false;">QR 코드 생성</button>
           <div id="qrcodeDisplay" style="display:none; margin-top:14px; text-align:center;">
             <div id="qrcode" style="display:inline-block;"></div>
@@ -4077,14 +4084,23 @@ function closeAdminModalQuick(){
       <button type="button" class="adm-btn adm-btn-blue" onclick="copyTemplate();">📋 템플릿 복사 (구글시트 사본 만들기)</button>
       <div class="hint adm-mt" style="font-size:12px; line-height:1.7; color:#444; padding:6px 0;">
 📌 <b>PC 진행 순서</b><br>
-버튼 클릭 → 구글시트 사본 생성 → 대회 제목 넣기 → 확장 프로그램 → 새 배포 → 웹앱 URL 복사 → 아래 입력란에 붙여넣기 → 💾 URL 저장 → QR코드 생성하기 → 대회코드 입력 → QR코드 생성 → QR코드 이미지 저장
+버튼 클릭 → 구글시트 사본 생성 → 확장 프로그램 → 새 배포 → 웹앱 URL 복사 → 대회코드·URL 입력 → 💾 URL 저장 → QR코드 생성 → 이미지 저장
 </div>
-      <div style="font-size:11px; color:#495057; font-weight:700; margin-bottom:4px;">
-  웹앱 URL 붙여넣기 <span style="font-weight:400; color:#868e96;">(배포 후 복사한 URL)</span>
-</div>
-<input type="text" id="webAppUrl" class="adm-input adm-input-url"
-  placeholder="https://script.google.com/..."
-  style="font-size:12px !important; height:44px !important; line-height:1.4 !important;">
+      <!-- 대회코드 + URL 2열 입력 -->
+      <div style="display:grid; grid-template-columns:1fr 2fr; gap:10px; margin-top:8px; align-items:end;">
+        <div>
+          <div style="font-size:11px; color:#495057; font-weight:700; margin-bottom:4px;">대회코드</div>
+          <input type="text" id="adminEventCode" class="adm-input"
+            placeholder="예: 한마음4월"
+            style="font-size:13px !important; height:44px !important; text-align:center !important; font-weight:900 !important;">
+        </div>
+        <div>
+          <div style="font-size:11px; color:#495057; font-weight:700; margin-bottom:4px;">웹앱 URL <span style="font-weight:400; color:#868e96;">(배포 후 복사)</span></div>
+          <input type="text" id="webAppUrl" class="adm-input adm-input-url"
+            placeholder="https://script.google.com/..."
+            style="font-size:12px !important; height:44px !important;">
+        </div>
+      </div>
       <button type="button" class="adm-btn adm-btn-green adm-mt" onclick="saveURL();">💾 URL 저장</button>
       <button type="button" class="adm-btn adm-mt" onclick="showSavedUrls()"
         style="background:#6c757d !important; color:#fff !important; font-size:12px !important;">📋 저장된 URL 목록</button>
@@ -4097,9 +4113,7 @@ function closeAdminModalQuick(){
       <div id="qrSection" style="display:none;" class="adm-mt12">
         <div class="hint">대회코드와 웹앱 URL을 넣고 QR을 생성하세요. (QR을 휴대폰 카메라로 스캔하면 자동 입력됩니다)</div>
         <div style="background:#fff; border:1px solid #e9ecef; border-radius:12px; padding:12px; margin-top:10px;">
-          <div style="font-weight:900; margin-bottom:6px;">대회 코드</div>
-          <input type="text" id="qrEventCode" class="adm-input" placeholder="예: 123456QW">
-          <div class="hint adm-mt" style="color:#6c757d; font-size:13px;">웹앱 URL은 ①에서 저장된 URL이 자동 사용됩니다</div>
+          <div class="hint" style="color:#6c757d; font-size:13px;">① 에서 입력한 대회코드와 저장된 URL로 QR을 생성합니다</div>
           <button type="button" class="adm-btn adm-btn-purple adm-mt12" onclick="generateQRCodeWithParams(); return false;">QR 코드 생성</button>
           <div id="qrcodeDisplay" style="display:none; margin-top:14px; text-align:center;">
             <div id="qrcode" style="display:inline-block;"></div>
