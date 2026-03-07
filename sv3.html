@@ -1874,6 +1874,24 @@ body {
         font-size: 24px !important;
     }
 }
+
+/* ── 하단 버튼 높이 조정 ── */
+/* 모바일: +2px → 29px */
+#sendToSheetBtn, #openAdminToolBtn {
+  height: 29px !important;
+  max-height: 29px !important;
+  min-height: 29px !important;
+  line-height: 29px !important;
+}
+/* PC(768px↑): +3px → 30px */
+@media (min-width: 768px) {
+  #sendToSheetBtn, #openAdminToolBtn {
+    height: 30px !important;
+    max-height: 30px !important;
+    min-height: 30px !important;
+    line-height: 30px !important;
+  }
+}
 </style>
 </head>
 <body>
@@ -4022,7 +4040,7 @@ function closeAdminModalQuick(){
       <button type="button" class="adm-btn adm-btn-blue" onclick="copyTemplate();">📋 템플릿 복사 (구글시트 사본 만들기)</button>
       <div class="hint adm-mt" style="font-size:12px; line-height:1.7; color:#444; padding:6px 0;">
 📌 <b>PC 진행 순서</b><br>
-버튼 클릭 → 구글시트 사본 생성 → 확장 프로그램 → 새 배포 → 웹앱 URL 복사 → 대회코드·URL 입력 → 💾 URL 저장 → QR코드 생성 → 이미지 저장
+템플릿 복사 버튼 클릭 → 구글시트 사본 생성 → 확장 프로그램 → 새 배포 → 웹앱 URL 복사 → 대회코드·URL 입력 → 💾 URL 저장 → QR코드 생성 → 이미지 저장
 </div>
       <!-- URL 전체 너비 입력 -->
       <div style="margin-top:8px;">
@@ -4037,13 +4055,13 @@ function closeAdminModalQuick(){
           <div style="font-size:11px; color:#495057; font-weight:700; margin-bottom:4px;">대회코드</div>
           <input type="text" id="adminEventCode" class="adm-input"
             placeholder="예: 한마음4월"
-            style="font-size:13px !important; height:44px !important; text-align:center !important; font-weight:900 !important; width:100% !important;">
+            style="font-size:13px !important; height:44px !important; text-align:center !important; font-weight:900 !important; width:100% !important; border:2.5px solid #1a5c35 !important; box-shadow:0 0 0 2px rgba(26,92,53,0.15) !important;">
         </div>
         <div>
           <button type="button" class="adm-btn adm-btn-green"
             onclick="saveURL();"
             style="width:100% !important; height:44px !important; font-size:15px !important; margin:0 !important;">
-            💾 저장
+            저장
           </button>
         </div>
       </div>
@@ -4144,7 +4162,7 @@ function closeAdminModalQuick(){
       <button type="button" class="adm-btn adm-btn-blue" onclick="copyTemplate();">📋 템플릿 복사 (구글시트 사본 만들기)</button>
       <div class="hint adm-mt" style="font-size:12px; line-height:1.7; color:#444; padding:6px 0;">
 📌 <b>PC 진행 순서</b><br>
-버튼 클릭 → 구글시트 사본 생성 → 확장 프로그램 → 새 배포 → 웹앱 URL 복사 → 대회코드·URL 입력 → 💾 URL 저장 → QR코드 생성 → 이미지 저장
+템플릿 복사 버튼 클릭 → 구글시트 사본 생성 → 확장 프로그램 → 새 배포 → 웹앱 URL 복사 → 대회코드·URL 입력 → 💾 URL 저장 → QR코드 생성 → 이미지 저장
 </div>
       <!-- URL 전체 너비 입력 -->
       <div style="margin-top:8px;">
@@ -4159,13 +4177,13 @@ function closeAdminModalQuick(){
           <div style="font-size:11px; color:#495057; font-weight:700; margin-bottom:4px;">대회코드</div>
           <input type="text" id="adminEventCode" class="adm-input"
             placeholder="예: 한마음4월"
-            style="font-size:13px !important; height:44px !important; text-align:center !important; font-weight:900 !important; width:100% !important;">
+            style="font-size:13px !important; height:44px !important; text-align:center !important; font-weight:900 !important; width:100% !important; border:2.5px solid #1a5c35 !important; box-shadow:0 0 0 2px rgba(26,92,53,0.15) !important;">
         </div>
         <div>
           <button type="button" class="adm-btn adm-btn-green"
             onclick="saveURL();"
             style="width:100% !important; height:44px !important; font-size:15px !important; margin:0 !important;">
-            💾 저장
+            저장
           </button>
         </div>
       </div>
