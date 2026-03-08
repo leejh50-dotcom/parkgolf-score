@@ -3733,21 +3733,24 @@ window.showSavedUrls = function() {
     document.body.appendChild(overlay);
 };
 function openAdminModalSafe(e){
-  try{
-    if(e){ e.preventDefault(); e.stopPropagation(); }
-    var m = document.getElementById('adminModal');
-    if(!m) return;
-    // 배경 관리자 버튼 숨기기
-    var adminBtn = document.getElementById('openAdminToolBtn');
-    if (adminBtn) adminBtn.style.visibility = 'hidden';
-    m.style.setProperty('display','flex','important');
-
-    // 대회코드 자동 채우기
-    var mainCode = (document.getElementById('eventCodeInput') && document.getElementById('eventCodeInput').value || '').trim();
-    var lockInput = document.getElementById('lockEventCodeInput');
-    if (lockInput && mainCode) lockInput.value = mainCode;
-    if(typeof window.__lockBodyScrollForModal === 'function'){ window.__lockBodyScrollForModal(); }
-  }catch(err){}
+  try{ if(e){ e.preventDefault(); e.stopPropagation(); } }catch(x){}
+  var m = document.getElementById('adminModal');
+  if(!m) return;
+  // 배경 관리자 버튼 숨기기
+  var adminBtn = document.getElementById('openAdminToolBtn');
+  if(adminBtn) adminBtn.style.visibility = 'hidden';
+  // 화면폭에 따라 PC/모바일 content 강제 지정 (미디어쿼리 의존 제거)
+  var isPC = window.innerWidth >= 768;
+  var pc  = document.querySelector('#adminModal .admin-pc-content');
+  var mob = document.querySelector('#adminModal .admin-mobile-content');
+  if(pc)  pc.style.setProperty('display', isPC  ? 'flex' : 'none', 'important');
+  if(mob) mob.style.setProperty('display', isPC  ? 'none' : 'flex', 'important');
+  m.style.setProperty('display','flex','important');
+  // 대회코드 자동 채우기
+  var mainCode = ((document.getElementById('eventCodeInput')||{}).value||'').trim();
+  var lockInput = document.getElementById('lockEventCodeInput');
+  if(lockInput && mainCode) lockInput.value = mainCode;
+  try{ if(typeof window.__lockBodyScrollForModal==='function') window.__lockBodyScrollForModal(); }catch(x){}
 }
 /* ===== 관리자: 대회 잠금 ===== */
 function syncLockCode(val) {
@@ -3994,7 +3997,7 @@ function closeAdminModalQuick(){
           style="width:100%; box-sizing:border-box; height:100%; padding:0 14px; border:2px solid #fca5a5; border-radius:10px; font-size:16px; font-weight:700; color:#b91c1c; background:#fff8f8; outline:none; text-align:center;"
           oninput="syncLockCode(this.value)">
         <button type="button" onclick="lockEventFromAdmin();"
-          style="width:100%; height:100%; background:linear-gradient(135deg,#ef4444,#b91c1c); color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:900; cursor:pointer; box-shadow:0 4px 16px rgba(239,68,68,0.4); padding:0;">
+          style="width:100%; height:100%; background:linear-gradient(135deg,#ef4444,#b91c1c); color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:900; cursor:pointer; box-shadow:0 4px 16px rgba(239,68,68,0.4); padding:0; line-height:1; display:flex; align-items:center; justify-content:center;">
           마감하기
         </button>
       </div>
@@ -4105,7 +4108,7 @@ function closeAdminModalQuick(){
           style="width:100%; box-sizing:border-box; height:100%; padding:0 14px; border:2px solid #fca5a5; border-radius:10px; font-size:16px; font-weight:700; color:#b91c1c; background:#fff8f8; outline:none; text-align:center;"
           oninput="syncLockCode(this.value)">
         <button type="button" onclick="lockEventFromAdmin();"
-          style="width:100%; height:100%; background:linear-gradient(135deg,#ef4444,#b91c1c); color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:900; cursor:pointer; box-shadow:0 4px 16px rgba(239,68,68,0.4); padding:0;">
+          style="width:100%; height:100%; background:linear-gradient(135deg,#ef4444,#b91c1c); color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:900; cursor:pointer; box-shadow:0 4px 16px rgba(239,68,68,0.4); padding:0; line-height:1; display:flex; align-items:center; justify-content:center;">
           마감하기
         </button>
       </div>
