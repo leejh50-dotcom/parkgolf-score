@@ -185,7 +185,7 @@ input, textarea, select { font-size: 16px; }
   inset: 0 !important;
   width: 100vw !important;
   height: 100vh !important;
-  display: none;
+  display: none !important;
   align-items: flex-start !important;
   justify-content: center !important;
   padding: 8px 12px !important;
@@ -3924,7 +3924,7 @@ function closeAdminModalQuick(){
 <div id="adminModal" style="position:fixed !important;">
 
   <!-- ══════ PC 전용 (768px↑): 잠금없음, 설정 바로 펼침 ══════ -->
-  <div class="modal-content admin-pc-content" style="position:relative !important;">
+  <div class="modal-content admin-pc-content" style="position:relative !important; width:min(640px,92vw) !important; background:white !important; box-sizing:border-box !important;">
     <div style="margin-top:10px;">
 <!-- ① 템플릿 복사 & URL 저장 -->
     <div class="admin-section">
@@ -3943,7 +3943,7 @@ function closeAdminModalQuick(){
       </div>
       <!-- 대회코드(넓게) + 저장버튼 2열 -->
       <div style="font-size:11px; color:#495057; font-weight:700; margin:10px 0 4px;">대회코드</div>
-      <div style="display:grid; grid-template-columns:2fr 1fr; gap:10px; height:52px;">
+      <div style="display:grid; grid-template-columns:2fr 1fr; gap:8px; height:52px; align-items:stretch;">
         <input type="text" id="adminEventCode" class="adm-input"
           placeholder="예: 한마음5월"
           style="font-size:16px !important; height:100% !important; padding:0 10px !important; text-align:center !important; font-weight:700 !important; width:100% !important; border:2.5px solid #1a5c35 !important; box-shadow:0 0 0 2px rgba(26,92,53,0.15) !important; box-sizing:border-box !important;">
@@ -3989,7 +3989,7 @@ function closeAdminModalQuick(){
       <div class="section-title" style="color:#b91c1c; font-size:17px;">③ 대회 점수 마감</div>
       <div style="font-size:13px; font-weight:800; color:#7f1d1d; margin:10px 0 6px;">대회코드 입력 후 마감버튼 누르세요</div>
       <div id="lockStatusMsg" style="display:none; text-align:center; padding:4px 0; font-size:15px; font-weight:800; color:#b91c1c;"></div>
-      <div style="display:grid; grid-template-columns:2fr 1fr; gap:10px; height:52px; margin-top:6px;">
+      <div style="display:grid; grid-template-columns:2fr 1fr; gap:8px; height:52px; margin-top:8px; align-items:stretch;">
         <input type="text" id="lockEventCodeInput" placeholder="예: 한마음5월"
           style="width:100%; box-sizing:border-box; height:100%; padding:0 14px; border:2px solid #fca5a5; border-radius:10px; font-size:16px; font-weight:700; color:#b91c1c; background:#fff8f8; outline:none; text-align:center;"
           oninput="syncLockCode(this.value)">
@@ -4034,7 +4034,7 @@ function closeAdminModalQuick(){
     </div>
   </div>
 
-  <div class="modal-content admin-mobile-content" style="position:relative !important; padding-top:12px !important;">
+  <div class="modal-content admin-mobile-content" style="position:relative !important; padding-top:12px !important; width:100% !important; max-width:100% !important; background:white !important; box-sizing:border-box !important;">
     <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
       <button type="button" onclick="closeAdminModalQuick()" aria-label="닫기"
         style="background:#f3f4f6; border:1.5px solid #d1d5db; border-radius:50%;
@@ -4054,7 +4054,7 @@ function closeAdminModalQuick(){
       </div>
       <!-- 대회코드(넓게) + 저장버튼 2열 -->
       <div style="font-size:11px; color:#495057; font-weight:700; margin:10px 0 4px;">대회코드</div>
-      <div style="display:grid; grid-template-columns:2fr 1fr; gap:10px; height:52px;">
+      <div style="display:grid; grid-template-columns:2fr 1fr; gap:8px; height:52px; align-items:stretch;">
         <input type="text" id="adminEventCode" class="adm-input"
           placeholder="예: 한마음5월"
           style="font-size:16px !important; height:100% !important; padding:0 10px !important; text-align:center !important; font-weight:700 !important; width:100% !important; border:2.5px solid #1a5c35 !important; box-shadow:0 0 0 2px rgba(26,92,53,0.15) !important; box-sizing:border-box !important;">
@@ -4100,7 +4100,7 @@ function closeAdminModalQuick(){
       <div class="section-title" style="color:#b91c1c; font-size:17px;">③ 대회 점수 마감</div>
       <div style="font-size:13px; font-weight:800; color:#7f1d1d; margin:10px 0 6px;">대회코드 입력 후 마감버튼 누르세요</div>
       <div id="lockStatusMsg" style="display:none; text-align:center; padding:4px 0; font-size:15px; font-weight:800; color:#b91c1c;"></div>
-      <div style="display:grid; grid-template-columns:2fr 1fr; gap:10px; height:52px; margin-top:6px;">
+      <div style="display:grid; grid-template-columns:2fr 1fr; gap:8px; height:52px; margin-top:8px; align-items:stretch;">
         <input type="text" id="lockEventCodeInput" placeholder="예: 한마음5월"
           style="width:100%; box-sizing:border-box; height:100%; padding:0 14px; border:2px solid #fca5a5; border-radius:10px; font-size:16px; font-weight:700; color:#b91c1c; background:#fff8f8; outline:none; text-align:center;"
           oninput="syncLockCode(this.value)">
