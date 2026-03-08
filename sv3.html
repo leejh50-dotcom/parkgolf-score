@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="ko">
 <!doctype html>
@@ -3301,32 +3300,8 @@ window.sendToGoogleSheet = function() {
             };
         }
         window.openAdminModal = function() {
-  // 배경 관리자 버튼 숨기기
-  var adminBtn = document.getElementById('openAdminToolBtn');
-  if (adminBtn) adminBtn.style.visibility = 'hidden';
-
-            var _code = (document.getElementById('adminEventCode') || {}).value || '';
-            var _clubKey = typeof getClubKey_ === 'function' ? getClubKey_(_code) : '';
-            var _clubUrl = _clubKey ? localStorage.getItem('parkgolf_url_' + _clubKey) : null;
-            var savedUrl = _clubUrl || localStorage.getItem('parkgolf_webapp_url');
-            if (savedUrl) {
-                document.getElementById('webAppUrl').value = savedUrl;
-            }
-            document.getElementById('codeSection').style.display = 'none';
-            document.getElementById('qrSection').style.display = 'none';
-            document.getElementById('qrcode').innerHTML = '';
-            document.getElementById('currentUrl').style.display = 'none';
-            
-            const modal = document.getElementById('adminModal');
-            if (modal) {
-                modal.style.display = 'flex';
-                // 배경 버튼 숨기기 (비침 방지)
-                var btn = document.getElementById('openAdminToolBtn');
-                if (btn) btn.style.visibility = 'hidden';
-            } else {
-                console.error('adminModal을 찾을 수 없습니다');
-            }
-        };
+  openAdminModalSafe(null);
+};
         window.closeAdminModal = function() {
             document.getElementById('adminModal').style.display = 'none';
         };
@@ -4003,8 +3978,8 @@ function closeAdminModalQuick(){
       <div style="font-size:11px; color:#495057; font-weight:700; margin:10px 0 4px;">대회코드</div>
       <div style="display:grid; grid-template-columns:2fr 1fr; gap:10px; height:52px;">
         <input type="text" id="adminEventCode" class="adm-input"
-          placeholder="예: 한마음4월"
-          style="font-size:13px !important; height:100% !important; padding:0 10px !important; text-align:center !important; font-weight:900 !important; width:100% !important; border:2.5px solid #1a5c35 !important; box-shadow:0 0 0 2px rgba(26,92,53,0.15) !important; box-sizing:border-box !important;">
+          placeholder="예: 한마음5월"
+          style="font-size:16px !important; height:100% !important; padding:0 10px !important; text-align:center !important; font-weight:700 !important; width:100% !important; border:2.5px solid #1a5c35 !important; box-shadow:0 0 0 2px rgba(26,92,53,0.15) !important; box-sizing:border-box !important;">
         <button type="button" class="adm-btn adm-btn-green"
           onclick="saveURL();"
           style="width:100% !important; height:100% !important; font-size:15px !important; margin:0 !important; padding:0 !important;">
@@ -4048,7 +4023,7 @@ function closeAdminModalQuick(){
       <div style="font-size:13px; font-weight:800; color:#7f1d1d; margin:10px 0 6px;">대회코드 입력 후 마감버튼 누르세요</div>
       <div id="lockStatusMsg" style="display:none; text-align:center; padding:4px 0; font-size:15px; font-weight:800; color:#b91c1c;"></div>
       <div style="display:grid; grid-template-columns:2fr 1fr; gap:10px; height:52px;">
-        <input type="text" id="lockEventCodeInput" placeholder="예: 3월대회"
+        <input type="text" id="lockEventCodeInput" placeholder="예: 한마음5월"
           style="width:100%; box-sizing:border-box; height:100%; padding:0 14px; border:2px solid #fca5a5; border-radius:10px; font-size:16px; font-weight:700; color:#b91c1c; background:#fff8f8; outline:none;"
           oninput="syncLockCode(this.value)">
         <button type="button" onclick="lockEventFromAdmin();"
@@ -4114,8 +4089,8 @@ function closeAdminModalQuick(){
       <div style="font-size:11px; color:#495057; font-weight:700; margin:10px 0 4px;">대회코드</div>
       <div style="display:grid; grid-template-columns:2fr 1fr; gap:10px; height:52px;">
         <input type="text" id="adminEventCode" class="adm-input"
-          placeholder="예: 한마음4월"
-          style="font-size:13px !important; height:100% !important; padding:0 10px !important; text-align:center !important; font-weight:900 !important; width:100% !important; border:2.5px solid #1a5c35 !important; box-shadow:0 0 0 2px rgba(26,92,53,0.15) !important; box-sizing:border-box !important;">
+          placeholder="예: 한마음5월"
+          style="font-size:16px !important; height:100% !important; padding:0 10px !important; text-align:center !important; font-weight:700 !important; width:100% !important; border:2.5px solid #1a5c35 !important; box-shadow:0 0 0 2px rgba(26,92,53,0.15) !important; box-sizing:border-box !important;">
         <button type="button" class="adm-btn adm-btn-green"
           onclick="saveURL();"
           style="width:100% !important; height:100% !important; font-size:15px !important; margin:0 !important; padding:0 !important;">
@@ -4159,7 +4134,7 @@ function closeAdminModalQuick(){
       <div style="font-size:13px; font-weight:800; color:#7f1d1d; margin:10px 0 6px;">대회코드 입력 후 마감버튼 누르세요</div>
       <div id="lockStatusMsg" style="display:none; text-align:center; padding:4px 0; font-size:15px; font-weight:800; color:#b91c1c;"></div>
       <div style="display:grid; grid-template-columns:2fr 1fr; gap:10px; height:52px;">
-        <input type="text" id="lockEventCodeInput" placeholder="예: 3월대회"
+        <input type="text" id="lockEventCodeInput" placeholder="예: 한마음5월"
           style="width:100%; box-sizing:border-box; height:100%; padding:0 14px; border:2px solid #fca5a5; border-radius:10px; font-size:16px; font-weight:700; color:#b91c1c; background:#fff8f8; outline:none;"
           oninput="syncLockCode(this.value)">
         <button type="button" onclick="lockEventFromAdmin();"
