@@ -3891,7 +3891,7 @@ function closeAdminModalQuick(){
         placeholder="웹앱 URL 붙여넣기 (배포 후 복사한 URL)"
         style="display:block; width:100%; box-sizing:border-box; height:42px !important; min-height:unset !important; padding:0 10px !important; font-size:13px !important; font-weight:600 !important; border:2px solid #28a745; border-radius:9px; outline:none; margin-bottom:8px; color:#333;">
       <div style="font-size:11px; color:#6c757d; font-weight:700; margin-bottom:4px;">대회코드</div>
-      <div style="display:grid; grid-template-columns:1fr 72px; gap:6px;">
+      <div style="display:grid; grid-template-columns:1fr 72px; gap:6px; align-items:center;">
         <input type="text" id="adminEventCode"
           placeholder="예: 한마음5월"
           style="width:100%; box-sizing:border-box; height:42px !important; min-height:unset !important; padding:0 10px !important; font-size:15px !important; font-weight:700 !important; text-align:center !important; border:2px solid #1a5c35; border-radius:9px; outline:none; color:#1a5c35;">
@@ -3943,7 +3943,7 @@ function closeAdminModalQuick(){
       <div style="font-size:13px; font-weight:900; color:#b91c1c; margin-bottom:6px;">③ 대회 점수 마감</div>
       <div style="font-size:12px; font-weight:700; color:#7f1d1d; margin-bottom:6px;">대회코드 입력 후 마감버튼 누르세요</div>
       <div id="lockStatusMsg" style="display:none; padding:3px 0 5px; font-size:13px; font-weight:800; color:#b91c1c;"></div>
-      <div style="display:grid; grid-template-columns:1fr 72px; gap:6px;">
+      <div style="display:grid; grid-template-columns:1fr 72px; gap:6px; align-items:center;">
         <input type="text" id="lockEventCodeInput" placeholder="예: 한마음5월"
           style="width:100%; box-sizing:border-box; height:42px !important; min-height:unset !important; padding:0 10px !important; font-size:15px !important; font-weight:700 !important; text-align:center !important; border:2px solid #fca5a5; border-radius:9px; background:#fff8f8; color:#b91c1c; outline:none;"
           oninput="syncLockCode(this.value)">
