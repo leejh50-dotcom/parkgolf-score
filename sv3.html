@@ -3894,10 +3894,10 @@ function closeAdminModalQuick(){
       <div style="display:flex; gap:8px;">
         <input type="text" id="adminEventCode" class="adm-input"
           placeholder="예: 한마음5월"
-          style="font-size:16px !important; height:48px !important; flex:2; padding:0 10px !important; text-align:center !important; font-weight:700 !important; width:100% !important; border:2.5px solid #1a5c35 !important; box-shadow:0 0 0 2px rgba(26,92,53,0.15) !important; box-sizing:border-box !important;">
+          style="font-size:16px !important; height:48px !important; min-height:unset !important; flex:2; padding:0 10px !important; text-align:center !important; font-weight:700 !important; width:auto !important; border:2.5px solid #1a5c35 !important; box-shadow:0 0 0 2px rgba(26,92,53,0.15) !important; box-sizing:border-box !important;">
         <button type="button" class="adm-btn adm-btn-green"
           onclick="saveURL();"
-          style="flex:1; height:48px !important; min-height:unset !important; font-size:15px !important; margin:0 !important; padding:0 !important; display:flex !important; align-items:center !important; justify-content:center !important; width:auto !important;">
+          style="flex:1; height:48px !important; min-height:unset !important; font-size:16px !important; font-weight:900 !important; margin:0 !important; padding:0 !important; display:flex !important; align-items:center !important; justify-content:center !important; width:auto !important;">
 저장</button>
       </div>
       <button type="button" class="adm-btn adm-mt" onclick="showSavedUrls()"
@@ -3941,8 +3941,7 @@ function closeAdminModalQuick(){
           style="flex:2; box-sizing:border-box; height:48px !important; min-height:unset !important; padding:0 14px !important; border:2px solid #fca5a5; border-radius:10px; font-size:16px; font-weight:700; color:#b91c1c; background:#fff8f8; outline:none; text-align:center;"
           oninput="syncLockCode(this.value)">
         <button type="button" onclick="lockEventFromAdmin();"
-          style="flex:1; height:48px !important; min-height:unset !important; background:linear-gradient(135deg,#ef4444,#b91c1c); color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:900; cursor:pointer; box-shadow:0 4px 16px rgba(239,68,68,0.4); padding:0; display:flex !important; align-items:center; justify-content:center; margin:0 !important; width:auto !important;">
-마감하기</button>
+          style="flex:1; height:48px !important; min-height:unset !important; background:linear-gradient(135deg,#ef4444,#b91c1c); color:#fff; border:none; border-radius:10px; font-size:16px !important; font-weight:900 !important; cursor:pointer; box-shadow:0 4px 16px rgba(239,68,68,0.4); padding:0 !important; display:flex !important; align-items:center !important; justify-content:center !important; margin:0 !important; width:auto !important;">마감</button>
       </div>
     </div>
 
