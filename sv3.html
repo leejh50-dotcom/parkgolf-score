@@ -3884,24 +3884,24 @@ function closeAdminModalQuick(){
     <div style="background:#f8f9fa; border:1px solid #dee2e6; border-radius:12px; padding:12px; margin-bottom:8px;">
       <div style="font-size:13px; font-weight:900; color:#1a5c35; margin-bottom:8px;">① 템플릿 복사 &amp; URL 저장</div>
       <button type="button" onclick="copyTemplate();"
-        style="display:block; width:100%; padding:11px; background:#1565c0; color:#fff; border:none; border-radius:10px; font-size:14px; font-weight:900; cursor:pointer; margin-bottom:8px; box-sizing:border-box;">
+        style="display:block; width:100%; box-sizing:border-box; padding:11px; background:#1565c0; color:#fff; border:none; border-radius:10px; font-size:14px; font-weight:900; cursor:pointer; margin-bottom:8px;">
         📋 템플릿 복사 (구글시트 사본 만들기)
       </button>
       <input type="text" id="webAppUrl"
         placeholder="웹앱 URL 붙여넣기 (배포 후 복사한 URL)"
         style="display:block; width:100%; box-sizing:border-box; height:42px !important; min-height:unset !important; padding:0 10px !important; font-size:13px !important; font-weight:600 !important; border:2px solid #28a745; border-radius:9px; outline:none; margin-bottom:8px; color:#333;">
       <div style="font-size:11px; color:#6c757d; font-weight:700; margin-bottom:4px;">대회코드</div>
-      <div style="display:flex; gap:6px;">
+      <div style="display:grid; grid-template-columns:1fr 72px; gap:6px;">
         <input type="text" id="adminEventCode"
           placeholder="예: 한마음5월"
-          style="flex:1; min-width:0; height:42px !important; min-height:unset !important; padding:0 10px !important; font-size:15px !important; font-weight:700 !important; text-align:center !important; border:2px solid #1a5c35; border-radius:9px; box-sizing:border-box; outline:none; color:#1a5c35;">
+          style="width:100%; box-sizing:border-box; height:42px !important; min-height:unset !important; padding:0 10px !important; font-size:15px !important; font-weight:700 !important; text-align:center !important; border:2px solid #1a5c35; border-radius:9px; outline:none; color:#1a5c35;">
         <button type="button" onclick="saveURL();"
-          style="width:72px; flex-shrink:0; height:42px !important; min-height:unset !important; padding:0 !important; font-size:15px !important; font-weight:900 !important; background:#28a745; color:#fff; border:none; border-radius:9px; cursor:pointer; box-sizing:border-box;">
+          style="width:100%; box-sizing:border-box; height:42px !important; min-height:unset !important; padding:0 !important; font-size:15px !important; font-weight:900 !important; background:#28a745; color:#fff; border:none; border-radius:9px; cursor:pointer;">
           저장
         </button>
       </div>
       <button type="button" onclick="showSavedUrls();"
-        style="display:block; width:100%; padding:10px; background:#6c757d; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; margin-top:6px; box-sizing:border-box;">
+        style="display:block; width:100%; box-sizing:border-box; padding:10px; background:#6c757d; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; margin-top:6px;">
         저장된 URL 목록
       </button>
     </div>
@@ -3910,14 +3910,14 @@ function closeAdminModalQuick(){
     <div style="background:#f8f9fa; border:1px solid #dee2e6; border-radius:12px; padding:12px; margin-bottom:8px;">
       <div style="font-size:13px; font-weight:900; color:#6f42c1; margin-bottom:8px;">② QR 코드 생성</div>
       <button type="button" onclick="toggleQRSection();"
-        style="display:block; width:100%; padding:11px; background:#6f42c1; color:#fff; border:none; border-radius:10px; font-size:14px; font-weight:900; cursor:pointer; box-sizing:border-box;">
+        style="display:block; width:100%; box-sizing:border-box; padding:11px; background:#6f42c1; color:#fff; border:none; border-radius:10px; font-size:14px; font-weight:900; cursor:pointer;">
         📱 QR코드 생성하기
       </button>
       <div id="qrSection" style="display:none; margin-top:10px;">
         <div style="background:#fff; border:1px solid #e9ecef; border-radius:10px; padding:10px;">
           <div style="font-size:12px; color:#6c757d; margin-bottom:8px;">① 에서 입력한 대회코드와 저장된 URL로 QR을 생성합니다</div>
           <button type="button" onclick="generateQRCodeWithParams(); return false;"
-            style="display:block; width:100%; padding:11px; background:#6f42c1; color:#fff; border:none; border-radius:9px; font-size:14px; font-weight:900; cursor:pointer; margin-bottom:8px; box-sizing:border-box;">
+            style="display:block; width:100%; box-sizing:border-box; padding:11px; background:#6f42c1; color:#fff; border:none; border-radius:9px; font-size:14px; font-weight:900; cursor:pointer; margin-bottom:8px;">
             QR 코드 생성
           </button>
           <div id="qrcodeDisplay" style="display:none; text-align:center;">
@@ -3943,12 +3943,12 @@ function closeAdminModalQuick(){
       <div style="font-size:13px; font-weight:900; color:#b91c1c; margin-bottom:6px;">③ 대회 점수 마감</div>
       <div style="font-size:12px; font-weight:700; color:#7f1d1d; margin-bottom:6px;">대회코드 입력 후 마감버튼 누르세요</div>
       <div id="lockStatusMsg" style="display:none; padding:3px 0 5px; font-size:13px; font-weight:800; color:#b91c1c;"></div>
-      <div style="display:flex; gap:6px;">
+      <div style="display:grid; grid-template-columns:1fr 72px; gap:6px;">
         <input type="text" id="lockEventCodeInput" placeholder="예: 한마음5월"
-          style="flex:1; min-width:0; height:42px !important; min-height:unset !important; padding:0 10px !important; font-size:15px !important; font-weight:700 !important; text-align:center !important; border:2px solid #fca5a5; border-radius:9px; background:#fff8f8; color:#b91c1c; outline:none; box-sizing:border-box;"
+          style="width:100%; box-sizing:border-box; height:42px !important; min-height:unset !important; padding:0 10px !important; font-size:15px !important; font-weight:700 !important; text-align:center !important; border:2px solid #fca5a5; border-radius:9px; background:#fff8f8; color:#b91c1c; outline:none;"
           oninput="syncLockCode(this.value)">
         <button type="button" onclick="lockEventFromAdmin();"
-          style="width:72px; flex-shrink:0; height:42px !important; min-height:unset !important; padding:0 !important; font-size:15px !important; font-weight:900 !important; background:linear-gradient(135deg,#ef4444,#b91c1c); color:#fff; border:none; border-radius:9px; cursor:pointer; box-sizing:border-box;">
+          style="width:100%; box-sizing:border-box; height:42px !important; min-height:unset !important; padding:0 !important; font-size:15px !important; font-weight:900 !important; background:linear-gradient(135deg,#ef4444,#b91c1c); color:#fff; border:none; border-radius:9px; cursor:pointer;">
           마감
         </button>
       </div>
@@ -3965,7 +3965,7 @@ function closeAdminModalQuick(){
     <div style="background:#fffbeb; border:1px solid #f59e0b; border-radius:12px; padding:10px 12px; margin-bottom:8px;">
       <div style="font-size:12px; font-weight:900; color:#92400e; margin-bottom:6px;">📱 태블릿 · 휴대폰에서 진행할 경우</div>
       <div style="font-size:11px; color:#78350f; line-height:1.7; background:#fef3c7; border-left:3px solid #f59e0b; padding:6px 8px; border-radius:5px; margin-bottom:6px;">
-        <b>Chrome 브라우저</b> → 메뉴(점3개) → <b>"PC 버전 사이트 요청"</b> 체크<br>→ 구글시트 <b>확장 프로그램</b> 메뉴 활성화
+        <b>Chrome</b> → 메뉴(점3개) → <b>"PC 버전 사이트 요청"</b> 체크 → 구글시트 <b>확장 프로그램</b> 활성화
       </div>
       <div style="font-size:11px; color:#92400e; line-height:1.7;">
         ① 템플릿 복사 → 사본 생성 &nbsp;② Apps Script → 배포 &nbsp;③ URL 저장 &nbsp;④ QR 생성
@@ -3974,7 +3974,7 @@ function closeAdminModalQuick(){
 
     <div style="position:sticky; bottom:0; padding-top:8px; background:linear-gradient(to top, #fff 60%, rgba(255,255,255,0));">
       <button type="button" onclick="closeAdminModalQuick();"
-        style="display:block; width:100%; padding:13px; background:#495057; color:#fff; border:none; border-radius:12px; font-size:15px; font-weight:900; cursor:pointer; box-sizing:border-box;">
+        style="display:block; width:100%; box-sizing:border-box; padding:13px; background:#495057; color:#fff; border:none; border-radius:12px; font-size:15px; font-weight:900; cursor:pointer;">
         닫기
       </button>
     </div>
