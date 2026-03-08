@@ -2019,7 +2019,7 @@ body {
 
 <!-- 관리자 도구 버튼 -->
 <div style="margin-top: 40px !important; margin-bottom: 30px !important;">
-<button id="openAdminToolBtn" type="button" class="admin-btn" onclick="openAdminModalSafe(null);" style="width: 100% !important; padding: 0px 14px !important; height: 27px !important; max-height: 27px !important; min-height: 27px !important; line-height: 27px !important; overflow: hidden !important; background: linear-gradient(135deg, #f4b400 0%, #db9200 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 14px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">🔒 관리자 전용</button>
+<button id="openAdminToolBtn" type="button" class="admin-open-btn" onclick="openAdminModalSafe(null);" style="width: 100% !important; padding: 0px 14px !important; height: 27px !important; max-height: 27px !important; min-height: 27px !important; line-height: 27px !important; overflow: hidden !important; background: linear-gradient(135deg, #f4b400 0%, #db9200 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 14px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">🔒 관리자 전용</button>
 </div>
 
 </div>
@@ -3720,7 +3720,6 @@ function openAdminModalSafe(e){
   var mainCode = ((document.getElementById('eventCodeInput')||{}).value||'').trim();
   var lockInput = document.getElementById('lockEventCodeInput');
   if(lockInput && mainCode) lockInput.value = mainCode;
-  try{ if(typeof window.__lockBodyScrollForModal==='function') window.__lockBodyScrollForModal(); }catch(x){}
 }
 /* ===== 관리자: 대회 잠금 ===== */
 function syncLockCode(val) {
@@ -3776,16 +3775,8 @@ function lockEventFromAdmin() {
 
 (function() {
   var _scrollY = 0;
-  window.__lockBodyScrollForModal = function() {
-    try {
-      document.body.style.overflow = 'hidden';
-    } catch (e) {}
-  };
-  window.__unlockBodyScrollForModal = function() {
-    try {
-      document.body.style.overflow = '';
-    } catch (e) {}
-  };
+  window.__lockBodyScrollForModal = function() {};
+  window.__unlockBodyScrollForModal = function() {};
   var openNames = ['openAdminModal', 'showAdminModal', 'openAdminTool', 'openAdminToolModal'];
   var closeNames = ['closeAdminModal', 'hideAdminModal', 'closeAdminTool', 'closeAdminToolModal'];
   openNames.forEach(function(fn) {
@@ -3838,7 +3829,6 @@ function lockEventFromAdmin() {
 function closeAdminModalQuick(){
   var m = document.getElementById('adminModal');
   if (m) m.style.setProperty('display','none','important');
-  try { if (typeof window.__unlockBodyScrollForModal === 'function') window.__unlockBodyScrollForModal(); } catch(e){}
 }
 (function(){
   function bindFastTap(selector){
@@ -3852,7 +3842,7 @@ function closeAdminModalQuick(){
     });
   }
   document.addEventListener('DOMContentLoaded', function(){
-    bindFastTap('.key-btn, .confirm-btn-top, .penalty-btn-side, .back-btn, .clear-btn, .admin-btn');
+    bindFastTap('.key-btn, .confirm-btn-top, .penalty-btn-side, .back-btn, .clear-btn');
   });
 })();
 
