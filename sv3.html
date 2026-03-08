@@ -182,7 +182,7 @@ input, textarea, select { font-size: 16px; }
   inset: 0 !important;
   width: 100vw !important;
   height: 100vh !important;
-  display: none !important;
+  display: none;
   align-items: flex-start !important;
   justify-content: center !important;
   padding: 8px 12px !important;
@@ -3173,10 +3173,13 @@ window.sendToGoogleSheet = function() {
                 saveSubmissionRecord(data);
                 var lockKey = 'lock_' + data.eventCode;
                 var alreadyLocked = localStorage.getItem(lockKey) === 'Y';
+                var teamLabel = (data.teamName && data.teamName.trim()) ? data.teamName.trim() : '조명없음';
+                var firstPlayer = data.player1 && data.player1.name && !data.player1.name.startsWith('경기자') ? data.player1.name : '';
+                var msg = teamLabel + (firstPlayer ? ' / ' + firstPlayer + ' 외 3명' : '') + ' 전송 완료했습니다 ✅';
                 if (alreadyLocked) {
-                    alert('🔒 대회 집계가 마감되었습니다.');
+                    showToast('🔒 대회 집계가 마감되었습니다.');
                 } else {
-                    alert('✅ 전송이 정상적으로 완료되었습니다.');
+                    showToast(msg);
                 }
                 // 버튼 복원
                 if (sendBtn) {
@@ -3287,7 +3290,7 @@ window.sendToGoogleSheet = function() {
   openAdminModalSafe(null);
 };
         window.closeAdminModal = function() {
-            document.getElementById('adminModal').style.setProperty('display','none','important');
+            document.getElementById('adminModal').style.display = 'none';
         };
         window.saveWebAppUrl = function() {
             const url = document.getElementById('webAppUrl').value.trim();
@@ -3715,7 +3718,7 @@ function openAdminModalSafe(e){
   try{ if(e){ e.preventDefault(); e.stopPropagation(); } }catch(x){}
   var m = document.getElementById('adminModal');
   if(!m) return;
-  m.style.setProperty('display','flex','important');
+  m.style.display = 'flex';
   var mainCode = ((document.getElementById('eventCodeInput')||{}).value||'').trim();
   var lockInput = document.getElementById('lockEventCodeInput');
   if(lockInput && mainCode) lockInput.value = mainCode;
@@ -3827,7 +3830,7 @@ function lockEventFromAdmin() {
 })();
 function closeAdminModalQuick(){
   var m = document.getElementById('adminModal');
-  if (m) m.style.setProperty('display','none','important');
+  if(m) m.style.display = 'none';
 }
 (function(){
   function bindFastTap(selector){
@@ -3943,25 +3946,20 @@ function closeAdminModalQuick(){
     </div>
 
       <!-- 태블릿·휴대폰 Chrome PC버전 안내 -->
-      <details style="margin-top:12px; background:#fffbeb; border:1px solid #f59e0b; border-radius:12px; overflow:hidden;">
-        <summary style="padding:12px 14px; font-size:13px; font-weight:900; color:#92400e; cursor:pointer; list-style:none; display:flex; justify-content:space-between; align-items:center;">
-          태블릿 · 휴대폰에서 진행할 경우
-          <span style="font-size:11px; color:#b45309;">▼ 펼치기</span>
-        </summary>
-        <div style="padding:0 14px 14px;">
-          <div style="background:#fef3c7; border-left:3px solid #f59e0b; padding:8px 10px; border-radius:6px; font-size:12px; color:#78350f; margin-bottom:8px; line-height:1.7;">
-            <b>반드시 Chrome 브라우저 사용</b><br>
-            Chrome 우측 상단 <b>메뉴(점3개)</b> → <b>"PC 버전 사이트 요청"</b> 체크<br>
-            → 구글시트에서 <b>확장 프로그램</b> 메뉴가 활성화됩니다
-          </div>
-          <div style="font-size:11px; color:#92400e; line-height:1.8;">
-            ① 템플릿 복사 탭 → 사본 생성<br>
-            ② Chrome PC버전으로 구글시트 열기 → 확장 프로그램 → Apps Script → 배포<br>
-            ③ 웹앱 URL 복사 → 위 입력란에 붙여넣기 → 저장<br>
-            ④ QR코드 생성 → 이미지 저장
-          </div>
+      <div style="margin-top:12px; background:#fffbeb; border:1px solid #f59e0b; border-radius:12px; padding:12px 14px;">
+        <div style="font-size:13px; font-weight:900; color:#92400e; margin-bottom:8px;">📱 태블릿 · 휴대폰에서 진행할 경우</div>
+        <div style="background:#fef3c7; border-left:3px solid #f59e0b; padding:8px 10px; border-radius:6px; font-size:12px; color:#78350f; margin-bottom:8px; line-height:1.7;">
+          <b>반드시 Chrome 브라우저 사용</b><br>
+          Chrome 우측 상단 <b>메뉴(점3개)</b> → <b>"PC 버전 사이트 요청"</b> 체크<br>
+          → 구글시트에서 <b>확장 프로그램</b> 메뉴가 활성화됩니다
         </div>
-      </details>
+        <div style="font-size:11px; color:#92400e; line-height:1.8;">
+          ① 템플릿 복사 탭 → 사본 생성<br>
+          ② Chrome PC버전으로 구글시트 열기 → 확장 프로그램 → Apps Script → 배포<br>
+          ③ 웹앱 URL 복사 → 위 입력란에 붙여넣기 → 저장<br>
+          ④ QR코드 생성 → 이미지 저장
+        </div>
+      </div>
         <div class="sticky-close">
       <button type="button" class="adm-btn adm-btn-gray" onclick="closeAdminModalQuick();">닫기</button>
     </div>
