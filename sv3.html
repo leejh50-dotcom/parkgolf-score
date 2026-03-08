@@ -3107,8 +3107,7 @@ window.sendToGoogleSheet = function() {
             
             if (!webAppUrl) {
                 if (sendBtn) { sendBtn.disabled=false; sendBtn.style.opacity=''; sendBtn.textContent='대회 집계(구글시트) 전송'; }
-                alert('먼저 관리자 도구에서 웹앱 URL을 설정해주세요.');
-                openAdminModalSafe(null);
+                alert('❌ 웹앱 URL이 없습니다.\n\n페이지 맨 아래 🔒 관리자 전용 버튼을 눌러\nURL을 먼저 설정해주세요.');
                 return;
             }
             localStorage.setItem('parkgolf_webapp_url', webAppUrl);
