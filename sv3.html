@@ -2039,7 +2039,7 @@ body {
 
 <!-- 관리자 도구 버튼 -->
 <div style="margin-top: 40px !important; margin-bottom: 30px !important;">
-<button id="openAdminToolBtn" type="button" class="admin-btn" onclick="openAdminModalSafe(null);" style="width: 100% !important; padding: 0px 14px !important; height: 27px !important; max-height: 27px !important; min-height: 27px !important; line-height: 27px !important; overflow: hidden !important; background: linear-gradient(135deg, #f4b400 0%, #db9200 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 14px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">🔒 관리자 전용 (PC:클릭 / 모바일:3번터치)</button>
+<button id="openAdminToolBtn" type="button" class="admin-btn" onclick="openAdminModalSafe(null);" style="width: 100% !important; padding: 0px 14px !important; height: 27px !important; max-height: 27px !important; min-height: 27px !important; line-height: 27px !important; overflow: hidden !important; background: linear-gradient(135deg, #f4b400 0%, #db9200 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 14px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">🔒 관리자 전용</button>
 </div>
 
 </div>
@@ -3801,31 +3801,7 @@ function lockEventFromAdmin() {
 
 /* ===== 관리자 버튼: PC=클릭, 모바일=3번 탭 ===== */
 window.addEventListener('load', function() {
-  var btn = document.getElementById('openAdminToolBtn');
-  if (!btn) return;
-  var isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-  if (isTouchDevice) {
-    /* 모바일: onclick 막고 3번 터치로만 열기 */
-    var tapCount = 0, tapTimer = null;
-    btn.onclick = function(e){ e.preventDefault(); e.stopPropagation(); return false; };
-    btn.addEventListener('touchend', function(e) {
-      e.preventDefault(); e.stopPropagation();
-      tapCount++;
-      clearTimeout(tapTimer);
-      if (tapCount >= 3) {
-        tapCount = 0;
-        btn.textContent = '🔒 관리자 전용 (3번터치)';
-        openAdminModalSafe(null);
-        return;
-      }
-      btn.textContent = '🔒 관리자 (' + tapCount + '/3)';
-      tapTimer = setTimeout(function(){
-        tapCount = 0;
-        btn.textContent = '🔒 관리자 전용 (3번터치)';
-      }, 2500);
-    }, {passive:false});
-  }
-  /* PC: 버튼 onclick="openAdminModalSafe(null)" 으로 처리 */
+  /* 관리자 버튼: PC/모바일 모두 onclick으로 처리 (버튼이 숨겨진 위치라 보안 충분) */
 });
 (function() {
   var _scrollY = 0;
@@ -4015,7 +3991,7 @@ function closeAdminModalQuick(){
       <div id="lockStatusMsg" style="display:none; text-align:center; padding:4px 0; font-size:15px; font-weight:800; color:#b91c1c;"></div>
       <div style="display:grid; grid-template-columns:2fr 1fr; gap:10px; height:52px; margin-top:6px;">
         <input type="text" id="lockEventCodeInput" placeholder="예: 한마음5월"
-          style="width:100%; box-sizing:border-box; height:100%; padding:0 14px; border:2px solid #fca5a5; border-radius:10px; font-size:16px; font-weight:700; color:#b91c1c; background:#fff8f8; outline:none;"
+          style="width:100%; box-sizing:border-box; height:100%; padding:0 14px; border:2px solid #fca5a5; border-radius:10px; font-size:16px; font-weight:700; color:#b91c1c; background:#fff8f8; outline:none; text-align:center;"
           oninput="syncLockCode(this.value)">
         <button type="button" onclick="lockEventFromAdmin();"
           style="width:100%; height:100%; background:linear-gradient(135deg,#ef4444,#b91c1c); color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:900; cursor:pointer; box-shadow:0 4px 16px rgba(239,68,68,0.4); padding:0;">
@@ -4126,7 +4102,7 @@ function closeAdminModalQuick(){
       <div id="lockStatusMsg" style="display:none; text-align:center; padding:4px 0; font-size:15px; font-weight:800; color:#b91c1c;"></div>
       <div style="display:grid; grid-template-columns:2fr 1fr; gap:10px; height:52px; margin-top:6px;">
         <input type="text" id="lockEventCodeInput" placeholder="예: 한마음5월"
-          style="width:100%; box-sizing:border-box; height:100%; padding:0 14px; border:2px solid #fca5a5; border-radius:10px; font-size:16px; font-weight:700; color:#b91c1c; background:#fff8f8; outline:none;"
+          style="width:100%; box-sizing:border-box; height:100%; padding:0 14px; border:2px solid #fca5a5; border-radius:10px; font-size:16px; font-weight:700; color:#b91c1c; background:#fff8f8; outline:none; text-align:center;"
           oninput="syncLockCode(this.value)">
         <button type="button" onclick="lockEventFromAdmin();"
           style="width:100%; height:100%; background:linear-gradient(135deg,#ef4444,#b91c1c); color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:900; cursor:pointer; box-shadow:0 4px 16px rgba(239,68,68,0.4); padding:0;">
