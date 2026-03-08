@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="ko">
 <!doctype html>
@@ -277,13 +278,10 @@ input, textarea, select { font-size: 16px; }
   padding-top: 10px;
   background: linear-gradient(to top, #ffffff 70%, rgba(255,255,255,0));
 }
-/* PC(768px↑): 잠금+X숨김, PC전용 표시, 모바일details 숨김 */
+/* PC/모바일 공통 모달 - 잠금섹션 항상 표시 */
 @media (min-width: 768px) {
-  #adminLockSection  { display: none !important; }
-  
-  }
+}
 @media (max-width: 767px) {
-  
 }
 .key-btn, .confirm-btn-top, .penalty-btn-side, .back-btn, .clear-btn {
   touch-action: manipulation !important;
@@ -3306,41 +3304,7 @@ window.sendToGoogleSheet = function() {
   // 배경 관리자 버튼 숨기기
   var adminBtn = document.getElementById('openAdminToolBtn');
   if (adminBtn) adminBtn.style.visibility = 'hidden';
-  // PC면 PC설정 자동 펼침 / 모바일이면 닫힘 유지
-  setTimeout(function() {
-    var details = document.getElementById('pcSettingsDetails');
-    var arrow   = document.getElementById('pcSettingsArrow');
-    var lockSection = document.getElementById('adminLockSection');
-    if (!details) return;
-    var isPC = window.innerWidth >= 768 && !('ontouchstart' in window);
-    var closeBtn  = document.getElementById('adminCloseBtn');
-    var pcOnly    = document.getElementById('pcSettingsPC');
-    var mobileOnly= document.getElementById('pcSettingsDetails');
-    if (isPC) {
-      // PC: 잠금섹션 숨김, X버튼 숨김, PC전용 div 표시, 모바일 details 숨김
-      if (lockSection)  lockSection.style.display  = 'none';
-      if (closeBtn)     closeBtn.style.display      = 'none';
-      if (pcOnly)       pcOnly.style.display        = 'block';
-      if (mobileOnly)   mobileOnly.style.display    = 'none';
-    } else {
-      // 모바일: 잠금섹션 표시, X버튼 표시, 모바일 details 표시, PC전용 숨김
-      if (lockSection)  lockSection.style.display  = 'block';
-      if (closeBtn)     closeBtn.style.display      = 'flex';
-      if (pcOnly)       pcOnly.style.display        = 'none';
-      if (mobileOnly) {
-        mobileOnly.style.display = 'block';
-        mobileOnly.open = false;
-        if (arrow) arrow.textContent = '▼ 펼치기';
-      }
-    }
-    // summary 클릭 시 화살표 토글
-    var summary = details.querySelector('summary');
-    summary.onclick = function() {
-      setTimeout(function() {
-        if (arrow) arrow.textContent = details.open ? '▲ 접기' : '▼ 펼치기';
-      }, 10);
-    };
-  }, 50);
+
             var _code = (document.getElementById('adminEventCode') || {}).value || '';
             var _clubKey = typeof getClubKey_ === 'function' ? getClubKey_(_code) : '';
             var _clubUrl = _clubKey ? localStorage.getItem('parkgolf_url_' + _clubKey) : null;
@@ -4036,20 +4000,16 @@ function closeAdminModalQuick(){
           style="font-size:12px !important; height:44px !important; width:100% !important;">
       </div>
       <!-- 대회코드(넓게) + 저장버튼 2열 -->
-      <div style="display:grid; grid-template-columns:2fr 1fr; gap:10px; margin-top:10px; height:52px;">
-        <div>
-          <div style="font-size:11px; color:#495057; font-weight:700; margin-bottom:4px;">대회코드</div>
-          <input type="text" id="adminEventCode" class="adm-input"
-            placeholder="예: 한마음4월"
-            style="font-size:13px !important; height:100% !important; padding:0 !important; text-align:center !important; font-weight:900 !important; width:100% !important; border:2.5px solid #1a5c35 !important; box-shadow:0 0 0 2px rgba(26,92,53,0.15) !important; box-sizing:border-box !important;">
-        </div>
-        <div>
-          <button type="button" class="adm-btn adm-btn-green"
-            onclick="saveURL();"
-            style="width:100% !important; height:100% !important; font-size:15px !important; margin:0 !important; padding:0 !important;">
-            저장
-          </button>
-        </div>
+      <div style="font-size:11px; color:#495057; font-weight:700; margin:10px 0 4px;">대회코드</div>
+      <div style="display:grid; grid-template-columns:2fr 1fr; gap:10px; height:52px;">
+        <input type="text" id="adminEventCode" class="adm-input"
+          placeholder="예: 한마음4월"
+          style="font-size:13px !important; height:100% !important; padding:0 10px !important; text-align:center !important; font-weight:900 !important; width:100% !important; border:2.5px solid #1a5c35 !important; box-shadow:0 0 0 2px rgba(26,92,53,0.15) !important; box-sizing:border-box !important;">
+        <button type="button" class="adm-btn adm-btn-green"
+          onclick="saveURL();"
+          style="width:100% !important; height:100% !important; font-size:15px !important; margin:0 !important; padding:0 !important;">
+          저장
+        </button>
       </div>
       <button type="button" class="adm-btn adm-mt" onclick="showSavedUrls()"
         style="background:#6c757d !important; color:#fff !important; font-size:12px !important;">저장된 URL 목록</button>
@@ -4151,20 +4111,16 @@ function closeAdminModalQuick(){
           style="font-size:12px !important; height:44px !important; width:100% !important;">
       </div>
       <!-- 대회코드(넓게) + 저장버튼 2열 -->
-      <div style="display:grid; grid-template-columns:2fr 1fr; gap:10px; margin-top:10px; height:52px;">
-        <div>
-          <div style="font-size:11px; color:#495057; font-weight:700; margin-bottom:4px;">대회코드</div>
-          <input type="text" id="adminEventCode" class="adm-input"
-            placeholder="예: 한마음4월"
-            style="font-size:13px !important; height:100% !important; padding:0 !important; text-align:center !important; font-weight:900 !important; width:100% !important; border:2.5px solid #1a5c35 !important; box-shadow:0 0 0 2px rgba(26,92,53,0.15) !important; box-sizing:border-box !important;">
-        </div>
-        <div>
-          <button type="button" class="adm-btn adm-btn-green"
-            onclick="saveURL();"
-            style="width:100% !important; height:100% !important; font-size:15px !important; margin:0 !important; padding:0 !important;">
-            저장
-          </button>
-        </div>
+      <div style="font-size:11px; color:#495057; font-weight:700; margin:10px 0 4px;">대회코드</div>
+      <div style="display:grid; grid-template-columns:2fr 1fr; gap:10px; height:52px;">
+        <input type="text" id="adminEventCode" class="adm-input"
+          placeholder="예: 한마음4월"
+          style="font-size:13px !important; height:100% !important; padding:0 10px !important; text-align:center !important; font-weight:900 !important; width:100% !important; border:2.5px solid #1a5c35 !important; box-shadow:0 0 0 2px rgba(26,92,53,0.15) !important; box-sizing:border-box !important;">
+        <button type="button" class="adm-btn adm-btn-green"
+          onclick="saveURL();"
+          style="width:100% !important; height:100% !important; font-size:15px !important; margin:0 !important; padding:0 !important;">
+          저장
+        </button>
       </div>
       <button type="button" class="adm-btn adm-mt" onclick="showSavedUrls()"
         style="background:#6c757d !important; color:#fff !important; font-size:12px !important;">저장된 URL 목록</button>
