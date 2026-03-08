@@ -183,13 +183,21 @@ input, textarea, select { font-size: 16px; }
   width: 100vw !important;
   height: 100vh !important;
   display: none;
-  align-items: flex-start !important;
-  justify-content: center !important;
-  padding: 8px 12px !important;
   background: rgba(0,0,0,0.45) !important;
   z-index: 99999 !important;
-  box-sizing: border-box !important;
   overflow-y: auto !important;
+}
+#adminModal .admin-unified-content {
+  display: block !important;
+  position: relative;
+  width: min(600px, 92vw);
+  margin: 12px auto !important;
+  background: white !important;
+  border-radius: 14px !important;
+  padding: 16px !important;
+  box-sizing: border-box !important;
+  max-height: none !important;
+  overflow-y: visible !important;
 }
 #adminModal .modal-content {
   width: min(640px, 92vw) !important;
@@ -3718,7 +3726,7 @@ function openAdminModalSafe(e){
   try{ if(e){ e.preventDefault(); e.stopPropagation(); } }catch(x){}
   var m = document.getElementById('adminModal');
   if(!m) return;
-  m.style.display = 'flex';
+  m.style.display = 'block';
   var mainCode = ((document.getElementById('eventCodeInput')||{}).value||'').trim();
   var lockInput = document.getElementById('lockEventCodeInput');
   if(lockInput && mainCode) lockInput.value = mainCode;
@@ -3860,10 +3868,10 @@ function closeAdminModalQuick(){
 </div>
 
 <!-- 관리자 도구 모달 -->
-<div id="adminModal" style="position:fixed !important;">
+<div id="adminModal">
 
   <!-- ══════ PC 전용 (768px↑): 잠금없음, 설정 바로 펼침 ══════ -->
-  <div class="modal-content admin-unified-content" style="position:relative; padding:16px; width:min(600px,92vw); background:white; border-radius:14px; box-sizing:border-box; overflow-y:auto; max-height:92vh;">
+  <div class="modal-content admin-unified-content" style="">
     <div style="display:flex; justify-content:flex-end; margin-bottom:8px;">
       <button type="button" onclick="closeAdminModalQuick()" aria-label="닫기"
         style="background:#f3f4f6; border:1.5px solid #d1d5db; border-radius:50%;
