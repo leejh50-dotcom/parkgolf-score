@@ -1864,6 +1864,9 @@ body {
     line-height: 30px !important;
   }
 }
+
+#adminEventCode::placeholder { color: #adb5bd !important; }
+#lockEventCodeInput::placeholder { color: #adb5bd !important; }
 </style>
 </head>
 <body>
@@ -1892,16 +1895,16 @@ body {
 <div class="players-section">
 <div class="player-input">
 <div class="player-number">1</div>
-<input id="player1" type="text" placeholder="경기자 1" /></div>
+<input id="player1" type="text" placeholder="경기자 1" style="text-align:center !important;" /></div>
 <div class="player-input">
 <div class="player-number">2</div>
-<input id="player2" type="text" placeholder="경기자 2" /></div>
+<input id="player2" type="text" placeholder="경기자 2" style="text-align:center !important;" /></div>
 <div class="player-input">
 <div class="player-number">3</div>
-<input id="player3" type="text" placeholder="경기자 3" /></div>
+<input id="player3" type="text" placeholder="경기자 3" style="text-align:center !important;" /></div>
 <div class="player-input">
 <div class="player-number">4</div>
-<input id="player4" type="text" placeholder="경기자 4" /></div>
+<input id="player4" type="text" placeholder="경기자 4" style="text-align:center !important;" /></div>
 </div>
 </div>
 <div class="button-group" style="grid-template-columns: 1fr 1fr; margin-bottom: 30px !important;"><button class="load-btn" onclick="openNameListModal()">이름<br>불러오기</button> <button class="clear-btn" onclick="clearPlayerNames()">이름<br>지우기</button></div>
@@ -3669,7 +3672,7 @@ window.showSavedUrls = function() {
     title.textContent = '📋 저장된 URL 목록';
     box.appendChild(title);
 
-    function makeRow(club, url, color) {
+    function makeRow(club, url, color, storageKey) {
         var row = document.createElement('div');
         row.style.marginBottom = '14px';
         var label = document.createElement('div');
@@ -3684,7 +3687,7 @@ window.showSavedUrls = function() {
         inp.addEventListener('click', function(){ this.select(); });
         var btn = document.createElement('button');
         btn.textContent = '복사';
-        btn.style.cssText = 'padding:7px 12px;background:' + color + ';color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;';
+        btn.style.cssText = 'padding:7px 10px;background:' + color + ';color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;';
         btn.addEventListener('click', function() {
             inp.select();
             if (navigator.clipboard) {
@@ -3694,7 +3697,22 @@ window.showSavedUrls = function() {
                 showToast('복사됨!');
             }
         });
-        wrap.appendChild(inp); wrap.appendChild(btn);
+        if (storageKey) {
+            var delBtn = document.createElement('button');
+            delBtn.textContent = '삭제';
+            delBtn.style.cssText = 'padding:7px 10px;background:#dc3545;color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;';
+            delBtn.addEventListener('click', function() {
+                if (confirm('["' + club + '"] URL을 삭제할까요?')) {
+                    localStorage.removeItem(storageKey);
+                    overlay.remove();
+                    window.showSavedUrls();
+                    showToast('삭제되었습니다');
+                }
+            });
+            wrap.appendChild(inp); wrap.appendChild(btn); wrap.appendChild(delBtn);
+        } else {
+            wrap.appendChild(inp); wrap.appendChild(btn);
+        }
         row.appendChild(label); row.appendChild(wrap);
         box.appendChild(row);
     }
@@ -3705,9 +3723,9 @@ window.showSavedUrls = function() {
         empty.textContent = '저장된 URL이 없습니다.';
         box.appendChild(empty);
     } else {
-        items.forEach(function(it) { makeRow(it.club, it.url, '#1a5c35'); });
+        items.forEach(function(it) { makeRow(it.club, it.url, '#1a5c35', 'parkgolf_url_' + it.club); });
         if (basic && !items.find(function(i){ return i.url === basic; })) {
-            makeRow('기본', basic, '#555');
+            makeRow('기본', basic, '#555', 'parkgolf_webapp_url');
         }
     }
 
