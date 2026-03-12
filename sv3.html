@@ -184,24 +184,27 @@ input, textarea, select { font-size: 16px; }
   display: none;
   background: rgba(0,0,0,0.45) !important;
   z-index: 99999 !important;
-  overflow: hidden !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
 }
-#adminModal .admin-unified-content {
-  position: fixed !important;
-  top: 12px !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
+#adminModal .admin-modal-wrapper {
+  min-height: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+  padding: 12px 2vw !important;
+  box-sizing: border-box !important;
+}
+.admin-unified-content {
+  position: relative !important;
   width: 96vw !important;
   max-width: 600px !important;
-  max-height: calc(100vh - 24px) !important;
-  overflow-y: auto !important;
-  -webkit-overflow-scrolling: touch !important;
   background: white !important;
   border-radius: 14px !important;
   padding: 16px !important;
   box-sizing: border-box !important;
   text-align: left !important;
-  z-index: 100000 !important;
 }
 #adminModal .modal-content {
   width: min(640px, 92vw) !important;
@@ -3918,7 +3921,7 @@ function closeAdminModalQuick(){
 <div id="adminModal">
 
   <!-- ══════ PC 전용 (768px↑): 잠금없음, 설정 바로 펼침 ══════ -->
-  <div class="modal-content admin-unified-content" style="">
+  <div class="admin-modal-wrapper"><div class="modal-content admin-unified-content" style="">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
       <span style="font-size:15px; font-weight:900; color:#1e3c72;"> 관리자 도구</span>
       <button type="button" onclick="closeAdminModalQuick()"
@@ -4040,7 +4043,7 @@ function closeAdminModalQuick(){
         닫기
       </button>
     </div>
-  </div>
+  </div></div>
 
 </div>
 
