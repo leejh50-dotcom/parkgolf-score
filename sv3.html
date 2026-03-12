@@ -181,27 +181,27 @@ input, textarea, select { font-size: 16px; }
 #adminModal {
   position: fixed !important;
   inset: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
   display: none;
   background: rgba(0,0,0,0.45) !important;
   z-index: 99999 !important;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
+  overflow: hidden !important;
 }
 #adminModal .admin-unified-content {
-  display: block !important;
-  position: relative !important;
+  position: fixed !important;
+  top: 12px !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
   width: 96vw !important;
   max-width: 600px !important;
-  margin: 12px 0 !important;
+  max-height: calc(100vh - 24px) !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
   background: white !important;
   border-radius: 14px !important;
   padding: 16px !important;
   box-sizing: border-box !important;
   text-align: left !important;
+  z-index: 100000 !important;
 }
 #adminModal .modal-content {
   width: min(640px, 92vw) !important;
