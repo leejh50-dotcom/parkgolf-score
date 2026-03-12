@@ -189,25 +189,15 @@ input, textarea, select { font-size: 16px; }
   overflow-y: auto !important;
 }
 #adminModal .admin-unified-content {
-  display: block !important;
+  display: table !important;
   position: relative;
-  width: min(600px, 96vw);
+  width: min(600px, 96vw) !important;
   margin: 12px auto !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
   background: white !important;
   border-radius: 14px !important;
   padding: 16px !important;
   box-sizing: border-box !important;
-  max-height: none !important;
-  overflow-y: visible !important;
-}
-/* PC에서 모달 중앙 정렬 보장 */
-#adminModal {
-  text-align: center;
-}
-#adminModal .admin-unified-content {
-  text-align: left;
+  text-align: left !important;
 }
 #adminModal .modal-content {
   width: min(640px, 92vw) !important;
