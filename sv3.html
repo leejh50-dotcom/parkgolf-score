@@ -3652,6 +3652,8 @@ function saveURL() {
     var clubKey = getClubKey_(code);
     if (clubKey) {
         localStorage.setItem('parkgolf_url_' + clubKey, url);
+        // 저장 시각 기록 (최신순 정렬용)
+        localStorage.setItem('parkgolf_url_ts_' + clubKey, Date.now());
         alert('✅ URL 저장 완료!\n클럽: ' + clubKey + '\n\n다음엔 같은 클럽 대회코드 입력 시\n자동으로 이 URL이 불러와집니다.');
     } else {
         alert('✅ URL이 저장되었습니다!\n\nTIP: 대회코드 입력 후 저장하면\n클럽별로 자동 기억됩니다.');
@@ -3663,10 +3665,15 @@ function getClubKey_(code) {
 }
 window.showSavedUrls = function() {
     var items = [];
-    Object.keys(localStorage).filter(function(k){ return k.startsWith('parkgolf_url_'); })
+    Object.keys(localStorage).filter(function(k){ return k.startsWith('parkgolf_url_') && !k.startsWith('parkgolf_url_ts_'); })
     .forEach(function(k) {
-        items.push({ club: k.replace('parkgolf_url_',''), url: localStorage.getItem(k) });
+        var clubKey = k.replace('parkgolf_url_','');
+        var ts = parseInt(localStorage.getItem('parkgolf_url_ts_' + clubKey) || '0');
+        items.push({ club: clubKey, url: localStorage.getItem(k), ts: ts, storageKey: k });
     });
+    // 최신 저장 순으로 정렬 (ts 내림차순, ts 없는 항목은 뒤로)
+    items.sort(function(a, b){ return b.ts - a.ts; });
+
     var basic = localStorage.getItem('parkgolf_webapp_url');
 
     var overlay = document.createElement('div');
@@ -3677,9 +3684,13 @@ window.showSavedUrls = function() {
     box.style.cssText = 'background:#fff;border-radius:16px;padding:20px;width:100%;max-width:420px;max-height:80vh;overflow-y:auto;';
 
     var title = document.createElement('div');
-    title.style.cssText = 'font-weight:900;font-size:16px;margin-bottom:14px;';
+    title.style.cssText = 'font-weight:900;font-size:16px;margin-bottom:4px;';
     title.textContent = '📋 저장된 URL 목록';
     box.appendChild(title);
+    var subtitle = document.createElement('div');
+    subtitle.style.cssText = 'font-size:11px;color:#6c757d;margin-bottom:14px;font-weight:600;';
+    subtitle.textContent = '최근 저장 순 · 선택 시 URL 입력란에 자동 입력됩니다';
+    box.appendChild(subtitle);
 
     function makeRow(club, url, color, storageKey) {
         var row = document.createElement('div');
@@ -3694,18 +3705,24 @@ window.showSavedUrls = function() {
         inp.value = url;
         inp.style.cssText = 'flex:1;font-size:11px;padding:7px 8px;border:1px solid #dee2e6;border-radius:8px;color:#333;background:#f8f9fa;min-width:0;';
         inp.addEventListener('click', function(){ this.select(); });
-        var btn = document.createElement('button');
-        btn.textContent = '복사';
-        btn.style.cssText = 'padding:7px 10px;background:' + color + ';color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;';
-        btn.addEventListener('click', function() {
-            inp.select();
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(url).then(function(){ showToast('복사됨!'); });
-            } else {
-                document.execCommand('copy');
-                showToast('복사됨!');
+
+        // ── 선택 버튼: URL 입력란에 바로 입력 후 오버레이 닫기 ──
+        var selectBtn = document.createElement('button');
+        selectBtn.textContent = '선택';
+        selectBtn.style.cssText = 'padding:7px 10px;background:' + color + ';color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;';
+        selectBtn.addEventListener('click', function() {
+            var webAppUrlInput = document.getElementById('webAppUrl');
+            if (webAppUrlInput) {
+                webAppUrlInput.value = url;
+                webAppUrlInput.style.borderColor = '#28a745';
+                setTimeout(function(){ webAppUrlInput.style.borderColor = ''; }, 1500);
             }
+            // 기본 URL도 함께 갱신
+            localStorage.setItem('parkgolf_webapp_url', url);
+            overlay.remove();
+            showToast('✅ URL 선택됨 — 저장 버튼을 눌러 확정하세요');
         });
+
         if (storageKey) {
             var delBtn = document.createElement('button');
             delBtn.textContent = '삭제';
@@ -3713,14 +3730,15 @@ window.showSavedUrls = function() {
             delBtn.addEventListener('click', function() {
                 if (confirm('["' + club + '"] URL을 삭제할까요?')) {
                     localStorage.removeItem(storageKey);
+                    localStorage.removeItem('parkgolf_url_ts_' + club);
                     overlay.remove();
                     window.showSavedUrls();
                     showToast('삭제되었습니다');
                 }
             });
-            wrap.appendChild(inp); wrap.appendChild(btn); wrap.appendChild(delBtn);
+            wrap.appendChild(inp); wrap.appendChild(selectBtn); wrap.appendChild(delBtn);
         } else {
-            wrap.appendChild(inp); wrap.appendChild(btn);
+            wrap.appendChild(inp); wrap.appendChild(selectBtn);
         }
         row.appendChild(label); row.appendChild(wrap);
         box.appendChild(row);
@@ -3732,7 +3750,7 @@ window.showSavedUrls = function() {
         empty.textContent = '저장된 URL이 없습니다.';
         box.appendChild(empty);
     } else {
-        items.forEach(function(it) { makeRow(it.club, it.url, '#1a5c35', 'parkgolf_url_' + it.club); });
+        items.forEach(function(it) { makeRow(it.club, it.url, '#1a5c35', it.storageKey); });
         if (basic && !items.find(function(i){ return i.url === basic; })) {
             makeRow('기본', basic, '#555', 'parkgolf_webapp_url');
         }
