@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="description" content="파크골프 대회 점수 자동집계 시스템 PASIS sv3.0 — QR코드로 현장 전송, 구글시트 자동 순위집계, 조편성, 대회잠금 기능">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<title>sv3.5</title>
+<title>sv3.0</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="파시스 sv3.0">
@@ -1855,21 +1855,50 @@ body {
 }
 
 /* ── 하단 버튼 높이 조정 ── */
-/* 모바일: +2px → 29px */
+/* 모바일: 32px */
 #sendToSheetBtn, #openAdminToolBtn {
-  height: 29px !important;
-  max-height: 29px !important;
-  min-height: 29px !important;
-  line-height: 29px !important;
+  height: 32px !important;
+  max-height: 32px !important;
+  min-height: 32px !important;
+  line-height: 32px !important;
 }
-/* PC(768px↑): +3px → 30px */
+/* PC(768px↑): 33px */
 @media (min-width: 768px) {
   #sendToSheetBtn, #openAdminToolBtn {
-    height: 30px !important;
-    max-height: 30px !important;
-    min-height: 30px !important;
-    line-height: 30px !important;
+    height: 33px !important;
+    max-height: 33px !important;
+    min-height: 33px !important;
+    line-height: 33px !important;
   }
+}
+
+/* ── 티스토리 광고·외부 요소 침범 방지 ── */
+/* 앱 전체를 독립 스택 컨텍스트로 격리 */
+.parkgolf-app {
+  isolation: isolate !important;
+  position: relative !important;
+  z-index: 0 !important;
+  contain: layout style !important;
+}
+/* 앱 안에 끼어드는 티스토리 광고 요소 숨김 */
+.parkgolf-app > .revenue_unit_item,
+.parkgolf-app > .tt_revenue_unit,
+.parkgolf-app > .ad_unit,
+.parkgolf-app > .kakao_ad_area,
+.parkgolf-app > ins,
+.parkgolf-app > .adsbygoogle,
+.parkgolf-app > [data-tistory-react-app],
+.parkgolf-app > [class*="revenue"],
+.parkgolf-app > [class*="kakao_ad"],
+.parkgolf-app > [id*="daumSearchCode"],
+.parkgolf-app > [id*="kakaoAdFit"] {
+  display: none !important;
+}
+/* 앱 바깥 티스토리 요소가 앱 위로 겹치는 것 방지 */
+.revenue_unit_item, .tt_revenue_unit,
+.article_revenue_unit, .wrap_revenue_unit {
+  z-index: -1 !important;
+  position: relative !important;
 }
 
 #adminEventCode::placeholder { color: #adb5bd !important; }
@@ -2037,7 +2066,7 @@ body {
 
 <!-- 관리자 도구 버튼 -->
 <div style="margin-top: 40px !important; margin-bottom: 30px !important;">
-<button id="openAdminToolBtn" type="button" class="admin-open-btn" onclick="openAdminModalSafe(null);" style="width: 100% !important; padding: 0px 14px !important; height: 27px !important; max-height: 27px !important; min-height: 27px !important; line-height: 27px !important; overflow: hidden !important; background: linear-gradient(135deg, #f4b400 0%, #db9200 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 14px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">🔒 관리자 전용</button>
+<button id="openAdminToolBtn" type="button" class="admin-open-btn" onclick="openAdminModalSafe(null);" style="width: 100% !important; padding: 0px 14px !important; height: 32px !important; max-height: 32px !important; min-height: 32px !important; line-height: 32px !important; overflow: hidden !important; background: linear-gradient(135deg, #f4b400 0%, #db9200 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 14px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">🔒 관리자 전용</button>
 </div>
 
 </div>
@@ -3906,6 +3935,38 @@ function closeAdminModalQuick(){
   }
   window.addEventListener('load', function(){ setTimeout(hideBar,300); });
   window.addEventListener('orientationchange', function(){ setTimeout(hideBar,400); });
+})();
+
+/* ── 티스토리 광고 동적 주입 방어 (MutationObserver) ── */
+(function() {
+  var AD_SELECTORS = [
+    '.revenue_unit_item', '.tt_revenue_unit', '.ad_unit',
+    '.kakao_ad_area', '.article_revenue_unit', '.wrap_revenue_unit',
+    '[data-tistory-react-app]', '[class*="revenue"]', '[class*="kakao_ad"]'
+  ];
+  function removeInjectedAds(root) {
+    var app = root || document.querySelector('.parkgolf-app');
+    if (!app) return;
+    AD_SELECTORS.forEach(function(sel) {
+      try {
+        app.querySelectorAll(sel).forEach(function(el) {
+          el.style.setProperty('display', 'none', 'important');
+        });
+      } catch(e) {}
+    });
+  }
+  window.addEventListener('DOMContentLoaded', function() { removeInjectedAds(); });
+  window.addEventListener('load', function() { removeInjectedAds(); });
+  // DOM 변경 감시
+  var observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(m) {
+      if (m.addedNodes.length) removeInjectedAds();
+    });
+  });
+  window.addEventListener('DOMContentLoaded', function() {
+    var app = document.querySelector('.parkgolf-app');
+    if (app) observer.observe(app, { childList: true, subtree: true });
+  });
 })();
 </script>
 </div>
