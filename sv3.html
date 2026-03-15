@@ -1872,6 +1872,36 @@ body {
 
 #adminEventCode::placeholder { color: #adb5bd !important; }
 #lockEventCodeInput::placeholder { color: #adb5bd !important; }
+
+/* ── 티스토리 광고·인기글·블로그 정보 침범 차단 ── */
+.parkgolf-app .revenue_unit_item,
+.parkgolf-app .tt_revenue_unit,
+.parkgolf-app .ad_unit,
+.parkgolf-app .article_revenue_unit,
+.parkgolf-app .wrap_revenue_unit,
+.parkgolf-app .kakao_ad_area,
+.parkgolf-app ins,
+.parkgolf-app .adsbygoogle,
+.parkgolf-app [id*="kakaoAdFit"],
+.parkgolf-app [id*="daumSearch"],
+.parkgolf-app [class*="revenue_"],
+.parkgolf-app [class*="kakao_ad"],
+.parkgolf-app [data-tistory-react-app],
+.parkgolf-app [id^="tistory_"],
+.parkgolf-app .link_list_post,
+.parkgolf-app .related_unit,
+.parkgolf-app .tt_recommend_related,
+.parkgolf-app [id*="related"],
+.parkgolf-app [id*="popular"],
+.parkgolf-app [class*="popular_"],
+.parkgolf-app [class*="recommend_"],
+.parkgolf-app .blog_author_info,
+.parkgolf-app .blog_info,
+.parkgolf-app .author_info,
+.parkgolf-app [class*="blogAuthor"],
+.parkgolf-app [class*="blog_author"] {
+  display: none !important;
+}
 </style>
 </head>
 <body>
