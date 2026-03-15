@@ -1,7 +1,5 @@
 <!doctype html>
 <html lang="ko">
-<!doctype html>
-<html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="description" content="파크골프 대회 점수 자동집계 시스템 PASIS sv3.0 — QR코드로 현장 전송, 구글시트 자동 순위집계, 조편성, 대회잠금 기능">
@@ -157,8 +155,6 @@ html, body {
     font-size: 20px !important;
     font-weight: 700 !important;
   }
-  #qrGuideMessage,
-  
 }
 button, .btn, .key-btn, .confirm-btn-top, .penalty-btn-side, .back-btn, .clear-btn {
   touch-action: manipulation;
@@ -170,7 +166,6 @@ input, textarea, select {
 #adminModal, #adminModal * {
   pointer-events: auto;
 }
-button, .btn, .big-btn, .action-btn, .modal button { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
 input, textarea, select { font-size: 16px; } 
 .admin-ver{ display:inline-block; margin-left:8px; padding:2px 8px; border-radius:999px; font-size:12px; font-weight:800; background:#eef2ff; color:#3730a3; vertical-align:middle;}
 #adminModal .modal-content {
@@ -1241,7 +1236,7 @@ body.modal-open {
   font-size: 17px !important;
   font-weight: 600 !important;
   text-align: center !important;
-},
+}
 .parkgolf-app #eventNameInput::placeholder,
 .parkgolf-app #eventCodeInput::placeholder,
 .parkgolf-app #teamNameInput::placeholder{
@@ -1563,11 +1558,6 @@ body.modal-open {
     font-weight: 800 !important;
     padding: 4px !important;
   }
-  .help-text,
-  .guide-text,
-  #qrGuideMessage,
-  
-}
 @media (max-width: 767px) {
   .parkgolf-app .map-link{
     width: 76px !important;
@@ -1632,20 +1622,6 @@ body.modal-open {
     justify-content: center !important;
     overscroll-behavior: contain !important;
 }
-#scoreModal .modal-content {
-    background: white !important;
-    border-radius: 16px !important;
-    padding: 20px !important;
-    max-width: 92% !important;
-    width: 400px !important;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
-    touch-action: pan-y !important;
-    -webkit-overflow-scrolling: touch !important;
-    overscroll-behavior: contain !important;
-    overflow-y: auto !important;
-    box-sizing: border-box !important;
-    max-height: 80vh !important;
-}
 #scoreModal.show {
     display: flex !important;
 }
@@ -1656,6 +1632,9 @@ body.modal-open {
     max-width: 90% !important;
     width: 400px !important;
     box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+    touch-action: pan-y !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: contain !important;
     overflow-y: auto !important;
     max-height: 90vh !important;
     box-sizing: border-box !important;
@@ -1873,35 +1852,17 @@ body {
 #adminEventCode::placeholder { color: #adb5bd !important; }
 #lockEventCodeInput::placeholder { color: #adb5bd !important; }
 
-/* ── 티스토리 광고·인기글·블로그 정보 침범 차단 ── */
-.parkgolf-app .revenue_unit_item,
-.parkgolf-app .tt_revenue_unit,
-.parkgolf-app .ad_unit,
-.parkgolf-app .article_revenue_unit,
-.parkgolf-app .wrap_revenue_unit,
-.parkgolf-app .kakao_ad_area,
-.parkgolf-app ins,
-.parkgolf-app .adsbygoogle,
-.parkgolf-app [id*="kakaoAdFit"],
-.parkgolf-app [id*="daumSearch"],
-.parkgolf-app [class*="revenue_"],
-.parkgolf-app [class*="kakao_ad"],
-.parkgolf-app [data-tistory-react-app],
-.parkgolf-app [id^="tistory_"],
-.parkgolf-app .link_list_post,
-.parkgolf-app .related_unit,
-.parkgolf-app .tt_recommend_related,
-.parkgolf-app [id*="related"],
-.parkgolf-app [id*="popular"],
-.parkgolf-app [class*="popular_"],
-.parkgolf-app [class*="recommend_"],
-.parkgolf-app .blog_author_info,
-.parkgolf-app .blog_info,
-.parkgolf-app .author_info,
-.parkgolf-app [class*="blogAuthor"],
-.parkgolf-app [class*="blog_author"] {
-  display: none !important;
+/* ── GitHub Pages 전용: body를 앱 전체 높이로 ── */
+html, body {
+  height: 100%;
 }
+.parkgolf-app {
+  min-height: 100vh;
+}
+/* 모든 모달 z-index 통일 (Tistory 간섭 없으므로 단순화) */
+.parkgolf-app .modal { z-index: 1000 !important; }
+#scoreModal       { z-index: 9998 !important; }
+#adminModal       { z-index: 9999 !important; }
 </style>
 </head>
 <body>
@@ -2133,8 +2094,6 @@ body {
             if (typeof html2canvas === 'undefined') {
                 var script = document.createElement('script');
                 script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-                script.onload = function() {
-                };
                 script.onerror = function() {
                     console.error('html2canvas 로드 실패 - 모든 CDN 시도 완료');
                 };
@@ -3842,61 +3801,6 @@ function lockEventFromAdmin() {
   });
 }
 
-/* ===== 관리자 버튼: PC=클릭, 모바일=3번 탭 ===== */
-
-(function() {
-  var _scrollY = 0;
-  window.__lockBodyScrollForModal = function() {};
-  window.__unlockBodyScrollForModal = function() {};
-  var openNames = ['openAdminModal', 'showAdminModal', 'openAdminTool', 'openAdminToolModal'];
-  var closeNames = ['closeAdminModal', 'hideAdminModal', 'closeAdminTool', 'closeAdminToolModal'];
-  openNames.forEach(function(fn) {
-    if (typeof window[fn] === 'function') {
-      var _orig = window[fn];
-      window[fn] = function() {
-        var r = _orig.apply(this, arguments);
-        window.__lockBodyScrollForModal();
-        return r;
-      };
-    }
-  });
-  closeNames.forEach(function(fn) {
-    if (typeof window[fn] === 'function') {
-      var _orig = window[fn];
-      window[fn] = function() {
-        var r = _orig.apply(this, arguments);
-        window.__unlockBodyScrollForModal();
-        return r;
-      };
-    }
-  });
-  try {
-    var modal = document.getElementById('adminModal');
-    if (modal) {
-      var obs = new MutationObserver(function() {
-        var d = (modal.style && modal.style.display) ? modal.style.display : '';
-        if (d && d !== 'none') window.__lockBodyScrollForModal();
-        if (d === 'none') window.__unlockBodyScrollForModal();
-      });
-      obs.observe(modal, { attributes: true, attributeFilter: ['style'] });
-    }
-  } catch (e) {}
-})();
-(function() {
-  function watchModal(id) {
-    try {
-      var modal = document.getElementById(id);
-      if (!modal) return;
-      var obs = new MutationObserver(function() {
-        var d = (modal.style && modal.style.display) ? modal.style.display : '';
-        if (d && d !== 'none') window.__lockBodyScrollForModal && window.__lockBodyScrollForModal();
-        if (d === 'none') window.__unlockBodyScrollForModal && window.__unlockBodyScrollForModal();
-      });
-      obs.observe(modal, { attributes: true, attributeFilter: ['style'] });
-    } catch (e) {}
-  }
-  watchModal('scoreModal');
-})();
 function closeAdminModalQuick(){
   var m = document.getElementById('adminModal');
   if(m) m.style.display = 'none';
@@ -3917,13 +3821,6 @@ function closeAdminModalQuick(){
   });
 })();
 
-(function(){
-  function hideBar(){
-    if(window.scrollY===0) window.scrollTo(0,1);
-  }
-  window.addEventListener('load', function(){ setTimeout(hideBar,300); });
-  window.addEventListener('orientationchange', function(){ setTimeout(hideBar,400); });
-})();
 </script>
 </div>
 </div>
