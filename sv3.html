@@ -2327,6 +2327,20 @@ body {
             document.getElementById('shareSelectModal').classList.remove('show');
         }
         
+        function safeHideLoadingModal() {
+            var lm = document.getElementById('loadingModal');
+            if (lm) lm.classList.remove('show');
+        }
+        var _loadingTimer = null;
+        function safeShowLoadingModal() {
+            safeShowLoadingModal();
+            if (_loadingTimer) clearTimeout(_loadingTimer);
+            // 최대 15초 후 강제 닫기 (html2canvas 행업 방지)
+            _loadingTimer = setTimeout(function() {
+                safeHideLoadingModal();
+                _loadingTimer = null;
+            }, 15000);
+        }
         function shareOnlySummary() {
             closeShareSelectModal();
             if (typeof html2canvas === 'undefined') {
@@ -2334,7 +2348,7 @@ body {
                 return;
             }
             
-            document.getElementById('loadingModal').classList.add('show');
+            safeShowLoadingModal();
             const coursesContainer = document.getElementById('coursesContainer');
             const originalDisplay = coursesContainer.style.display;
             coursesContainer.style.display = 'none';
@@ -2350,7 +2364,7 @@ body {
                     imageTimeout: 0
                 }).then(function(canvas) {
                     coursesContainer.style.display = originalDisplay;
-                    document.getElementById('loadingModal').classList.remove('show');
+                    safeHideLoadingModal();
                     canvas.toBlob(function(blob) {
                         if (!blob) {
                             alert('이미지 생성에 실패했습니다.');
@@ -2370,11 +2384,6 @@ body {
                                     text: '파크골프 경기 결과를 공유합니다.'
                                 }).then(function() {
                                 }).catch(function(error) {
-                        if (sendBtn) {
-                            sendBtn.disabled = false;
-                            sendBtn.style.opacity = '';
-                            sendBtn.textContent = '대회 집계(구글시트) 전송';
-                        }
                                     if (error.name !== 'AbortError') {
                                         tryClipboardShare(blob, canvas);
                                     }
@@ -2388,7 +2397,7 @@ body {
                     }, 'image/png', 0.95);
                 }).catch(function(error) {
                     coursesContainer.style.display = originalDisplay;
-                    document.getElementById('loadingModal').classList.remove('show');
+                    safeHideLoadingModal();
                     alert('⚠️ 이미지 생성에 실패했습니다.\n\n오류: ' + error.message + '\n\n해결 방법:\n1. 페이지 새로고침(F5 또는 Ctrl+R)\n2. 점수를 다시 입력한 후 재시도\n3. 다른 브라우저로 시도');
                 });
             }, 500);
@@ -2435,7 +2444,7 @@ body {
                 return;
             }
             
-            document.getElementById('loadingModal').classList.add('show');
+            safeShowLoadingModal();
             setTimeout(function() {
                 html2canvas(document.getElementById('resultCapture'), {
                     backgroundColor: '#ffffff',
@@ -2489,7 +2498,7 @@ body {
                         ctx.drawImage(summaryCanvas, (maxWidth - summaryCanvas.width) / 2, 0);
                         ctx.drawImage(coursesCanvas, (maxWidth - coursesCanvas.width) / 2, summaryCanvas.height + 40);
                         
-                        document.getElementById('loadingModal').classList.remove('show');
+                        safeHideLoadingModal();
                         combinedCanvas.toBlob(function(blob) {
                             if (!blob) {
                                 alert('이미지 생성에 실패했습니다.');
@@ -2521,11 +2530,11 @@ body {
                             }
                         }, 'image/png', 0.95);
                     }).catch(function(error) {
-                        document.getElementById('loadingModal').classList.remove('show');
+                        safeHideLoadingModal();
                         alert('⚠️ 이미지 생성에 실패했습니다.\n\n오류: ' + error.message + '\n\n해결 방법:\n1. 페이지 새로고침(F5 또는 Ctrl+R)\n2. 점수를 다시 입력한 후 재시도\n3. 다른 브라우저로 시도');
                     });
                 }).catch(function(error) {
-                    document.getElementById('loadingModal').classList.remove('show');
+                    safeHideLoadingModal();
                     alert('⚠️ 이미지 생성에 실패했습니다.\n\n오류: ' + error.message + '\n\n해결 방법:\n1. 페이지 새로고침(F5 또는 Ctrl+R)\n2. 점수를 다시 입력한 후 재시도\n3. 다른 브라우저로 시도');
                 });
             }, 500);
@@ -2542,7 +2551,7 @@ body {
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
                 
-                document.getElementById('loadingModal').classList.remove('show');
+                safeHideLoadingModal();
                 showToast('이미지가 저장되었습니다!\n갤러리에서 확인 후 공유해주세요.');
             });
         }
@@ -2668,13 +2677,16 @@ body {
             showToast('저장되었습니다!');
         }
         
+        var _toastTimer = null;
         function showToast(message) {
             const toast = document.getElementById('toast');
             toast.textContent = message;
             toast.classList.add('show');
-            setTimeout(function() {
+            if (_toastTimer) clearTimeout(_toastTimer);
+            _toastTimer = setTimeout(function() {
                 toast.classList.remove('show');
-            }, 2000);
+                _toastTimer = null;
+            }, 2500);
         }
         
         function openMap() {
@@ -3736,7 +3748,7 @@ function saveURL() {
 }
 function getClubKey_(code) {
     if (!code) return '';
-    return code.replace(/[\d]+월?$/, '').trim() || code.trim();
+    return code.trim();
 }
 window.showSavedUrls = function() {
     var items = [];
