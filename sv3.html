@@ -157,7 +157,7 @@ html, body {
     font-size: 20px !important;
     font-weight: 700 !important;
   }
-  
+  #qrGuideMessage,
   
 }
 button, .btn, .key-btn, .confirm-btn-top, .penalty-btn-side, .back-btn, .clear-btn {
@@ -291,7 +291,7 @@ input, textarea, select { font-size: 16px; }
 }
 body.modal-open {
   overflow: hidden !important;
-}
+  }
 #adminModal {
   overscroll-behavior: contain !important;
 }
@@ -1413,7 +1413,7 @@ body.modal-open {
     }
     .parkgolf-app .help-text,
     .parkgolf-app .guide-text,
-    
+    .parkgolf-app #qrGuideMessage,
     .parkgolf-app 
     .parkgolf-app .top-banner,
     .parkgolf-app .header-box,
@@ -1565,8 +1565,9 @@ body.modal-open {
   }
   .help-text,
   .guide-text,
+  #qrGuideMessage,
+  
 }
-
 @media (max-width: 767px) {
   .parkgolf-app .map-link{
     width: 76px !important;
@@ -1854,14 +1855,12 @@ body {
 }
 
 /* ── 하단 버튼 높이 조정 ── */
-/* 모바일: 32px */
 #sendToSheetBtn, #openAdminToolBtn {
   height: 32px !important;
   max-height: 32px !important;
   min-height: 32px !important;
   line-height: 32px !important;
 }
-/* PC(768px↑): 33px */
 @media (min-width: 768px) {
   #sendToSheetBtn, #openAdminToolBtn {
     height: 33px !important;
@@ -1869,79 +1868,6 @@ body {
     min-height: 33px !important;
     line-height: 33px !important;
   }
-}
-
-/* ══════════════════════════════════════════════════════
-   티스토리 광고·인기글·추천글 침범 완전 방어
-   ══════════════════════════════════════════════════════ */
-
-/* 앱 전체를 독립 격리 컨테이너로 */
-.parkgolf-app {
-  isolation: isolate !important;
-  position: relative !important;
-  z-index: 1 !important;
-}
-
-/* ── 앱 내부 어디서든 (> 아닌 공백 선택자 = 모든 자손) 숨김 ── */
-
-/* 광고 유닛 */
-.parkgolf-app .revenue_unit_item,
-.parkgolf-app .tt_revenue_unit,
-.parkgolf-app .ad_unit,
-.parkgolf-app .article_revenue_unit,
-.parkgolf-app .wrap_revenue_unit,
-.parkgolf-app .kakao_ad_area,
-.parkgolf-app ins.adsbygoogle,
-.parkgolf-app .adsbygoogle,
-.parkgolf-app [id*="kakaoAdFit"],
-.parkgolf-app [id*="daumSearchCode"],
-.parkgolf-app [class*="revenue"],
-.parkgolf-app [class*="kakao_ad"] {
-  display: none !important;
-}
-
-/* 인기글·추천글·관련글 위젯 */
-.parkgolf-app #related-entry-article,
-.parkgolf-app .related_unit,
-.parkgolf-app [class*="popular"],
-.parkgolf-app [class*="recommend"],
-.parkgolf-app [class*="reco_"],
-.parkgolf-app [class*="relate"],
-.parkgolf-app [id*="related"],
-.parkgolf-app [id*="kakaoRel"],
-.parkgolf-app [id*="popular"],
-.parkgolf-app .link_list_post,
-.parkgolf-app .tt_recommend_related,
-.parkgolf-app .recommend_related,
-.parkgolf-app [data-tistory-react-app],
-.parkgolf-app [id^="tistory_"],
-.parkgolf-app [class*="tistory_"] {
-  display: none !important;
-}
-
-/* 티스토리 블로그 메타 요소(닉네임·블로그명 표시 등) */
-.parkgolf-app .blogName,
-.parkgolf-app .blog_author,
-.parkgolf-app .blog_info,
-.parkgolf-app [class*="blog_"],
-.parkgolf-app [id*="blog_"],
-.parkgolf-app .post-meta,
-.parkgolf-app .post_meta,
-.parkgolf-app [class*="post_meta"],
-.parkgolf-app [class*="post-meta"],
-.parkgolf-app [class*="entry_"].entry_content + *:not(#coursesContainer):not(.summary-section):not(#adSection):not(.button-group):not(#parModal):not(#scoreModal):not(#toast):not(#loadingModal):not(#historyModal):not(#shareSelectModal):not(#nameListModal) {
-  /* 앱 내부에 끼어드는 모든 외부 요소 차단 */
-}
-
-/* 앱 바깥 티스토리 요소가 앱 영역 위로 z-index 경쟁 방지 */
-.revenue_unit_item,
-.tt_revenue_unit,
-.article_revenue_unit,
-.wrap_revenue_unit,
-[id*="kakaoAdFit"],
-[id*="daumSearchCode"] {
-  z-index: -1 !important;
-  position: relative !important;
 }
 
 #adminEventCode::placeholder { color: #adb5bd !important; }
@@ -2101,7 +2027,7 @@ body {
 
 <!-- 구글시트로 보내기 버튼 -->
 <div style="margin-top: 30px !important; margin-bottom: 40px !important;">
-<button id="sendToSheetBtn" class="sheet-btn" onclick="sendToGoogleSheet();" style="width: 100% !important; padding: 0px 14px !important; height: 32px !important; max-height: 32px !important; min-height: 32px !important; line-height: 32px !important; overflow: hidden !important; background: linear-gradient(135deg, #0f9d58 0%, #0b7a44 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 14px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">대회 집계(구글시트) 전송</button>
+<button id="sendToSheetBtn" class="sheet-btn" onclick="sendToGoogleSheet();" style="width: 100% !important; padding: 0px 14px !important; height: 27px !important; max-height: 27px !important; min-height: 27px !important; line-height: 27px !important; overflow: hidden !important; background: linear-gradient(135deg, #0f9d58 0%, #0b7a44 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 14px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">대회 집계(구글시트) 전송</button>
 </div>
 
 <!-- 구분선 -->
@@ -2324,21 +2250,6 @@ body {
             document.getElementById('shareSelectModal').classList.remove('show');
         }
         
-        function safeHideLoadingModal() {
-            var lm = document.getElementById('loadingModal');
-            if (lm) lm.classList.remove('show');
-            if (_loadingTimer) { clearTimeout(_loadingTimer); _loadingTimer = null; }
-        }
-        var _loadingTimer = null;
-        function safeShowLoadingModal() {
-            var lm = document.getElementById('loadingModal');
-            if (lm) lm.classList.add('show');
-            if (_loadingTimer) clearTimeout(_loadingTimer);
-            // 최대 12초 후 강제 닫기 (html2canvas 행업 방지)
-            _loadingTimer = setTimeout(function() {
-                safeHideLoadingModal();
-            }, 12000);
-        }
         function shareOnlySummary() {
             closeShareSelectModal();
             if (typeof html2canvas === 'undefined') {
@@ -2346,7 +2257,7 @@ body {
                 return;
             }
             
-            safeShowLoadingModal();
+            document.getElementById('loadingModal').classList.add('show');
             const coursesContainer = document.getElementById('coursesContainer');
             const originalDisplay = coursesContainer.style.display;
             coursesContainer.style.display = 'none';
@@ -2362,7 +2273,7 @@ body {
                     imageTimeout: 0
                 }).then(function(canvas) {
                     coursesContainer.style.display = originalDisplay;
-                    safeHideLoadingModal();
+                    document.getElementById('loadingModal').classList.remove('show');
                     canvas.toBlob(function(blob) {
                         if (!blob) {
                             alert('이미지 생성에 실패했습니다.');
@@ -2382,6 +2293,11 @@ body {
                                     text: '파크골프 경기 결과를 공유합니다.'
                                 }).then(function() {
                                 }).catch(function(error) {
+                        if (sendBtn) {
+                            sendBtn.disabled = false;
+                            sendBtn.style.opacity = '';
+                            sendBtn.textContent = '대회 집계(구글시트) 전송';
+                        }
                                     if (error.name !== 'AbortError') {
                                         tryClipboardShare(blob, canvas);
                                     }
@@ -2395,7 +2311,7 @@ body {
                     }, 'image/png', 0.95);
                 }).catch(function(error) {
                     coursesContainer.style.display = originalDisplay;
-                    safeHideLoadingModal();
+                    document.getElementById('loadingModal').classList.remove('show');
                     alert('⚠️ 이미지 생성에 실패했습니다.\n\n오류: ' + error.message + '\n\n해결 방법:\n1. 페이지 새로고침(F5 또는 Ctrl+R)\n2. 점수를 다시 입력한 후 재시도\n3. 다른 브라우저로 시도');
                 });
             }, 500);
@@ -2442,7 +2358,7 @@ body {
                 return;
             }
             
-            safeShowLoadingModal();
+            document.getElementById('loadingModal').classList.add('show');
             setTimeout(function() {
                 html2canvas(document.getElementById('resultCapture'), {
                     backgroundColor: '#ffffff',
@@ -2496,7 +2412,7 @@ body {
                         ctx.drawImage(summaryCanvas, (maxWidth - summaryCanvas.width) / 2, 0);
                         ctx.drawImage(coursesCanvas, (maxWidth - coursesCanvas.width) / 2, summaryCanvas.height + 40);
                         
-                        safeHideLoadingModal();
+                        document.getElementById('loadingModal').classList.remove('show');
                         combinedCanvas.toBlob(function(blob) {
                             if (!blob) {
                                 alert('이미지 생성에 실패했습니다.');
@@ -2528,11 +2444,11 @@ body {
                             }
                         }, 'image/png', 0.95);
                     }).catch(function(error) {
-                        safeHideLoadingModal();
+                        document.getElementById('loadingModal').classList.remove('show');
                         alert('⚠️ 이미지 생성에 실패했습니다.\n\n오류: ' + error.message + '\n\n해결 방법:\n1. 페이지 새로고침(F5 또는 Ctrl+R)\n2. 점수를 다시 입력한 후 재시도\n3. 다른 브라우저로 시도');
                     });
                 }).catch(function(error) {
-                    safeHideLoadingModal();
+                    document.getElementById('loadingModal').classList.remove('show');
                     alert('⚠️ 이미지 생성에 실패했습니다.\n\n오류: ' + error.message + '\n\n해결 방법:\n1. 페이지 새로고침(F5 또는 Ctrl+R)\n2. 점수를 다시 입력한 후 재시도\n3. 다른 브라우저로 시도');
                 });
             }, 500);
@@ -2549,7 +2465,7 @@ body {
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
                 
-                safeHideLoadingModal();
+                document.getElementById('loadingModal').classList.remove('show');
                 showToast('이미지가 저장되었습니다!\n갤러리에서 확인 후 공유해주세요.');
             });
         }
@@ -2880,7 +2796,9 @@ body {
                 isPenalty = false;
             }
             updateScoreDisplay();
-            window.__smScrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+            window.__smScrollY = window.pageYOffset || 0;
+            document.documentElement.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden';
             var modal = document.getElementById('scoreModal');
             var mc = modal.querySelector('.modal-content');
             if (mc) {
@@ -3477,7 +3395,6 @@ function saveQrImage() {
             if (!qrContainer) return;
             const currentUrl = window.location.href;
             qrContainer.innerHTML = '';
-            
             if (typeof QRCode !== 'undefined') {
                 new QRCode(qrContainer, {
                     text: currentUrl,
@@ -3696,15 +3613,28 @@ if (qrUrl && qrUrl.length > 1000) {
 }
 window.qrModeActive = false;
 function updateQrSendGuardUI() {
-    // qrGuideMessage 요소 없음 - 버튼은 항상 정상 표시
+    var guide = document.getElementById('qrGuideMessage');
     var sendBtn = document.getElementById('sendToSheetBtn');
-    if (!sendBtn) return;
-    sendBtn.style.opacity = '1';
-    sendBtn.style.filter = 'none';
-    sendBtn.style.boxShadow = 'none';
+    if (!guide || !sendBtn) return;
+    if (window.qrModeActive) {
+        guide.style.display = 'none';
+        sendBtn.style.opacity = '1';
+        sendBtn.style.filter = 'none';
+        sendBtn.style.boxShadow = 'none';
+    } else {
+        guide.style.display = 'block';
+        sendBtn.style.opacity = '0.55';
+        sendBtn.style.filter = 'grayscale(0.15)';
+        sendBtn.style.boxShadow = '0 0 0 3px rgba(255, 193, 7, 0.25)';
+    }
 }
 function requireQrBeforeSend() {
-    return true; // QR 강제 여부 제거 - 전송 버튼 항상 활성
+    if (window.qrModeActive) return true;
+    alert('⚠️ 먼저 QR코드를 스캔해 주세요!\n\n점수 기록은 할 수 있지만, 전송은 QR로 대회코드가 자동입력된 상태에서만 가능합니다.');
+    var eventCodeInput = document.getElementById('eventCodeInput');
+    if (eventCodeInput) eventCodeInput.focus();
+    updateQrSendGuardUI();
+    return false;
 }
 
 function saveURL() {
@@ -3719,8 +3649,7 @@ function saveURL() {
     var clubKey = getClubKey_(code);
     if (clubKey) {
         localStorage.setItem('parkgolf_url_' + clubKey, url);
-        // 저장 시각 기록 (최신순 정렬용)
-        localStorage.setItem('parkgolf_url_ts_' + clubKey, Date.now());
+        localStorage.setItem('parkgolf_url_ts_' + clubKey, Date.now()); // 저장시각
         alert('✅ URL 저장 완료!\n클럽: ' + clubKey + '\n\n다음엔 같은 클럽 대회코드 입력 시\n자동으로 이 URL이 불러와집니다.');
     } else {
         alert('✅ URL이 저장되었습니다!\n\nTIP: 대회코드 입력 후 저장하면\n클럽별로 자동 기억됩니다.');
@@ -3728,19 +3657,18 @@ function saveURL() {
 }
 function getClubKey_(code) {
     if (!code) return '';
-    return code.trim();
+    return code.trim(); // 대회코드 전체를 키로 사용
 }
 window.showSavedUrls = function() {
     var items = [];
-    Object.keys(localStorage).filter(function(k){ return k.startsWith('parkgolf_url_') && !k.startsWith('parkgolf_url_ts_'); })
-    .forEach(function(k) {
-        var clubKey = k.replace('parkgolf_url_','');
-        var ts = parseInt(localStorage.getItem('parkgolf_url_ts_' + clubKey) || '0');
-        items.push({ club: clubKey, url: localStorage.getItem(k), ts: ts, storageKey: k });
-    });
-    // 최신 저장 순으로 정렬 (ts 내림차순, ts 없는 항목은 뒤로)
-    items.sort(function(a, b){ return b.ts - a.ts; });
-
+    Object.keys(localStorage)
+      .filter(function(k){ return k.startsWith('parkgolf_url_') && !k.startsWith('parkgolf_url_ts_'); })
+      .forEach(function(k) {
+          var clubKey = k.replace('parkgolf_url_','');
+          var ts = parseInt(localStorage.getItem('parkgolf_url_ts_' + clubKey) || '0');
+          items.push({ club: clubKey, url: localStorage.getItem(k), ts: ts, storageKey: k });
+      });
+    items.sort(function(a,b){ return b.ts - a.ts; }); // 최신순
     var basic = localStorage.getItem('parkgolf_webapp_url');
 
     var overlay = document.createElement('div');
@@ -3754,10 +3682,10 @@ window.showSavedUrls = function() {
     title.style.cssText = 'font-weight:900;font-size:16px;margin-bottom:4px;';
     title.textContent = '📋 저장된 URL 목록';
     box.appendChild(title);
-    var subtitle = document.createElement('div');
-    subtitle.style.cssText = 'font-size:11px;color:#6c757d;margin-bottom:14px;font-weight:600;';
-    subtitle.textContent = '최근 저장 순 · 선택 시 URL 입력란에 자동 입력됩니다';
-    box.appendChild(subtitle);
+    var sub = document.createElement('div');
+    sub.style.cssText = 'font-size:11px;color:#6c757d;font-weight:600;margin-bottom:14px;';
+    sub.textContent = '최근 저장 순 · 선택 시 URL 입력란에 자동 입력됩니다';
+    box.appendChild(sub);
 
     function makeRow(club, url, color, storageKey) {
         var row = document.createElement('div');
@@ -3771,25 +3699,17 @@ window.showSavedUrls = function() {
         inp.readOnly = true;
         inp.value = url;
         inp.style.cssText = 'flex:1;font-size:11px;padding:7px 8px;border:1px solid #dee2e6;border-radius:8px;color:#333;background:#f8f9fa;min-width:0;';
-        inp.addEventListener('click', function(){ this.select(); });
-
-        // ── 선택 버튼: URL 입력란에 바로 입력 후 오버레이 닫기 ──
+        // 선택 버튼: webAppUrl 입력란에 바로 입력
         var selectBtn = document.createElement('button');
         selectBtn.textContent = '선택';
         selectBtn.style.cssText = 'padding:7px 10px;background:' + color + ';color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;';
         selectBtn.addEventListener('click', function() {
-            var webAppUrlInput = document.getElementById('webAppUrl');
-            if (webAppUrlInput) {
-                webAppUrlInput.value = url;
-                webAppUrlInput.style.borderColor = '#28a745';
-                setTimeout(function(){ webAppUrlInput.style.borderColor = ''; }, 1500);
-            }
-            // 기본 URL도 함께 갱신
+            var inp2 = document.getElementById('webAppUrl');
+            if (inp2) { inp2.value = url; }
             localStorage.setItem('parkgolf_webapp_url', url);
             overlay.remove();
-            showToast('✅ URL 선택됨 — 저장 버튼을 눌러 확정하세요');
+            showToast('✅ URL 선택됨 — 저장 버튼으로 확정하세요');
         });
-
         if (storageKey) {
             var delBtn = document.createElement('button');
             delBtn.textContent = '삭제';
@@ -3973,72 +3893,6 @@ function closeAdminModalQuick(){
   }
   window.addEventListener('load', function(){ setTimeout(hideBar,300); });
   window.addEventListener('orientationchange', function(){ setTimeout(hideBar,400); });
-})();
-
-/* ── 티스토리 동적 주입 요소 실시간 제거 (MutationObserver) ── */
-(function() {
-  // 제거 대상 셀렉터 목록
-  var KILL_SELECTORS = [
-    // 광고
-    '.revenue_unit_item', '.tt_revenue_unit', '.ad_unit',
-    '.article_revenue_unit', '.wrap_revenue_unit',
-    '.kakao_ad_area', '.adsbygoogle', 'ins.adsbygoogle',
-    '[id*="kakaoAdFit"]', '[id*="daumSearchCode"]',
-    '[class*="revenue"]', '[class*="kakao_ad"]',
-    // 인기글·추천글·관련글
-    '#related-entry-article', '.related_unit',
-    '[class*="popular"]', '[class*="recommend"]',
-    '[class*="reco_"]', '[class*="relate"]',
-    '[id*="related"]', '[id*="kakaoRel"]', '[id*="popular"]',
-    '.link_list_post', '.tt_recommend_related', '.recommend_related',
-    // 티스토리 React 앱·기타 메타
-    '[data-tistory-react-app]',
-    '[id^="tistory_"]', '[class*="tistory_"]'
-  ];
-
-  function purgeInjected() {
-    var app = document.querySelector('.parkgolf-app');
-    if (!app) return;
-    KILL_SELECTORS.forEach(function(sel) {
-      try {
-        app.querySelectorAll(sel).forEach(function(el) {
-          // 앱 고유 요소는 건드리지 않음
-          if (el.id && /^(coursesContainer|summaryBodyNew|resultCapture|adSection|adminModal|scoreModal|parModal|historyModal|shareSelectModal|nameListModal|loadingModal|toast|sendToSheetBtn|openAdminToolBtn)/.test(el.id)) return;
-          el.style.setProperty('display', 'none', 'important');
-          el.setAttribute('aria-hidden', 'true');
-        });
-      } catch(e) {}
-    });
-  }
-
-  // 페이지 로드 시 즉시 + 지연 실행 (티스토리는 늦게 주입하는 경우 있음)
-  document.addEventListener('DOMContentLoaded', function() {
-    purgeInjected();
-    setTimeout(purgeInjected, 500);
-    setTimeout(purgeInjected, 1500);
-    setTimeout(purgeInjected, 3000);
-  });
-  window.addEventListener('load', function() {
-    purgeInjected();
-    setTimeout(purgeInjected, 1000);
-  });
-
-  // DOM 변경 실시간 감시
-  var observer = new MutationObserver(function(mutations) {
-    var needsPurge = false;
-    mutations.forEach(function(m) {
-      if (m.addedNodes.length) needsPurge = true;
-    });
-    if (needsPurge) purgeInjected();
-  });
-  document.addEventListener('DOMContentLoaded', function() {
-    var app = document.querySelector('.parkgolf-app');
-    if (app) {
-      observer.observe(app, { childList: true, subtree: true });
-    }
-    // 앱 바깥 body 수준도 감시 (티스토리가 body에 직접 주입 후 앱 안으로 이동시키는 경우)
-    observer.observe(document.body, { childList: true, subtree: false });
-  });
 })();
 </script>
 </div>
