@@ -1872,31 +1872,77 @@ body {
   }
 }
 
-/* ── 티스토리 광고·외부 요소 침범 방지 ── */
-/* 앱 전체를 독립 스택 컨텍스트로 격리 */
+/* ══════════════════════════════════════════════════════
+   티스토리 광고·인기글·추천글 침범 완전 방어
+   ══════════════════════════════════════════════════════ */
+
+/* 앱 전체를 독립 격리 컨테이너로 */
 .parkgolf-app {
   isolation: isolate !important;
   position: relative !important;
-  z-index: 0 !important;
+  z-index: 1 !important;
   contain: layout style !important;
+  overflow: visible !important;
 }
-/* 앱 안에 끼어드는 티스토리 광고 요소 숨김 */
-.parkgolf-app > .revenue_unit_item,
-.parkgolf-app > .tt_revenue_unit,
-.parkgolf-app > .ad_unit,
-.parkgolf-app > .kakao_ad_area,
-.parkgolf-app > ins,
-.parkgolf-app > .adsbygoogle,
-.parkgolf-app > [data-tistory-react-app],
-.parkgolf-app > [class*="revenue"],
-.parkgolf-app > [class*="kakao_ad"],
-.parkgolf-app > [id*="daumSearchCode"],
-.parkgolf-app > [id*="kakaoAdFit"] {
+
+/* ── 앱 내부 어디서든 (> 아닌 공백 선택자 = 모든 자손) 숨김 ── */
+
+/* 광고 유닛 */
+.parkgolf-app .revenue_unit_item,
+.parkgolf-app .tt_revenue_unit,
+.parkgolf-app .ad_unit,
+.parkgolf-app .article_revenue_unit,
+.parkgolf-app .wrap_revenue_unit,
+.parkgolf-app .kakao_ad_area,
+.parkgolf-app ins.adsbygoogle,
+.parkgolf-app .adsbygoogle,
+.parkgolf-app [id*="kakaoAdFit"],
+.parkgolf-app [id*="daumSearchCode"],
+.parkgolf-app [class*="revenue"],
+.parkgolf-app [class*="kakao_ad"] {
   display: none !important;
 }
-/* 앱 바깥 티스토리 요소가 앱 위로 겹치는 것 방지 */
-.revenue_unit_item, .tt_revenue_unit,
-.article_revenue_unit, .wrap_revenue_unit {
+
+/* 인기글·추천글·관련글 위젯 */
+.parkgolf-app #related-entry-article,
+.parkgolf-app .related_unit,
+.parkgolf-app [class*="popular"],
+.parkgolf-app [class*="recommend"],
+.parkgolf-app [class*="reco_"],
+.parkgolf-app [class*="relate"],
+.parkgolf-app [id*="related"],
+.parkgolf-app [id*="kakaoRel"],
+.parkgolf-app [id*="popular"],
+.parkgolf-app .link_list_post,
+.parkgolf-app .tt_recommend_related,
+.parkgolf-app .recommend_related,
+.parkgolf-app [data-tistory-react-app],
+.parkgolf-app [id^="tistory_"],
+.parkgolf-app [class*="tistory_"] {
+  display: none !important;
+}
+
+/* 티스토리 블로그 메타 요소(닉네임·블로그명 표시 등) */
+.parkgolf-app .blogName,
+.parkgolf-app .blog_author,
+.parkgolf-app .blog_info,
+.parkgolf-app [class*="blog_"],
+.parkgolf-app [id*="blog_"],
+.parkgolf-app .post-meta,
+.parkgolf-app .post_meta,
+.parkgolf-app [class*="post_meta"],
+.parkgolf-app [class*="post-meta"],
+.parkgolf-app [class*="entry_"].entry_content + *:not(#coursesContainer):not(.summary-section):not(#adSection):not(.button-group):not(#parModal):not(#scoreModal):not(#toast):not(#loadingModal):not(#historyModal):not(#shareSelectModal):not(#nameListModal) {
+  /* 앱 내부에 끼어드는 모든 외부 요소 차단 */
+}
+
+/* 앱 바깥 티스토리 요소가 앱 영역 위로 z-index 경쟁 방지 */
+.revenue_unit_item,
+.tt_revenue_unit,
+.article_revenue_unit,
+.wrap_revenue_unit,
+[id*="kakaoAdFit"],
+[id*="daumSearchCode"] {
   z-index: -1 !important;
   position: relative !important;
 }
@@ -3937,35 +3983,69 @@ function closeAdminModalQuick(){
   window.addEventListener('orientationchange', function(){ setTimeout(hideBar,400); });
 })();
 
-/* ── 티스토리 광고 동적 주입 방어 (MutationObserver) ── */
+/* ── 티스토리 동적 주입 요소 실시간 제거 (MutationObserver) ── */
 (function() {
-  var AD_SELECTORS = [
+  // 제거 대상 셀렉터 목록
+  var KILL_SELECTORS = [
+    // 광고
     '.revenue_unit_item', '.tt_revenue_unit', '.ad_unit',
-    '.kakao_ad_area', '.article_revenue_unit', '.wrap_revenue_unit',
-    '[data-tistory-react-app]', '[class*="revenue"]', '[class*="kakao_ad"]'
+    '.article_revenue_unit', '.wrap_revenue_unit',
+    '.kakao_ad_area', '.adsbygoogle', 'ins.adsbygoogle',
+    '[id*="kakaoAdFit"]', '[id*="daumSearchCode"]',
+    '[class*="revenue"]', '[class*="kakao_ad"]',
+    // 인기글·추천글·관련글
+    '#related-entry-article', '.related_unit',
+    '[class*="popular"]', '[class*="recommend"]',
+    '[class*="reco_"]', '[class*="relate"]',
+    '[id*="related"]', '[id*="kakaoRel"]', '[id*="popular"]',
+    '.link_list_post', '.tt_recommend_related', '.recommend_related',
+    // 티스토리 React 앱·기타 메타
+    '[data-tistory-react-app]',
+    '[id^="tistory_"]', '[class*="tistory_"]'
   ];
-  function removeInjectedAds(root) {
-    var app = root || document.querySelector('.parkgolf-app');
+
+  function purgeInjected() {
+    var app = document.querySelector('.parkgolf-app');
     if (!app) return;
-    AD_SELECTORS.forEach(function(sel) {
+    KILL_SELECTORS.forEach(function(sel) {
       try {
         app.querySelectorAll(sel).forEach(function(el) {
+          // 앱 고유 요소는 건드리지 않음
+          if (el.id && /^(coursesContainer|summaryBodyNew|resultCapture|adSection|adminModal|scoreModal|parModal|historyModal|shareSelectModal|nameListModal|loadingModal|toast|sendToSheetBtn|openAdminToolBtn)/.test(el.id)) return;
           el.style.setProperty('display', 'none', 'important');
+          el.setAttribute('aria-hidden', 'true');
         });
       } catch(e) {}
     });
   }
-  window.addEventListener('DOMContentLoaded', function() { removeInjectedAds(); });
-  window.addEventListener('load', function() { removeInjectedAds(); });
-  // DOM 변경 감시
-  var observer = new MutationObserver(function(mutations) {
-    mutations.forEach(function(m) {
-      if (m.addedNodes.length) removeInjectedAds();
-    });
+
+  // 페이지 로드 시 즉시 + 지연 실행 (티스토리는 늦게 주입하는 경우 있음)
+  document.addEventListener('DOMContentLoaded', function() {
+    purgeInjected();
+    setTimeout(purgeInjected, 500);
+    setTimeout(purgeInjected, 1500);
+    setTimeout(purgeInjected, 3000);
   });
-  window.addEventListener('DOMContentLoaded', function() {
+  window.addEventListener('load', function() {
+    purgeInjected();
+    setTimeout(purgeInjected, 1000);
+  });
+
+  // DOM 변경 실시간 감시
+  var observer = new MutationObserver(function(mutations) {
+    var needsPurge = false;
+    mutations.forEach(function(m) {
+      if (m.addedNodes.length) needsPurge = true;
+    });
+    if (needsPurge) purgeInjected();
+  });
+  document.addEventListener('DOMContentLoaded', function() {
     var app = document.querySelector('.parkgolf-app');
-    if (app) observer.observe(app, { childList: true, subtree: true });
+    if (app) {
+      observer.observe(app, { childList: true, subtree: true });
+    }
+    // 앱 바깥 body 수준도 감시 (티스토리가 body에 직접 주입 후 앱 안으로 이동시키는 경우)
+    observer.observe(document.body, { childList: true, subtree: false });
   });
 })();
 </script>
