@@ -284,9 +284,6 @@ input, textarea, select { font-size: 16px; }
   touch-action: manipulation !important;
   -webkit-tap-highlight-color: transparent !important;
 }
-body.modal-open {
-  overflow: hidden !important;
-  }
 #adminModal {
   overscroll-behavior: contain !important;
 }
@@ -2785,9 +2782,12 @@ html, body {
                 isPenalty = false;
             }
             updateScoreDisplay();
-            window.__smScrollY = window.pageYOffset || 0;
-            document.documentElement.style.overflow = 'hidden';
-            document.body.style.overflow = 'hidden';
+            /* iOS scroll lock: position:fixed 방식 (overflow:hidden은 iOS에서 스크롤 먹통 유발) */
+            window.__smScrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+            document.body.style.top = '-' + window.__smScrollY + 'px';
+            document.body.style.position = 'fixed';
+            document.body.style.width = '100%';
+            document.body.style.overflowY = 'scroll';
             var modal = document.getElementById('scoreModal');
             var mc = modal.querySelector('.modal-content');
             if (mc) {
@@ -2847,8 +2847,11 @@ html, body {
             document.getElementById('scoreModal').classList.remove('show');
             tempScore = '';
             isPenalty = false;
-            document.documentElement.style.overflow = '';
-            document.body.style.overflow = '';
+            /* iOS scroll unlock */
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.width = '';
+            document.body.style.overflowY = '';
             window.scrollTo(0, sy);
         } 
         function getPlayerName(playerNum) {
