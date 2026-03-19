@@ -4063,8 +4063,14 @@ function closeAdminModalQuick(){
 </div>
 
 <script>
-/* 티스토리 침범 차단: parkgolf-app 직계 자식 중 .container 가 아닌 것만 숨김 */
+/* 티스토리 침범 차단: parkgolf-app 직계 자식 중 앱 고유 요소 외에만 숨김 */
 (function(){
+  /* 앱 고유 직계 자식 ID/클래스 — 절대 숨기면 안 됨 */
+  var KEEP_IDS = {
+    'parModal':1,'scoreModal':1,'toast':1,'loadingModal':1,
+    'historyModal':1,'shareSelectModal':1,'nameListModal':1,
+    'adminModal':1,'coursesContainer':1,'resultCapture':1,'adSection':1
+  };
   function block(){
     var app = document.querySelector('.parkgolf-app');
     if(!app) return;
@@ -4072,10 +4078,10 @@ function closeAdminModalQuick(){
       if(child.classList && child.classList.contains('container')) return;
       if(child.tagName === 'SCRIPT') return;
       if(child.tagName === 'STYLE')  return;
+      if(child.id && KEEP_IDS[child.id]) return;
       child.style.setProperty('display','none','important');
     });
   }
-  /* 로드 시점에만 실행 — MutationObserver 사용 안 함 (스크롤 끊김 방지) */
   block();
   document.addEventListener('DOMContentLoaded', block);
   window.addEventListener('load', function(){
