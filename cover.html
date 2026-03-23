@@ -29,7 +29,7 @@
 
 html, body {
   height: 100%;
-  overflow: hidden;
+  overflow-y: auto;
   font-family: 'Noto Sans KR', sans-serif;
   background: var(--green-dark);
 }
@@ -43,6 +43,7 @@ html, body {
     radial-gradient(ellipse 60% 40% at 100% 100%, #0f4a2488 0%, transparent 60%),
     linear-gradient(160deg, #1a5634 0%, #0d3320 55%, #0a2818 100%);
   z-index: 0;
+  min-height: 100%;
 }
 
 /* 잔디 패턴 */
@@ -84,7 +85,7 @@ html, body {
   justify-content: center;
   min-height: 100vh;
   min-height: 100dvh;
-  padding: 24px 20px;
+  padding: 28px 20px 36px;
   gap: 0;
 }
 
