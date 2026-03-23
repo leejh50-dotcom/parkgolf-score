@@ -3482,6 +3482,26 @@ function loadUrlParams() {
         var webAppUrlInput = document.getElementById('webAppUrlInput');
         if (webAppUrlInput) webAppUrlInput.value = webAppUrl;
     }
+    /* 표지에서 관리자 버튼으로 진입 시 모달 자동 오픈 */
+    if (urlParams.get('admin') === '1') {
+        setTimeout(function(){ openAdminModalSafe(null); }, 400);
+    }
+    /* 미리보기 모드: 구글시트 전송 버튼만 비활성화 */
+    if (urlParams.get('preview') === '1') {
+        setTimeout(function(){
+            var btn = document.getElementById('sendToSheetBtn');
+            if (btn) {
+                btn.disabled = true;
+                btn.style.opacity = '0.4';
+                btn.style.cursor = 'not-allowed';
+                btn.textContent = '🔒 미리보기 — 전송은 QR 스캔 후 가능';
+                btn.onclick = function(e){
+                    e.preventDefault();
+                    showToast('전송은 관리자에게 QR코드를 받아 스캔 후 가능합니다');
+                };
+            }
+        }, 300);
+    }
 }
 </script>
 
