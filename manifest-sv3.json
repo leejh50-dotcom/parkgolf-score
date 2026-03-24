@@ -1,13 +1,20 @@
 {
-  "name": "파시스3 (SV3.0 클럽대항용)",
-  "short_name": "파시스3",
- "start_url": "/parkgolf-score/sv3.html",
-  "scope": "/피클클프접수/",
-  "display": "standalone",
-  "background_color": "#15803d",
-  "theme_color": "#15803d",
-  "icons": [
-    { "src": "sv3-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "sv3-512.png", "sizes": "512x512", "type": "image/png" }
-  ]
+    "이름":"파시스 sv3.0 클럽대회용",
+    "짧은 이름":"파시스3",
+    "시작_URL":"/parkgolf-score/cover.html",
+    "범위":"/파골프접수/",
+    "표시하다":"독립형",
+    "배경색":"#15803d",
+    "테마_색상":"#15803d",
+    "아이콘": [
+        {"src":"sv3-192.png","사이즈":"192x192","유형":"이미지/png"},
+        {"src":"sv3-512.png","사이즈":"512x512","유형":"이미지/png"}
+    ]
 }
+```
+
+---
+
+수정 후 타이틀 바:
+```
+파시스 sv3.0 클럽대회용
