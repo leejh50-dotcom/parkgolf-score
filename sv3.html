@@ -3520,13 +3520,16 @@ function loadUrlParams() {
         setTimeout(function(){
             var btn = document.getElementById('sendToSheetBtn');
             if (btn) {
-                btn.disabled = true;
-                btn.style.opacity = '0.4';
-                btn.style.cursor = 'not-allowed';
+                /* disabled 사용 안 함 - iOS Safari가 강제 회색 적용하므로 */
+                btn.style.setProperty('background', 'linear-gradient(135deg, #1a5634 0%, #0d3320 100%)', 'important');
+                btn.style.setProperty('opacity', '0.55', 'important');
+                btn.style.setProperty('cursor', 'not-allowed', 'important');
                 btn.textContent = '🔒 미리보기 — 전송은 QR 스캔 후 가능';
                 btn.onclick = function(e){
                     e.preventDefault();
+                    e.stopPropagation();
                     showToast('전송은 관리자에게 QR코드를 받아 스캔 후 가능합니다');
+                    return false;
                 };
             }
         }, 300);
