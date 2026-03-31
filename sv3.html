@@ -2079,7 +2079,7 @@ body {
 
 <!-- 구글시트로 보내기 버튼 -->
 <div style="margin-top: 30px !important; margin-bottom: 40px !important;">
-<button id="sendToSheetBtn" class="sheet-btn" onclick="sendToGoogleSheet();" style="width: 100% !important; padding: 0px 14px !important; height: 27px !important; max-height: 27px !important; min-height: 27px !important; line-height: 27px !important; overflow: hidden !important; background: linear-gradient(135deg, #0f9d58 0%, #0b7a44 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 14px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">대회 집계(구글시트) 전송</button>
+<button id="sendToSheetBtn" class="sheet-btn" onclick="sendToGoogleSheet();" style="width: 100% !important; padding: 0px 14px !important; height: 30px !important; max-height: 30px !important; min-height: 30px !important; line-height: 30px !important; overflow: hidden !important; background: linear-gradient(135deg, #1a5634 0%, #0d3320 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 14px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">대회집계(구글시트)전송</button>
 </div>
 
 <!-- 구분선 -->
@@ -2088,6 +2088,22 @@ body {
 <!-- 관리자 도구 버튼 -->
 <div style="margin-top: 40px !important; margin-bottom: 30px !important;">
 <button id="openAdminToolBtn" type="button" class="admin-open-btn" onclick="openAdminModalSafe(null);" style="width: 100% !important; padding: 0px 14px !important; height: 32px !important; max-height: 32px !important; min-height: 32px !important; line-height: 32px !important; overflow: hidden !important; background: linear-gradient(135deg, #f4b400 0%, #db9200 100%) !important; color: white !important; border: none !important; border-radius: 8px !important; font-size: 14px !important; font-weight: 900 !important; cursor: pointer !important; display: block !important;">🔒 관리자 전용</button>
+</div>
+
+<!-- 도움말 / 사용가이드 -->
+<div style="margin-top: 10px !important; margin-bottom: 40px !important; background: #f5f5f5 !important; border-radius: 12px !important; padding: 14px 12px !important;">
+  <div style="font-size: 13px !important; font-weight: 900 !important; color: #444 !important; margin-bottom: 10px !important; text-align: center !important;">도움말 / 사용가이드</div>
+  <div style="font-size: 12px !important; color: #555 !important; margin-bottom: 10px !important; text-align: center !important;">📌 자세한 사용방법은 아래 설명과 영상을 참고하세요</div>
+  <div style="display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 8px !important;">
+    <a href="https://songgeun25.tistory.com/555" target="_blank" rel="noopener"
+      style="display: flex !important; align-items: center !important; justify-content: center !important; gap: 6px !important; padding: 10px 6px !important; background: #1a5634 !important; color: white !important; border-radius: 10px !important; font-size: 13px !important; font-weight: 900 !important; text-decoration: none !important; text-align: center !important;">
+      📖 사용 설명<br>글 보기
+    </a>
+    <a href="https://youtu.be/XLNFu_s4_MA" target="_blank" rel="noopener"
+      style="display: flex !important; align-items: center !important; justify-content: center !important; gap: 6px !important; padding: 10px 6px !important; background: #c62828 !important; color: white !important; border-radius: 10px !important; font-size: 13px !important; font-weight: 900 !important; text-decoration: none !important; text-align: center !important;">
+      ▶ 사용법 유튜브<br>보기
+    </a>
+  </div>
 </div>
 
 </div>
@@ -2348,7 +2364,7 @@ body {
                         if (sendBtn) {
                             sendBtn.disabled = false;
                             sendBtn.style.opacity = '';
-                            sendBtn.textContent = '대회 집계(구글시트) 전송';
+                            sendBtn.textContent = '대회집계(구글시트)전송';
                         }
                                     if (error.name !== 'AbortError') {
                                         tryClipboardShare(blob, canvas);
@@ -3177,7 +3193,7 @@ window.sendToGoogleSheet = function() {
             let webAppUrl = normalizeWebAppUrl(localStorage.getItem('parkgolf_webapp_url'));
             
             if (!webAppUrl) {
-                if (sendBtn) { sendBtn.disabled=false; sendBtn.style.opacity=''; sendBtn.textContent='대회 집계(구글시트) 전송'; }
+                if (sendBtn) { sendBtn.disabled=false; sendBtn.style.opacity=''; sendBtn.textContent='대회집계(구글시트)전송'; }
                 alert('❌ 웹앱 URL이 없습니다.\n\n페이지 맨 아래 🔒 관리자 전용 버튼을 눌러\nURL을 먼저 설정해주세요.');
                 return;
             }
@@ -3186,14 +3202,14 @@ window.sendToGoogleSheet = function() {
             const eventCode = document.getElementById('eventCodeInput').value || '';
             
             if (!teamName || teamName.trim() === '' || teamName === '미입력') {
-                if (sendBtn) { sendBtn.disabled=false; sendBtn.style.opacity=''; sendBtn.textContent='대회 집계(구글시트) 전송'; }
+                if (sendBtn) { sendBtn.disabled=false; sendBtn.style.opacity=''; sendBtn.textContent='대회집계(구글시트)전송'; }
                 alert('❌ 조명을 입력해주세요!\n\n조명은 필수 입력 항목입니다.\n예: 1조, A조, 3조');
                 document.getElementById('teamNameInput').focus();
                 return;
             }
             
             if (!eventCode || eventCode.trim() === '' || eventCode === '미입력') {
-                if (sendBtn) { sendBtn.disabled=false; sendBtn.style.opacity=''; sendBtn.textContent='대회 집계(구글시트) 전송'; }
+                if (sendBtn) { sendBtn.disabled=false; sendBtn.style.opacity=''; sendBtn.textContent='대회집계(구글시트)전송'; }
                 alert('❌ 대회코드를 입력해주세요!\n\n대회코드는 필수 입력 항목입니다.\nQR 코드를 스캔하면 자동으로 입력됩니다.');
                 document.getElementById('eventCodeInput').focus();
                 return;
@@ -3213,7 +3229,7 @@ window.sendToGoogleSheet = function() {
             };
             const duplicateCheck = checkDuplicateSubmission(data);
             if (duplicateCheck.hasDuplicate) {
-                if (sendBtn) { sendBtn.disabled=false; sendBtn.style.opacity=''; sendBtn.textContent='대회 집계(구글시트) 전송'; }
+                if (sendBtn) { sendBtn.disabled=false; sendBtn.style.opacity=''; sendBtn.textContent='대회집계(구글시트)전송'; }
                 alert('❌ 중복 전송 차단!\n\n' + duplicateCheck.message + 
                       '\n\n이미 전송된 경기자입니다.\n전송이 차단되었습니다.\n\n' +
                       '※ 점수 수정이 필요하면\n   대회 관리자에게 직접 문의하세요!');
@@ -3257,7 +3273,7 @@ window.sendToGoogleSheet = function() {
                     setTimeout(function() {
                         sendBtn.disabled = false;
                         sendBtn.style.opacity = '';
-                        sendBtn.textContent = '대회 집계(구글시트) 전송';
+                        sendBtn.textContent = '대회집계(구글시트)전송';
                     }, 2000);
                 }
             })
@@ -3266,7 +3282,7 @@ window.sendToGoogleSheet = function() {
                 if (sendBtn) {
                     sendBtn.disabled = false;
                     sendBtn.style.opacity = '';
-                    sendBtn.textContent = '대회 집계(구글시트) 전송';
+                    sendBtn.textContent = '대회집계(구글시트)전송';
                 }
             });
         };
