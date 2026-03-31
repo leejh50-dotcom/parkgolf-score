@@ -3523,11 +3523,11 @@ function loadUrlParams() {
                 btn.style.setProperty('background', 'linear-gradient(135deg, #1a5634 0%, #0d3320 100%)', 'important');
                 btn.style.setProperty('cursor', 'not-allowed', 'important');
                 btn.style.removeProperty('opacity');
-                btn.textContent = '🔒 미리보기 — 전송은 QR 스캔 후 가능';
+                btn.textContent = '대회집계(구글시트)전송';
                 btn.onclick = function(e){
                     e.preventDefault();
                     e.stopPropagation();
-                    showToast('전송은 관리자에게 QR코드를 받아 스캔 후 가능합니다');
+                    showToast('🔒 미리보기 모드 — 전송은 QR코드 스캔 후 가능합니다');
                     return false;
                 };
             }
