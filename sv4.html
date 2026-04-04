@@ -743,6 +743,10 @@ function backToCover() {
           <div>③ 예선일자·성별 선택 후 <b>조별 QR 일괄생성</b> 클릭</div>
           <div>④ 팝업창에서 <b>🖨 인쇄하기</b> → 심판 배포</div>
           <div>⑤ 심판이 QR 스캔 → 인적사항·조명 자동입력</div>
+          <div style="margin-top:6px;padding:6px 8px;background:#fff3cd;border-radius:6px;color:#856404;">
+            ⚠️ <b>심판 첫 사용 시 1회 설정 필요</b><br>
+            관리자 모달 → ①번 → 웹앱 URL + 코드 저장 → 이후 팀 QR만으로 작동
+          </div>
         </div>
       </div>
 
@@ -3896,10 +3900,10 @@ async function generateBatchQR() {
     let done = 0;
 
     teams.forEach(function(team, idx) {
-      // 단축 파라미터로 URL 최소화 (c=code, u=url, d=date, t=team, 1~4=player)
+      // WebApp URL 제외 → URL 최소화 (스캔 신뢰성 최대화)
+      // 심판 기기는 관리자 모달 ①번에서 1회 URL 저장으로 설정
       var qrUrl = pageUrl
         + '?c=' + encodeURIComponent(code)
-        + '&u=' + encodeURIComponent(webappUrl)
         + '&d=' + encodeURIComponent(date)
         + '&t=' + encodeURIComponent(team.team);
       team.players.forEach(function(p, pi) {
@@ -3925,18 +3929,6 @@ async function generateBatchQR() {
       qrWrap.appendChild(qrDiv);
 
       // 대회코드 라벨 — QR 하단 HTML 오버레이
-      // 조명 + 대회코드 — QR 중앙 HTML 오버레이
-      var centerLbl = document.createElement('div');
-      centerLbl.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:3px;pointer-events:none;';
-      var teamChip = document.createElement('div');
-      teamChip.style.cssText = 'background:rgba(255,255,255,0.93);color:#7a3f00;font-size:15px;font-weight:900;padding:4px 12px;border-radius:5px;border:2px solid #c8860a;white-space:nowrap;font-family:"Malgun Gothic",Arial,sans-serif;';
-      teamChip.textContent = team.team;
-      var codeChip = document.createElement('div');
-      codeChip.style.cssText = 'background:rgba(200,134,10,0.93);color:#fff;font-size:11px;font-weight:900;padding:2px 10px;border-radius:4px;white-space:nowrap;font-family:"Malgun Gothic",Arial,sans-serif;';
-      codeChip.textContent = code;
-      centerLbl.appendChild(teamChip);
-      centerLbl.appendChild(codeChip);
-      qrWrap.appendChild(centerLbl);
       card.appendChild(qrWrap);
 
       // 선수 명단
