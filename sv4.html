@@ -3875,11 +3875,13 @@ async function generateBatchQR() {
     printStyle.id = 'batchQrPrintStyle';
     printStyle.textContent =
       '@media print{' +
-        'body > *:not(#batchQrOverlay){display:none!important;}' +
-        '#batchQrOverlay{position:static!important;overflow:visible!important;}' +
-        '#batchQrOverlay > div:first-child{display:none!important;}' +
-        '#batchQrGrid{grid-template-columns:repeat(3,1fr)!important;gap:8px!important;padding:0!important;}' +
-        '.bqr-card{page-break-inside:avoid;border:1px solid #ccc!important;box-shadow:none!important;}' +
+        '* { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }' +
+        'body > *{ display:none !important; }' +
+        '#batchQrOverlay{ display:block !important; position:static !important; overflow:visible !important; background:#fff !important; }' +
+        '#batchQrOverlay > div:first-child{ display:none !important; }' +
+        '#batchQrGrid{ display:grid !important; grid-template-columns:repeat(3,1fr) !important; gap:6px !important; padding:0 !important; max-width:100% !important; }' +
+        '.bqr-card{ break-inside:avoid; page-break-inside:avoid; border:1px solid #ccc !important; box-shadow:none !important; }' +
+        '#adminModal, #savedUrlsModal, #qrScanModal, .modal, .toast{ display:none !important; }' +
       '}';
     document.head.appendChild(printStyle);
 
@@ -3945,33 +3947,36 @@ async function generateBatchQR() {
         correctLevel: QRCode.CorrectLevel.H
       });
 
-      // 조명 + 대회코드 오버레이
-      setTimeout(function() {
+      // 조명 + 대회코드 오버레이 (캔버스 준비될 때까지 재시도)
+      (function drawOverlay(attempts) {
         const canvas = qrDiv.querySelector('canvas');
-        if (!canvas) return;
+        if (!canvas || canvas.width === 0) {
+          if (attempts < 30) setTimeout(function(){ drawOverlay(attempts + 1); }, 100);
+          return;
+        }
         const ctx = canvas.getContext('2d');
         const cx = canvas.width / 2;
         const cy = canvas.height / 2;
-        // 조명: 중앙
+        // 조명: 중앙 흰 배경 + 테두리
         const label = team.team;
-        const bW = Math.min(label.length * 18 + 20, canvas.width * 0.68);
-        const bH = 32;
-        ctx.fillStyle = 'rgba(255,255,255,0.92)';
+        const bW = Math.min(label.length * 16 + 20, canvas.width * 0.70);
+        const bH = 30;
+        ctx.fillStyle = 'rgba(255,255,255,0.93)';
         ctx.fillRect(cx - bW/2, cy - bH/2, bW, bH);
-        ctx.strokeStyle = '#c8860a'; ctx.lineWidth = 2;
+        ctx.strokeStyle = '#c8860a'; ctx.lineWidth = 2.5;
         ctx.strokeRect(cx - bW/2, cy - bH/2, bW, bH);
         ctx.fillStyle = '#7a3f00';
-        ctx.font = 'bold 17px "Malgun Gothic",sans-serif';
+        ctx.font = 'bold 16px "Malgun Gothic",Arial,sans-serif';
         ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
         ctx.fillText(label, cx, cy);
-        // 대회코드: 하단
-        const cW = Math.min(code.length * 13 + 16, canvas.width * 0.72);
+        // 대회코드: 하단 진황 바
+        const cW = Math.min(code.length * 12 + 16, canvas.width * 0.75);
         const cH = 22;
-        const cy2 = canvas.height - 4;
-        ctx.fillStyle = 'rgba(200,134,10,0.90)';
+        const cy2 = canvas.height - 3;
+        ctx.fillStyle = 'rgba(200,134,10,0.92)';
         ctx.fillRect(cx - cW/2, cy2 - cH, cW, cH);
         ctx.fillStyle = '#fff';
-        ctx.font = 'bold 13px "Malgun Gothic",sans-serif';
+        ctx.font = 'bold 12px "Malgun Gothic",Arial,sans-serif';
         ctx.textBaseline = 'middle';
         ctx.fillText(code, cx, cy2 - cH/2);
 
@@ -3981,7 +3986,7 @@ async function generateBatchQR() {
           btn.innerHTML = '✅ ' + teams.length + '개 조 QR 생성 완료!';
           btn.disabled = false;
         }
-      }, 80 + idx * 5);
+      })(0);
     });
 
   } catch(err) {
