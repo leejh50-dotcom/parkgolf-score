@@ -600,10 +600,10 @@ function backToCover() {
           <label style="display:block; font-size:13px; font-weight:700; color:#374151; margin-bottom:6px;">👥 조편성 성별 구분</label>
           <select id="modalTeamMode"
             style="width:100%; padding:11px 12px; border:2px solid #e5e7eb; border-radius:10px; font-size:14px; background:white; cursor:pointer; outline:none;">
-            <option value="all">전체 (남녀 혼성)</option>
+            <option value="mixed">혼성 (남녀 무작위 섞어 4명 1조)</option>
             <option value="male">남자부만</option>
             <option value="female">여자부만</option>
-            <option value="separate">성별 분리 (남자부 → 여자부 순)</option>
+            <option value="separate">성별 분리 (남자부 조 → 여자부 조)</option>
           </select>
         </div>
         <button onclick="generateBatchQR()"
