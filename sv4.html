@@ -471,7 +471,7 @@ html, body {
         <span style="width:40px;height:40px;background:rgba(255,255,255,0.15);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">⌨</span>
         <div style="flex:1;">
           <div style="font-size:17px;font-weight:900;color:#fff;">경기자 입장</div>
-          <div style="font-size:12px;color:rgba(255,255,255,0.65);margin-top:2px;">점수 입력 · 대회 전송</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.65);margin-top:2px;">QR 스캔 또는 직접 입력</div>
         </div>
         <span style="color:rgba(255,255,255,0.4);font-size:18px;">›</span>
       </button>
@@ -480,11 +480,35 @@ html, body {
   </div>
 </div>
 
+<!-- QR 스캐너 모달 -->
+<div id="qrScanModal" style="display:none; position:fixed; inset:0; z-index:10001; background:rgba(0,0,0,0.85); align-items:center; justify-content:center;">
+  <div style="background:#fff; border-radius:20px; padding:22px; width:min(380px,92vw); text-align:center; position:relative;">
+    <div style="font-size:18px; font-weight:900; color:#1f2937; margin-bottom:6px;">📷 QR 코드 스캔</div>
+    <div style="font-size:13px; color:#6b7280; margin-bottom:16px;">조별 QR 코드를 카메라로 스캔하세요</div>
+
+    <!-- 카메라 뷰파인더 -->
+    <div id="qrScanReader" style="width:100%; border-radius:12px; overflow:hidden; margin-bottom:14px;"></div>
+
+    <div style="display:flex; gap:10px; flex-direction:column;">
+      <button onclick="skipQRScan()"
+        style="padding:13px; background:#f0f0f0; color:#374151; border:none; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer;">
+        QR 없이 직접 입력
+      </button>
+      <button onclick="closeQRScanner()"
+        style="padding:11px; background:#e5e7eb; color:#6b7280; border:none; border-radius:10px; font-size:13px; cursor:pointer;">
+        취소
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- html5-qrcode 라이브러리 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+
 <script>
 function openAdminFromCover() {
   const m = document.getElementById('adminModal');
   if (!m) return;
-  // 저장된 값 복원
   const urlInp  = document.getElementById('adminWebappUrl');
   const codeInp = document.getElementById('adminCodeInput');
   if (urlInp)  urlInp.value  = localStorage.getItem('parkgolf_webapp_url') || '';
@@ -498,28 +522,127 @@ function closeAdminFromCover() {
 function showMainAppPreview() {
   document.getElementById('sv4CoverPage').style.display = 'none';
   const app = document.querySelector('.parkgolf-app');
-  if (app) {
-    app.style.display = '';
-    app.style.removeProperty('display');
-    window.scrollTo({top: 0, behavior: 'smooth'});
+  if (app) { app.style.display = ''; app.style.removeProperty('display'); window.scrollTo({top:0, behavior:'smooth'}); }
+}
+
+// ── QR 스캐너 ──
+let _html5QrScanner = null;
+
+function enterPlayerScoring() {
+  // 먼저 QR 스캔 모달 열기
+  const modal = document.getElementById('qrScanModal');
+  if (modal) {
+    modal.style.display = 'flex';
+    _startQRScanner();
+  } else {
+    _openScoringScreen();
   }
 }
-function enterPlayerScoring() {
+
+function _startQRScanner() {
+  if (typeof Html5Qrcode === 'undefined') {
+    // 라이브러리 미로드 → 직접 입력으로 바로 이동
+    skipQRScan();
+    return;
+  }
+  try {
+    _html5QrScanner = new Html5Qrcode('qrScanReader');
+    const config = { fps: 10, qrbox: { width: 240, height: 240 }, aspectRatio: 1.0 };
+    _html5QrScanner.start(
+      { facingMode: 'environment' },  // 후면 카메라
+      config,
+      function(decodedText) {
+        // QR 스캔 성공
+        _stopQRScanner();
+        document.getElementById('qrScanModal').style.display = 'none';
+        _applyQRAndOpenScoring(decodedText);
+      },
+      function(err) { /* 스캔 중 에러 무시 */ }
+    ).catch(function(err) {
+      // 카메라 권한 거부 등 → 직접 입력
+      console.log('QR 카메라 오류:', err);
+      skipQRScan();
+    });
+  } catch(e) {
+    skipQRScan();
+  }
+}
+
+function _stopQRScanner() {
+  if (_html5QrScanner) {
+    try { _html5QrScanner.stop(); } catch(e) {}
+    try { _html5QrScanner.clear(); } catch(e) {}
+    _html5QrScanner = null;
+  }
+}
+
+function _applyQRAndOpenScoring(qrText) {
+  // QR URL에서 파라미터 추출
+  try {
+    let search = qrText;
+    if (qrText.includes('?')) search = '?' + qrText.split('?')[1];
+    const params = new URLSearchParams(search);
+
+    const code = params.get('code');
+    const url  = params.get('url');
+    const pre  = params.get('preliminaryDate');
+    const team = params.get('team');
+
+    if (code) {
+      localStorage.setItem('parkgolf_tournament_code', code);
+      const inp = document.getElementById('tournamentCode');
+      if (inp) inp.value = code;
+    }
+    if (url) localStorage.setItem('parkgolf_webapp_url', decodeURIComponent(url));
+    if (pre) localStorage.setItem('parkgolf_preliminary_date', pre);
+    if (team) {
+      const teamInp = document.getElementById('teamName');
+      if (teamInp) teamInp.value = team;
+    }
+    for (let pi = 1; pi <= 4; pi++) {
+      const pVal = params.get('p' + pi);
+      if (!pVal) continue;
+      const parts = decodeURIComponent(pVal).split('|');
+      const nameEl   = document.getElementById('player' + pi);
+      const genderEl = document.getElementById('gender' + pi);
+      const affiliEl = document.getElementById('affiliation' + pi);
+      if (nameEl)   nameEl.value   = (parts[0] || '').trim();
+      if (genderEl) genderEl.value = (parts[1] || '').trim();
+      if (affiliEl) affiliEl.value = (parts[2] || '').trim();
+    }
+    setTimeout(function() {
+      if (typeof syncNameHeaders === 'function') syncNameHeaders();
+      if (typeof autoSave === 'function') autoSave();
+    }, 100);
+  } catch(e) {
+    console.log('QR 파싱 오류:', e);
+  }
+  _openScoringScreen();
+}
+
+function skipQRScan() {
+  _stopQRScanner();
+  document.getElementById('qrScanModal').style.display = 'none';
+  _openScoringScreen();
+}
+function closeQRScanner() {
+  _stopQRScanner();
+  document.getElementById('qrScanModal').style.display = 'none';
+}
+function _openScoringScreen() {
   document.getElementById('sv4CoverPage').style.display = 'none';
   const app = document.querySelector('.parkgolf-app');
-  if (app) {
-    app.style.display = '';
-    app.style.removeProperty('display');
-    window.scrollTo({top: 0, behavior: 'smooth'});
-  }
+  if (app) { app.style.display = ''; app.style.removeProperty('display'); window.scrollTo({top:0}); }
 }
 function backToCover() {
+  _stopQRScanner();
   const app = document.querySelector('.parkgolf-app');
   if (app) app.style.display = 'none';
   const cover = document.getElementById('sv4CoverPage');
   if (cover) cover.style.display = 'flex';
-  window.scrollTo({top: 0, behavior: 'smooth'});
+  window.scrollTo({top:0, behavior:'smooth'});
 }
+</script>
 </script>
 <!-- ===== /SV4.0 COVER PAGE ===== -->
 
@@ -590,12 +713,7 @@ function backToCover() {
           </select>
         </div>
 
-        <button onclick="generateQRInModal()"
-          style="width:100%; padding:14px; background:#7c3aed; color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:900; cursor:pointer; margin-bottom:10px;">
-          QR코드 생성하기 (단일)
-        </button>
-
-        <!-- 조별 QR 일괄생성 -->
+        <!-- 조편성 성별 구분 -->
         <div style="margin-bottom:10px;">
           <label style="display:block; font-size:13px; font-weight:700; color:#374151; margin-bottom:6px;">👥 조편성 성별 구분</label>
           <select id="modalTeamMode"
@@ -606,34 +724,21 @@ function backToCover() {
             <option value="separate">성별 분리 (남자부 조 → 여자부 조)</option>
           </select>
         </div>
+
         <button onclick="generateBatchQR()"
-          style="width:100%; padding:14px; background:linear-gradient(135deg,#c8860a 0%,#7a4f00 100%); color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:900; cursor:pointer;">
-          📋 조별 QR 일괄생성 (100조 인쇄용)
+          style="width:100%; padding:16px; background:linear-gradient(135deg,#c8860a 0%,#7a4f00 100%); color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:900; cursor:pointer;">
+          📋 조별 QR 일괄생성 (인쇄용)
         </button>
-        <div style="font-size:12px; color:#6b7280; margin-top:6px; text-align:center;">조편성 완료 후 실행 · 조명이 QR 안에 표시됨</div>
+        <div style="font-size:12px; color:#6b7280; margin-top:6px; text-align:center;">조편성 완료 후 실행 · 조명·대회코드가 QR 안에 표시됨</div>
 
         <!-- 조별 QR 사용법 안내 -->
         <div style="margin-top:10px; background:#fef9f0; border:1px solid #f0d080; border-radius:10px; padding:12px; font-size:12px; color:#7a4f00; line-height:1.7;">
-          <div style="font-weight:900; margin-bottom:4px;">📋 조별 QR 일괄생성 순서</div>
+          <div style="font-weight:900; margin-bottom:4px;">📋 조별 QR 생성 순서</div>
           <div>① ①번에서 <b>웹앱 URL + 대회코드</b> 저장</div>
-          <div>② 구글시트에서 <b>조편성 실행</b> (GAS 완성본 필요)</div>
-          <div>③ 예선일자 선택 후 <b>조별 QR 일괄생성</b> 클릭</div>
-          <div>④ 팝업창에서 <b>🖨 인쇄하기</b> → 조별 QR 출력</div>
-          <div>⑤ 심판에게 배포 → QR 스캔 시 인적사항 자동입력</div>
-          <div style="margin-top:4px; padding:6px 8px; background:#fff3cd; border-radius:6px; color:#856404;">
-            ⚠️ GAS에 <b>getteams</b> 액션이 없으면 Failed to fetch 오류 발생<br>→ 아래 제공된 GAS 완성본으로 교체하세요
-          </div>
-        </div>
-
-        <!-- QR 결과 영역 (인라인) -->
-        <div id="modalQrResult" style="display:none; text-align:center; margin-top:18px; padding-top:18px; border-top:1px solid #e5e7eb;">
-          <div style="font-size:16px; font-weight:900; color:#333; margin-bottom:14px;">생성 완료! 🎉</div>
-          <div id="modalQrCode" style="display:inline-block; padding:16px; background:white; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.12);"></div>
-          <p style="margin-top:12px; color:#666; font-size:13px; line-height:1.6;">이미지를 길게 눌러 저장하거나<br>카톡으로 바로 전송하세요!</p>
-          <button onclick="downloadQRModal()"
-            style="margin-top:10px; padding:12px 28px; background:#166534; color:white; border:none; border-radius:8px; font-size:14px; font-weight:900; cursor:pointer;">
-            💾 이미지로 저장
-          </button>
+          <div>② 구글시트 → <b>파시스관리 메뉴 → 조편성 실행</b></div>
+          <div>③ 예선일자·성별 선택 후 <b>조별 QR 일괄생성</b> 클릭</div>
+          <div>④ 팝업창에서 <b>🖨 인쇄하기</b> → 심판 배포</div>
+          <div>⑤ 심판이 QR 스캔 → 인적사항·조명 자동입력</div>
         </div>
       </div>
 
