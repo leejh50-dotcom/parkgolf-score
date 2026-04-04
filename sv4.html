@@ -583,9 +583,10 @@ function _applyQRAndOpenScoring(qrText) {
     if (qrText.includes('?')) search = '?' + qrText.split('?')[1];
     const params = new URLSearchParams(search);
 
-    const code = params.get('code');
-    const url  = params.get('url');
-    const pre  = params.get('preliminaryDate');
+    // 단축(c/u/d) 또는 전체(code/url/preliminaryDate) 파라미터 모두 지원
+    const code = params.get('c') || params.get('code');
+    const url  = params.get('u') || params.get('url');
+    const pre  = params.get('d') || params.get('preliminaryDate');
     const team = params.get('team');
 
     if (code) {
@@ -600,7 +601,7 @@ function _applyQRAndOpenScoring(qrText) {
       if (teamInp) teamInp.value = team;
     }
     for (let pi = 1; pi <= 4; pi++) {
-      const pVal = params.get('p' + pi);
+      const pVal = params.get(String(pi)) || params.get('p' + pi);
       if (!pVal) continue;
       const parts = decodeURIComponent(pVal).split('|');
       const nameEl   = document.getElementById('player' + pi);
@@ -1768,13 +1769,13 @@ function initFromQueryParams() {
 
     // ✅ p1~p4: 조별 QR에서 인적사항 자동입력
     // 형식: p1=이름|성별|소속
-    const team = params.get('team');
+    const team = params.get('t') || params.get('team');
     if (team) {
       const teamInp = document.getElementById('teamName');
       if (teamInp) teamInp.value = team;
     }
     for (let pi = 1; pi <= 4; pi++) {
-      const pVal = params.get('p' + pi);
+      const pVal = params.get(String(pi)) || params.get('p' + pi);
       if (!pVal) continue;
       const parts = decodeURIComponent(pVal).split('|');
       const pName  = (parts[0] || '').trim();
@@ -3895,13 +3896,14 @@ async function generateBatchQR() {
     let done = 0;
 
     teams.forEach(function(team, idx) {
+      // 단축 파라미터로 URL 최소화 (c=code, u=url, d=date, t=team, 1~4=player)
       var qrUrl = pageUrl
-        + '?code=' + encodeURIComponent(code)
-        + '&url=' + encodeURIComponent(webappUrl)
-        + '&preliminaryDate=' + encodeURIComponent(date)
-        + '&team=' + encodeURIComponent(team.team);
+        + '?c=' + encodeURIComponent(code)
+        + '&u=' + encodeURIComponent(webappUrl)
+        + '&d=' + encodeURIComponent(date)
+        + '&t=' + encodeURIComponent(team.team);
       team.players.forEach(function(p, pi) {
-        qrUrl += '&p' + (pi+1) + '=' + encodeURIComponent(p.name + '|' + p.gender + '|' + p.affil);
+        qrUrl += '&' + (pi+1) + '=' + encodeURIComponent(p.name + '|' + p.gender + '|' + p.affil);
       });
 
       // 카드
@@ -3917,7 +3919,7 @@ async function generateBatchQR() {
 
       // QR 래퍼 (relative positioning)
       var qrWrap = document.createElement('div');
-      qrWrap.style.cssText = 'position:relative;display:inline-block;margin-bottom:8px;';
+      qrWrap.style.cssText = 'position:relative;display:inline-block;margin-bottom:8px;width:260px;height:260px;';
 
       var qrDiv = document.createElement('div');
       qrWrap.appendChild(qrDiv);
@@ -3959,9 +3961,9 @@ async function generateBatchQR() {
 
       // QR 생성
       new QRCode(qrDiv, {
-        text: qrUrl, width: 220, height: 220,
+        text: qrUrl, width: 260, height: 260,
         colorDark: '#000000', colorLight: '#ffffff',
-        correctLevel: QRCode.CorrectLevel.L
+        correctLevel: QRCode.CorrectLevel.H
       });
 
       done++;
