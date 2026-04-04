@@ -3923,10 +3923,18 @@ async function generateBatchQR() {
       qrWrap.appendChild(qrDiv);
 
       // 대회코드 라벨 — QR 하단 HTML 오버레이
-      var codeLbl = document.createElement('div');
-      codeLbl.style.cssText = 'position:absolute;bottom:0;left:50%;transform:translateX(-50%);background:rgba(200,134,10,0.93);color:#fff;font-size:12px;font-weight:900;white-space:nowrap;padding:3px 10px;border-radius:0 0 3px 3px;font-family:"Malgun Gothic",Arial,sans-serif;';
-      codeLbl.textContent = code;
-      qrWrap.appendChild(codeLbl);
+      // 조명 + 대회코드 — QR 중앙 HTML 오버레이
+      var centerLbl = document.createElement('div');
+      centerLbl.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:3px;pointer-events:none;';
+      var teamChip = document.createElement('div');
+      teamChip.style.cssText = 'background:rgba(255,255,255,0.93);color:#7a3f00;font-size:15px;font-weight:900;padding:4px 12px;border-radius:5px;border:2px solid #c8860a;white-space:nowrap;font-family:"Malgun Gothic",Arial,sans-serif;';
+      teamChip.textContent = team.team;
+      var codeChip = document.createElement('div');
+      codeChip.style.cssText = 'background:rgba(200,134,10,0.93);color:#fff;font-size:11px;font-weight:900;padding:2px 10px;border-radius:4px;white-space:nowrap;font-family:"Malgun Gothic",Arial,sans-serif;';
+      codeChip.textContent = code;
+      centerLbl.appendChild(teamChip);
+      centerLbl.appendChild(codeChip);
+      qrWrap.appendChild(centerLbl);
       card.appendChild(qrWrap);
 
       // 선수 명단
@@ -3951,9 +3959,9 @@ async function generateBatchQR() {
 
       // QR 생성
       new QRCode(qrDiv, {
-        text: qrUrl, width: 180, height: 180,
+        text: qrUrl, width: 220, height: 220,
         colorDark: '#000000', colorLight: '#ffffff',
-        correctLevel: QRCode.CorrectLevel.H
+        correctLevel: QRCode.CorrectLevel.L
       });
 
       done++;
