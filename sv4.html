@@ -648,418 +648,6 @@ function backToCover() {
 
 
 
-<script>
-function openAdminModal(){
-  // 모달 열릴 때 저장된 값 자동 복원
-  const savedUrl = localStorage.getItem('parkgolf_webapp_url') || '';
-  const savedCode = localStorage.getItem('parkgolf_tournament_code') || '';
-  const urlInp = document.getElementById('adminWebappUrl');
-  const codeInp = document.getElementById('adminCodeInput');
-  if (urlInp && savedUrl) urlInp.value = savedUrl;
-  if (codeInp && savedCode) codeInp.value = savedCode;
-  const m = document.getElementById('adminModal');
-  if(m) m.style.display = 'block';
-}
-function closeAdminModal(){
-  const m = document.getElementById('adminModal');
-  if(m) m.style.display = 'none';
-}
-
-// URL + 코드 저장
-function saveAdminUrlAndCode() {
-  const url = (document.getElementById('adminWebappUrl').value || '').trim();
-  const code = (document.getElementById('adminCodeInput').value || '').trim().toUpperCase();
-  if (!url) { alert('⚠️ 웹앱 URL을 입력해주세요.'); return; }
-  if (!url.includes('script.google.com')) { alert('❌ 올바른 Google Apps Script URL이 아닙니다.'); return; }
-  if (!code) { alert('⚠️ 대회코드를 입력해주세요.'); return; }
-
-  // 기존 목록에 추가(최신 5개 유지)
-  let list = [];
-  try { list = JSON.parse(localStorage.getItem('parkgolf_saved_urls') || '[]'); } catch(e){}
-  if (!Array.isArray(list)) list = [];
-  // 중복 제거 후 앞에 추가
-  list = list.filter(item => item.code !== code || item.url !== url);
-  list.unshift({ code: code, url: url, saved: new Date().toLocaleString('ko-KR') });
-  if (list.length > 10) list = list.slice(0, 10);
-  localStorage.setItem('parkgolf_saved_urls', JSON.stringify(list));
-
-  // 현재 사용할 값도 저장
-  localStorage.setItem('parkgolf_webapp_url', url);
-  localStorage.setItem('parkgolf_tournament_code', code);
-
-  // 점수판의 코드 입력칸에도 반영
-  const codeInp = document.getElementById('tournamentCode');
-  if (codeInp) codeInp.value = code;
-
-  alert('✅ 저장 완료!\n\n코드: ' + code + '\nURL: ' + url.slice(0,40) + '...\n\n이제 QR 코드를 생성하세요.');
-}
-
-// 저장된 URL 목록
-function showSavedUrlsList() {
-  let list = [];
-  try { list = JSON.parse(localStorage.getItem('parkgolf_saved_urls') || '[]'); } catch(e){}
-  const container = document.getElementById('savedUrlsList');
-  if (!list.length) {
-    container.innerHTML = '<p style="text-align:center;color:#6b7280;padding:20px 0;">저장된 URL이 없습니다.</p>';
-  } else {
-    container.innerHTML = list.map(function(item, idx) {
-      return '<div style="border:1px solid #e5e7eb;border-radius:10px;padding:12px;margin-bottom:10px;">' +
-        '<div style="font-weight:900;font-size:15px;margin-bottom:4px;">' + item.code + '</div>' +
-        '<div style="font-size:12px;color:#6b7280;word-break:break-all;margin-bottom:8px;">' + (item.url || '').slice(0,50) + '...</div>' +
-        '<div style="font-size:11px;color:#9ca3af;margin-bottom:8px;">' + (item.saved || '') + '</div>' +
-        '<button onclick="applySavedUrl(' + idx + ')" style="padding:8px 16px;background:#2563eb;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">적용</button>' +
-        '</div>';
-    }).join('');
-  }
-  document.getElementById('savedUrlsModal').style.display = 'block';
-}
-function closeSavedUrlsModal() {
-  document.getElementById('savedUrlsModal').style.display = 'none';
-}
-function applySavedUrl(idx) {
-  let list = [];
-  try { list = JSON.parse(localStorage.getItem('parkgolf_saved_urls') || '[]'); } catch(e){}
-  const item = list[idx];
-  if (!item) return;
-  localStorage.setItem('parkgolf_webapp_url', item.url);
-  localStorage.setItem('parkgolf_tournament_code', item.code);
-  const urlInp = document.getElementById('adminWebappUrl');
-  const codeInp = document.getElementById('adminCodeInput');
-  if (urlInp) urlInp.value = item.url;
-  if (codeInp) codeInp.value = item.code;
-  const mainCode = document.getElementById('tournamentCode');
-  if (mainCode) mainCode.value = item.code;
-  closeSavedUrlsModal();
-  alert('✅ 적용 완료: ' + item.code);
-}
-
-// 마감 기능
-async function adminCloseScoring() {
-  const code = (document.getElementById('adminCloseCode').value || '').trim().toUpperCase();
-  const url = localStorage.getItem('parkgolf_webapp_url') || '';
-  if (!code) { alert('⚠️ 대회코드를 입력해주세요.'); return; }
-  if (!url) { alert('⚠️ 저장된 웹앱 URL이 없습니다.\n먼저 ①에서 URL을 저장하세요.'); return; }
-  if (!confirm('⚠️ [' + code + '] 대회의 점수 마감을 진행합니까?\n\n마감 후에는 추가 전송이 차단됩니다.')) return;
-  try {
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code: code, action: 'close' })
-    });
-    const json = await res.json();
-    alert(json.success ? ('✅ 마감 완료!\n' + (json.message || '')) : ('⚠️ ' + (json.message || '마감 실패')));
-  } catch(e) {
-    alert('✅ 로컬 마감 처리\n\n[' + code + '] 대회가 마감되었습니다.\n(네트워크 오류 발생 시 관리자가 구글시트에서 직접 확인하세요.)');
-  }
-}
-
-
-// ── 모달 내부 인라인 QR 생성 ──
-let _modalQrInstance = null;
-
-function generateQRInModal() {
-  const url  = (document.getElementById('adminWebappUrl').value || '').trim()
-             || localStorage.getItem('parkgolf_webapp_url') || '';
-  const code = ((document.getElementById('adminCodeInput').value || '').trim()
-             || localStorage.getItem('parkgolf_tournament_code') || '').toUpperCase();
-  const date = document.getElementById('modalQrDate').value || '통합';
-  const pageUrl = window.location.href.split('?')[0];
-
-  if (!code) { alert('❌ 대회 코드를 입력하세요!\n①번에서 먼저 저장하세요.'); return; }
-  if (!url)  { alert('❌ 웹 앱 URL을 입력하세요!\n①번에서 먼저 저장하세요.'); return; }
-  if (!url.includes('script.google.com')) { alert('❌ 올바른 Google Apps Script URL이 아닙니다.'); return; }
-
-  const finalUrl = pageUrl
-    + '?code=' + encodeURIComponent(code)
-    + '&url='  + encodeURIComponent(url)
-    + '&preliminaryDate=' + encodeURIComponent(date);
-
-  const container = document.getElementById('modalQrCode');
-  container.innerHTML = '';
-  if (_modalQrInstance) { try { _modalQrInstance.clear(); } catch(e){} }
-  _modalQrInstance = new QRCode(container, {
-    text: finalUrl,
-    width: 240, height: 240,
-    colorDark: '#000000', colorLight: '#ffffff',
-    correctLevel: QRCode.CorrectLevel.H
-  });
-
-  // 대회코드 오버레이 (canvas 생성 대기 후 그리기)
-  function drawQROverlay(container, codeLabel) {
-    const canvas = container.querySelector('canvas');
-    if (!canvas) { setTimeout(function(){ drawQROverlay(container, codeLabel); }, 100); return; }
-    const ctx = canvas.getContext('2d');
-    const cx = canvas.width / 2;
-    const boxW = Math.min(codeLabel.length * 14 + 20, canvas.width * 0.75);
-    const boxH = 28;
-    const by = canvas.height - 4;
-    ctx.fillStyle = 'rgba(200,134,10,0.93)';
-    ctx.fillRect(cx - boxW/2, by - boxH, boxW, boxH);
-    ctx.fillStyle = '#fff';
-    ctx.font = 'bold 15px "Malgun Gothic",sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(codeLabel, cx, by - boxH/2);
-  }
-  setTimeout(function(){ drawQROverlay(container, code); }, 200);
-
-  document.getElementById('modalQrResult').style.display = 'block';
-  setTimeout(function() {
-    document.getElementById('modalQrResult').scrollIntoView({ behavior:'smooth', block:'nearest' });
-  }, 150);
-}
-
-function downloadQRModal() {
-  const canvas = document.querySelector('#modalQrCode canvas');
-  if (!canvas) { alert('QR 코드를 먼저 생성해주세요!'); return; }
-  const code = ((document.getElementById('adminCodeInput').value || '')
-               || (localStorage.getItem('parkgolf_tournament_code') || 'QR')).trim().toUpperCase();
-  canvas.toBlob(function(blob) {
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = '파크골프_' + code + '_QR.png';
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    URL.revokeObjectURL(a.href);
-    alert('✅ QR 코드가 저장되었습니다!\n\n카톡으로 전송하거나 인쇄하세요.');
-  });
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 조별 QR 일괄생성 (팝업 없이 인라인 오버레이)
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-async function generateBatchQR() {
-  const webappUrl = (document.getElementById('adminWebappUrl').value || '').trim()
-                  || localStorage.getItem('parkgolf_webapp_url') || '';
-  const code = ((document.getElementById('adminCodeInput').value || '').trim()
-              || localStorage.getItem('parkgolf_tournament_code') || '').toUpperCase();
-  const date = document.getElementById('modalQrDate').value || '통합';
-  const mode = document.getElementById('modalTeamMode') ? document.getElementById('modalTeamMode').value : 'mixed';
-  const pageUrl = window.location.href.split('?')[0];
-
-  if (!code)      { alert('❌ 대회 코드를 입력하세요!\n①번에서 먼저 저장하세요.'); return; }
-  if (!webappUrl) { alert('❌ 웹 앱 URL을 입력하세요!\n①번에서 먼저 저장하세요.'); return; }
-  if (!webappUrl.includes('script.google.com')) { alert('❌ 올바른 Google Apps Script URL이 아닙니다.'); return; }
-
-  const btn = event.target;
-  const origText = btn.innerHTML;
-  btn.innerHTML = '⏳ 조편성 데이터 불러오는 중...';
-  btn.disabled = true;
-
-  try {
-    const res = await fetch(webappUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ code: code, action: 'getteams', mode: mode })
-    });
-    const json = await res.json();
-
-    if (!json.success) throw new Error(json.message || '조편성 데이터를 불러오지 못했습니다.');
-    if (!json.teams || json.teams.length === 0) throw new Error('조편성 시트가 비어있습니다. 먼저 조편성을 실행하세요.');
-
-    const teams = json.teams;
-    btn.innerHTML = '⏳ QR 코드 생성 중... (0/' + teams.length + ')';
-
-    // ── 인라인 오버레이 생성 (window.open 대신) ──
-    let overlay = document.getElementById('batchQrOverlay');
-    if (overlay) overlay.remove();
-
-    overlay = document.createElement('div');
-    overlay.id = 'batchQrOverlay';
-    overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:#f5f5f5;overflow-y:auto;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;';
-
-    // 툴바
-    const now = new Date().toLocaleDateString('ko-KR');
-    overlay.innerHTML =
-      '<div style="position:sticky;top:0;background:#7a4f00;color:#fff;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;z-index:1;box-shadow:0 2px 8px rgba(0,0,0,0.3);">' +
-        '<div style="font-size:15px;font-weight:900;">📋 조별 QR — ' + escHtml(code) + ' (' + escHtml(date) + ') · 총 ' + teams.length + '개 조</div>' +
-        '<div style="display:flex;gap:8px;">' +
-          '<button onclick="window.print()" style="padding:8px 18px;background:#f5c842;color:#3d2000;border:none;border-radius:8px;font-size:14px;font-weight:900;cursor:pointer;">🖨 인쇄</button>' +
-          '<button onclick="document.getElementById(\'batchQrOverlay\').remove()" style="padding:8px 14px;background:rgba(255,255,255,0.2);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:900;cursor:pointer;">✕ 닫기</button>' +
-        '</div>' +
-      '</div>' +
-      '<div id="batchQrGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:14px;max-width:960px;margin:0 auto;"></div>';
-
-    document.body.appendChild(overlay);
-
-    // 인쇄 CSS (오버레이 안에 삽입)
-    const printStyle = document.createElement('style');
-    printStyle.id = 'batchQrPrintStyle';
-    printStyle.textContent =
-      '@media print{' +
-        'body > *:not(#batchQrOverlay){display:none!important;}' +
-        '#batchQrOverlay{position:static!important;overflow:visible!important;}' +
-        '#batchQrOverlay > div:first-child{display:none!important;}' +
-        '#batchQrGrid{grid-template-columns:repeat(3,1fr)!important;gap:8px!important;padding:0!important;}' +
-        '.bqr-card{page-break-inside:avoid;border:1px solid #ccc!important;box-shadow:none!important;}' +
-      '}';
-    document.head.appendChild(printStyle);
-
-    const grid = document.getElementById('batchQrGrid');
-    let done = 0;
-
-    teams.forEach(function(team, idx) {
-      // 카드 div 생성
-      const card = document.createElement('div');
-      card.className = 'bqr-card';
-      card.style.cssText = 'background:#fff;border-radius:12px;border:2px solid #e0e0e0;padding:12px;display:flex;flex-direction:column;align-items:center;box-shadow:0 2px 6px rgba(0,0,0,0.08);';
-
-      // 조명 헤더
-      const hdr = document.createElement('div');
-      hdr.style.cssText = 'font-size:22px;font-weight:900;color:#7a3f00;margin-bottom:8px;letter-spacing:-0.5px;';
-      hdr.textContent = team.team;
-      card.appendChild(hdr);
-
-      // QR 컨테이너
-      const qrDiv = document.createElement('div');
-      qrDiv.id = 'bqr_' + idx;
-      qrDiv.style.cssText = 'margin:0 0 8px 0;';
-      card.appendChild(qrDiv);
-
-      // 선수 명단
-      const pList = document.createElement('div');
-      pList.style.cssText = 'width:100%;margin-bottom:4px;';
-      team.players.forEach(function(p, pi) {
-        const row = document.createElement('div');
-        row.style.cssText = 'display:flex;gap:6px;align-items:center;padding:3px 0;border-bottom:1px solid #f0f0f0;';
-        row.innerHTML =
-          '<span style="width:18px;height:18px;background:#c8860a;border-radius:50%;color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' + (pi+1) + '</span>' +
-          '<span style="font-weight:700;font-size:13px;min-width:52px;">' + escHtml(p.name) + '</span>' +
-          '<span style="font-size:12px;color:#555;background:#f5f5f5;padding:1px 6px;border-radius:4px;">' + escHtml(p.gender || '') + '</span>' +
-          '<span style="font-size:12px;color:#777;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escHtml(p.affil || '') + '</span>';
-        pList.appendChild(row);
-      });
-      card.appendChild(pList);
-
-      // 푸터
-      const footer = document.createElement('div');
-      footer.style.cssText = 'font-size:10px;color:#aaa;margin-top:4px;';
-      footer.textContent = escHtml(code) + ' · ' + escHtml(date) + ' · ' + now;
-      card.appendChild(footer);
-
-      grid.appendChild(card);
-
-      // QR URL 구성
-      let qrUrl = pageUrl
-        + '?code=' + encodeURIComponent(code)
-        + '&url='  + encodeURIComponent(webappUrl)
-        + '&preliminaryDate=' + encodeURIComponent(date)
-        + '&team=' + encodeURIComponent(team.team);
-      team.players.forEach(function(p, pi) {
-        qrUrl += '&p' + (pi+1) + '=' + encodeURIComponent(p.name + '|' + p.gender + '|' + p.affil);
-      });
-
-      // QR 생성
-      new QRCode(qrDiv, {
-        text: qrUrl,
-        width: 200, height: 200,
-        colorDark: '#000000', colorLight: '#ffffff',
-        correctLevel: QRCode.CorrectLevel.H
-      });
-
-      // 조명 + 대회코드 오버레이
-      setTimeout(function() {
-        const canvas = qrDiv.querySelector('canvas');
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-        const cx = canvas.width / 2;
-        const cy = canvas.height / 2;
-        // 조명: 중앙
-        const label = team.team;
-        const bW = Math.min(label.length * 18 + 20, canvas.width * 0.68);
-        const bH = 32;
-        ctx.fillStyle = 'rgba(255,255,255,0.92)';
-        ctx.fillRect(cx - bW/2, cy - bH/2, bW, bH);
-        ctx.strokeStyle = '#c8860a'; ctx.lineWidth = 2;
-        ctx.strokeRect(cx - bW/2, cy - bH/2, bW, bH);
-        ctx.fillStyle = '#7a3f00';
-        ctx.font = 'bold 17px "Malgun Gothic",sans-serif';
-        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.fillText(label, cx, cy);
-        // 대회코드: 하단
-        const cW = Math.min(code.length * 13 + 16, canvas.width * 0.72);
-        const cH = 22;
-        const cy2 = canvas.height - 4;
-        ctx.fillStyle = 'rgba(200,134,10,0.90)';
-        ctx.fillRect(cx - cW/2, cy2 - cH, cW, cH);
-        ctx.fillStyle = '#fff';
-        ctx.font = 'bold 13px "Malgun Gothic",sans-serif';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(code, cx, cy2 - cH/2);
-
-        done++;
-        btn.innerHTML = '⏳ QR 생성 중... (' + done + '/' + teams.length + ')';
-        if (done === teams.length) {
-          btn.innerHTML = '✅ ' + teams.length + '개 조 QR 생성 완료!';
-          btn.disabled = false;
-        }
-      }, 80 + idx * 5);
-    });
-
-  } catch(err) {
-    alert('❌ 오류: ' + err.message);
-    btn.innerHTML = origText;
-    btn.disabled = false;
-  }
-}
-
-// 인쇄용 HTML 빌드 (사용 안함 - 인라인 방식으로 대체)
-function buildBatchQRHtml(teams, code, webappUrl, date, pageUrl) { return ''; }
-  const now = new Date().toLocaleDateString('ko-KR');
-  let cards = '';
-
-  teams.forEach(function(team, idx) {
-    const playerRows = team.players.map(function(p, i) {
-      return '<div style="display:flex;gap:6px;align-items:center;padding:3px 0;border-bottom:1px solid #f0f0f0;">'
-           + '<span style="width:18px;height:18px;background:#c8860a;border-radius:50%;color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' + (i+1) + '</span>'
-           + '<span style="font-weight:700;font-size:13px;min-width:52px;">' + escHtml(p.name) + '</span>'
-           + '<span style="font-size:12px;color:#555;background:#f5f5f5;padding:1px 6px;border-radius:4px;">' + escHtml(p.gender || '') + '</span>'
-           + '<span style="font-size:12px;color:#777;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escHtml(p.affil || '') + '</span>'
-           + '</div>';
-    }).join('');
-
-    cards += '<div class="card" style="break-inside:avoid;">'
-           + '<div class="card-header">' + escHtml(team.team) + '</div>'
-           + '<div id="qr_' + idx + '" class="qr-box"></div>'
-           + '<div class="player-list">' + playerRows + '</div>'
-           + '<div class="card-footer">' + escHtml(code) + ' · ' + escHtml(date) + ' · ' + now + '</div>'
-           + '</div>';
-  });
-
-  return '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>조별 QR 코드 - ' + escHtml(code) + '\x3C/title>'
-    + '\x3Cscript src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js">\x3C/script>'
-    + '\x3Cstyle>'
-    + 'body{margin:0;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;background:#f5f5f5;}'
-    + '.toolbar{position:fixed;top:0;left:0;right:0;background:#7a4f00;color:#fff;padding:10px 18px;display:flex;align-items:center;justify-content:space-between;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,0.3);}'
-    + '.toolbar h2{margin:0;font-size:16px;}'
-    + '.print-btn{padding:8px 22px;background:#f5c842;color:#3d2000;border:none;border-radius:8px;font-size:15px;font-weight:900;cursor:pointer;}'
-    + '.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:60px 14px 14px;max-width:960px;margin:0 auto;}'
-    + '.card{background:#fff;border-radius:12px;border:2px solid #e0e0e0;padding:12px;display:flex;flex-direction:column;align-items:center;box-shadow:0 2px 6px rgba(0,0,0,0.08);}'
-    + '.card-header{font-size:22px;font-weight:900;color:#7a3f00;margin-bottom:8px;letter-spacing:-0.5px;}'
-    + '.qr-box{margin:0 0 8px 0;}'
-    + '.player-list{width:100%;margin-bottom:6px;}'
-    + '.card-footer{font-size:10px;color:#aaa;margin-top:4px;}'
-    + '@media print{'
-    + '  body{background:#fff;}'
-    + '  .toolbar{display:none;}'
-    + '  .grid{padding:0;gap:8px;}'
-    + '  .card{border:1px solid #ccc;box-shadow:none;page-break-inside:avoid;}'
-    + '}'
-    + '\x3C/style>\x3C/head>\x3Cbody>'
-    + '\x3Cdiv class="toolbar">'
-    + '  \x3Ch2>📋 조별 QR — ' + escHtml(code) + ' (' + escHtml(date) + ') · 총 ' + teams.length + '개 조\x3C/h2>'
-    + '  \x3Cbutton class="print-btn" onclick="window.print()">🖨 인쇄하기\x3C/button>'
-    + '\x3C/div>'
-    + '\x3Cdiv class="grid">' + cards + '\x3C/div>'
-    + '\x3C/body>\x3C/html>';
-}
-
-function escHtml(s) {
-  return (s||'').toString().replace(/&/g,'&amp;').replace(/\x3C/g,'&lt;').replace(/\x3E/g,'&gt;');
-}
-// ── /조별 QR 일괄생성 ──
-
-</script>
 
 <!-- 관리자 도구 모달 (SV3.0 스타일) -->
 <div id="adminModal" style="display:none; position:fixed; inset:0; z-index:9999; overflow-y:auto;">
@@ -4045,6 +3633,421 @@ function toggleAppsScript() {
 }
 </script>
 <!-- ===== /SV4.0: Apps Script Install ===== -->
+
+
+
+<script>
+function openAdminModal(){
+  // 모달 열릴 때 저장된 값 자동 복원
+  const savedUrl = localStorage.getItem('parkgolf_webapp_url') || '';
+  const savedCode = localStorage.getItem('parkgolf_tournament_code') || '';
+  const urlInp = document.getElementById('adminWebappUrl');
+  const codeInp = document.getElementById('adminCodeInput');
+  if (urlInp && savedUrl) urlInp.value = savedUrl;
+  if (codeInp && savedCode) codeInp.value = savedCode;
+  const m = document.getElementById('adminModal');
+  if(m) m.style.display = 'block';
+}
+function closeAdminModal(){
+  const m = document.getElementById('adminModal');
+  if(m) m.style.display = 'none';
+}
+
+// URL + 코드 저장
+function saveAdminUrlAndCode() {
+  const url = (document.getElementById('adminWebappUrl').value || '').trim();
+  const code = (document.getElementById('adminCodeInput').value || '').trim().toUpperCase();
+  if (!url) { alert('⚠️ 웹앱 URL을 입력해주세요.'); return; }
+  if (!url.includes('script.google.com')) { alert('❌ 올바른 Google Apps Script URL이 아닙니다.'); return; }
+  if (!code) { alert('⚠️ 대회코드를 입력해주세요.'); return; }
+
+  // 기존 목록에 추가(최신 5개 유지)
+  let list = [];
+  try { list = JSON.parse(localStorage.getItem('parkgolf_saved_urls') || '[]'); } catch(e){}
+  if (!Array.isArray(list)) list = [];
+  // 중복 제거 후 앞에 추가
+  list = list.filter(item => item.code !== code || item.url !== url);
+  list.unshift({ code: code, url: url, saved: new Date().toLocaleString('ko-KR') });
+  if (list.length > 10) list = list.slice(0, 10);
+  localStorage.setItem('parkgolf_saved_urls', JSON.stringify(list));
+
+  // 현재 사용할 값도 저장
+  localStorage.setItem('parkgolf_webapp_url', url);
+  localStorage.setItem('parkgolf_tournament_code', code);
+
+  // 점수판의 코드 입력칸에도 반영
+  const codeInp = document.getElementById('tournamentCode');
+  if (codeInp) codeInp.value = code;
+
+  alert('✅ 저장 완료!\n\n코드: ' + code + '\nURL: ' + url.slice(0,40) + '...\n\n이제 QR 코드를 생성하세요.');
+}
+
+// 저장된 URL 목록
+function showSavedUrlsList() {
+  let list = [];
+  try { list = JSON.parse(localStorage.getItem('parkgolf_saved_urls') || '[]'); } catch(e){}
+  const container = document.getElementById('savedUrlsList');
+  if (!list.length) {
+    container.innerHTML = '<p style="text-align:center;color:#6b7280;padding:20px 0;">저장된 URL이 없습니다.</p>';
+  } else {
+    container.innerHTML = list.map(function(item, idx) {
+      return '<div style="border:1px solid #e5e7eb;border-radius:10px;padding:12px;margin-bottom:10px;">' +
+        '<div style="font-weight:900;font-size:15px;margin-bottom:4px;">' + item.code + '</div>' +
+        '<div style="font-size:12px;color:#6b7280;word-break:break-all;margin-bottom:8px;">' + (item.url || '').slice(0,50) + '...</div>' +
+        '<div style="font-size:11px;color:#9ca3af;margin-bottom:8px;">' + (item.saved || '') + '</div>' +
+        '<button onclick="applySavedUrl(' + idx + ')" style="padding:8px 16px;background:#2563eb;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">적용</button>' +
+        '</div>';
+    }).join('');
+  }
+  document.getElementById('savedUrlsModal').style.display = 'block';
+}
+function closeSavedUrlsModal() {
+  document.getElementById('savedUrlsModal').style.display = 'none';
+}
+function applySavedUrl(idx) {
+  let list = [];
+  try { list = JSON.parse(localStorage.getItem('parkgolf_saved_urls') || '[]'); } catch(e){}
+  const item = list[idx];
+  if (!item) return;
+  localStorage.setItem('parkgolf_webapp_url', item.url);
+  localStorage.setItem('parkgolf_tournament_code', item.code);
+  const urlInp = document.getElementById('adminWebappUrl');
+  const codeInp = document.getElementById('adminCodeInput');
+  if (urlInp) urlInp.value = item.url;
+  if (codeInp) codeInp.value = item.code;
+  const mainCode = document.getElementById('tournamentCode');
+  if (mainCode) mainCode.value = item.code;
+  closeSavedUrlsModal();
+  alert('✅ 적용 완료: ' + item.code);
+}
+
+// 마감 기능
+async function adminCloseScoring() {
+  const code = (document.getElementById('adminCloseCode').value || '').trim().toUpperCase();
+  const url = localStorage.getItem('parkgolf_webapp_url') || '';
+  if (!code) { alert('⚠️ 대회코드를 입력해주세요.'); return; }
+  if (!url) { alert('⚠️ 저장된 웹앱 URL이 없습니다.\n먼저 ①에서 URL을 저장하세요.'); return; }
+  if (!confirm('⚠️ [' + code + '] 대회의 점수 마감을 진행합니까?\n\n마감 후에는 추가 전송이 차단됩니다.')) return;
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: code, action: 'close' })
+    });
+    const json = await res.json();
+    alert(json.success ? ('✅ 마감 완료!\n' + (json.message || '')) : ('⚠️ ' + (json.message || '마감 실패')));
+  } catch(e) {
+    alert('✅ 로컬 마감 처리\n\n[' + code + '] 대회가 마감되었습니다.\n(네트워크 오류 발생 시 관리자가 구글시트에서 직접 확인하세요.)');
+  }
+}
+
+
+// ── 모달 내부 인라인 QR 생성 ──
+let _modalQrInstance = null;
+
+function generateQRInModal() {
+  const url  = (document.getElementById('adminWebappUrl').value || '').trim()
+             || localStorage.getItem('parkgolf_webapp_url') || '';
+  const code = ((document.getElementById('adminCodeInput').value || '').trim()
+             || localStorage.getItem('parkgolf_tournament_code') || '').toUpperCase();
+  const date = document.getElementById('modalQrDate').value || '통합';
+  const pageUrl = window.location.href.split('?')[0];
+
+  if (!code) { alert('❌ 대회 코드를 입력하세요!\n①번에서 먼저 저장하세요.'); return; }
+  if (!url)  { alert('❌ 웹 앱 URL을 입력하세요!\n①번에서 먼저 저장하세요.'); return; }
+  if (!url.includes('script.google.com')) { alert('❌ 올바른 Google Apps Script URL이 아닙니다.'); return; }
+
+  const finalUrl = pageUrl
+    + '?code=' + encodeURIComponent(code)
+    + '&url='  + encodeURIComponent(url)
+    + '&preliminaryDate=' + encodeURIComponent(date);
+
+  const container = document.getElementById('modalQrCode');
+  container.innerHTML = '';
+  if (_modalQrInstance) { try { _modalQrInstance.clear(); } catch(e){} }
+  _modalQrInstance = new QRCode(container, {
+    text: finalUrl,
+    width: 240, height: 240,
+    colorDark: '#000000', colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.H
+  });
+
+  // 대회코드 오버레이 (canvas 생성 대기 후 그리기)
+  function drawQROverlay(container, codeLabel) {
+    const canvas = container.querySelector('canvas');
+    if (!canvas) { setTimeout(function(){ drawQROverlay(container, codeLabel); }, 100); return; }
+    const ctx = canvas.getContext('2d');
+    const cx = canvas.width / 2;
+    const boxW = Math.min(codeLabel.length * 14 + 20, canvas.width * 0.75);
+    const boxH = 28;
+    const by = canvas.height - 4;
+    ctx.fillStyle = 'rgba(200,134,10,0.93)';
+    ctx.fillRect(cx - boxW/2, by - boxH, boxW, boxH);
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 15px "Malgun Gothic",sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(codeLabel, cx, by - boxH/2);
+  }
+  setTimeout(function(){ drawQROverlay(container, code); }, 200);
+
+  document.getElementById('modalQrResult').style.display = 'block';
+  setTimeout(function() {
+    document.getElementById('modalQrResult').scrollIntoView({ behavior:'smooth', block:'nearest' });
+  }, 150);
+}
+
+function downloadQRModal() {
+  const canvas = document.querySelector('#modalQrCode canvas');
+  if (!canvas) { alert('QR 코드를 먼저 생성해주세요!'); return; }
+  const code = ((document.getElementById('adminCodeInput').value || '')
+               || (localStorage.getItem('parkgolf_tournament_code') || 'QR')).trim().toUpperCase();
+  canvas.toBlob(function(blob) {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = '파크골프_' + code + '_QR.png';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(a.href);
+    alert('✅ QR 코드가 저장되었습니다!\n\n카톡으로 전송하거나 인쇄하세요.');
+  });
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 조별 QR 일괄생성 (팝업 없이 인라인 오버레이)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+async function generateBatchQR() {
+  const webappUrl = (document.getElementById('adminWebappUrl').value || '').trim()
+                  || localStorage.getItem('parkgolf_webapp_url') || '';
+  const code = ((document.getElementById('adminCodeInput').value || '').trim()
+              || localStorage.getItem('parkgolf_tournament_code') || '').toUpperCase();
+  const date = document.getElementById('modalQrDate').value || '통합';
+  const mode = document.getElementById('modalTeamMode') ? document.getElementById('modalTeamMode').value : 'mixed';
+  const pageUrl = window.location.href.split('?')[0];
+
+  if (!code)      { alert('❌ 대회 코드를 입력하세요!\n①번에서 먼저 저장하세요.'); return; }
+  if (!webappUrl) { alert('❌ 웹 앱 URL을 입력하세요!\n①번에서 먼저 저장하세요.'); return; }
+  if (!webappUrl.includes('script.google.com')) { alert('❌ 올바른 Google Apps Script URL이 아닙니다.'); return; }
+
+  const btn = event.target;
+  const origText = btn.innerHTML;
+  btn.innerHTML = '⏳ 조편성 데이터 불러오는 중...';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(webappUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ code: code, action: 'getteams', mode: mode })
+    });
+    const json = await res.json();
+
+    if (!json.success) throw new Error(json.message || '조편성 데이터를 불러오지 못했습니다.');
+    if (!json.teams || json.teams.length === 0) throw new Error('조편성 시트가 비어있습니다. 먼저 조편성을 실행하세요.');
+
+    const teams = json.teams;
+    btn.innerHTML = '⏳ QR 코드 생성 중... (0/' + teams.length + ')';
+
+    // ── 인라인 오버레이 생성 (window.open 대신) ──
+    let overlay = document.getElementById('batchQrOverlay');
+    if (overlay) overlay.remove();
+
+    overlay = document.createElement('div');
+    overlay.id = 'batchQrOverlay';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:#f5f5f5;overflow-y:auto;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;';
+
+    // 툴바
+    const now = new Date().toLocaleDateString('ko-KR');
+    overlay.innerHTML =
+      '<div style="position:sticky;top:0;background:#7a4f00;color:#fff;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;z-index:1;box-shadow:0 2px 8px rgba(0,0,0,0.3);">' +
+        '<div style="font-size:15px;font-weight:900;">📋 조별 QR — ' + escHtml(code) + ' (' + escHtml(date) + ') · 총 ' + teams.length + '개 조</div>' +
+        '<div style="display:flex;gap:8px;">' +
+          '<button onclick="window.print()" style="padding:8px 18px;background:#f5c842;color:#3d2000;border:none;border-radius:8px;font-size:14px;font-weight:900;cursor:pointer;">🖨 인쇄</button>' +
+          '<button onclick="document.getElementById(\'batchQrOverlay\').remove()" style="padding:8px 14px;background:rgba(255,255,255,0.2);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:900;cursor:pointer;">✕ 닫기</button>' +
+        '</div>' +
+      '</div>' +
+      '<div id="batchQrGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:14px;max-width:960px;margin:0 auto;"></div>';
+
+    document.body.appendChild(overlay);
+
+    // 인쇄 CSS (오버레이 안에 삽입)
+    const printStyle = document.createElement('style');
+    printStyle.id = 'batchQrPrintStyle';
+    printStyle.textContent =
+      '@media print{' +
+        'body > *:not(#batchQrOverlay){display:none!important;}' +
+        '#batchQrOverlay{position:static!important;overflow:visible!important;}' +
+        '#batchQrOverlay > div:first-child{display:none!important;}' +
+        '#batchQrGrid{grid-template-columns:repeat(3,1fr)!important;gap:8px!important;padding:0!important;}' +
+        '.bqr-card{page-break-inside:avoid;border:1px solid #ccc!important;box-shadow:none!important;}' +
+      '}';
+    document.head.appendChild(printStyle);
+
+    const grid = document.getElementById('batchQrGrid');
+    let done = 0;
+
+    teams.forEach(function(team, idx) {
+      // 카드 div 생성
+      const card = document.createElement('div');
+      card.className = 'bqr-card';
+      card.style.cssText = 'background:#fff;border-radius:12px;border:2px solid #e0e0e0;padding:12px;display:flex;flex-direction:column;align-items:center;box-shadow:0 2px 6px rgba(0,0,0,0.08);';
+
+      // 조명 헤더
+      const hdr = document.createElement('div');
+      hdr.style.cssText = 'font-size:22px;font-weight:900;color:#7a3f00;margin-bottom:8px;letter-spacing:-0.5px;';
+      hdr.textContent = team.team;
+      card.appendChild(hdr);
+
+      // QR 컨테이너
+      const qrDiv = document.createElement('div');
+      qrDiv.id = 'bqr_' + idx;
+      qrDiv.style.cssText = 'margin:0 0 8px 0;';
+      card.appendChild(qrDiv);
+
+      // 선수 명단
+      const pList = document.createElement('div');
+      pList.style.cssText = 'width:100%;margin-bottom:4px;';
+      team.players.forEach(function(p, pi) {
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex;gap:6px;align-items:center;padding:3px 0;border-bottom:1px solid #f0f0f0;';
+        row.innerHTML =
+          '<span style="width:18px;height:18px;background:#c8860a;border-radius:50%;color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' + (pi+1) + '</span>' +
+          '<span style="font-weight:700;font-size:13px;min-width:52px;">' + escHtml(p.name) + '</span>' +
+          '<span style="font-size:12px;color:#555;background:#f5f5f5;padding:1px 6px;border-radius:4px;">' + escHtml(p.gender || '') + '</span>' +
+          '<span style="font-size:12px;color:#777;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escHtml(p.affil || '') + '</span>';
+        pList.appendChild(row);
+      });
+      card.appendChild(pList);
+
+      // 푸터
+      const footer = document.createElement('div');
+      footer.style.cssText = 'font-size:10px;color:#aaa;margin-top:4px;';
+      footer.textContent = escHtml(code) + ' · ' + escHtml(date) + ' · ' + now;
+      card.appendChild(footer);
+
+      grid.appendChild(card);
+
+      // QR URL 구성
+      let qrUrl = pageUrl
+        + '?code=' + encodeURIComponent(code)
+        + '&url='  + encodeURIComponent(webappUrl)
+        + '&preliminaryDate=' + encodeURIComponent(date)
+        + '&team=' + encodeURIComponent(team.team);
+      team.players.forEach(function(p, pi) {
+        qrUrl += '&p' + (pi+1) + '=' + encodeURIComponent(p.name + '|' + p.gender + '|' + p.affil);
+      });
+
+      // QR 생성
+      new QRCode(qrDiv, {
+        text: qrUrl,
+        width: 200, height: 200,
+        colorDark: '#000000', colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H
+      });
+
+      // 조명 + 대회코드 오버레이
+      setTimeout(function() {
+        const canvas = qrDiv.querySelector('canvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const cx = canvas.width / 2;
+        const cy = canvas.height / 2;
+        // 조명: 중앙
+        const label = team.team;
+        const bW = Math.min(label.length * 18 + 20, canvas.width * 0.68);
+        const bH = 32;
+        ctx.fillStyle = 'rgba(255,255,255,0.92)';
+        ctx.fillRect(cx - bW/2, cy - bH/2, bW, bH);
+        ctx.strokeStyle = '#c8860a'; ctx.lineWidth = 2;
+        ctx.strokeRect(cx - bW/2, cy - bH/2, bW, bH);
+        ctx.fillStyle = '#7a3f00';
+        ctx.font = 'bold 17px "Malgun Gothic",sans-serif';
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(label, cx, cy);
+        // 대회코드: 하단
+        const cW = Math.min(code.length * 13 + 16, canvas.width * 0.72);
+        const cH = 22;
+        const cy2 = canvas.height - 4;
+        ctx.fillStyle = 'rgba(200,134,10,0.90)';
+        ctx.fillRect(cx - cW/2, cy2 - cH, cW, cH);
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 13px "Malgun Gothic",sans-serif';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(code, cx, cy2 - cH/2);
+
+        done++;
+        btn.innerHTML = '⏳ QR 생성 중... (' + done + '/' + teams.length + ')';
+        if (done === teams.length) {
+          btn.innerHTML = '✅ ' + teams.length + '개 조 QR 생성 완료!';
+          btn.disabled = false;
+        }
+      }, 80 + idx * 5);
+    });
+
+  } catch(err) {
+    alert('❌ 오류: ' + err.message);
+    btn.innerHTML = origText;
+    btn.disabled = false;
+  }
+}
+
+// 인쇄용 HTML 빌드 (사용 안함 - 인라인 방식으로 대체)
+function buildBatchQRHtml(teams, code, webappUrl, date, pageUrl) { return ''; }
+  const now = new Date().toLocaleDateString('ko-KR');
+  let cards = '';
+
+  teams.forEach(function(team, idx) {
+    const playerRows = team.players.map(function(p, i) {
+      return '<div style="display:flex;gap:6px;align-items:center;padding:3px 0;border-bottom:1px solid #f0f0f0;">'
+           + '<span style="width:18px;height:18px;background:#c8860a;border-radius:50%;color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' + (i+1) + '</span>'
+           + '<span style="font-weight:700;font-size:13px;min-width:52px;">' + escHtml(p.name) + '</span>'
+           + '<span style="font-size:12px;color:#555;background:#f5f5f5;padding:1px 6px;border-radius:4px;">' + escHtml(p.gender || '') + '</span>'
+           + '<span style="font-size:12px;color:#777;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escHtml(p.affil || '') + '</span>'
+           + '</div>';
+    }).join('');
+
+    cards += '<div class="card" style="break-inside:avoid;">'
+           + '<div class="card-header">' + escHtml(team.team) + '</div>'
+           + '<div id="qr_' + idx + '" class="qr-box"></div>'
+           + '<div class="player-list">' + playerRows + '</div>'
+           + '<div class="card-footer">' + escHtml(code) + ' · ' + escHtml(date) + ' · ' + now + '</div>'
+           + '</div>';
+  });
+
+  return '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>조별 QR 코드 - ' + escHtml(code) + '\x3C/title>'
+    + '\x3Cscript src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js">\x3C/script>'
+    + '\x3Cstyle>'
+    + 'body{margin:0;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;background:#f5f5f5;}'
+    + '.toolbar{position:fixed;top:0;left:0;right:0;background:#7a4f00;color:#fff;padding:10px 18px;display:flex;align-items:center;justify-content:space-between;z-index:999;box-shadow:0 2px 8px rgba(0,0,0,0.3);}'
+    + '.toolbar h2{margin:0;font-size:16px;}'
+    + '.print-btn{padding:8px 22px;background:#f5c842;color:#3d2000;border:none;border-radius:8px;font-size:15px;font-weight:900;cursor:pointer;}'
+    + '.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:60px 14px 14px;max-width:960px;margin:0 auto;}'
+    + '.card{background:#fff;border-radius:12px;border:2px solid #e0e0e0;padding:12px;display:flex;flex-direction:column;align-items:center;box-shadow:0 2px 6px rgba(0,0,0,0.08);}'
+    + '.card-header{font-size:22px;font-weight:900;color:#7a3f00;margin-bottom:8px;letter-spacing:-0.5px;}'
+    + '.qr-box{margin:0 0 8px 0;}'
+    + '.player-list{width:100%;margin-bottom:6px;}'
+    + '.card-footer{font-size:10px;color:#aaa;margin-top:4px;}'
+    + '@media print{'
+    + '  body{background:#fff;}'
+    + '  .toolbar{display:none;}'
+    + '  .grid{padding:0;gap:8px;}'
+    + '  .card{border:1px solid #ccc;box-shadow:none;page-break-inside:avoid;}'
+    + '}'
+    + '\x3C/style>\x3C/head>\x3Cbody>'
+    + '\x3Cdiv class="toolbar">'
+    + '  \x3Ch2>📋 조별 QR — ' + escHtml(code) + ' (' + escHtml(date) + ') · 총 ' + teams.length + '개 조\x3C/h2>'
+    + '  \x3Cbutton class="print-btn" onclick="window.print()">🖨 인쇄하기\x3C/button>'
+    + '\x3C/div>'
+    + '\x3Cdiv class="grid">' + cards + '\x3C/div>'
+    + '\x3C/body>\x3C/html>';
+}
+
+function escHtml(s) {
+  return (s||'').toString().replace(/&/g,'&amp;').replace(/\x3C/g,'&lt;').replace(/\x3E/g,'&gt;');
+}
+// ── /조별 QR 일괄생성 ──
+
+</script>
 
 </body>
 </html>
