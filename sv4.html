@@ -1,3 +1,15 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>파시스 SV4.0 대회용 - 파크골프 점수판</title>
+</head>
+<body style="margin:0;padding:0;background:#f0fff4;">
+
 <div style="all: initial !important; font-family: 'Malgun Gothic', sans-serif !important;">
 <style>
 
@@ -32,6 +44,19 @@
    - 가로 스크롤(100vw 튐) 방지
    - .parkgolf-app 내부에만 적용
 ========================================================= */
+
+/* ----- GitHub Pages / 독립 환경 기본 리셋 ----- */
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+#sv4Root {
+  width: 100% !important;
+  min-height: 100vh !important;
+}
 
 /* ----- Reset & 가로 스크롤 방지 ----- */
 .parkgolf-app,
@@ -404,11 +429,11 @@
 <!-- ===== SV4.0 COVER PAGE ===== -->
 <div id="sv4Root" style="width:100%; max-width:100%; overflow-x:hidden; font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif;">
 
-<div id="sv4CoverPage" style="min-height:520px; background:linear-gradient(160deg,#c8860a 0%,#7a4f00 60%,#4a2f00 100%); display:flex; align-items:center; justify-content:center; padding:40px 16px; font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif; position:relative; overflow:hidden;">
+<div id="sv4CoverPage" style="min-height:100vh; background:linear-gradient(160deg,#c8860a 0%,#7a4f00 60%,#4a2f00 100%); display:flex; align-items:center; justify-content:center; padding:32px 16px; font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif; position:relative; overflow:hidden;">
   <!-- 대각선 줄무늬 패턴 -->
   <div style="position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(255,255,255,0.04) 0px,rgba(255,255,255,0.04) 1px,transparent 1px,transparent 28px);pointer-events:none;"></div>
 
-  <div style="background:rgba(255,255,255,0.10);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,0.20);border-radius:28px;padding:44px 28px 40px;max-width:400px;width:100%;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,0.45);position:relative;">
+  <div style="background:rgba(255,255,255,0.10);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,0.20);border-radius:28px;padding:44px 28px 40px;max-width:480px;width:100%;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,0.45);position:relative;">
 
     <!-- 골프 로고 -->
     <div style="width:78px;height:78px;background:linear-gradient(135deg,#4caf50 0%,#2e7d32 100%);border-radius:50%;margin:0 auto 22px;display:flex;align-items:center;justify-content:center;font-size:38px;box-shadow:0 8px 24px rgba(0,0,0,0.35);">⛳</div>
@@ -646,8 +671,8 @@ function backToCover() {
 
 
 
-<div class="parkgolf-app" style="padding: 0px !important; margin: 0 !important; max-width: 100% !important; width: 100% !important; display:none;">
-<div class="container" style="padding: 0px !important; margin: 0 !important; border-radius: 0 !important; box-shadow: none !important; max-width: 100% !important;">
+<div class="parkgolf-app" style="padding: 0px !important; margin: 0 !important; max-width: 100% !important; width: 100% !important; min-height: 100vh !important; display:none;">
+<div class="container" style="padding: 0px !important; margin: 0 !important; border-radius: 0 !important; box-shadow: none !important; max-width: 100% !important; width: 100% !important;">
 
 <!-- 표지로 돌아가기 버튼 -->
 <div style="text-align:right; padding:6px 8px 0 8px;">
@@ -3331,7 +3356,7 @@ function showCodeModal() {
 
 
 <div style="text-align: center; margin-top: 50px; padding: 20px; font-size: 12px; color: #999;">
-    ⛳ 파크골프 점수판 파시스 sv3.0 (UI최종) | 2026.01.14
+    ⛳ 파크골프 점수판 파시스 SV4.0 대회용 | 2026
 </div>
 </div>
 </div>
@@ -3820,3 +3845,6 @@ function toggleAppsScript() {
 }
 </script>
 <!-- ===== /SV4.0: Apps Script Install ===== -->
+
+</body>
+</html>
