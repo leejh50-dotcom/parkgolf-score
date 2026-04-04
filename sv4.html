@@ -596,6 +596,16 @@ function backToCover() {
         </button>
 
         <!-- 조별 QR 일괄생성 -->
+        <div style="margin-bottom:10px;">
+          <label style="display:block; font-size:13px; font-weight:700; color:#374151; margin-bottom:6px;">👥 조편성 성별 구분</label>
+          <select id="modalTeamMode"
+            style="width:100%; padding:11px 12px; border:2px solid #e5e7eb; border-radius:10px; font-size:14px; background:white; cursor:pointer; outline:none;">
+            <option value="all">전체 (남녀 혼성)</option>
+            <option value="male">남자부만</option>
+            <option value="female">여자부만</option>
+            <option value="separate">성별 분리 (남자부 → 여자부 순)</option>
+          </select>
+        </div>
         <button onclick="generateBatchQR()"
           style="width:100%; padding:14px; background:linear-gradient(135deg,#c8860a 0%,#7a4f00 100%); color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:900; cursor:pointer;">
           📋 조별 QR 일괄생성 (100조 인쇄용)
@@ -2107,6 +2117,7 @@ async function generateBatchQR() {
   const code = ((document.getElementById('adminCodeInput').value || '').trim()
               || localStorage.getItem('parkgolf_tournament_code') || '').toUpperCase();
   const date = document.getElementById('modalQrDate').value || '통합';
+  const mode = document.getElementById('modalTeamMode') ? document.getElementById('modalTeamMode').value : 'all';
   const pageUrl = window.location.href.split('?')[0];
 
   if (!code)       { alert('❌ 대회 코드를 입력하세요!\n①번에서 먼저 저장하세요.'); return; }
@@ -2123,8 +2134,8 @@ async function generateBatchQR() {
     // GAS에서 조편성 데이터 가져오기
     const res = await fetch(webappUrl, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code: code, action: 'getteams' })
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ code: code, action: 'getteams', mode: mode })
     });
     const json = await res.json();
 
