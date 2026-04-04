@@ -602,6 +602,19 @@ function backToCover() {
         </button>
         <div style="font-size:12px; color:#6b7280; margin-top:6px; text-align:center;">조편성 완료 후 실행 · 조명이 QR 안에 표시됨</div>
 
+        <!-- 조별 QR 사용법 안내 -->
+        <div style="margin-top:10px; background:#fef9f0; border:1px solid #f0d080; border-radius:10px; padding:12px; font-size:12px; color:#7a4f00; line-height:1.7;">
+          <div style="font-weight:900; margin-bottom:4px;">📋 조별 QR 일괄생성 순서</div>
+          <div>① ①번에서 <b>웹앱 URL + 대회코드</b> 저장</div>
+          <div>② 구글시트에서 <b>조편성 실행</b> (GAS 완성본 필요)</div>
+          <div>③ 예선일자 선택 후 <b>조별 QR 일괄생성</b> 클릭</div>
+          <div>④ 팝업창에서 <b>🖨 인쇄하기</b> → 조별 QR 출력</div>
+          <div>⑤ 심판에게 배포 → QR 스캔 시 인적사항 자동입력</div>
+          <div style="margin-top:4px; padding:6px 8px; background:#fff3cd; border-radius:6px; color:#856404;">
+            ⚠️ GAS에 <b>getteams</b> 액션이 없으면 Failed to fetch 오류 발생<br>→ 아래 제공된 GAS 완성본으로 교체하세요
+          </div>
+        </div>
+
         <!-- QR 결과 영역 (인라인) -->
         <div id="modalQrResult" style="display:none; text-align:center; margin-top:18px; padding-top:18px; border-top:1px solid #e5e7eb;">
           <div style="font-size:16px; font-weight:900; color:#333; margin-bottom:14px;">생성 완료! 🎉</div>
@@ -1333,12 +1346,15 @@ async function sendToGoogleSheet() {
             // 🔥 1. 필수 정보 수집
             // ========================================
             
-            // 대회 코드 (localStorage에서 가져오기)
-            const tournamentCode = localStorage.getItem('parkgolf_tournament_code') || '';
+            // 대회 코드 (localStorage 우선, 없으면 화면 입력값)
+            const codeFromInput = document.getElementById('tournamentCode') ? (document.getElementById('tournamentCode').value || '').trim().toUpperCase() : '';
+            const tournamentCode = (localStorage.getItem('parkgolf_tournament_code') || codeFromInput || '').toUpperCase();
             if (!tournamentCode) {
-                alert('⚠️ 대회 코드가 없습니다!\n\nQR 코드를 다시 스캔하거나 대회 코드를 입력해주세요.');
+                alert('⚠️ 대회 코드가 없습니다!\n\nQR 코드를 다시 스캔하거나\n코드명 칸에 대회코드를 직접 입력하세요.');
                 return;
             }
+            // localStorage에도 저장(화면 입력값으로 들어온 경우)
+            if (tournamentCode) localStorage.setItem('parkgolf_tournament_code', tournamentCode);
             
             // 웹앱 URL (localStorage에서 가져오기)
             const webAppUrl = localStorage.getItem('parkgolf_webapp_url') || '';
@@ -1663,6 +1679,16 @@ function initFromQueryParams() {
         if (typeof autoSave === 'function') autoSave();
       }, 100);
       changed = true;
+    }
+
+    // ✅ QR 스캔으로 들어온 경우 → 커버 건너뛰고 바로 점수판 열기
+    if (code && url) {
+      setTimeout(function() {
+        const cover = document.getElementById('sv4CoverPage');
+        const app   = document.querySelector('.parkgolf-app');
+        if (cover) cover.style.display = 'none';
+        if (app)   { app.style.display = ''; window.scrollTo({top:0}); }
+      }, 50);
     }
 
     // QR에서 넘어온 값이 없으면(직접 접속) 기존 저장값을 입력칸에 반영
@@ -2031,25 +2057,24 @@ function generateQRInModal() {
     correctLevel: QRCode.CorrectLevel.H
   });
 
-  // 대회코드 오버레이
-  setTimeout(function() {
+  // 대회코드 오버레이 (canvas 생성 대기 후 그리기)
+  function drawQROverlay(container, codeLabel) {
     const canvas = container.querySelector('canvas');
-    if (canvas) {
-      const ctx = canvas.getContext('2d');
-      const label = code;
-      const cx = canvas.width / 2;
-      const boxW = Math.min(label.length * 14 + 20, canvas.width * 0.7);
-      const boxH = 26;
-      const by = canvas.height - 6;
-      ctx.fillStyle = 'rgba(200,134,10,0.92)';
-      ctx.fillRect(cx - boxW/2, by - boxH, boxW, boxH);
-      ctx.fillStyle = '#fff';
-      ctx.font = 'bold 15px "Malgun Gothic", sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(label, cx, by - boxH/2);
-    }
-  }, 100);
+    if (!canvas) { setTimeout(function(){ drawQROverlay(container, codeLabel); }, 100); return; }
+    const ctx = canvas.getContext('2d');
+    const cx = canvas.width / 2;
+    const boxW = Math.min(codeLabel.length * 14 + 20, canvas.width * 0.75);
+    const boxH = 28;
+    const by = canvas.height - 4;
+    ctx.fillStyle = 'rgba(200,134,10,0.93)';
+    ctx.fillRect(cx - boxW/2, by - boxH, boxW, boxH);
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 15px "Malgun Gothic",sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(codeLabel, cx, by - boxH/2);
+  }
+  setTimeout(function(){ drawQROverlay(container, code); }, 200);
 
   document.getElementById('modalQrResult').style.display = 'block';
   setTimeout(function() {
