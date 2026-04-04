@@ -3846,152 +3846,125 @@ async function generateBatchQR() {
     if (!json.teams || json.teams.length === 0) throw new Error('조편성 시트가 비어있습니다. 먼저 조편성을 실행하세요.');
 
     const teams = json.teams;
-    btn.innerHTML = '⏳ QR 코드 생성 중... (0/' + teams.length + ')';
+    btn.innerHTML = '⏳ QR 코드 생성 중...';
 
-    // ── 인라인 오버레이 생성 (window.open 대신) ──
-    let overlay = document.getElementById('batchQrOverlay');
-    if (overlay) overlay.remove();
+    // ── 기존 오버레이 제거 ──
+    const oldO = document.getElementById('batchQrOverlay');
+    if (oldO) oldO.remove();
+    const oldS = document.getElementById('batchQrPrintStyle');
+    if (oldS) oldS.remove();
 
-    overlay = document.createElement('div');
-    overlay.id = 'batchQrOverlay';
-    overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:#f5f5f5;overflow-y:auto;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;';
-
-    // 툴바
-    const now = new Date().toLocaleDateString('ko-KR');
-    overlay.innerHTML =
-      '<div style="position:sticky;top:0;background:#7a4f00;color:#fff;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;z-index:1;box-shadow:0 2px 8px rgba(0,0,0,0.3);">' +
-        '<div style="font-size:15px;font-weight:900;">📋 조별 QR — ' + escHtml(code) + ' (' + escHtml(date) + ') · 총 ' + teams.length + '개 조</div>' +
-        '<div style="display:flex;gap:8px;">' +
-          '<button onclick="window.print()" style="padding:8px 18px;background:#f5c842;color:#3d2000;border:none;border-radius:8px;font-size:14px;font-weight:900;cursor:pointer;">🖨 인쇄</button>' +
-          '<button onclick="document.getElementById(\'batchQrOverlay\').remove()" style="padding:8px 14px;background:rgba(255,255,255,0.2);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:900;cursor:pointer;">✕ 닫기</button>' +
-        '</div>' +
-      '</div>' +
-      '<div id="batchQrGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:14px;max-width:960px;margin:0 auto;"></div>';
-
-    document.body.appendChild(overlay);
-
-    // 인쇄 CSS (오버레이 안에 삽입)
+    // ── 인쇄 CSS ──
     const printStyle = document.createElement('style');
     printStyle.id = 'batchQrPrintStyle';
     printStyle.textContent =
+      '@page{margin:8mm}' +
       '@media print{' +
-        '* { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }' +
-        'body > *{ display:none !important; }' +
-        '#batchQrOverlay{ display:block !important; position:static !important; overflow:visible !important; background:#fff !important; }' +
-        '#batchQrOverlay > div:first-child{ display:none !important; }' +
-        '#batchQrGrid{ display:grid !important; grid-template-columns:repeat(3,1fr) !important; gap:6px !important; padding:0 !important; max-width:100% !important; }' +
-        '.bqr-card{ break-inside:avoid; page-break-inside:avoid; border:1px solid #ccc !important; box-shadow:none !important; }' +
-        '#adminModal, #savedUrlsModal, #qrScanModal, .modal, .toast{ display:none !important; }' +
+        'html,body{height:auto!important;overflow:visible!important}' +
+        'body>*{visibility:hidden!important}' +
+        '#batchQrOverlay,#batchQrOverlay *{visibility:visible!important}' +
+        '#batchQrOverlay{position:absolute!important;top:0!important;left:0!important;width:100%!important;background:#fff!important;overflow:visible!important}' +
+        '#bqrToolbar{display:none!important}' +
+        '#batchQrGrid{grid-template-columns:repeat(3,1fr)!important;gap:6px!important;padding:0!important;max-width:100%!important}' +
+        '.bqr-card{break-inside:avoid;page-break-inside:avoid;border:1px solid #bbb!important;box-shadow:none!important}' +
       '}';
     document.head.appendChild(printStyle);
 
-    const grid = document.getElementById('batchQrGrid');
+    // ── 오버레이 ──
+    const overlay = document.createElement('div');
+    overlay.id = 'batchQrOverlay';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:#f5f5f5;overflow-y:auto;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;';
+
+    const toolbar = document.createElement('div');
+    toolbar.id = 'bqrToolbar';
+    toolbar.style.cssText = 'position:sticky;top:0;background:#7a4f00;color:#fff;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;z-index:1;box-shadow:0 2px 8px rgba(0,0,0,0.3);';
+    toolbar.innerHTML = '<div style="font-size:15px;font-weight:900;">📋 조별 QR — ' + escHtml(code) + ' (' + escHtml(date) + ') · 총 ' + teams.length + '개 조</div>' +
+      '<div style="display:flex;gap:8px;">' +
+        '<button onclick="window.print()" style="padding:8px 18px;background:#f5c842;color:#3d2000;border:none;border-radius:8px;font-size:14px;font-weight:900;cursor:pointer;">🖨 인쇄/PDF</button>' +
+        '<button onclick="document.getElementById(\'batchQrOverlay\').remove();var s=document.getElementById(\'batchQrPrintStyle\');if(s)s.remove();" style="padding:8px 14px;background:rgba(255,255,255,0.2);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:900;cursor:pointer;">✕ 닫기</button>' +
+      '</div>';
+    overlay.appendChild(toolbar);
+
+    const grid = document.createElement('div');
+    grid.id = 'batchQrGrid';
+    grid.style.cssText = 'display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:14px;max-width:960px;margin:0 auto;';
+    overlay.appendChild(grid);
+    document.body.appendChild(overlay);
+
+    const now = new Date().toLocaleDateString('ko-KR');
     let done = 0;
 
     teams.forEach(function(team, idx) {
-      // 카드 div 생성
-      const card = document.createElement('div');
-      card.className = 'bqr-card';
-      card.style.cssText = 'background:#fff;border-radius:12px;border:2px solid #e0e0e0;padding:12px;display:flex;flex-direction:column;align-items:center;box-shadow:0 2px 6px rgba(0,0,0,0.08);';
-
-      // 조명 헤더
-      const hdr = document.createElement('div');
-      hdr.style.cssText = 'font-size:22px;font-weight:900;color:#7a3f00;margin-bottom:8px;letter-spacing:-0.5px;';
-      hdr.textContent = team.team;
-      card.appendChild(hdr);
-
-      // QR 컨테이너
-      const qrDiv = document.createElement('div');
-      qrDiv.id = 'bqr_' + idx;
-      qrDiv.style.cssText = 'margin:0 0 8px 0;';
-      card.appendChild(qrDiv);
-
-      // 선수 명단
-      const pList = document.createElement('div');
-      pList.style.cssText = 'width:100%;margin-bottom:4px;';
-      team.players.forEach(function(p, pi) {
-        const row = document.createElement('div');
-        row.style.cssText = 'display:flex;gap:6px;align-items:center;padding:3px 0;border-bottom:1px solid #f0f0f0;';
-        row.innerHTML =
-          '<span style="width:18px;height:18px;background:#c8860a;border-radius:50%;color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' + (pi+1) + '</span>' +
-          '<span style="font-weight:700;font-size:13px;min-width:52px;">' + escHtml(p.name) + '</span>' +
-          '<span style="font-size:12px;color:#555;background:#f5f5f5;padding:1px 6px;border-radius:4px;">' + escHtml(p.gender || '') + '</span>' +
-          '<span style="font-size:12px;color:#777;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escHtml(p.affil || '') + '</span>';
-        pList.appendChild(row);
-      });
-      card.appendChild(pList);
-
-      // 푸터
-      const footer = document.createElement('div');
-      footer.style.cssText = 'font-size:10px;color:#aaa;margin-top:4px;';
-      footer.textContent = escHtml(code) + ' · ' + escHtml(date) + ' · ' + now;
-      card.appendChild(footer);
-
-      grid.appendChild(card);
-
-      // QR URL 구성
-      let qrUrl = pageUrl
+      var qrUrl = pageUrl
         + '?code=' + encodeURIComponent(code)
-        + '&url='  + encodeURIComponent(webappUrl)
+        + '&url=' + encodeURIComponent(webappUrl)
         + '&preliminaryDate=' + encodeURIComponent(date)
         + '&team=' + encodeURIComponent(team.team);
       team.players.forEach(function(p, pi) {
         qrUrl += '&p' + (pi+1) + '=' + encodeURIComponent(p.name + '|' + p.gender + '|' + p.affil);
       });
 
+      // 카드
+      var card = document.createElement('div');
+      card.className = 'bqr-card';
+      card.style.cssText = 'background:#fff;border-radius:12px;border:2px solid #e0e0e0;padding:12px;display:flex;flex-direction:column;align-items:center;box-shadow:0 2px 6px rgba(0,0,0,0.08);';
+
+      // 조명 헤더 (HTML)
+      var hdr = document.createElement('div');
+      hdr.style.cssText = 'font-size:20px;font-weight:900;color:#7a3f00;margin-bottom:6px;text-align:center;';
+      hdr.textContent = team.team;
+      card.appendChild(hdr);
+
+      // QR 래퍼 (relative positioning)
+      var qrWrap = document.createElement('div');
+      qrWrap.style.cssText = 'position:relative;display:inline-block;margin-bottom:8px;';
+
+      var qrDiv = document.createElement('div');
+      qrWrap.appendChild(qrDiv);
+
+      // 대회코드 라벨 — QR 하단 HTML 오버레이
+      var codeLbl = document.createElement('div');
+      codeLbl.style.cssText = 'position:absolute;bottom:0;left:50%;transform:translateX(-50%);background:rgba(200,134,10,0.93);color:#fff;font-size:12px;font-weight:900;white-space:nowrap;padding:3px 10px;border-radius:0 0 3px 3px;font-family:"Malgun Gothic",Arial,sans-serif;';
+      codeLbl.textContent = code;
+      qrWrap.appendChild(codeLbl);
+      card.appendChild(qrWrap);
+
+      // 선수 명단
+      var pList = document.createElement('div');
+      pList.style.cssText = 'width:100%;margin-bottom:4px;';
+      team.players.forEach(function(p, pi) {
+        var row = document.createElement('div');
+        row.style.cssText = 'display:flex;gap:6px;align-items:center;padding:3px 0;border-bottom:1px solid #f0f0f0;';
+        row.innerHTML = '<span style="width:18px;height:18px;background:#c8860a;border-radius:50%;color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' + (pi+1) + '</span>' +
+          '<span style="font-weight:700;font-size:13px;min-width:46px;">' + escHtml(p.name) + '</span>' +
+          '<span style="font-size:12px;color:#555;background:#f5f5f5;padding:1px 5px;border-radius:4px;">' + escHtml(p.gender||'') + '</span>' +
+          '<span style="font-size:12px;color:#777;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escHtml(p.affil||'') + '</span>';
+        pList.appendChild(row);
+      });
+      card.appendChild(pList);
+
+      var footer = document.createElement('div');
+      footer.style.cssText = 'font-size:10px;color:#aaa;margin-top:2px;text-align:center;';
+      footer.textContent = code + ' · ' + date + ' · ' + now;
+      card.appendChild(footer);
+      grid.appendChild(card);
+
       // QR 생성
       new QRCode(qrDiv, {
-        text: qrUrl,
-        width: 200, height: 200,
+        text: qrUrl, width: 180, height: 180,
         colorDark: '#000000', colorLight: '#ffffff',
         correctLevel: QRCode.CorrectLevel.H
       });
 
-      // 조명 + 대회코드 오버레이 (캔버스 준비될 때까지 재시도)
-      (function drawOverlay(attempts) {
-        const canvas = qrDiv.querySelector('canvas');
-        if (!canvas || canvas.width === 0) {
-          if (attempts < 30) setTimeout(function(){ drawOverlay(attempts + 1); }, 100);
-          return;
-        }
-        const ctx = canvas.getContext('2d');
-        const cx = canvas.width / 2;
-        const cy = canvas.height / 2;
-        // 조명: 중앙 흰 배경 + 테두리
-        const label = team.team;
-        const bW = Math.min(label.length * 16 + 20, canvas.width * 0.70);
-        const bH = 30;
-        ctx.fillStyle = 'rgba(255,255,255,0.93)';
-        ctx.fillRect(cx - bW/2, cy - bH/2, bW, bH);
-        ctx.strokeStyle = '#c8860a'; ctx.lineWidth = 2.5;
-        ctx.strokeRect(cx - bW/2, cy - bH/2, bW, bH);
-        ctx.fillStyle = '#7a3f00';
-        ctx.font = 'bold 16px "Malgun Gothic",Arial,sans-serif';
-        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.fillText(label, cx, cy);
-        // 대회코드: 하단 진황 바
-        const cW = Math.min(code.length * 12 + 16, canvas.width * 0.75);
-        const cH = 22;
-        const cy2 = canvas.height - 3;
-        ctx.fillStyle = 'rgba(200,134,10,0.92)';
-        ctx.fillRect(cx - cW/2, cy2 - cH, cW, cH);
-        ctx.fillStyle = '#fff';
-        ctx.font = 'bold 12px "Malgun Gothic",Arial,sans-serif';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(code, cx, cy2 - cH/2);
-
-        done++;
-        btn.innerHTML = '⏳ QR 생성 중... (' + done + '/' + teams.length + ')';
-        if (done === teams.length) {
-          btn.innerHTML = '✅ ' + teams.length + '개 조 QR 생성 완료!';
-          btn.disabled = false;
-        }
-      })(0);
+      done++;
+      btn.innerHTML = '⏳ QR 생성 중... (' + done + '/' + teams.length + ')';
+      if (done === teams.length) {
+        btn.innerHTML = '✅ ' + teams.length + '개 조 QR 생성 완료!';
+        btn.disabled = false;
+      }
     });
 
-  } catch(err) {
-    alert('❌ 오류: ' + err.message);
-    btn.innerHTML = origText;
+  } catch(err) {  btn.innerHTML = origText;
     btn.disabled = false;
   }
 }
