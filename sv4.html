@@ -506,6 +506,21 @@ html, body {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
 
 <script>
+// QR 파라미터가 있으면 페이지 로드 즉시 점수판 열기 (표지 건너뜀)
+(function() {
+  try {
+    var p = new URLSearchParams(window.location.search || '');
+    if (p.get('c') || p.get('code')) {
+      document.addEventListener('DOMContentLoaded', function() {
+        var cover = document.getElementById('sv4CoverPage');
+        var app   = document.querySelector('.parkgolf-app');
+        if (cover) cover.style.display = 'none';
+        if (app)   { app.style.display = ''; window.scrollTo({top:0}); }
+      });
+    }
+  } catch(e) {}
+})();
+
 function openAdminFromCover() {
   const m = document.getElementById('adminModal');
   if (!m) return;
@@ -640,6 +655,14 @@ function _openScoringScreen() {
   document.getElementById('sv4CoverPage').style.display = 'none';
   const app = document.querySelector('.parkgolf-app');
   if (app) { app.style.display = ''; app.style.removeProperty('display'); window.scrollTo({top:0}); }
+  // 저장된 대회코드 복원 (버튼 직접 입장 시)
+  setTimeout(function() {
+    var inp = document.getElementById('tournamentCode');
+    if (inp && !inp.value) {
+      var saved = localStorage.getItem('parkgolf_tournament_code') || '';
+      if (saved) inp.value = saved;
+    }
+  }, 150);
 }
 function backToCover() {
   _stopQRScanner();
@@ -3887,7 +3910,8 @@ async function generateBatchQR() {
         '#batchQrOverlay,#batchQrOverlay *{visibility:visible!important}' +
         '#batchQrOverlay{position:absolute!important;top:0!important;left:0!important;width:100%!important;background:#fff!important;overflow:visible!important}' +
         '#bqrToolbar{display:none!important}' +
-        '#batchQrGrid{grid-template-columns:repeat(3,1fr)!important;gap:6px!important;padding:0!important;max-width:100%!important}' +
+        '#batchQrGrid{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:6mm!important;padding:0!important;width:100%!important;max-width:190mm!important}' +
+        '.bqr-card img,.bqr-card canvas{width:100%!important;height:auto!important;max-width:80mm!important}' +
         '.bqr-card{break-inside:avoid;page-break-inside:avoid;border:1px solid #bbb!important;box-shadow:none!important}' +
       '}';
     document.head.appendChild(printStyle);
@@ -3950,14 +3974,16 @@ async function generateBatchQR() {
 
       // 선수 명단 — 2×2 그리드
       var pGrid = document.createElement('div');
-      pGrid.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:4px 8px;width:100%;margin-bottom:6px;';
+      pGrid.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;width:100%;margin-bottom:6px;';
       team.players.forEach(function(p, pi) {
         var cell = document.createElement('div');
         cell.style.cssText = 'display:flex;gap:4px;align-items:center;padding:2px 0;';
         cell.innerHTML =
-          '<span style="width:16px;height:16px;background:#c8860a;border-radius:50%;color:#fff;font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' + (pi+1) + '</span>' +
-          '<span style="font-weight:800;font-size:13px;">' + escHtml(p.name) + '</span>' +
-          '<span style="font-size:11px;color:#555;">' + escHtml(p.gender||'') + '</span>';
+          '<span style="width:17px;height:17px;background:#c8860a;border-radius:50%;color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' + (pi+1) + '</span>' +
+          '<div style="display:flex;flex-direction:column;min-width:0;">' +
+            '<span style="font-weight:900;font-size:14px;line-height:1.2;">' + escHtml(p.name) + ' <span style=\'font-size:12px;color:#555;font-weight:700;\'>' + escHtml(p.gender||'') + '</span></span>' +
+            '<span style="font-size:12px;color:#777;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escHtml(p.affil||'') + '</span>' +
+          '</div>';
         pGrid.appendChild(cell);
       });
       card.appendChild(pGrid);
