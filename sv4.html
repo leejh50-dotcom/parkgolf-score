@@ -788,11 +788,11 @@ function backToCover() {
       <div style="border:2px solid #fca5a5; border-radius:14px; padding:16px; background:#fff5f5;">
         <div style="font-size:14px; font-weight:900; color:#dc2626; margin-bottom:6px;">③ 대회 점수 마감</div>
         <p style="font-size:13px; color:#374151; margin:0 0 12px 0;">대회코드 입력 후 마감버튼 누르세요</p>
-        <div style="display:flex; gap:8px;">
+        <div style="display:flex; gap:8px; overflow:hidden;">
           <input id="adminCloseCode" type="text" placeholder="예: 한마음5월"
-            style="flex:1; padding:12px 14px; border:2px solid #e5e7eb; border-radius:10px; font-size:15px; font-weight:700; box-sizing:border-box; text-transform:uppercase; outline:none;" />
+            style="flex:1; min-width:0; padding:10px 10px; border:2px solid #e5e7eb; border-radius:10px; font-size:14px; font-weight:700; box-sizing:border-box; text-transform:uppercase; outline:none;" />
           <button onclick="adminCloseScoring()"
-            style="padding:12px 20px; background:#dc2626; color:#fff; border:none; border-radius:10px; font-size:15px; font-weight:900; cursor:pointer; white-space:nowrap; flex-shrink:0;">
+            style="padding:10px 14px; background:#dc2626; color:#fff; border:none; border-radius:10px; font-size:14px; font-weight:900; cursor:pointer; white-space:nowrap; flex-shrink:0;">
             마감
           </button>
         </div>
@@ -1925,6 +1925,18 @@ document.addEventListener('DOMContentLoaded', function() {
   loadData();
   // loadData가 구 저장값으로 덮어쓰는 경우를 막기 위해 QR 파라미터를 한 번 더 적용
   initFromQueryParams();
+  // QR 파라미터 코드를 최종 강제 반영 (loadData 덮어쓰기 방지)
+  (function() {
+    try {
+      var p = new URLSearchParams(window.location.search || '');
+      var qrCode = p.get('c') || p.get('code');
+      if (qrCode) {
+        var el = document.getElementById('tournamentCode');
+        if (el) el.value = qrCode;
+        localStorage.setItem('parkgolf_tournament_code', qrCode);
+      }
+    } catch(e) {}
+  })();
   syncNameHeaders();
   updateTotalsAndRanks();
   updateHistoryCount();
