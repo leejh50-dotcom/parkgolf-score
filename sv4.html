@@ -529,7 +529,13 @@ function showMainAppPreview() {
 let _html5QrScanner = null;
 
 function enterPlayerScoring() {
-  // 먼저 QR 스캔 모달 열기
+  // QR 파라미터로 들어온 경우 → 카메라 불필요, 바로 점수판
+  const params = new URLSearchParams(window.location.search || '');
+  if (params.get('c') || params.get('code')) {
+    _openScoringScreen();
+    return;
+  }
+  // 카메라 스캔 모달 열기
   const modal = document.getElementById('qrScanModal');
   if (modal) {
     modal.style.display = 'flex';
@@ -1805,7 +1811,7 @@ function initFromQueryParams() {
     }
 
     // ✅ QR 스캔으로 들어온 경우 → 커버 건너뛰고 바로 점수판 열기
-    if (code && url) {
+    if (code) {
       setTimeout(function() {
         const cover = document.getElementById('sv4CoverPage');
         const app   = document.querySelector('.parkgolf-app');
@@ -3697,14 +3703,25 @@ function showSavedUrlsList() {
   } else {
     container.innerHTML = list.map(function(item, idx) {
       return '<div style="border:1px solid #e5e7eb;border-radius:10px;padding:12px;margin-bottom:10px;">' +
-        '<div style="font-weight:900;font-size:15px;margin-bottom:4px;">' + item.code + '</div>' +
-        '<div style="font-size:12px;color:#6b7280;word-break:break-all;margin-bottom:8px;">' + (item.url || '').slice(0,50) + '...</div>' +
+        '<div style="font-weight:900;font-size:15px;margin-bottom:2px;">' + item.code + '</div>' +
+        '<div style="font-size:12px;color:#6b7280;word-break:break-all;margin-bottom:6px;">' + (item.url || '').slice(0,50) + '...</div>' +
         '<div style="font-size:11px;color:#9ca3af;margin-bottom:8px;">' + (item.saved || '') + '</div>' +
-        '<button onclick="applySavedUrl(' + idx + ')" style="padding:8px 16px;background:#2563eb;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">적용</button>' +
+        '<div style="display:flex;gap:8px;">' +
+        '<button onclick="applySavedUrl(' + idx + ')" style="flex:1;padding:8px 0;background:#2563eb;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✅ 적용</button>' +
+        '<button onclick="deleteSavedUrl(' + idx + ')" style="padding:8px 14px;background:#dc2626;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">🗑 삭제</button>' +
+        '</div>' +
         '</div>';
     }).join('');
   }
   document.getElementById('savedUrlsModal').style.display = 'block';
+}
+function deleteSavedUrl(idx) {
+  let list = [];
+  try { list = JSON.parse(localStorage.getItem('parkgolf_saved_urls') || '[]'); } catch(e){}
+  if (!confirm('삭제하시겠습니까?')) return;
+  list.splice(idx, 1);
+  localStorage.setItem('parkgolf_saved_urls', JSON.stringify(list));
+  showSavedUrlsList(); // 목록 새로고침
 }
 function closeSavedUrlsModal() {
   document.getElementById('savedUrlsModal').style.display = 'none';
@@ -3923,7 +3940,7 @@ async function generateBatchQR() {
 
       // QR 래퍼 (relative positioning)
       var qrWrap = document.createElement('div');
-      qrWrap.style.cssText = 'position:relative;display:inline-block;margin-bottom:8px;width:260px;height:260px;';
+      qrWrap.style.cssText = 'position:relative;display:inline-block;margin-bottom:8px;width:420px;height:420px;';
 
       var qrDiv = document.createElement('div');
       qrWrap.appendChild(qrDiv);
@@ -3931,31 +3948,32 @@ async function generateBatchQR() {
       // 대회코드 라벨 — QR 하단 HTML 오버레이
       card.appendChild(qrWrap);
 
-      // 선수 명단
-      var pList = document.createElement('div');
-      pList.style.cssText = 'width:100%;margin-bottom:4px;';
+      // 선수 명단 — 2×2 그리드
+      var pGrid = document.createElement('div');
+      pGrid.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:4px 8px;width:100%;margin-bottom:6px;';
       team.players.forEach(function(p, pi) {
-        var row = document.createElement('div');
-        row.style.cssText = 'display:flex;gap:6px;align-items:center;padding:3px 0;border-bottom:1px solid #f0f0f0;';
-        row.innerHTML = '<span style="width:18px;height:18px;background:#c8860a;border-radius:50%;color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' + (pi+1) + '</span>' +
-          '<span style="font-weight:700;font-size:13px;min-width:46px;">' + escHtml(p.name) + '</span>' +
-          '<span style="font-size:12px;color:#555;background:#f5f5f5;padding:1px 5px;border-radius:4px;">' + escHtml(p.gender||'') + '</span>' +
-          '<span style="font-size:12px;color:#777;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escHtml(p.affil||'') + '</span>';
-        pList.appendChild(row);
+        var cell = document.createElement('div');
+        cell.style.cssText = 'display:flex;gap:4px;align-items:center;padding:2px 0;';
+        cell.innerHTML =
+          '<span style="width:16px;height:16px;background:#c8860a;border-radius:50%;color:#fff;font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' + (pi+1) + '</span>' +
+          '<span style="font-weight:800;font-size:13px;">' + escHtml(p.name) + '</span>' +
+          '<span style="font-size:11px;color:#555;">' + escHtml(p.gender||'') + '</span>';
+        pGrid.appendChild(cell);
       });
-      card.appendChild(pList);
+      card.appendChild(pGrid);
 
+      // 푸터 — 대회코드·날짜 굵고 크게
       var footer = document.createElement('div');
-      footer.style.cssText = 'font-size:10px;color:#aaa;margin-top:2px;text-align:center;';
-      footer.textContent = code + ' · ' + date + ' · ' + now;
+      footer.style.cssText = 'font-size:13px;font-weight:900;color:#444;margin-top:2px;text-align:center;letter-spacing:0.3px;';
+      footer.textContent = code + '  ' + date + '  ' + now;
       card.appendChild(footer);
       grid.appendChild(card);
 
-      // QR 생성
+      // QR 생성: Level M(15%), 420px(300DPI 3.5cm), 4모듈 여백 포함
       new QRCode(qrDiv, {
-        text: qrUrl, width: 260, height: 260,
+        text: qrUrl, width: 420, height: 420,
         colorDark: '#000000', colorLight: '#ffffff',
-        correctLevel: QRCode.CorrectLevel.H
+        correctLevel: QRCode.CorrectLevel.M
       });
 
       done++;
