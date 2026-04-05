@@ -608,12 +608,17 @@ function _applyQRAndOpenScoring(qrText) {
     const code = params.get('c') || params.get('code');
     const url  = params.get('u') || params.get('url');
     const pre  = params.get('d') || params.get('preliminaryDate');
-    const team = params.get('team');
+    const team = params.get('t') || params.get('team');
 
     if (code) {
       localStorage.setItem('parkgolf_tournament_code', code);
+      // 입력칸에 즉시 설정 + 지연 재설정 (loadData 덮어쓰기 방지)
       const inp = document.getElementById('tournamentCode');
       if (inp) inp.value = code;
+      setTimeout(function() {
+        const inp2 = document.getElementById('tournamentCode');
+        if (inp2) inp2.value = code;
+      }, 300);
     }
     if (url) localStorage.setItem('parkgolf_webapp_url', decodeURIComponent(url));
     if (pre) localStorage.setItem('parkgolf_preliminary_date', pre);
@@ -3933,7 +3938,7 @@ async function generateBatchQR() {
 
     const grid = document.createElement('div');
     grid.id = 'batchQrGrid';
-    grid.style.cssText = 'display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:14px;max-width:960px;margin:0 auto;';
+    grid.style.cssText = 'display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:14px;max-width:880px;margin:0 auto;';
     overlay.appendChild(grid);
     document.body.appendChild(overlay);
 
@@ -3977,13 +3982,12 @@ async function generateBatchQR() {
       pGrid.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;width:100%;margin-bottom:6px;';
       team.players.forEach(function(p, pi) {
         var cell = document.createElement('div');
-        cell.style.cssText = 'display:flex;gap:4px;align-items:center;padding:2px 0;';
+        cell.style.cssText = 'display:flex;gap:5px;align-items:center;padding:3px 0;';
         cell.innerHTML =
           '<span style="width:17px;height:17px;background:#c8860a;border-radius:50%;color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' + (pi+1) + '</span>' +
-          '<div style="display:flex;flex-direction:column;min-width:0;">' +
-            '<span style="font-weight:900;font-size:14px;line-height:1.2;">' + escHtml(p.name) + ' <span style=\'font-size:12px;color:#555;font-weight:700;\'>' + escHtml(p.gender||'') + '</span></span>' +
-            '<span style="font-size:12px;color:#777;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escHtml(p.affil||'') + '</span>' +
-          '</div>';
+          '<span style="font-weight:900;font-size:14px;">' + escHtml(p.name) + '</span>' +
+          '<span style="font-size:12px;color:#555;font-weight:700;">' + escHtml(p.gender||'') + '</span>' +
+          '<span style="font-size:12px;color:#777;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escHtml(p.affil||'') + '</span>';
         pGrid.appendChild(cell);
       });
       card.appendChild(pGrid);
