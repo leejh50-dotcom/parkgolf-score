@@ -620,7 +620,10 @@ function _applyQRAndOpenScoring(qrText) {
         if (inp2) inp2.value = code;
       }, 300);
     }
-    if (url) localStorage.setItem('parkgolf_webapp_url', decodeURIComponent(url));
+    if (url) {
+      const decodedUrl = decodeURIComponent(url);
+      localStorage.setItem('parkgolf_webapp_url', decodedUrl);
+    }
     if (pre) localStorage.setItem('parkgolf_preliminary_date', pre);
     if (team) {
       const teamInp = document.getElementById('teamName');
@@ -1513,10 +1516,16 @@ async function sendToGoogleSheet() {
             // localStorage에도 저장(화면 입력값으로 들어온 경우)
             if (tournamentCode) localStorage.setItem('parkgolf_tournament_code', tournamentCode);
             
-            // 웹앱 URL (localStorage에서 가져오기)
-            const webAppUrl = localStorage.getItem('parkgolf_webapp_url') || '';
+            // 웹앱 URL (localStorage 우선, 없으면 URL 파라미터에서 직접 읽기)
+            var _urlParams = new URLSearchParams(window.location.search || '');
+            var _urlFromQR = _urlParams.get('u') || _urlParams.get('url') || '';
+            if (_urlFromQR) {
+              try { _urlFromQR = decodeURIComponent(_urlFromQR); } catch(e) {}
+              localStorage.setItem('parkgolf_webapp_url', _urlFromQR);
+            }
+            const webAppUrl = localStorage.getItem('parkgolf_webapp_url') || _urlFromQR || '';
             if (!webAppUrl) {
-                alert('⚠️ 웹 앱 URL이 없습니다!\n\nQR 코드를 다시 스캔해주세요.');
+                alert('⚠️ 웹 앱 URL이 없습니다!\n\n관리자 모달 → ①번에서\nURL과 대회코드를 저장해주세요.');
                 return;
             }
             
