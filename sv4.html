@@ -3908,6 +3908,7 @@ async function generateBatchQR() {
     const printStyle = document.createElement('style');
     printStyle.id = 'batchQrPrintStyle';
     printStyle.textContent =
+      '#batchQrOverlay img,#batchQrOverlay canvas{max-width:100%;height:auto;display:block;}'  +
       '@page{margin:8mm}' +
       '@media print{' +
         'html,body{height:auto!important;overflow:visible!important}' +
@@ -3915,8 +3916,9 @@ async function generateBatchQR() {
         '#batchQrOverlay,#batchQrOverlay *{visibility:visible!important}' +
         '#batchQrOverlay{position:absolute!important;top:0!important;left:0!important;width:100%!important;background:#fff!important;overflow:visible!important}' +
         '#bqrToolbar{display:none!important}' +
-        '#batchQrGrid{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:6mm!important;padding:0!important;width:100%!important;max-width:190mm!important}' +
-        '.bqr-card img,.bqr-card canvas{width:100%!important;height:auto!important;max-width:80mm!important}' +
+        '#batchQrGrid{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:4mm!important;padding:0!important;width:100%!important;max-width:200mm!important}' +
+        '.bqr-card{padding:6px!important}' +
+        '.bqr-card img,.bqr-card canvas{width:100%!important;height:auto!important}' +
         '.bqr-card{break-inside:avoid;page-break-inside:avoid;border:1px solid #bbb!important;box-shadow:none!important}' +
       '}';
     document.head.appendChild(printStyle);
@@ -3938,7 +3940,7 @@ async function generateBatchQR() {
 
     const grid = document.createElement('div');
     grid.id = 'batchQrGrid';
-    grid.style.cssText = 'display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:14px;max-width:880px;margin:0 auto;';
+    grid.style.cssText = 'display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px;max-width:1100px;margin:0 auto;';
     overlay.appendChild(grid);
     document.body.appendChild(overlay);
 
@@ -3959,19 +3961,20 @@ async function generateBatchQR() {
       // 카드
       var card = document.createElement('div');
       card.className = 'bqr-card';
-      card.style.cssText = 'background:#fff;border-radius:12px;border:2px solid #e0e0e0;padding:12px;display:flex;flex-direction:column;align-items:center;box-shadow:0 2px 6px rgba(0,0,0,0.08);';
+      card.style.cssText = 'background:#fff;border-radius:8px;border:1px solid #ddd;padding:8px;display:flex;flex-direction:column;align-items:center;box-shadow:0 1px 4px rgba(0,0,0,0.08);';
 
       // 조명 헤더 (HTML)
       var hdr = document.createElement('div');
-      hdr.style.cssText = 'font-size:20px;font-weight:900;color:#7a3f00;margin-bottom:6px;text-align:center;';
+      hdr.style.cssText = 'font-size:16px;font-weight:900;color:#7a3f00;margin-bottom:4px;text-align:center;';
       hdr.textContent = team.team;
       card.appendChild(hdr);
 
       // QR 래퍼 (relative positioning)
       var qrWrap = document.createElement('div');
-      qrWrap.style.cssText = 'position:relative;display:inline-block;margin-bottom:8px;width:420px;height:420px;';
+      qrWrap.style.cssText = 'position:relative;display:block;margin-bottom:6px;width:100%;';
 
       var qrDiv = document.createElement('div');
+      qrDiv.style.cssText = 'width:100%;';
       qrWrap.appendChild(qrDiv);
 
       // 대회코드 라벨 — QR 하단 HTML 오버레이
@@ -3979,22 +3982,22 @@ async function generateBatchQR() {
 
       // 선수 명단 — 2×2 그리드
       var pGrid = document.createElement('div');
-      pGrid.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;width:100%;margin-bottom:6px;';
+      pGrid.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:3px 6px;width:100%;margin-bottom:4px;';
       team.players.forEach(function(p, pi) {
         var cell = document.createElement('div');
-        cell.style.cssText = 'display:flex;gap:5px;align-items:center;padding:3px 0;';
+        cell.style.cssText = 'display:flex;gap:3px;align-items:baseline;padding:1px 0;';
         cell.innerHTML =
           '<span style="width:17px;height:17px;background:#c8860a;border-radius:50%;color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' + (pi+1) + '</span>' +
-          '<span style="font-weight:900;font-size:14px;">' + escHtml(p.name) + '</span>' +
-          '<span style="font-size:12px;color:#555;font-weight:700;">' + escHtml(p.gender||'') + '</span>' +
-          '<span style="font-size:12px;color:#777;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escHtml(p.affil||'') + '</span>';
+          '<span style="font-weight:800;font-size:12px;">' + escHtml(p.name) + '</span>' +
+          '<span style="font-size:11px;color:#555;font-weight:600;">' + escHtml(p.gender||'') + '</span>' +
+          '<span style="font-size:11px;color:#777;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + escHtml(p.affil||'') + '</span>';
         pGrid.appendChild(cell);
       });
       card.appendChild(pGrid);
 
       // 푸터 — 대회코드·날짜 굵고 크게
       var footer = document.createElement('div');
-      footer.style.cssText = 'font-size:13px;font-weight:900;color:#444;margin-top:2px;text-align:center;letter-spacing:0.3px;';
+      footer.style.cssText = 'font-size:11px;font-weight:700;color:#444;margin-top:2px;text-align:center;';
       footer.textContent = code + '  ' + date + '  ' + now;
       card.appendChild(footer);
       grid.appendChild(card);
