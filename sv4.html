@@ -3964,6 +3964,7 @@ async function generateBatchQR() {
       // 심판 기기는 관리자 모달 ①번에서 1회 URL 저장으로 설정
       var qrUrl = pageUrl
         + '?c=' + encodeURIComponent(code)
+        + '&u=' + encodeURIComponent(webappUrl)
         + '&d=' + encodeURIComponent(date)
         + '&t=' + encodeURIComponent(team.team);
       team.players.forEach(function(p, pi) {
