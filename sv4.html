@@ -3794,32 +3794,6 @@ async function loadConfigFromSheet() {
     btn.disabled = false;
   }
 }
-  const url = (document.getElementById('adminWebappUrl').value || '').trim();
-  const code = (document.getElementById('adminCodeInput').value || '').trim().toUpperCase();
-  if (!url) { alert('⚠️ 웹앱 URL을 입력해주세요.'); return; }
-  if (!url.includes('script.google.com')) { alert('❌ 올바른 Google Apps Script URL이 아닙니다.'); return; }
-  if (!code) { alert('⚠️ 대회코드를 입력해주세요.'); return; }
-
-  // 기존 목록에 추가(최신 5개 유지)
-  let list = [];
-  try { list = JSON.parse(localStorage.getItem('parkgolf_saved_urls') || '[]'); } catch(e){}
-  if (!Array.isArray(list)) list = [];
-  // 중복 제거 후 앞에 추가
-  list = list.filter(item => item.code !== code || item.url !== url);
-  list.unshift({ code: code, url: url, saved: new Date().toLocaleString('ko-KR') });
-  if (list.length > 10) list = list.slice(0, 10);
-  localStorage.setItem('parkgolf_saved_urls', JSON.stringify(list));
-
-  // 현재 사용할 값도 저장
-  localStorage.setItem('parkgolf_webapp_url', url);
-  localStorage.setItem('parkgolf_tournament_code', code);
-
-  // 점수판의 코드 입력칸에도 반영
-  const codeInp = document.getElementById('tournamentCode');
-  if (codeInp) codeInp.value = code;
-
-  alert('✅ 저장 완료!\n\n코드: ' + code + '\nURL: ' + url.slice(0,40) + '...\n\n이제 QR 코드를 생성하세요.');
-}
 
 // 저장된 URL 목록
 function showSavedUrlsList() {
