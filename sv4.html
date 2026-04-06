@@ -3900,6 +3900,9 @@ async function generateBatchQR() {
   if (!webappUrl) { alert('❌ 웹 앱 URL을 입력하세요!\n①번에서 먼저 저장하세요.'); return; }
   if (!webappUrl.includes('script.google.com')) { alert('❌ 올바른 Google Apps Script URL이 아닙니다.'); return; }
 
+  // 조편성 확인 안내
+  if (!confirm('📋 조별 QR 일괄생성을 시작합니다.\n\n⚠️ 반드시 구글시트에서 조편성을 먼저 실행하세요!\n\n조편성이 완료되어 있으면 확인을 누르세요.')) return;
+
   const btn = event.target;
   const origText = btn.innerHTML;
   btn.innerHTML = '⏳ 조편성 데이터 불러오는 중...';
