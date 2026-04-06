@@ -1547,7 +1547,9 @@ async function sendToGoogleSheet() {
             // 🔥 2. 선수별 상세 점수 데이터 수집
             // ========================================
             
-            const playerData = (window.playerData && Array.isArray(window.playerData)) ? window.playerData : (typeof buildPlayerDataForSend_ === 'function' ? buildPlayerDataForSend_() : []);
+            const _rawPlayerData = (window.playerData && Array.isArray(window.playerData)) ? window.playerData : (typeof buildPlayerDataForSend_ === 'function' ? buildPlayerDataForSend_() : []);
+            // 이름 없는 선수 제거 (빈칸 전송 방지)
+            const playerData = _rawPlayerData.filter(function(p) { return p && (p.name || '').trim() !== ''; });
             
             // ✅ SV4.0 간소화: 코스별 합계표(직접입력) 기반 전송
 // ========================================
