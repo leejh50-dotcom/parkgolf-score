@@ -4039,7 +4039,9 @@ async function generateBatchQR() {
       }
     });
 
-  } catch(err) {  btn.innerHTML = origText;
+  } catch(err) {
+    alert('❌ 오류: ' + (err.message || err) + '\n\n조편성 시트가 없으면 먼저\n구글시트 → 파시스관리 → ⚡조편성 실행 후 다시 시도하세요.');
+    btn.innerHTML = origText;
     btn.disabled = false;
   }
 }
