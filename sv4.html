@@ -3748,7 +3748,7 @@ function saveAdminUrlAndCode() {
   fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain' },
-    body: JSON.stringify({ action: 'saveConfig', code: code, webappUrl: url })
+    body: JSON.stringify({ action: 'saveconfig', code: code, webappUrl: url })
   }).then(function(r){ return r.json(); })
     .then(function(j){ if (j.success) showToast('✅ 저장 완료 (기기 + 구글시트)'); })
     .catch(function(){ /* 구글시트 저장 실패해도 로컬은 저장됨 */ });
@@ -3771,7 +3771,7 @@ async function loadConfigFromSheet() {
     const res = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'loadConfig', code: '_' })
+      body: JSON.stringify({ action: 'loadconfig', code: '_' })
     });
     const j = await res.json();
     if (!j.success) throw new Error(j.message || '불러오기 실패');
