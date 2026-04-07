@@ -692,8 +692,8 @@ function backToCover() {
   <div onclick="closeAdminModal()" style="position:fixed; inset:0; background:rgba(0,0,0,0.55);"></div>
 
   <div role="dialog" aria-modal="true"
-       style="position:relative; margin:4vh auto 20px; width:min(760px, 92vw);
-              background:#ffffff; border-radius:18px; box-shadow:0 20px 60px rgba(0,0,0,0.35);
+       style="position:relative; margin:2vh auto 20px; width:min(700px, 98vw);
+              background:#ffffff; border-radius:14px; box-shadow:0 20px 60px rgba(0,0,0,0.35);
               overflow:hidden;">
 
     <!-- 모달 헤더 -->
@@ -737,6 +737,25 @@ function backToCover() {
           ☁️ PC 설정 불러오기
         </button>
         <div style="font-size:11px;color:#6b7280;text-align:center;margin-top:4px;">PC에서 저장한 URL·코드를 가져옵니다</div>
+
+        <!-- 📤 구글시트 결과 공유 -->
+        <div style="margin-top:12px; border:1px solid #e5e7eb; border-radius:10px; padding:12px; background:#f9fafb;">
+          <div style="font-size:13px; font-weight:900; color:#374151; margin-bottom:8px;">📤 구글시트 결과 공유</div>
+          <div id="sheetShareUrl" style="font-size:12px; color:#6b7280; word-break:break-all; margin-bottom:8px; min-height:18px; background:#fff; border:1px solid #e5e7eb; border-radius:6px; padding:6px 8px;">
+            URL을 불러오세요
+          </div>
+          <div style="display:flex; gap:6px;">
+            <button onclick="loadSheetShareUrl()"
+              style="flex:1; padding:9px; background:#6b7280; color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer;">
+              🔗 시트 URL 불러오기
+            </button>
+            <button onclick="copySheetUrl()"
+              style="flex:1; padding:9px; background:#16a34a; color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer;">
+              📋 복사
+            </button>
+          </div>
+          <div style="font-size:11px;color:#9ca3af;margin-top:6px;text-align:center;">복사 후 카톡으로 동료에게 전송하세요</div>
+        </div>
       </div>
 
       <!-- ② QR 코드 생성 -->
@@ -874,10 +893,10 @@ function backToCover() {
   <!-- 🔑 대회코드 입력(선택) -->
   <div class="input-group">
     <div style="position: relative; width: 100%;">
-      <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-weight: 900; font-size: 16px; color: #00796B; pointer-events: none; z-index: 1;">코드명:</span>
-      <input type="text" id="tournamentCode" placeholder="관리자에게 받은 코드"
+      <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-weight: 900; font-size: 15px; color: #00796B; pointer-events: none; z-index: 1;">코드명</span>
+      <input type="text" id="tournamentCode" placeholder="대회코드"
         style="width: 100%; text-align: center; font-weight: 900; font-size: 20px; background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
-              border: 3px solid #00acc1; padding: 16px 14px 16px 90px; letter-spacing: 2px; text-transform: uppercase; box-sizing: border-box;">
+              border: 3px solid #00acc1; padding: 16px 14px; letter-spacing: 2px; text-transform: uppercase; box-sizing: border-box;">
     </div>
   </div>
 
@@ -885,10 +904,10 @@ function backToCover() {
 
   <div class="input-group">
     <div style="position: relative; width: 100%;">
-      <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-weight: 900; font-size: 16px; color: #6A1B9A; pointer-events: none; z-index: 1;">조명:</span>
-      <input type="text" id="teamName" placeholder="예: A조, 5조, 버디팀"
+      <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-weight: 900; font-size: 15px; color: #6A1B9A; pointer-events: none; z-index: 1;">조명</span>
+      <input type="text" id="teamName" placeholder="조명 입력"
         style="width: 100% !important; text-align: center !important; font-weight: 900 !important; font-size: 18px !important; background: #f8f9fa !important;
-              border: 2px solid #dee2e6 !important; padding: 14px 12px 14px 100px !important; box-sizing: border-box !important;">
+              border: 2px solid #dee2e6 !important; padding: 14px 12px !important; box-sizing: border-box !important;">
     </div>
   </div>
 
@@ -3756,7 +3775,55 @@ function saveAdminUrlAndCode() {
   showToast('✅ URL + 대회코드 저장됨: ' + code);
 }
 
-// ☁️ 구글시트에서 PC 설정 불러오기 (휴대폰용)
+// ☁️ 구글시트 URL 불러오기 + 복사
+async function loadSheetShareUrl() {
+  const url = (document.getElementById('adminWebappUrl').value || '').trim()
+             || localStorage.getItem('parkgolf_webapp_url') || '';
+  if (!url) { alert('⚠️ 웹앱 URL을 먼저 입력하세요.'); return; }
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'getsheeturl', code: '_' })
+    });
+    const j = await res.json();
+    if (!j.success) throw new Error(j.message || '불러오기 실패');
+    const el = document.getElementById('sheetShareUrl');
+    if (el) el.textContent = j.sheetUrl || '없음';
+    localStorage.setItem('parkgolf_sheet_url', j.sheetUrl || '');
+    showToast('✅ 시트 URL 불러오기 완료');
+  } catch(err) {
+    alert('❌ ' + err.message);
+  }
+}
+
+function copySheetUrl() {
+  const el = document.getElementById('sheetShareUrl');
+  const sheetUrl = (el ? el.textContent : '') || localStorage.getItem('parkgolf_sheet_url') || '';
+  if (!sheetUrl || sheetUrl === 'URL을 불러오세요') {
+    alert('⚠️ 먼저 시트 URL을 불러오세요.');
+    return;
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(sheetUrl).then(function() {
+      showToast('📋 시트 URL 복사 완료! 카톡으로 전송하세요.');
+    }).catch(function() { fallbackCopySheetUrl_(sheetUrl); });
+  } else {
+    fallbackCopySheetUrl_(sheetUrl);
+  }
+}
+
+function fallbackCopySheetUrl_(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); showToast('📋 시트 URL 복사 완료!'); }
+  catch(e) { alert('복사 실패. 직접 선택하여 복사하세요:\n' + text); }
+  document.body.removeChild(ta);
+}
 async function loadConfigFromSheet() {
   const url = (document.getElementById('adminWebappUrl').value || '').trim()
              || localStorage.getItem('parkgolf_webapp_url') || '';
