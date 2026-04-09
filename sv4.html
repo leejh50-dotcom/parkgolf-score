@@ -777,7 +777,11 @@ function test_doPost() {
 // 호환용(기존 코드에서 호출하더라도 에러 방지)
 function toggleAppsScript(){location.hash=`#appsScriptInstall`}</script><script>function openAdminModal(){
 // 모달 열릴 때 저장된 값 자동 복원
-let savedUrl=localStorage.getItem(`parkgolf_webapp_url`)||``,savedCode=localStorage.getItem(`parkgolf_tournament_code`)||``,urlInp=document.getElementById(`adminWebappUrl`),codeInp=document.getElementById(`adminCodeInput`);urlInp&&savedUrl&&(urlInp.value=savedUrl),codeInp&&savedCode&&(codeInp.value=savedCode);let m=document.getElementById(`adminModal`);m&&(m.style.display=`block`)}function closeAdminModal(){let m=document.getElementById(`adminModal`);m&&(m.style.display=`none`)}
+let savedUrl=localStorage.getItem(`parkgolf_webapp_url`)||``,savedCode=localStorage.getItem(`parkgolf_tournament_code`)||``,urlInp=document.getElementById(`adminWebappUrl`),codeInp=document.getElementById(`adminCodeInput`);urlInp&&savedUrl&&(urlInp.value=savedUrl),codeInp&&savedCode&&(codeInp.value=savedCode);let m=document.getElementById(`adminModal`);
+// ── 조편성 모드 자동 감지 (URL+코드 있을 때) ──
+m&&(m.style.display=`block`),savedUrl&&savedCode&&fetch(savedUrl,{method:`POST`,headers:{"Content-Type":`text/plain`},body:JSON.stringify({action:`getteams`,mode:`all`,code:savedCode})}).then(function(r){return r.json()}).then(function(j){if(!(!j.success||!j.teams||j.teams.length===0)){var modeEl=document.getElementById(`modalTeamMode`);if(modeEl){
+// 첫 번째 조명으로 모드 감지
+var first=String(j.teams[0].team||``),hasMale=j.teams.some(function(t){return/^남/.test(t.team)}),hasFemale=j.teams.some(function(t){return/^여/.test(t.team)});hasMale&&hasFemale?modeEl.value=`separate`:hasMale?modeEl.value=`male`:hasFemale?modeEl.value=`female`:modeEl.value=`mixed`}}}).catch(function(){})}function closeAdminModal(){let m=document.getElementById(`adminModal`);m&&(m.style.display=`none`)}
 // URL + 코드 저장
 function saveAdminUrlAndCode(){let url=(document.getElementById(`adminWebappUrl`).value||``).trim(),code=(document.getElementById(`adminCodeInput`).value||``).trim().toUpperCase();if(!url){alert(`웹앱 URL을 입력해주세요.`);return}if(!code){alert(`대회코드를 입력해주세요.`);return}if(!url.includes(`script.google.com`)){alert(`❌ 올바른 Google Apps Script URL이 아닙니다.`);return}localStorage.setItem(`parkgolf_webapp_url`,url),localStorage.setItem(`parkgolf_tournament_code`,code);let mainCode=document.getElementById(`tournamentCode`);mainCode&&(mainCode.value=code);
 // 저장 목록에 추가
