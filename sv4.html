@@ -1568,5 +1568,39 @@ function test_doPost() {
 })();
 </script>
 
+
+<script>
+// ── 비고(HIO) 입력 자유 텍스트 패치 ──
+// bindScoreInputs()가 HIO를 숫자1자리로 강제하므로 이를 덮어씀
+document.addEventListener('DOMContentLoaded', function(){
+  setTimeout(function(){
+    for(var i=1;i<=4;i++){
+      var el = document.getElementById('in-HIO-'+i);
+      if(!el) continue;
+      // 요소 복제(이벤트 리스너 제거) 후 교체
+      var clone = el.cloneNode(true);
+      clone.type = 'text';
+      clone.inputMode = 'text';
+      clone.maxLength = 30;
+      clone.removeAttribute('pattern');
+      clone.style.cssText = el.style.cssText;
+      el.parentNode.replaceChild(clone, el);
+      // 새 이벤트 바인딩 (자유텍스트)
+      (function(idx, inp){
+        inp.addEventListener('input', function(){
+          if(typeof summaryScores !== 'undefined'){
+            summaryScores['HIO'][idx] = this.value;
+          }
+          if(typeof autoSave === 'function') autoSave();
+        });
+        inp.addEventListener('blur', function(){
+          if(typeof autoSave === 'function') autoSave();
+        });
+      })(i, clone);
+    }
+  }, 800); // bindScoreInputs 이후 실행
+});
+</script>
+
 </body>
 </html>
