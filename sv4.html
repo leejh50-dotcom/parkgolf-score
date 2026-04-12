@@ -7,6 +7,15 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>파시스 SV4.0 대회용 - 파크골프 점수판</title>
+
+<style>
+.parkgolf-app #codeLabel, .parkgolf-app #teamLabel,
+.parkgolf-app label[for="tournamentCode"],
+.parkgolf-app label[for="teamName"] { font-size:18px!important; font-weight:700!important; }
+.parkgolf-app #tournamentCode,
+.parkgolf-app #teamName { font-size:20px!important; font-weight:700!important; }
+.parkgolf-app .code-display, .parkgolf-app .team-display { font-size:20px!important; }
+</style>
 </head>
 <body style="margin:0;padding:0;background:#f0fff4;">
 
@@ -789,10 +798,10 @@ html, body {
   <!-- 🔑 대회코드 입력(선택) -->
   <div class="input-group">
     <div style="position: relative; width: 100%;">
-      <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-weight: 900; font-size: 15px; color: #00796B; pointer-events: none; z-index: 1;">코드명</span>
+      <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-weight: 900; font-size: 20px; color: #00796B; pointer-events: none; z-index: 1;">코드명</span>
       <input type="text" id="tournamentCode" placeholder="대회코드"
-        style="width: 100%; text-align: center; font-weight: 900; font-size: 20px; background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
-              border: 3px solid #00acc1; padding: 16px 14px; letter-spacing: 2px; text-transform: uppercase; box-sizing: border-box;">
+        style="width: 100%; text-align: center; font-weight: 900; font-size_old: 20px; background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+              border: 3px solid #00acc1; padding: 16px 14px; letter-spacing: 2px; text-transform: uppercase; box-sizing: border-box;font-size:20px!important;">
     </div>
   </div>
 
@@ -800,7 +809,7 @@ html, body {
 
   <div class="input-group">
     <div style="position: relative; width: 100%;">
-      <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-weight: 900; font-size: 15px; color: #6A1B9A; pointer-events: none; z-index: 1;">조명</span>
+      <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-weight: 900; font-size: 20px; color: #6A1B9A; pointer-events: none; z-index: 1;">조명</span>
       <input type="text" id="teamName" placeholder="조명 입력"
         style="width: 100% !important; text-align: center !important; font-weight: 900 !important; font-size: 18px !important; background: #f8f9fa !important;
               border: 2px solid #dee2e6 !important; padding: 14px 12px !important; box-sizing: border-box !important;">
@@ -882,7 +891,7 @@ html, body {
         </tr>
         <tr class="scard-bigo">
           <td class="scard-bigo-lbl">비고</td>
-          <td colspan="4"><input id="in-HIO-1" class="scard-bigo-inp" inputmode="numeric" pattern="[0-9]*" maxlength="1" placeholder="A-7홀  홀인원"></td>
+          <td colspan="4"><input id="in-HIO-1" class="scard-bigo-inp" type="text" inputmode="text" maxlength="20" placeholder="A-7홀  홀인원"></td>
         </tr>
       </table>
     </div>
@@ -907,7 +916,7 @@ html, body {
         </tr>
         <tr class="scard-bigo">
           <td class="scard-bigo-lbl">비고</td>
-          <td colspan="4"><input id="in-HIO-2" class="scard-bigo-inp" inputmode="numeric" pattern="[0-9]*" maxlength="1" placeholder="A-7홀  홀인원"></td>
+          <td colspan="4"><input id="in-HIO-2" class="scard-bigo-inp" type="text" inputmode="text" maxlength="20" placeholder="A-7홀  홀인원"></td>
         </tr>
       </table>
     </div>
@@ -932,7 +941,7 @@ html, body {
         </tr>
         <tr class="scard-bigo">
           <td class="scard-bigo-lbl">비고</td>
-          <td colspan="4"><input id="in-HIO-3" class="scard-bigo-inp" inputmode="numeric" pattern="[0-9]*" maxlength="1" placeholder="A-7홀  홀인원"></td>
+          <td colspan="4"><input id="in-HIO-3" class="scard-bigo-inp" type="text" inputmode="text" maxlength="20" placeholder="A-7홀  홀인원"></td>
         </tr>
       </table>
     </div>
@@ -957,7 +966,7 @@ html, body {
         </tr>
         <tr class="scard-bigo">
           <td class="scard-bigo-lbl">비고</td>
-          <td colspan="4"><input id="in-HIO-4" class="scard-bigo-inp" inputmode="numeric" pattern="[0-9]*" maxlength="1" placeholder="A-7홀  홀인원"></td>
+          <td colspan="4"><input id="in-HIO-4" class="scard-bigo-inp" type="text" inputmode="text" maxlength="20" placeholder="A-7홀  홀인원"></td>
         </tr>
       </table>
     </div>
