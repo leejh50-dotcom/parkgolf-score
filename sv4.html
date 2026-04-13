@@ -1705,5 +1705,52 @@ document.addEventListener('DOMContentLoaded', function(){
 })();
 </script>
 
+
+<script>
+// ── num2 오버라이드: HIO(비고)는 텍스트 그대로 통과 ──
+(function(){
+  // 전송 직전 HIO를 DOM에서 직접 읽어 summaryScores에 덮어쓰기
+  // sendToGoogleSheet 오버라이드
+  var _origSend = window.sendToGoogleSheet;
+  if(typeof _origSend === 'function'){
+    window.sendToGoogleSheet = function(){
+      // 전송 전 비고 DOM→summaryScores 강제 동기화
+      try {
+        for(var i=1;i<=4;i++){
+          var el = document.getElementById('in-HIO-'+i);
+          if(el && typeof summaryScores !== 'undefined'){
+            summaryScores['HIO'][i] = el.value || '';
+          }
+        }
+      } catch(e){}
+      return _origSend.apply(this, arguments);
+    };
+    console.log('✅ sendToGoogleSheet 오버라이드 완료');
+  } else {
+    // 함수가 아직 로드 안됐을 경우 대기
+    var _waitSend = setInterval(function(){
+      var _fn = window.sendToGoogleSheet;
+      if(typeof _fn === 'function' && !_fn._patched){
+        window.sendToGoogleSheet = function(){
+          try {
+            for(var i=1;i<=4;i++){
+              var el = document.getElementById('in-HIO-'+i);
+              if(el && typeof summaryScores !== 'undefined'){
+                summaryScores['HIO'][i] = el.value || '';
+              }
+            }
+          } catch(e){}
+          return _fn.apply(this, arguments);
+        };
+        window.sendToGoogleSheet._patched = true;
+        clearInterval(_waitSend);
+        console.log('✅ sendToGoogleSheet 지연 오버라이드 완료');
+      }
+    }, 200);
+    setTimeout(function(){ clearInterval(_waitSend); }, 5000);
+  }
+})();
+</script>
+
 </body>
 </html>
