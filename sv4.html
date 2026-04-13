@@ -976,7 +976,7 @@ html, body {
   <div class="button-group" style="margin-top:14px!important">
     <button class="save-btn" id="saveBtn">저장하기</button>
     <button class="history-btn" id="historyBtn">저장된 기록<br>(<span id="historyCount">0</span>)</button>
-    <button class="clear-btn" id="clearBtn">점수 지우기</button>
+    <button class="clear-btn" id="clearAllBtn">전체 초기화</button>
     <button id="copyBtn" style="background:linear-gradient(135deg,#6c757d 0%,#495057 100%);color:white;">텍스트 복사</button>
   </div>
 
@@ -1573,19 +1573,19 @@ function test_doPost() {
 // ── 비고(HIO) 입력 자유 텍스트 패치 ──
 // bindScoreInputs()가 HIO를 숫자1자리로 강제하므로 이를 덮어씀
 document.addEventListener('DOMContentLoaded', function(){
-  setTimeout(function(){
+  function rebindBigo(){
     for(var i=1;i<=4;i++){
       var el = document.getElementById('in-HIO-'+i);
       if(!el) continue;
-      // 요소 복제(이벤트 리스너 제거) 후 교체
       var clone = el.cloneNode(true);
       clone.type = 'text';
       clone.inputMode = 'text';
       clone.maxLength = 30;
       clone.removeAttribute('pattern');
+      clone.removeAttribute('inputmode');
+      clone.setAttribute('inputmode','text');
       clone.style.cssText = el.style.cssText;
       el.parentNode.replaceChild(clone, el);
-      // 새 이벤트 바인딩 (자유텍스트)
       (function(idx, inp){
         inp.addEventListener('input', function(){
           if(typeof summaryScores !== 'undefined'){
@@ -1598,8 +1598,76 @@ document.addEventListener('DOMContentLoaded', function(){
         });
       })(i, clone);
     }
-  }, 800); // bindScoreInputs 이후 실행
+  }
+  setTimeout(rebindBigo, 800);
+  setTimeout(rebindBigo, 1500); // 한 번 더 보장
 });
+</script>
+
+
+<script>
+// ── 전체 초기화 (이름·성별·소속 포함) ──
+document.addEventListener('DOMContentLoaded', function(){
+  var btn = document.getElementById('clearAllBtn');
+  if(!btn) return;
+  btn.addEventListener('click', function(){
+    if(!confirm('이름·성별·소속·점수를 모두 초기화하시겠습니까?')) return;
+    // 점수 초기화 (기존 clearScores 호출)
+    if(typeof clearScores === 'function') clearScores();
+    // 이름·성별·소속 초기화
+    for(var i=1;i<=4;i++){
+      var p = document.getElementById('player'+i);
+      var g = document.getElementById('gender'+i);
+      var a = document.getElementById('affiliation'+i);
+      var h = document.getElementById('nameHeader'+i);
+      if(p) p.value = '';
+      if(g) g.value = '';
+      if(a) a.value = '';
+      if(h) h.textContent = '경기자 ' + i;
+    }
+    // 조명도 초기화
+    var tn = document.getElementById('teamName');
+    var tc = document.getElementById('shareTeam');
+    if(tn) tn.value = '';
+    if(tc) tc.textContent = '미입력';
+    if(typeof autoSave === 'function') autoSave();
+  });
+});
+</script>
+
+
+<script>
+// ── 히스토리 카운트 실시간 갱신 패치 ──
+(function(){
+  function refreshCount(){
+    try {
+      var list = JSON.parse(localStorage.getItem('parkGolfHistories_sv4')||'[]');
+      var el = document.getElementById('historyCount');
+      if(el) el.textContent = list.length;
+    } catch(e) {}
+  }
+  // deleteHistory_sv4 오버라이드
+  var _origDel = window.deleteHistory_sv4;
+  if(typeof _origDel === 'function'){
+    window.deleteHistory_sv4 = function(idx){
+      _origDel(idx);
+      setTimeout(refreshCount, 100);
+    };
+  }
+  // 모달 닫을 때도 갱신
+  var _origClose = window.closeHistoryModal;
+  if(typeof _origClose === 'function'){
+    window.closeHistoryModal = function(){
+      _origClose();
+      refreshCount();
+    };
+  }
+  // 주기적 갱신
+  setInterval(refreshCount, 2000);
+  document.addEventListener('DOMContentLoaded', function(){
+    setTimeout(refreshCount, 500);
+  });
+})();
 </script>
 
 </body>
