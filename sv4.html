@@ -1613,17 +1613,42 @@ function test_doPost() {
     }
   }
 
-  // ② sendToGoogleSheet 오버라이드: 전송 직전 DOM→summaryScores 강제 동기화
+  // ② fetch 가로채기: GAS 전송 body에서 holeInOne을 DOM 원문으로 교체
+  //    num2()가 이미 숫자변환 후여도 여기서 텍스트로 복원
+  var _origFetch = window.fetch;
+  window.fetch = function(url, options) {
+    try {
+      if(options && options.body && typeof url === 'string'
+         && url.indexOf('script.google.com') !== -1) {
+        var body = JSON.parse(options.body);
+        if(body && Array.isArray(body.players)) {
+          var playerIdx = 0;
+          for(var pi=1; pi<=4; pi++){
+            var nameEl = document.getElementById('player'+pi);
+            if(!nameEl || !nameEl.value.trim()) continue;
+            var bigoEl = document.getElementById('in-HIO-'+pi);
+            var bigoVal = bigoEl ? bigoEl.value || '' : '';
+            if(playerIdx < body.players.length) {
+              body.players[playerIdx].holeInOne = bigoVal;
+            }
+            playerIdx++;
+          }
+          options = Object.assign({}, options, {body: JSON.stringify(body)});
+        }
+      }
+    } catch(eFetch){}
+    return _origFetch.apply(this, arguments);
+  };
+
+  // sendToGoogleSheet 최초 전송 실패 방지: 중복 전송 차단 오버라이드
   function patchSend() {
     var orig = window.sendToGoogleSheet;
     if(typeof orig !== 'function' || orig._sv4patched) return false;
     window.sendToGoogleSheet = function(){
-      // 전송 전 비고 DOM값으로 덮어쓰기
+      // 비고 DOM→summaryScores 동기화 (fetch 가로채기 보완)
       for(var i=1;i<=4;i++){
         var el = document.getElementById('in-HIO-'+i);
-        if(el) {
-          try { summaryScores['HIO'][i] = el.value || ''; } catch(e){}
-        }
+        if(el) try { summaryScores['HIO'][i] = el.value || ''; } catch(e){}
       }
       return orig.apply(this, arguments);
     };
@@ -1689,9 +1714,10 @@ function test_doPost() {
       }, 200);
     }
 
-    // GAS 워밍업
-    setTimeout(pingGAS, 500);
-    setTimeout(pingGAS, 3000);
+    // GAS 워밍업 (콜드 스타트 방지 — 앱 열리면 즉시 ping)
+    setTimeout(pingGAS, 300);
+    setTimeout(pingGAS, 2000);
+    setTimeout(pingGAS, 5000);
 
     // 히스토리 카운트
     setInterval(refreshCount, 2000);
