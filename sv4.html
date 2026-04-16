@@ -17,24 +17,7 @@
 .parkgolf-app .code-display, .parkgolf-app .team-display { font-size:20px!important; }
 </style>
 
-<script>
-// ── GAS 워밍업 ping (콜드 스타트 방지) ──
-(function(){
-  function pingGAS(){
-    try {
-      var url = localStorage.getItem('parkgolf_webapp_url') || '';
-      if(!url) return;
-      fetch(url + '?ping=1', {method:'GET', mode:'no-cors'})
-        .catch(function(){});
-    } catch(e){}
-  }
-  // 페이지 로드 즉시 + 3초 후 한 번 더
-  document.addEventListener('DOMContentLoaded', function(){
-    setTimeout(pingGAS, 500);
-    setTimeout(pingGAS, 3000);
-  });
-})();
-</script>
+
 
 </head>
 <body style="margin:0;padding:0;background:#f0fff4;">
@@ -1589,166 +1572,134 @@ function test_doPost() {
 </script>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 <script>
-// ── 비고(HIO) 입력 자유 텍스트 패치 ──
-// bindScoreInputs()가 HIO를 숫자1자리로 강제하므로 이를 덮어씀
-document.addEventListener('DOMContentLoaded', function(){
-  function rebindBigo(){
+// ══════════════════════════════════════════
+// PASIS SV4 통합 패치 스크립트
+// ══════════════════════════════════════════
+(function(){
+  // ① 비고 필드: 텍스트 입력 강제 + 전송 직전 동기화
+  function patchBigo() {
     for(var i=1;i<=4;i++){
       var el = document.getElementById('in-HIO-'+i);
       if(!el) continue;
+      // 기존 이벤트 제거 후 새 요소로 교체
       var clone = el.cloneNode(true);
       clone.type = 'text';
-      clone.inputMode = 'text';
+      clone.setAttribute('inputmode','text');
       clone.maxLength = 30;
       clone.removeAttribute('pattern');
-      clone.setAttribute('inputmode','text');
-      clone.style.cssText = el.style.cssText;
+      clone.style.color = '#111';
       el.parentNode.replaceChild(clone, el);
       (function(idx, inp){
         inp.addEventListener('input', function(){
-          // ★ 숫자 변환 없이 원문 그대로 저장
-          if(typeof summaryScores !== 'undefined'){
-            summaryScores['HIO'][idx] = this.value;
-          }
-          if(typeof autoSave === 'function') autoSave();
-        });
-        inp.addEventListener('blur', function(){
-          if(typeof autoSave === 'function') autoSave();
+          // 텍스트 그대로 저장 (숫자 변환 없이)
+          try { summaryScores['HIO'][idx] = this.value; } catch(e){}
+          try { if(typeof autoSave==='function') autoSave(); } catch(e){}
         });
       })(i, clone);
     }
   }
-  setTimeout(rebindBigo, 800);
-  setTimeout(rebindBigo, 1500);
 
-  // ★ 전송 직전 DOM 값으로 holeInOne 강제 동기화
-  var _origSend = window.sendToGoogleSheet;
-  if(typeof _origSend === 'function'){
+  // ② sendToGoogleSheet 오버라이드: 전송 직전 DOM→summaryScores 강제 동기화
+  function patchSend() {
+    var orig = window.sendToGoogleSheet;
+    if(typeof orig !== 'function' || orig._sv4patched) return false;
     window.sendToGoogleSheet = function(){
-      // 전송 전 비고 DOM→summaryScores 동기화
-      for(var si=1;si<=4;si++){
-        var bigoEl = document.getElementById('in-HIO-'+si);
-        if(bigoEl && typeof summaryScores !== 'undefined'){
-          summaryScores['HIO'][si] = bigoEl.value || '';
+      // 전송 전 비고 DOM값으로 덮어쓰기
+      for(var i=1;i<=4;i++){
+        var el = document.getElementById('in-HIO-'+i);
+        if(el) {
+          try { summaryScores['HIO'][i] = el.value || ''; } catch(e){}
         }
       }
-      return _origSend.apply(this, arguments);
+      return orig.apply(this, arguments);
     };
+    window.sendToGoogleSheet._sv4patched = true;
+    return true;
   }
-});
-</script>
 
+  // ③ GAS 워밍업 ping (콜드 스타트 방지)
+  function pingGAS(){
+    try {
+      var url = localStorage.getItem('parkgolf_webapp_url') || '';
+      if(!url) return;
+      fetch(url + '?ping=1', {method:'GET', mode:'no-cors'}).catch(function(){});
+    } catch(e){}
+  }
 
-<script>
-// ── 전체 초기화 (이름·성별·소속 포함) ──
-document.addEventListener('DOMContentLoaded', function(){
-  var btn = document.getElementById('clearAllBtn');
-  if(!btn) return;
-  btn.addEventListener('click', function(){
-    if(!confirm('이름·성별·소속·점수를 모두 초기화하시겠습니까?')) return;
-    // 점수 초기화 (기존 clearScores 호출)
-    if(typeof clearScores === 'function') clearScores();
-    // 이름·성별·소속 초기화
-    for(var i=1;i<=4;i++){
-      var p = document.getElementById('player'+i);
-      var g = document.getElementById('gender'+i);
-      var a = document.getElementById('affiliation'+i);
-      var h = document.getElementById('nameHeader'+i);
-      if(p) p.value = '';
-      if(g) g.value = '';
-      if(a) a.value = '';
-      if(h) h.textContent = '경기자 ' + i;
-    }
-    // 조명도 초기화
-    var tn = document.getElementById('teamName');
-    var tc = document.getElementById('shareTeam');
-    if(tn) tn.value = '';
-    if(tc) tc.textContent = '미입력';
-    if(typeof autoSave === 'function') autoSave();
-  });
-});
-</script>
-
-
-<script>
-// ── 히스토리 카운트 실시간 갱신 패치 ──
-(function(){
+  // ④ 히스토리 카운트 실시간 갱신
   function refreshCount(){
     try {
       var list = JSON.parse(localStorage.getItem('parkGolfHistories_sv4')||'[]');
       var el = document.getElementById('historyCount');
       if(el) el.textContent = list.length;
-    } catch(e) {}
+    } catch(e){}
   }
-  // deleteHistory_sv4 오버라이드
-  var _origDel = window.deleteHistory_sv4;
-  if(typeof _origDel === 'function'){
-    window.deleteHistory_sv4 = function(idx){
-      _origDel(idx);
-      setTimeout(refreshCount, 100);
-    };
-  }
-  // 모달 닫을 때도 갱신
-  var _origClose = window.closeHistoryModal;
-  if(typeof _origClose === 'function'){
-    window.closeHistoryModal = function(){
-      _origClose();
-      refreshCount();
-    };
-  }
-  // 주기적 갱신
-  setInterval(refreshCount, 2000);
-  document.addEventListener('DOMContentLoaded', function(){
-    setTimeout(refreshCount, 500);
-  });
-})();
-</script>
 
-
-<script>
-// ── num2 오버라이드: HIO(비고)는 텍스트 그대로 통과 ──
-(function(){
-  // 전송 직전 HIO를 DOM에서 직접 읽어 summaryScores에 덮어쓰기
-  // sendToGoogleSheet 오버라이드
-  var _origSend = window.sendToGoogleSheet;
-  if(typeof _origSend === 'function'){
-    window.sendToGoogleSheet = function(){
-      // 전송 전 비고 DOM→summaryScores 강제 동기화
-      try {
-        for(var i=1;i<=4;i++){
-          var el = document.getElementById('in-HIO-'+i);
-          if(el && typeof summaryScores !== 'undefined'){
-            summaryScores['HIO'][i] = el.value || '';
-          }
-        }
-      } catch(e){}
-      return _origSend.apply(this, arguments);
-    };
-    console.log('✅ sendToGoogleSheet 오버라이드 완료');
-  } else {
-    // 함수가 아직 로드 안됐을 경우 대기
-    var _waitSend = setInterval(function(){
-      var _fn = window.sendToGoogleSheet;
-      if(typeof _fn === 'function' && !_fn._patched){
-        window.sendToGoogleSheet = function(){
-          try {
-            for(var i=1;i<=4;i++){
-              var el = document.getElementById('in-HIO-'+i);
-              if(el && typeof summaryScores !== 'undefined'){
-                summaryScores['HIO'][i] = el.value || '';
-              }
-            }
-          } catch(e){}
-          return _fn.apply(this, arguments);
-        };
-        window.sendToGoogleSheet._patched = true;
-        clearInterval(_waitSend);
-        console.log('✅ sendToGoogleSheet 지연 오버라이드 완료');
+  // ⑤ 전체 초기화 버튼 (이름+성별+소속+점수)
+  function initClearAllBtn(){
+    var btn = document.getElementById('clearAllBtn');
+    if(!btn) return;
+    btn.addEventListener('click', function(){
+      if(!confirm('이름·성별·소속·점수를 모두 초기화하시겠습니까?')) return;
+      try { if(typeof clearScores==='function') clearScores(); } catch(e){}
+      for(var i=1;i<=4;i++){
+        var p=document.getElementById('player'+i);
+        var g=document.getElementById('gender'+i);
+        var a=document.getElementById('affiliation'+i);
+        var h=document.getElementById('nameHeader'+i);
+        if(p) p.value='';
+        if(g) g.value='';
+        if(a) a.value='';
+        if(h) h.textContent='경기자 '+i;
       }
-    }, 200);
-    setTimeout(function(){ clearInterval(_waitSend); }, 5000);
+      var tn=document.getElementById('teamName');
+      var tc=document.getElementById('shareTeam');
+      if(tn) tn.value='';
+      if(tc) tc.textContent='미입력';
+      try { if(typeof autoSave==='function') autoSave(); } catch(e){}
+    });
   }
+
+  // 실행
+  document.addEventListener('DOMContentLoaded', function(){
+    // 비고 패치 — 여러 번 시도
+    setTimeout(patchBigo, 500);
+    setTimeout(patchBigo, 1000);
+    setTimeout(patchBigo, 2000);
+
+    // sendToGoogleSheet 패치 — 로드될 때까지 대기
+    if(!patchSend()){
+      var tries = 0;
+      var t = setInterval(function(){
+        if(patchSend() || ++tries > 20) clearInterval(t);
+      }, 200);
+    }
+
+    // GAS 워밍업
+    setTimeout(pingGAS, 500);
+    setTimeout(pingGAS, 3000);
+
+    // 히스토리 카운트
+    setInterval(refreshCount, 2000);
+    setTimeout(refreshCount, 500);
+
+    // 버튼 초기화
+    initClearAllBtn();
+  });
 })();
 </script>
 
