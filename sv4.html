@@ -1652,12 +1652,11 @@ function test_doPost() {
         try { data = JSON.parse(text); } catch(ep) {}
 
         if(data && data.coldstart) {
-          // ★ 콜드 스타트 감지 → 2.5초 후 자동 재시도 (사용자 알림 없음)
-          console.log('🔄 서버 초기화 중 — 2.5초 후 자동 재시도');
+          // 콜드 스타트 → 즉시 재시도 (0.5초 후)
           return new Promise(function(resolve) {
             setTimeout(function(){
               resolve(_origFetch(url, options));
-            }, 2500);
+            }, 500);
           });
         }
 
@@ -1764,6 +1763,56 @@ function test_doPost() {
     // 버튼 초기화
     initClearAllBtn();
   });
+})();
+</script>
+
+
+<div id="sv4LoadingOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:9999;align-items:center;justify-content:center;flex-direction:column;">
+  <div style="background:#fff;border-radius:16px;padding:32px 28px;text-align:center;max-width:300px;width:85%;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+    <div style="font-size:36px;margin-bottom:12px;">⛳</div>
+    <div id="sv4LoadingMsg" style="font-size:16px;font-weight:700;color:#1e3c72;margin-bottom:8px;">조편성 진행 중입니다</div>
+    <div style="font-size:13px;color:#6b7280;">잠시만 기다려 주세요...</div>
+    <div style="margin-top:16px;height:4px;background:#e5e7eb;border-radius:2px;overflow:hidden;">
+      <div id="sv4LoadingBar" style="height:100%;width:0%;background:#1e3c72;border-radius:2px;transition:width 8s ease-out;"></div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+// ── 조편성 로딩 오버레이 ──
+(function(){
+  function showLoading(msg) {
+    var el = document.getElementById('sv4LoadingOverlay');
+    var msgEl = document.getElementById('sv4LoadingMsg');
+    var bar = document.getElementById('sv4LoadingBar');
+    if(!el) return;
+    if(msgEl) msgEl.textContent = msg || '조편성 진행 중입니다';
+    el.style.display = 'flex';
+    if(bar) { bar.style.width = '0%'; setTimeout(function(){ bar.style.width = '95%'; }, 50); }
+  }
+  function hideLoading() {
+    var el = document.getElementById('sv4LoadingOverlay');
+    if(el) el.style.display = 'none';
+  }
+
+  // executeTeamAssignment 오버라이드
+  var _waitTeam = setInterval(function(){
+    var orig = window.executeTeamAssignment;
+    if(typeof orig === 'function' && !orig._patched) {
+      window.executeTeamAssignment = async function(){
+        showLoading('조편성 진행 중입니다');
+        try {
+          await orig.apply(this, arguments);
+        } finally {
+          hideLoading();
+        }
+      };
+      window.executeTeamAssignment._patched = true;
+      clearInterval(_waitTeam);
+    }
+  }, 200);
+  setTimeout(function(){ clearInterval(_waitTeam); }, 5000);
 })();
 </script>
 
