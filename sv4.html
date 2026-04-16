@@ -1646,22 +1646,26 @@ function test_doPost() {
     if(!isScorePost) return _origFetch.apply(this, arguments);
 
     return _origFetch.apply(this, arguments).then(function(resp) {
-      return resp.json().then(function(data) {
-        if(data && data.success) {
-          // 성공 → 원래 Response 재구성
-          return new Response(JSON.stringify(data), {
-            status: 200,
-            headers: {'Content-Type':'application/json'}
-          });
-        } else {
-          // GAS가 success:false 반환 → 2초 후 재시도
-          console.warn('⚠️ GAS success:false — 2초 후 재시도');
+      // 응답 텍스트를 읽고 재구성 (body 소비 문제 방지)
+      return resp.text().then(function(text) {
+        var data = {};
+        try { data = JSON.parse(text); } catch(ep) {}
+
+        if(data && data.coldstart) {
+          // ★ 콜드 스타트 감지 → 2.5초 후 자동 재시도 (사용자 알림 없음)
+          console.log('🔄 서버 초기화 중 — 2.5초 후 자동 재시도');
           return new Promise(function(resolve) {
             setTimeout(function(){
-              resolve(_origFetch(url, options).then(function(r){return r;}));
-            }, 2000);
+              resolve(_origFetch(url, options));
+            }, 2500);
           });
         }
+
+        // 정상 응답 → Response 재구성해서 반환
+        return new Response(text, {
+          status: resp.status || 200,
+          headers: {'Content-Type':'application/json'}
+        });
       });
     }).catch(function(err) {
       // 네트워크 오류 → 3초 후 재시도
