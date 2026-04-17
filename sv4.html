@@ -1797,14 +1797,26 @@ function test_doPost() {
   }
 
   // executeTeamAssignment 오버라이드
+  // 난독화된 함수는 confirm() 후 fetch → 오버레이는 fetch 직전에 표시
   var _waitTeam = setInterval(function(){
     var orig = window.executeTeamAssignment;
     if(typeof orig === 'function' && !orig._patched) {
       window.executeTeamAssignment = async function(){
-        showLoading('조편성 진행 중입니다');
+        // confirm은 기존 함수 안에 있으므로 먼저 실행
+        // fetch 시작 시점을 fetch 가로채기로 감지하여 오버레이 표시
+        var _teamFetchStarted = false;
+        var _origFetchLocal = window.fetch;
+        window.fetch = function(url, opts){
+          if(!_teamFetchStarted && typeof url==='string' && url.indexOf('script.google.com')!==-1){
+            _teamFetchStarted = true;
+            showLoading('조편성 진행 중입니다');
+          }
+          return _origFetchLocal.apply(this, arguments);
+        };
         try {
           await orig.apply(this, arguments);
         } finally {
+          window.fetch = _origFetchLocal; // fetch 복원
           hideLoading();
         }
       };
