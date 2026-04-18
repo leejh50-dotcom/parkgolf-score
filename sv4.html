@@ -1945,8 +1945,8 @@ function test_doPost() {
         btn.textContent = '⏳ 전송 중...';
       }
 
-      var webappUrl = ((document.getElementById('adminWebappUrl') || {}).value || localStorage.getItem('pasis_webapp_url') || '').trim();
-      var code = (((document.getElementById('tournamentCode') || {}).value || localStorage.getItem('pasis_tournament_code') || '') + '').trim().toUpperCase();
+      var webappUrl = ((document.getElementById('adminWebappUrl') || {}).value || (localStorage.getItem('parkgolf_webapp_url') || localStorage.getItem('pasis_webapp_url')) || '').trim();
+      var code = (((document.getElementById('tournamentCode') || {}).value || (localStorage.getItem('parkgolf_tournament_code') || localStorage.getItem('pasis_tournament_code')) || '') + '').trim().toUpperCase();
       var team = (((document.getElementById('teamName') || {}).value || '') + '').trim();
 
       if (!webappUrl) throw new Error('웹앱 URL이 없습니다.');
@@ -2033,3 +2033,67 @@ function test_doPost() {
 
 </body>
 </html>
+
+
+<script>
+(function(){
+  function syncConfigKeys() {
+    try {
+      var adminUrlEl = document.getElementById('adminWebappUrl');
+      var codeEl = document.getElementById('adminCodeInput');
+      var mainCodeEl = document.getElementById('tournamentCode');
+
+      var webappUrl =
+        (adminUrlEl && adminUrlEl.value ? adminUrlEl.value.trim() : '') ||
+        localStorage.getItem('parkgolf_webapp_url') ||
+        localStorage.getItem('pasis_webapp_url') ||
+        '';
+
+      var tournamentCode =
+        (codeEl && codeEl.value ? codeEl.value.trim() : '') ||
+        (mainCodeEl && mainCodeEl.value ? mainCodeEl.value.trim() : '') ||
+        localStorage.getItem('parkgolf_tournament_code') ||
+        localStorage.getItem('pasis_tournament_code') ||
+        '';
+
+      if (webappUrl) {
+        localStorage.setItem('parkgolf_webapp_url', webappUrl);
+        localStorage.setItem('pasis_webapp_url', webappUrl);
+        if (adminUrlEl && !adminUrlEl.value) adminUrlEl.value = webappUrl;
+      }
+
+      if (tournamentCode) {
+        tournamentCode = String(tournamentCode).trim().toUpperCase();
+        localStorage.setItem('parkgolf_tournament_code', tournamentCode);
+        localStorage.setItem('pasis_tournament_code', tournamentCode);
+        if (codeEl && !codeEl.value) codeEl.value = tournamentCode;
+        if (mainCodeEl && !mainCodeEl.value) mainCodeEl.value = tournamentCode;
+      }
+    } catch (e) {
+      console.log('config key sync failed', e);
+    }
+  }
+
+  var originalSaveAdminUrlAndCode = window.saveAdminUrlAndCode;
+  window.saveAdminUrlAndCode = function() {
+    if (typeof originalSaveAdminUrlAndCode === 'function') {
+      originalSaveAdminUrlAndCode.apply(this, arguments);
+    }
+    setTimeout(syncConfigKeys, 0);
+  };
+
+  document.addEventListener('DOMContentLoaded', function() {
+    syncConfigKeys();
+    setTimeout(syncConfigKeys, 200);
+    setTimeout(syncConfigKeys, 800);
+  });
+
+  window.addEventListener('load', function() {
+    syncConfigKeys();
+    setTimeout(syncConfigKeys, 300);
+  });
+
+  window.syncConfigKeys = syncConfigKeys;
+})();
+</script>
+
