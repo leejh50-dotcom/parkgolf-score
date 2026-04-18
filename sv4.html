@@ -1897,16 +1897,52 @@ function test_doPost() {
   function collectPlayersForSend() {
     var players = [];
     for (var i = 1; i <= 4; i++) {
-      var nameEl = document.getElementById('nameHeader' + i);
+      var nameHeaderEl = document.getElementById('nameHeader' + i);
+      var hiddenPlayerEl = document.getElementById('player' + i);
       var genderEl = document.getElementById('gender' + i);
       var affEl = document.getElementById('affiliation' + i);
 
-      var name = (nameEl && nameEl.value ? nameEl.value : '').trim();
+      var name = '';
+      if (typeof playerNames !== 'undefined' && playerNames && playerNames[i - 1]) {
+        name = String(playerNames[i - 1] || '').trim();
+      }
+      if (!name && hiddenPlayerEl) {
+        name = String(hiddenPlayerEl.value || '').trim();
+      }
+      if (!name && nameHeaderEl) {
+        name = String(nameHeaderEl.textContent || nameHeaderEl.innerText || '').trim();
+        name = name.replace(/^\d+\s*/, '').trim();
+        if (/^경기자\s*\d+$/.test(name)) name = '';
+      }
       if (!name) continue;
 
-      var gender = genderEl ? String(genderEl.value || '').trim() : '';
+      var gender = '';
+      if (typeof playerGenders !== 'undefined' && playerGenders && playerGenders[i - 1]) {
+        gender = String(playerGenders[i - 1] || '').trim();
+      }
+      if (!gender && genderEl) {
+        gender = String(genderEl.value || '').trim();
+      }
+      if (!gender && nameHeaderEl) {
+        var infoText = String(nameHeaderEl.textContent || nameHeaderEl.innerText || '');
+        var m = infoText.match(/\(\s*([남여])\s+/);
+        if (m) gender = m[1];
+      }
       if (!gender) {
         throw new Error('⚠️ ' + name + ' 선수의 성별을 선택해주세요.');
+      }
+
+      var affiliation = '';
+      if (typeof playerAffiliations !== 'undefined' && playerAffiliations && playerAffiliations[i - 1]) {
+        affiliation = String(playerAffiliations[i - 1] || '').trim();
+      }
+      if (!affiliation && affEl) {
+        affiliation = String(affEl.value || '').trim();
+      }
+      if (!affiliation && nameHeaderEl) {
+        var infoText2 = String(nameHeaderEl.textContent || nameHeaderEl.innerText || '');
+        var m2 = infoText2.match(/\(\s*[남여]\s+([^\)]+)\s*\)/);
+        if (m2) affiliation = String(m2[1] || '').trim();
       }
 
       var A = typeof num2 === 'function' ? num2(summaryScores.A[i]) : Number(summaryScores.A[i]) || 0;
@@ -1918,7 +1954,7 @@ function test_doPost() {
       players.push({
         name: name,
         gender: gender,
-        affiliation: affEl ? String(affEl.value || '').trim() : '',
+        affiliation: affiliation,
         A: A, B: B, C: C, D: D,
         holeInOne: H,
         total: A + B + C + D
