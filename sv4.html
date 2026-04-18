@@ -1828,5 +1828,63 @@ function test_doPost() {
 })();
 </script>
 
+
+<script>
+// ── 전송 전 GAS 워밍업 ──
+(function(){
+  var _waitSendBtn = setInterval(function(){
+    var btn = document.getElementById('sendBtn');
+    if(!btn || btn._warmPatched) { 
+      if(btn && btn._warmPatched) clearInterval(_waitSendBtn); 
+      return; 
+    }
+    btn._warmPatched = true;
+    clearInterval(_waitSendBtn);
+
+    btn.addEventListener('click', function(e){
+      e.stopImmediatePropagation();
+      e.preventDefault();
+      
+      // 이미 전송 중이면 무시
+      if(btn.disabled) return;
+      
+      // GAS URL 가져오기
+      var gasUrl = '';
+      try {
+        var urlEl = document.getElementById('webappUrl') || document.getElementById('qrUrl');
+        if(urlEl) gasUrl = urlEl.value.trim();
+        if(!gasUrl) gasUrl = localStorage.getItem('parkgolf_webapp_url') || '';
+      } catch(e){}
+
+      if(!gasUrl || gasUrl.indexOf('script.google.com') === -1) {
+        // URL 없으면 바로 원래 전송 실행
+        if(typeof sendToGoogleSheet === 'function') sendToGoogleSheet();
+        return;
+      }
+
+      // 버튼 임시 상태
+      var origText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = '⚡ 서버 연결 중...';
+      btn.style.opacity = '0.7';
+
+      // GET ping으로 GAS 워밍업
+      fetch(gasUrl + '?ping=1', {method:'GET', mode:'no-cors'})
+        .catch(function(){})
+        .finally(function(){
+          // 1.5초 후 실제 전송
+          setTimeout(function(){
+            btn.disabled = false;
+            btn.textContent = origText;
+            btn.style.opacity = '';
+            if(typeof sendToGoogleSheet === 'function') sendToGoogleSheet();
+          }, 1500);
+        });
+    }, true); // capture phase
+  }, 300);
+  setTimeout(function(){ clearInterval(_waitSendBtn); }, 10000);
+})();
+</script>
+
 </body>
 </html>
