@@ -2817,6 +2817,209 @@ function test_doPost() {
 })();
 </script>
 
+
+<script>
+// ===== PASIS QR 배치생성 안정화 패치 =====
+(function(){
+  function q(id){ return document.getElementById(id); }
+  function getStoredWebAppUrl(){
+    return (q('adminWebappUrl') && q('adminWebappUrl').value.trim())
+      || localStorage.getItem('parkgolf_webapp_url')
+      || localStorage.getItem('pasis_webapp_url')
+      || '';
+  }
+  function getStoredCode(){
+    return ((q('adminCodeInput') && q('adminCodeInput').value.trim())
+      || localStorage.getItem('parkgolf_tournament_code')
+      || localStorage.getItem('pasis_tournament_code')
+      || '').toUpperCase();
+  }
+  function getQrDate(){
+    return (q('modalQrDate') && q('modalQrDate').value) || '통합';
+  }
+  function getTeamMode(){
+    return (q('modalTeamMode') && q('modalTeamMode').value) || 'mixed';
+  }
+  function esc(s){
+    return String(s || '')
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;');
+  }
+  async function postGas(url, payload){
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    });
+    const txt = await res.text();
+    let data = null;
+    try { data = JSON.parse(txt); }
+    catch(e){
+      throw new Error('응답 해석 실패: ' + txt.slice(0, 120));
+    }
+    return data;
+  }
+  function buildQrUrl(baseUrl, webappUrl, code, qrDate, team){
+    const url = new URL(baseUrl, location.href);
+    url.searchParams.set('c', code);
+    url.searchParams.set('u', webappUrl);
+    url.searchParams.set('d', qrDate);
+    url.searchParams.set('t', team.team || '');
+    (team.players || []).slice(0,4).forEach(function(p, idx){
+      const val = [p.name || '', p.gender || '', p.affil || ''].join('|');
+      url.searchParams.set(String(idx + 1), val);
+    });
+    return url.toString();
+  }
+  function injectBatchStyles(){
+    if (q('pasisBatchQrStyles')) return;
+    const st = document.createElement('style');
+    st.id = 'pasisBatchQrStyles';
+    st.textContent = `
+      #pasisBatchQrOverlay{position:fixed;inset:0;background:#f3f4f6;z-index:999999;overflow:auto;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif}
+      #pasisBatchQrTop{position:sticky;top:0;z-index:5;background:linear-gradient(135deg,#c8860a 0%,#7a4f00 100%);color:#fff;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;gap:8px;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+      #pasisBatchQrGrid{max-width:1280px;margin:0 auto;padding:12px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+      .pasis-bqr-card{background:#fff;border:1px solid #d1d5db;border-radius:10px;padding:8px 8px 6px;box-shadow:0 1px 4px rgba(0,0,0,.06);display:flex;flex-direction:column;align-items:center;break-inside:avoid;page-break-inside:avoid}
+      .pasis-bqr-title{font-size:16px;font-weight:900;color:#7a4f00;line-height:1.1;margin-bottom:6px;text-align:center}
+      .pasis-bqr-qbox{width:172px;height:172px;display:flex;align-items:center;justify-content:center;background:#fff}
+      .pasis-bqr-qbox img,.pasis-bqr-qbox canvas{display:block !important;width:172px !important;height:172px !important;max-width:none !important;max-height:none !important;margin:0 !important}
+      .pasis-bqr-list{width:100%;margin-top:6px;font-size:11px;line-height:1.18;color:#111}
+      .pasis-bqr-row{display:flex;gap:3px;align-items:baseline;padding:1px 0;white-space:nowrap;overflow:hidden}
+      .pasis-bqr-no{min-width:12px;color:#9a5b00;font-weight:800}
+      .pasis-bqr-name{font-weight:800;overflow:hidden;text-overflow:ellipsis}
+      .pasis-bqr-aff{font-size:9px;color:#666;font-weight:600;overflow:hidden;text-overflow:ellipsis}
+      .pasis-bqr-foot{margin-top:5px;font-size:9px;line-height:1.1;color:#7a4f00;font-weight:700;text-align:center}
+      .pasis-bqr-btn{border:0;border-radius:10px;padding:8px 12px;font-size:14px;font-weight:900;cursor:pointer}
+      .pasis-bqr-btn.print{background:#fff;color:#7a4f00}
+      .pasis-bqr-btn.close{background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.35)}
+      @media (max-width: 1000px){ #pasisBatchQrGrid{grid-template-columns:repeat(3,minmax(0,1fr));} .pasis-bqr-qbox,.pasis-bqr-qbox img,.pasis-bqr-qbox canvas{width:156px !important;height:156px !important} }
+      @media (max-width: 760px){ #pasisBatchQrGrid{grid-template-columns:repeat(2,minmax(0,1fr));} .pasis-bqr-qbox,.pasis-bqr-qbox img,.pasis-bqr-qbox canvas{width:148px !important;height:148px !important} }
+      @media print{
+        @page{size:A4 portrait;margin:7mm}
+        body *{visibility:hidden !important}
+        #pasisBatchQrOverlay,#pasisBatchQrOverlay *{visibility:visible !important}
+        #pasisBatchQrOverlay{position:static !important;background:#fff !important;overflow:visible !important}
+        #pasisBatchQrTop{position:static !important;box-shadow:none !important;padding:0 0 6px 0 !important;background:#fff !important;color:#111 !important}
+        #pasisBatchQrTop .pasis-bqr-btn, #pasisBatchQrTop .pasis-print-hide{display:none !important}
+        #pasisBatchQrGrid{max-width:none !important;padding:0 !important;grid-template-columns:repeat(3,1fr) !important;gap:6mm !important}
+        .pasis-bqr-card{padding:4mm 3mm 2.5mm !important;border:1px solid #bbb !important;border-radius:3mm !important;box-shadow:none !important}
+        .pasis-bqr-title{font-size:14pt !important;margin-bottom:2mm !important}
+        .pasis-bqr-qbox{width:38mm !important;height:38mm !important}
+        .pasis-bqr-qbox img,.pasis-bqr-qbox canvas{width:38mm !important;height:38mm !important}
+        .pasis-bqr-list{font-size:8.4pt !important;line-height:1.12 !important;margin-top:1.8mm !important}
+        .pasis-bqr-row{padding:0.5mm 0 !important}
+        .pasis-bqr-aff{font-size:7pt !important}
+        .pasis-bqr-foot{font-size:7pt !important;margin-top:1.5mm !important}
+      }`;
+    document.head.appendChild(st);
+  }
+  function removeOverlay(){
+    const old = q('pasisBatchQrOverlay');
+    if (old) old.remove();
+  }
+  function makeOverlay(titleText, total){
+    removeOverlay();
+    injectBatchStyles();
+    const ov = document.createElement('div');
+    ov.id = 'pasisBatchQrOverlay';
+    ov.innerHTML = `
+      <div id="pasisBatchQrTop">
+        <div style="font-size:15px;font-weight:900;">📋 ${esc(titleText)} <span class="pasis-print-hide" style="opacity:.9;font-size:13px;">· ${total}개 조</span></div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <div id="pasisBatchQrStatus" class="pasis-print-hide" style="font-size:13px;font-weight:800;">준비 중...</div>
+          <button class="pasis-bqr-btn print" onclick="window.print()">🖨 인쇄하기</button>
+          <button class="pasis-bqr-btn close" onclick="document.getElementById('pasisBatchQrOverlay')?.remove()">닫기</button>
+        </div>
+      </div>
+      <div id="pasisBatchQrGrid"></div>`;
+    document.body.appendChild(ov);
+    return ov;
+  }
+  function renderCard(grid, team, qrText, code, qrDate){
+    const card = document.createElement('div');
+    card.className = 'pasis-bqr-card';
+    const listHtml = (team.players || []).slice(0,4).map(function(p, idx){
+      return `<div class="pasis-bqr-row">
+        <span class="pasis-bqr-no">${idx+1}.</span>
+        <span class="pasis-bqr-name">${esc(p.name || '')}</span>
+        <span class="pasis-bqr-aff">${(p.affil || '').trim() ? '(' + esc(p.affil) + ')' : ''}</span>
+      </div>`;
+    }).join('');
+    card.innerHTML = `
+      <div class="pasis-bqr-title">${esc(team.team || '')}</div>
+      <div class="pasis-bqr-qbox"><div></div></div>
+      <div class="pasis-bqr-list">${listHtml}</div>
+      <div class="pasis-bqr-foot">${esc(code)} · ${esc(qrDate)} · ${new Date().toLocaleDateString('ko-KR')}</div>
+    `;
+    grid.appendChild(card);
+    const target = card.querySelector('.pasis-bqr-qbox > div');
+    try {
+      new QRCode(target, {
+        text: qrText,
+        width: 172,
+        height: 172,
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.L
+      });
+    } catch (e) {
+      // fallback
+      target.textContent = 'QR 생성 오류';
+      target.style.fontSize = '12px';
+      target.style.color = '#b91c1c';
+    }
+    // 혹시 canvas/img 둘 다 생기면 첫 번째만 남김
+    const nodes = target.querySelectorAll('canvas,img');
+    nodes.forEach(function(node, idx){
+      if (idx > 0) node.remove();
+    });
+  }
+  window.generateBatchQR = async function(evt){
+    const btn = evt && evt.target ? evt.target : document.querySelector('button[onclick*="generateBatchQR"]');
+    const oldText = btn ? btn.textContent : '';
+    const webappUrl = getStoredWebAppUrl();
+    const code = getStoredCode();
+    const qrDate = getQrDate();
+    const mode = getTeamMode();
+    if (!webappUrl) { alert('웹앱 URL이 없습니다. 관리자에서 먼저 저장하세요.'); return; }
+    if (!code) { alert('대회코드가 없습니다. 관리자에서 먼저 저장하세요.'); return; }
+    if (!/script\.google\.com/.test(webappUrl)) { alert('웹앱 URL이 올바르지 않습니다.'); return; }
+
+    if (btn) { btn.disabled = true; btn.textContent = '⏳ 조편성 데이터 불러오는 중...'; }
+    try {
+      const data = await postGas(webappUrl, { action: 'getteams', code: code, mode: mode });
+      if (!data || !data.success) throw new Error((data && data.message) || '조편성 데이터를 가져오지 못했습니다.');
+      const teams = Array.isArray(data.teams) ? data.teams : [];
+      if (!teams.length) throw new Error('조편성 결과가 없습니다. 구글시트에서 조편성을 먼저 실행해 주세요.');
+
+      const overlay = makeOverlay(code + ' · ' + qrDate, teams.length);
+      const grid = q('pasisBatchQrGrid');
+      const status = q('pasisBatchQrStatus');
+      const pageBase = location.origin + location.pathname;
+
+      for (let i = 0; i < teams.length; i++) {
+        const qrText = buildQrUrl(pageBase, webappUrl, code, qrDate, teams[i]);
+        renderCard(grid, teams[i], qrText, code, qrDate);
+        if (status) status.textContent = `생성 중... ${i+1}/${teams.length}`;
+        if ((i + 1) % 4 === 0) {
+          await new Promise(r => setTimeout(r, 0));
+        }
+      }
+      if (status) status.textContent = `✅ 생성 완료 · ${teams.length}개 조`;
+      if (btn) btn.textContent = `✅ ${teams.length}개 조 QR 생성 완료`;
+    } catch (err) {
+      console.error(err);
+      alert('조별 QR 생성 실패\n\n' + (err && err.message ? err.message : err));
+      if (btn) btn.textContent = oldText;
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  };
+})();
+</script>
+
 </body>
 </html>
 
