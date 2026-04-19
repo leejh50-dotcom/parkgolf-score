@@ -2280,6 +2280,405 @@ function test_doPost() {
 })();
 </script>
 
+
+<style id="pasis-final-ui-patch">
+/* 전송 버튼 색상 */
+#autoSendBtn{
+  background:linear-gradient(135deg,#7a4f00 0%, #c88a12 55%, #f2c14e 100%) !important;
+  color:#fff !important;
+  box-shadow:0 6px 14px rgba(122,79,0,.35) !important;
+}
+
+/* 전송 확인 오버레이 */
+#sendFlowOverlay{
+  position:fixed; inset:0; z-index:100001;
+  background:rgba(17,24,39,.58);
+  display:none; align-items:center; justify-content:center;
+  padding:18px;
+  font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+}
+#sendFlowOverlay.active{ display:flex; }
+#sendFlowCard{
+  width:min(92vw,560px);
+  background:#fff;
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 18px 50px rgba(0,0,0,.28);
+  border:1px solid rgba(122,79,0,.15);
+}
+#sendFlowHead{
+  background:linear-gradient(135deg,#7a4f00 0%, #a66b00 60%, #d9a11b 100%);
+  color:#fff;
+  padding:16px 18px 14px;
+}
+#sendFlowHeadTitle{
+  font-size:22px; font-weight:900; letter-spacing:-.3px;
+}
+#sendFlowHeadSub{
+  font-size:12.5px; opacity:.92; margin-top:5px; line-height:1.45;
+}
+#sendFlowBody{ padding:16px 18px 18px; }
+#sendFlowStatus{
+  font-size:15px; font-weight:900; color:#7a4f00;
+  margin-bottom:10px;
+}
+#sendFlowList{
+  max-height:40vh; overflow:auto;
+  border:1px solid #ead9b0; border-radius:12px;
+  background:#fffcf4; padding:10px 12px;
+}
+.send-flow-item{
+  display:flex; gap:8px; align-items:flex-start;
+  padding:7px 0; border-bottom:1px dashed #ead9b0;
+}
+.send-flow-item:last-child{ border-bottom:none; }
+.send-flow-index{
+  min-width:22px; height:22px; line-height:22px; text-align:center;
+  border-radius:999px; background:#7a4f00; color:#fff;
+  font-size:12px; font-weight:800; margin-top:1px;
+}
+.send-flow-main{ flex:1; min-width:0; }
+.send-flow-name{ font-size:15px; font-weight:900; color:#111827; }
+.send-flow-meta{ font-size:12px; color:#6b7280; margin-top:2px; }
+.send-flow-score{ font-size:13.5px; font-weight:800; color:#7a4f00; margin-top:4px; }
+#sendFlowFooter{
+  display:flex; gap:10px; justify-content:flex-end;
+  padding:14px 18px 18px;
+}
+.send-flow-btn{
+  border:none; border-radius:12px; padding:12px 16px;
+  font-size:15px; font-weight:900; cursor:pointer;
+}
+#sendFlowEditBtn{
+  background:#f3f4f6; color:#374151;
+}
+#sendFlowConfirmBtn{
+  background:linear-gradient(135deg,#7a4f00 0%, #c88a12 100%);
+  color:#fff;
+}
+#sendFlowCloseBtn{
+  background:#111827; color:#fff;
+  display:none;
+}
+#sendFlowNotice{
+  font-size:12px; color:#6b7280; margin-top:10px; line-height:1.45;
+}
+.send-flow-spinner{
+  width:18px;height:18px;border:3px solid #e5e7eb;border-top-color:#7a4f00;border-radius:50%;
+  display:inline-block; vertical-align:-3px; margin-right:8px; animation:sendspin .9s linear infinite;
+}
+@keyframes sendspin{to{transform:rotate(360deg)}}
+
+/* QR 카드 렌더링 정리 */
+#batchQrGrid{ grid-template-columns:repeat(4,1fr) !important; gap:8px !important; }
+.bqr-card{
+  padding:6px 6px 5px !important;
+  border-radius:10px !important;
+  min-height: 0 !important;
+}
+.bqr-card > div:first-child{
+  margin-bottom:4px !important;
+}
+.bqr-card .bqr-qrbox,
+.bqr-card > div:nth-child(2){
+  width:92px !important;
+  height:92px !important;
+  margin:2px auto 4px !important;
+  overflow:hidden !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+.bqr-card .bqr-qrbox img,
+.bqr-card .bqr-qrbox canvas,
+.bqr-card > div:nth-child(2) img,
+.bqr-card > div:nth-child(2) canvas{
+  width:92px !important;
+  height:92px !important;
+  display:block !important;
+}
+.bqr-card .bqr-qrbox img:not(:last-child),
+.bqr-card > div:nth-child(2) img:not(:last-child),
+.bqr-card .bqr-qrbox canvas:not(:last-child),
+.bqr-card > div:nth-child(2) canvas:not(:last-child){
+  display:none !important;
+}
+.bqr-card .bqr-players,
+.bqr-card > div:nth-child(3){
+  width:100% !important;
+  margin-top:0 !important;
+  display:block !important;
+}
+.bqr-card .bqr-player-row,
+.bqr-card > div:nth-child(3) > div{
+  display:flex !important;
+  align-items:baseline !important;
+  gap:3px !important;
+  padding:1px 0 !important;
+  border-bottom:none !important;
+  font-size:10.3px !important;
+  line-height:1.12 !important;
+  width:100% !important;
+  overflow:hidden !important;
+}
+.bqr-card .bqr-player-num,
+.bqr-card > div:nth-child(3) > div > span:first-child{
+  min-width:12px !important;
+  color:#7a4f00 !important;
+  font-weight:900 !important;
+}
+.bqr-card .bqr-player-name{
+  font-weight:800 !important;
+  color:#111827 !important;
+  flex:0 1 auto !important;
+  min-width:0 !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+}
+.bqr-card .bqr-player-aff{
+  font-size:8.7px !important;
+  color:#6b7280 !important;
+  font-weight:700 !important;
+  flex:1 1 auto !important;
+  min-width:0 !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+}
+.bqr-card .bqr-foot,
+.bqr-card > div:nth-child(4){
+  font-size:9px !important;
+  line-height:1.1 !important;
+  margin-top:3px !important;
+  color:#7a4f00 !important;
+}
+@media print{
+  .bqr-card{
+    padding:5px 5px 4px !important;
+    break-inside:avoid !important;
+    page-break-inside:avoid !important;
+  }
+  .bqr-card .bqr-qrbox,
+  .bqr-card > div:nth-child(2){
+    width:90px !important; height:90px !important; margin-bottom:3px !important;
+  }
+  .bqr-card .bqr-player-row,
+  .bqr-card > div:nth-child(3) > div{
+    font-size:9.7px !important; line-height:1.08 !important; padding:0.5px 0 !important;
+  }
+  .bqr-card .bqr-player-aff{ font-size:8.1px !important; }
+}
+</style>
+
+<div id="sendFlowOverlay" aria-hidden="true">
+  <div id="sendFlowCard">
+    <div id="sendFlowHead">
+      <div id="sendFlowHeadTitle">구글시트 자동 전송</div>
+      <div id="sendFlowHeadSub">가장 중요한 순간입니다. 전송 전 기록을 한 번 더 확인하세요.</div>
+    </div>
+    <div id="sendFlowBody">
+      <div id="sendFlowStatus">전송할 기록을 확인하세요.</div>
+      <div id="sendFlowList"></div>
+      <div id="sendFlowNotice">수정이 필요하면 수정 버튼으로 돌아가고, 이상 없으면 확인을 눌러 전송합니다.</div>
+    </div>
+    <div id="sendFlowFooter">
+      <button type="button" id="sendFlowEditBtn" class="send-flow-btn">수정</button>
+      <button type="button" id="sendFlowConfirmBtn" class="send-flow-btn">확인</button>
+      <button type="button" id="sendFlowCloseBtn" class="send-flow-btn">닫기</button>
+    </div>
+  </div>
+</div>
+
+<script id="pasis-final-ui-script">
+(function(){
+  function $(id){ return document.getElementById(id); }
+  function t(id){ var el=$(id); return el?((el.value||el.textContent||'').trim()):''; }
+  function n(v){ var x=parseInt(String(v==null?'':v).replace(/[^0-9\-]/g,''),10); return isNaN(x)?0:x; }
+  function esc(s){ return String(s||'').replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function getCode(){ return (t('adminTournamentCode') || t('tournamentCode') || localStorage.getItem('parkgolf_tournament_code') || localStorage.getItem('pasis_tournament_code') || '').trim().toUpperCase(); }
+  function getWebapp(){ return (t('adminWebappUrl') || localStorage.getItem('parkgolf_webapp_url') || localStorage.getItem('pasis_webapp_url') || '').trim(); }
+  function getTeam(){ return (t('teamLabel') || t('teamName') || t('team') || '').trim(); }
+  function getSummaryVal(course, idx){
+    try{
+      if(window.summaryScores && window.summaryScores[course] && window.summaryScores[course][idx] != null) return window.summaryScores[course][idx];
+    }catch(e){}
+    var el = $('in-'+course+'-'+idx) || $(course+idx);
+    return el ? (el.value||el.textContent||'') : '';
+  }
+  function parseHeader(header){
+    var out={gender:'', affiliation:''};
+    var m=String(header||'').match(/\(\s*([가-힣A-Za-z]+)?(?:\s+([^)]+))?\s*\)/);
+    if(m){
+      out.gender=(m[1]||'').trim();
+      out.affiliation=(m[2]||'').trim();
+    }
+    return out;
+  }
+  function collectPlayers(){
+    var arr=[];
+    for(var i=1;i<=4;i++){
+      var name=t('player'+i) || t('nameHeader'+i).replace(/\s*\(.*?\)\s*$/,'').trim();
+      var parsed=parseHeader(t('nameHeader'+i));
+      var gender=t('gender'+i) || parsed.gender || (window.playerGenders&&window.playerGenders[i-1]) || '';
+      var aff=t('affiliation'+i) || parsed.affiliation || (window.playerAffiliations&&window.playerAffiliations[i-1]) || '';
+      var note=t('in-HIO-'+i);
+      var A=n(getSummaryVal('A',i)), B=n(getSummaryVal('B',i)), C=n(getSummaryVal('C',i)), D=n(getSummaryVal('D',i));
+      if(!name) continue;
+      arr.push({slot:i,name:name,gender:gender,affiliation:aff,note:note,A:A,B:B,C:C,D:D,total:A+B+C+D});
+    }
+    return arr;
+  }
+  function renderReview(players){
+    var list=$('sendFlowList');
+    list.innerHTML=players.map(function(p){
+      var meta=[p.gender,p.affiliation].filter(Boolean).join(' · ');
+      return '<div class="send-flow-item">'
+        + '<div class="send-flow-index">'+p.slot+'</div>'
+        + '<div class="send-flow-main">'
+        +   '<div class="send-flow-name">'+esc(p.name)+'</div>'
+        +   '<div class="send-flow-meta">'+esc(meta || '정보 확인')+'</div>'
+        +   '<div class="send-flow-score">'+esc(p.name)+' '+p.total+'점'
+        +      ' <span style="font-size:12px;color:#6b7280;font-weight:700;">A '+p.A+' · B '+p.B+' · C '+p.C+' · D '+p.D
+        +      (p.note ? ' · 비고 '+esc(p.note) : '')
+        +      '</span></div>'
+        + '</div></div>';
+    }).join('');
+  }
+  function openOverlay(players){
+    renderReview(players);
+    $('sendFlowStatus').textContent = players.map(function(p){ return p.name+' '+p.total+'점'; }).join(', ') + ' 전송합니다';
+    $('sendFlowEditBtn').style.display='';
+    $('sendFlowConfirmBtn').style.display='';
+    $('sendFlowCloseBtn').style.display='none';
+    $('sendFlowNotice').textContent='수정이 필요하면 수정 버튼으로 돌아가고, 이상 없으면 확인을 눌러 전송합니다.';
+    $('sendFlowOverlay').classList.add('active');
+    $('sendFlowOverlay').setAttribute('aria-hidden','false');
+  }
+  function setSending(){
+    $('sendFlowStatus').innerHTML='<span class="send-flow-spinner"></span>전송 중입니다. 잠시만 기다려 주세요.';
+    $('sendFlowNotice').textContent='원본데이터와 점수기록을 함께 저장하고 있습니다.';
+    $('sendFlowEditBtn').style.display='none';
+    $('sendFlowConfirmBtn').style.display='none';
+    $('sendFlowCloseBtn').style.display='none';
+  }
+  function setDone(text){
+    $('sendFlowStatus').textContent=text||'전송 완료되었습니다.';
+    $('sendFlowNotice').textContent='저장 결과가 반영되었습니다.';
+    $('sendFlowEditBtn').style.display='none';
+    $('sendFlowConfirmBtn').style.display='none';
+    $('sendFlowCloseBtn').style.display='';
+  }
+  function closeOverlay(){
+    $('sendFlowOverlay').classList.remove('active');
+    $('sendFlowOverlay').setAttribute('aria-hidden','true');
+  }
+  $('sendFlowEditBtn').addEventListener('click', closeOverlay);
+  $('sendFlowCloseBtn').addEventListener('click', closeOverlay);
+  $('sendFlowOverlay').addEventListener('click', function(e){ if(e.target===this && $('sendFlowCloseBtn').style.display!=='none') closeOverlay(); });
+
+  function patchSendReview(){
+    var orig = window.sendToGoogleSheet;
+    if(typeof orig!=='function' || orig._reviewPatched) return false;
+    window.sendToGoogleSheet = async function(){
+      if(window.__pasisSending) return;
+      var players = collectPlayers();
+      if(!players.length){ return orig.apply(this, arguments); }
+      openOverlay(players);
+      return new Promise(function(resolve,reject){
+        $('sendFlowConfirmBtn').onclick = async function(){
+          setSending();
+          window.__pasisSending = true;
+          var webapp = getWebapp();
+          var origFetch = window.fetch;
+          var captured = null;
+          if(webapp){
+            window.fetch = async function(url, options){
+              var res = await origFetch.apply(this, arguments);
+              try{
+                var u = String(url||'');
+                if(u.indexOf(webapp)===0 && options && String(options.method||'GET').toUpperCase()==='POST'){
+                  captured = await res.clone().json();
+                }
+              }catch(e){}
+              return res;
+            };
+          }
+          try{
+            var r = await orig.apply(this, arguments);
+            if(captured && captured.success){
+              var count = captured.savedPlayersCount || captured.savedCount || captured.playersSaved || players.length;
+              setDone('전송 완료되었습니다. 저장 선수 수: '+count+'명');
+            }else if(captured && captured.success===false){
+              $('sendFlowStatus').textContent='전송 실패: '+(captured.message||captured.error||'오류');
+              $('sendFlowNotice').textContent='수정 후 다시 시도해 주세요.';
+              $('sendFlowEditBtn').style.display='';
+              $('sendFlowConfirmBtn').style.display='';
+              $('sendFlowCloseBtn').style.display='none';
+            }else{
+              setDone('전송 완료되었습니다.');
+            }
+            resolve(r);
+          }catch(err){
+            $('sendFlowStatus').textContent='전송 실패: '+(err && err.message ? err.message : err);
+            $('sendFlowNotice').textContent='수정 후 다시 시도해 주세요.';
+            $('sendFlowEditBtn').style.display='';
+            $('sendFlowConfirmBtn').style.display='';
+            reject(err);
+          }finally{
+            window.fetch = origFetch;
+            window.__pasisSending = false;
+          }
+        };
+      });
+    };
+    window.sendToGoogleSheet._reviewPatched = true;
+    return true;
+  }
+
+  function enhanceBatchQrAfterRender(){
+    var grid = $('batchQrGrid');
+    if(!grid) return;
+    var cards = grid.querySelectorAll('.bqr-card');
+    cards.forEach(function(card){
+      var qrBox = card.children[1];
+      if(qrBox){ qrBox.classList.add('bqr-qrbox'); }
+      var playersBox = card.children[2];
+      if(playersBox){
+        playersBox.classList.add('bqr-players');
+        Array.prototype.forEach.call(playersBox.children, function(row){
+          row.classList.add('bqr-player-row');
+          var spans = row.querySelectorAll('span');
+          if(spans[0]) spans[0].classList.add('bqr-player-num');
+          if(spans[1]){
+            var full = spans[1].textContent || '';
+            var m = full.match(/^(.*?)(\s*\([^)]*\))?$/);
+            spans[1].innerHTML = '<span class="bqr-player-name">'+esc(m && m[1] ? m[1].trim() : full)+'</span>'
+              + (m && m[2] ? '<span class="bqr-player-aff">'+esc(m[2].trim())+'</span>' : '');
+          }
+        });
+      }
+      var foot = card.children[3];
+      if(foot) foot.classList.add('bqr-foot');
+    });
+  }
+
+  function watchBatchQr(){
+    var mo = new MutationObserver(function(){
+      enhanceBatchQrAfterRender();
+    });
+    mo.observe(document.body, {childList:true, subtree:true});
+    enhanceBatchQrAfterRender();
+  }
+
+  document.addEventListener('DOMContentLoaded', function(){
+    patchSendReview() || setTimeout(patchSendReview, 500);
+    setTimeout(patchSendReview, 1200);
+    watchBatchQr();
+  });
+})();
+</script>
+
 </body>
 </html>
 
