@@ -950,7 +950,7 @@ html, body {
     <button id="copyBtn" style="background:linear-gradient(135deg,#6c757d 0%,#495057 100%);color:white;">텍스트 복사</button>
   </div>
 
-  <button id="autoSendBtn" class="parkgolf-send-button" style="width:100%;background:linear-gradient(135deg,#28a745 0%,#20c997 100%);color:white;border:none;padding:20px;border-radius:12px;font-size:20px;font-weight:900;cursor:pointer;margin-top:8px!important;margin-bottom:25px!important;box-shadow:0 5px 10px rgba(40,167,69,.4);display:block;">
+  <button id="autoSendBtn" class="parkgolf-send-button" style="width:100%;background:linear-gradient(135deg,#c8860a 0%,#7a4f00 100%);color:white;border:none;padding:20px;border-radius:12px;font-size:20px;font-weight:900;cursor:pointer;margin-top:8px!important;margin-bottom:25px!important;box-shadow:0 5px 10px rgba(122,79,0,.4);display:block;">
     구글 시트 자동 전송 (대회 자동 집계)
   </button>
 </div>
@@ -2212,36 +2212,55 @@ function test_doPost() {
     return players;
   }
 
-  async function sendToGoogleSheetPatchedV4(){
+  async function sendToGoogleSheetPatchedV4(forceSend, preparedPlayers, preparedTeam){
     var btn = document.getElementById('autoSendBtn');
     if(btn && btn.disabled) return;
+
+    function paintBtn(){
+      if(!btn) return;
+      btn.style.background = 'linear-gradient(135deg,#c8860a 0%,#7a4f00 100%)';
+      btn.style.boxShadow = '0 5px 10px rgba(122,79,0,.4)';
+      btn.style.color = '#fff';
+    }
 
     function restoreBtn(){
       if(!btn) return;
       btn.disabled = false;
       btn.style.opacity = '';
+      paintBtn();
       btn.textContent = '구글 시트 자동 전송 (대회 자동 집계)';
     }
 
     try {
-      if(btn){
-        btn.disabled = true;
-        btn.style.opacity = '0.5';
-        btn.textContent = '⏳ 전송 중...';
-      }
-
+      paintBtn();
       syncVisiblePlayersToHidden();
 
       var webappUrl = ((document.getElementById('adminWebappUrl') || {}).value || localStorage.getItem('parkgolf_webapp_url') || localStorage.getItem('pasis_webapp_url') || '').trim();
       var code = String(((document.getElementById('tournamentCode') || {}).value || localStorage.getItem('parkgolf_tournament_code') || localStorage.getItem('pasis_tournament_code') || '')).trim().toUpperCase();
-      var team = String(((document.getElementById('teamName') || {}).value || '')).trim();
+      var team = String(preparedTeam || ((document.getElementById('teamName') || {}).value || '')).trim();
 
       if(!webappUrl) throw new Error('웹앱 URL이 없습니다.');
       if(!code) throw new Error('대회 코드가 없습니다.');
       if(!team) throw new Error('조명이 없습니다.');
 
-      var players = collectPlayersForSendV4();
+      var players = Array.isArray(preparedPlayers) && preparedPlayers.length ? preparedPlayers : collectPlayersForSendV4();
       if(!players.length) throw new Error('전송할 선수 이름이 없습니다.');
+
+      if(!forceSend){
+        if(typeof showConfirm === 'function'){
+          showConfirm(players, team, function(confirmedPlayers, confirmedTeam){
+            sendToGoogleSheetPatchedV4(true, confirmedPlayers, confirmedTeam);
+          });
+          return;
+        }
+      }
+
+      if(btn){
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+        paintBtn();
+        btn.textContent = '⏳ 전송 중...';
+      }
 
       var payload = {
         code: code,
@@ -2280,6 +2299,7 @@ function test_doPost() {
         throw new Error((json && json.message) ? json.message : '전송 실패');
       }
 
+      if(typeof showDone === 'function') showDone(team, players);
       if(typeof showToast === 'function') showToast('전송 완료! ' + team);
       else alert('전송 완료! ' + team);
 
@@ -2614,8 +2634,8 @@ function test_doPost() {
     var rows=players.map(function(p){
       var sc=['A','B','C','D'].map(function(c){return c+':'+(p[c]||0);}).join(' ');
       return '<div class="psRow"><div><div class="psName">'+esc(p.name)+(p.gender?' <span style="font-size:11px;color:#888;">('+esc(p.gender)+')</span>':'')+'</div>'
-        +'<div class="psDetail">'+esc(sc)+(p.holeInOne?' HIO:'+esc(p.holeInOne):'')+'</div></div>'
-        +'<div class="psTotal">'+(p.total||0)+'<small> 타</small></div></div>';
+        +'<div class="psDetail">합계 '+(p.total||0)+'타 · '+esc(sc)+(p.holeInOne?' · HIO:'+esc(p.holeInOne):'')+'</div></div>'
+        +'<div class="psTotal">'+(p.total||0)+'<small> 타</small></div></div>;
     }).join('');
     var ov=document.createElement('div');ov.id='pasisSendOv';
     ov.innerHTML='<div id="pasisSendBox"><div class="psHead">📋 전송 전 확인<small>'+esc(teamName)+' · '+players.length+'명</small></div>'
