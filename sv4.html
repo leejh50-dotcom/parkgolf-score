@@ -2679,6 +2679,144 @@ function test_doPost() {
 })();
 </script>
 
+
+<script id="pasis-teamassignment-hotfix">
+(function(){
+  function ensureTeamOverlay(){
+    let ov = document.getElementById('teamAssignOverlay');
+    if (ov) return ov;
+    ov = document.createElement('div');
+    ov.id = 'teamAssignOverlay';
+    ov.style.cssText = 'position:fixed;inset:0;background:rgba(17,24,39,.62);z-index:99998;display:none;align-items:center;justify-content:center;padding:20px;';
+    ov.innerHTML = `
+      <div style="width:min(92vw,460px);background:#fff;border-radius:18px;box-shadow:0 20px 50px rgba(0,0,0,.25);overflow:hidden;">
+        <div style="padding:16px 18px;background:linear-gradient(135deg,#c8860a 0%, #7a4f00 100%);color:#fff;font-size:18px;font-weight:900;">조편성 실행</div>
+        <div style="padding:18px;">
+          <div id="teamAssignOverlayMsg" style="font-size:15px;line-height:1.6;color:#111827;white-space:pre-line;">조편성을 준비합니다...</div>
+          <div id="teamAssignOverlaySub" style="margin-top:8px;font-size:12px;color:#6b7280;">접수명단을 읽고 조편성 시트에 일괄 기록합니다.</div>
+          <div id="teamAssignOverlaySpinner" style="display:none;margin:16px auto 4px;width:36px;height:36px;border:4px solid #f3f4f6;border-top-color:#c8860a;border-radius:50%;animation:pasisSpin .8s linear infinite;"></div>
+          <div id="teamAssignOverlayButtons" style="margin-top:18px;display:flex;gap:10px;justify-content:flex-end;">
+            <button id="teamAssignCancelBtn" style="padding:11px 16px;border:none;border-radius:10px;background:#e5e7eb;color:#111827;font-weight:800;cursor:pointer;">취소</button>
+            <button id="teamAssignRunBtn" style="padding:11px 16px;border:none;border-radius:10px;background:linear-gradient(135deg,#c8860a 0%, #7a4f00 100%);color:#fff;font-weight:900;cursor:pointer;">확인</button>
+          </div>
+        </div>
+      </div>`;
+    document.body.appendChild(ov);
+    if (!document.getElementById('pasis-spin-style')) {
+      const st = document.createElement('style');
+      st.id = 'pasis-spin-style';
+      st.textContent = '@keyframes pasisSpin{to{transform:rotate(360deg)}}';
+      document.head.appendChild(st);
+    }
+    return ov;
+  }
+
+  function showTeamOverlay(msg, sub, busy){
+    const ov = ensureTeamOverlay();
+    ov.style.display = 'flex';
+    document.getElementById('teamAssignOverlayMsg').textContent = msg || '';
+    document.getElementById('teamAssignOverlaySub').textContent = sub || '';
+    document.getElementById('teamAssignOverlaySpinner').style.display = busy ? 'block' : 'none';
+    document.getElementById('teamAssignOverlayButtons').style.display = busy ? 'none' : 'flex';
+    return ov;
+  }
+  function hideTeamOverlay(){
+    const ov = document.getElementById('teamAssignOverlay');
+    if (ov) ov.style.display = 'none';
+  }
+
+  function getSavedWebAppUrl(){
+    return (
+      localStorage.getItem('parkgolf_webapp_url') ||
+      localStorage.getItem('pasis_webapp_url') ||
+      document.getElementById('qrUrl')?.value?.trim() ||
+      ''
+    ).trim();
+  }
+  function getSavedTournamentCode(){
+    return (
+      localStorage.getItem('parkgolf_tournament_code') ||
+      localStorage.getItem('pasis_tournament_code') ||
+      document.getElementById('tournamentCode')?.value?.trim() ||
+      ''
+    ).trim().toUpperCase();
+  }
+
+  window.executeTeamAssignment = async function executeTeamAssignmentPatched(){
+    const webappUrl = getSavedWebAppUrl();
+    const code = getSavedTournamentCode();
+    const mode = (document.getElementById('modalTeamMode')?.value || 'mixed').trim().toLowerCase();
+    const prefix = (document.getElementById('modalTeamPrefix')?.value || document.getElementById('teamPrefix')?.value || '').trim();
+
+    if (!webappUrl) { alert('웹앱 URL이 없습니다. 관리자 설정에서 먼저 저장해 주세요.'); return; }
+    if (!code) { alert('대회코드가 없습니다. 관리자 설정에서 먼저 저장해 주세요.'); return; }
+
+    const modeLabel = ({mixed:'혼성', male:'남자부만', female:'여자부만', separate:'성별 분리'})[mode] || mode;
+    const ov = showTeamOverlay(
+      `대회코드 ${code}\n조편성 방식: ${modeLabel}${prefix ? `\n조명 접두어: ${prefix}` : ''}\n\n접수명단을 읽어 조편성을 실행합니다.`,
+      '확인을 누르면 구글시트 조편성 탭을 새로 작성합니다.',
+      false
+    );
+
+    return await new Promise((resolve) => {
+      const cancelBtn = document.getElementById('teamAssignCancelBtn');
+      const runBtn = document.getElementById('teamAssignRunBtn');
+
+      const cleanup = () => {
+        cancelBtn.onclick = null;
+        runBtn.onclick = null;
+      };
+
+      cancelBtn.onclick = () => {
+        cleanup();
+        hideTeamOverlay();
+        resolve(false);
+      };
+
+      runBtn.onclick = async () => {
+        cleanup();
+        showTeamOverlay('조편성 중입니다...', '접수명단을 읽고 조편성 시트를 일괄 작성하는 중입니다. 잠시만 기다려 주세요.', true);
+        try{
+          await fetch(webappUrl, { method: 'GET', mode: 'cors' }).catch(()=>null);
+          const payload = { action:'team', code, options:{ mode, prefix } };
+          const res = await fetch(webappUrl, {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify(payload)
+          });
+          const txt = await res.text();
+          let data;
+          try { data = JSON.parse(txt); } catch(_e){ throw new Error('응답 해석 실패: ' + txt.slice(0, 180)); }
+          if (!data || data.success !== true) throw new Error((data && (data.message || data.error)) || '조편성 실패');
+
+          const meta = data.meta || {};
+          const summary = [
+            '조편성 완료되었습니다.',
+            '',
+            `총 인원: ${meta.total || 0}명`,
+            `조 수: ${meta.teams || 0}개`,
+            `남자: ${meta.males || 0}명`,
+            `여자: ${meta.females || 0}명`
+          ].join('\n');
+
+          showTeamOverlay(summary, '구글시트의 조편성 탭과 QR 일괄생성을 이어서 진행하세요.', false);
+          document.getElementById('teamAssignCancelBtn').style.display = 'none';
+          const okBtn = document.getElementById('teamAssignRunBtn');
+          okBtn.textContent = '닫기';
+          okBtn.onclick = () => { hideTeamOverlay(); resolve(true); };
+        }catch(err){
+          showTeamOverlay('조편성 실패', (err && err.message) ? err.message : String(err), false);
+          document.getElementById('teamAssignCancelBtn').style.display = 'none';
+          const okBtn = document.getElementById('teamAssignRunBtn');
+          okBtn.textContent = '닫기';
+          okBtn.onclick = () => { hideTeamOverlay(); resolve(false); };
+        }
+      };
+    });
+  };
+})();
+</script>
+
 </body>
 </html>
 
