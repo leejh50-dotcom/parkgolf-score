@@ -2781,7 +2781,7 @@ function test_doPost() {
           const payload = { action:'team', code, options:{ mode, prefix } };
           const res = await fetch(webappUrl, {
             method:'POST',
-            headers:{'Content-Type':'application/json'},
+            headers:{'Content-Type':'text/plain;charset=utf-8'},
             body: JSON.stringify(payload)
           });
           const txt = await res.text();
@@ -2945,7 +2945,7 @@ function test_doPost() {
     try{
       var res = await fetch(s.webappUrl, {
         method:'POST',
-        headers:{'Content-Type':'application/json'},
+        headers:{'Content-Type':'text/plain;charset=utf-8'},
         body: JSON.stringify({action:'getteams', code:s.code, mode:s.mode})
       });
       var json = await res.json();
