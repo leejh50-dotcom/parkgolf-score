@@ -2635,7 +2635,7 @@ function test_doPost() {
       var sc=['A','B','C','D'].map(function(c){return c+':'+(p[c]||0);}).join(' ');
       return '<div class="psRow"><div><div class="psName">'+esc(p.name)+(p.gender?' <span style="font-size:11px;color:#888;">('+esc(p.gender)+')</span>':'')+'</div>'
         +'<div class="psDetail">합계 '+(p.total||0)+'타 · '+esc(sc)+(p.holeInOne?' · HIO:'+esc(p.holeInOne):'')+'</div></div>'
-        +'<div class="psTotal">'+(p.total||0)+'<small> 타</small></div></div>;
+        +'<div class="psTotal">'+(p.total||0)+'<small> 타</small></div></div>';
     }).join('');
     var ov=document.createElement('div');ov.id='pasisSendOv';
     ov.innerHTML='<div id="pasisSendBox"><div class="psHead">📋 전송 전 확인<small>'+esc(teamName)+' · '+players.length+'명</small></div>'
