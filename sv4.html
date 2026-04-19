@@ -2034,6 +2034,152 @@ function test_doPost() {
 })();
 </script>
 
+
+<script>
+(function(){
+  function esc(s){
+    return String(s == null ? '' : s)
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#39;');
+  }
+
+  function ensureGold(btn){
+    if(!btn) return;
+    btn.style.background = 'linear-gradient(135deg,#c8860a 0%,#7a4f00 100%)';
+    btn.style.boxShadow = '0 5px 10px rgba(122,79,0,.4)';
+    btn.style.color = '#fff';
+  }
+
+  function removeOverlay(id){
+    var el = document.getElementById(id);
+    if(el && el.parentNode) el.parentNode.removeChild(el);
+  }
+
+  function showFinalConfirm(players, teamName, onConfirm){
+    removeOverlay('sv4FinalSendOverlay');
+    var rows = players.map(function(p){
+      return '<div style="display:flex;justify-content:space-between;align-items:center;background:#fef9f0;border:1px solid #f0d08a;border-radius:10px;padding:10px 14px;margin-bottom:8px;gap:10px;">'
+        + '<div>'
+        + '<div style="font-size:15px;font-weight:800;color:#1e3c72;">' + esc(p.name) + '</div>'
+        + '<div style="font-size:12px;color:#666;margin-top:2px;">합계 ' + (p.total || 0) + '타'
+        + (p.gender ? ' · ' + esc(p.gender) : '')
+        + (p.affiliation ? ' · ' + esc(p.affiliation) : '')
+        + '</div>'
+        + '</div>'
+        + '<div style="font-size:22px;font-weight:900;color:#c8860a;white-space:nowrap;">' + (p.total || 0) + '<small style="font-size:11px;color:#999;font-weight:600;"> 타</small></div>'
+        + '</div>';
+    }).join('');
+
+    var ov = document.createElement('div');
+    ov.id = 'sv4FinalSendOverlay';
+    ov.style.cssText = 'position:fixed;inset:0;z-index:300000;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;';
+    ov.innerHTML = '<div style="background:#fff;border-radius:18px;width:min(420px,92vw);max-height:86vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.3);">'
+      + '<div style="background:linear-gradient(135deg,#c8860a,#7a4f00);color:#fff;padding:16px 20px 12px;font-size:16px;font-weight:900;border-radius:18px 18px 0 0;">📋 전송 전 확인<small style="display:block;font-size:12px;opacity:.8;margin-top:2px;font-weight:500;">' + esc(teamName) + ' · ' + players.length + '명</small></div>'
+      + '<div style="padding:14px 18px;">' + rows + '</div>'
+      + '<div style="padding:10px 18px 18px;display:flex;gap:10px;">'
+      + '<button id="sv4BackBtn" style="flex:1;padding:14px;border:none;border-radius:11px;font-size:15px;font-weight:900;cursor:pointer;background:#f3f4f6;color:#374151;">← 뒤로(수정)</button>'
+      + '<button id="sv4OkBtn" style="flex:1;padding:14px;border:none;border-radius:11px;font-size:15px;font-weight:900;cursor:pointer;background:linear-gradient(135deg,#c8860a,#7a4f00);color:#fff;">✅ 확인·전송</button>'
+      + '</div></div>';
+    document.body.appendChild(ov);
+    document.getElementById('sv4BackBtn').onclick = function(){ removeOverlay('sv4FinalSendOverlay'); };
+    document.getElementById('sv4OkBtn').onclick = function(){ removeOverlay('sv4FinalSendOverlay'); onConfirm(); };
+    ov.onclick = function(e){ if(e.target === ov) removeOverlay('sv4FinalSendOverlay'); };
+  }
+
+  function showFinalDone(teamName, players){
+    removeOverlay('sv4FinalDoneOverlay');
+    var ov = document.createElement('div');
+    ov.id = 'sv4FinalDoneOverlay';
+    ov.style.cssText = 'position:fixed;inset:0;z-index:300001;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;';
+    ov.innerHTML = '<div style="background:#fff;border-radius:18px;width:min(360px,90vw);box-shadow:0 24px 64px rgba(0,0,0,.3);padding:26px 22px;text-align:center;">'
+      + '<div style="font-size:42px;margin-bottom:10px;">✅</div>'
+      + '<div style="font-size:22px;font-weight:900;color:#1f2937;margin-bottom:8px;">전송 완료!</div>'
+      + '<div style="font-size:14px;line-height:1.7;color:#4b5563;">' + esc(teamName) + '<br>' + esc((players||[]).map(function(p){ return p.name; }).join(' · ')) + '<br><span style="color:#c8860a;font-weight:700;">구글시트에 기록되었습니다.</span></div>'
+      + '<button id="sv4DoneBtn" style="margin-top:16px;width:100%;padding:12px;border:none;border-radius:10px;background:linear-gradient(135deg,#c8860a,#7a4f00);color:#fff;font-size:15px;font-weight:900;cursor:pointer;">확인</button>'
+      + '</div>';
+    document.body.appendChild(ov);
+    function close(){ removeOverlay('sv4FinalDoneOverlay'); }
+    document.getElementById('sv4DoneBtn').onclick = close;
+    setTimeout(close, 4000);
+  }
+
+  function collectPlayersSafe(){
+    if(typeof syncVisiblePlayersToHidden === 'function') syncVisiblePlayersToHidden();
+    if(typeof collectPlayersForSendV4 === 'function') return collectPlayersForSendV4();
+    if(typeof collectPlayersForSend === 'function') return collectPlayersForSend();
+    return [];
+  }
+
+  async function doFinalSend(players, teamName, btn){
+    ensureGold(btn);
+    if(btn){
+      btn.disabled = true;
+      btn.style.opacity = '0.5';
+      btn.textContent = '⏳ 전송 중...';
+    }
+    try{
+      if(typeof sendToGoogleSheetPatchedV4 === 'function'){
+        await sendToGoogleSheetPatchedV4(true, players, teamName);
+      }else if(typeof sendToGoogleSheetPatched === 'function'){
+        await sendToGoogleSheetPatched();
+      }else if(typeof sendToGoogleSheet === 'function'){
+        await sendToGoogleSheet();
+      }else{
+        throw new Error('전송 함수를 찾지 못했습니다.');
+      }
+      showFinalDone(teamName, players);
+    }catch(err){
+      alert('❌ ' + (err && err.message ? err.message : err));
+    }finally{
+      if(btn){
+        btn.disabled = false;
+        btn.style.opacity = '';
+        btn.textContent = '구글 시트 자동 전송 (대회 자동 집계)';
+        ensureGold(btn);
+      }
+    }
+  }
+
+  function bindFinalSendButton(){
+    var oldBtn = document.getElementById('autoSendBtn');
+    if(!oldBtn) return;
+    ensureGold(oldBtn);
+
+    var newBtn = oldBtn.cloneNode(true);
+    oldBtn.parentNode.replaceChild(newBtn, oldBtn);  // 기존 onclick/addEventListener 모두 제거
+    ensureGold(newBtn);
+
+    newBtn.onclick = function(ev){
+      if(ev){ ev.preventDefault(); ev.stopPropagation(); }
+      var players;
+      try{
+        players = collectPlayersSafe();
+      }catch(err){
+        alert('❌ ' + (err && err.message ? err.message : err));
+        return false;
+      }
+      if(!players || !players.length){
+        alert('전송할 선수 이름이 없습니다.');
+        return false;
+      }
+      var teamName = String(((document.getElementById('teamName') || {}).value || '')).trim() || '팀명';
+      showFinalConfirm(players, teamName, function(){ doFinalSend(players, teamName, newBtn); });
+      return false;
+    };
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', function(){ setTimeout(bindFinalSendButton, 0); });
+  } else {
+    setTimeout(bindFinalSendButton, 0);
+  }
+  window.addEventListener('load', function(){ setTimeout(bindFinalSendButton, 100); });
+})();
+</script>
+
 </body>
 </html>
 
