@@ -3081,7 +3081,6 @@ function test_doPost() {
       + '<div id="batchQrTopbar">'
       +   '<div><strong>조별 QR 인쇄</strong> &nbsp; ' + esc(title) + ' (' + esc(code || '코드없음') + ') / ' + count + '개 조</div>'
       +   '<div style="display:flex;gap:8px;align-items:center;">'
-      +     '<div id="batchQrStatus" style="font-size:13px;font-weight:800;color:#fff;opacity:.9;"></div>'
       +     '<button type="button" id="batchQrPrintBtn">🖨 인쇄</button>'
       +     '<button type="button" id="batchQrCloseBtn">닫기</button>'
       +   '</div>'
@@ -3098,7 +3097,8 @@ function test_doPost() {
         + '</div>';
     }).join('');
   }
-  // buildOverlay: 오버레이 구조 + 카드 HTML만 생성 (QR은 생성 안 함 → generateBatchQR에서 비동기 생성)
+  // buildOverlay: 오버레이/카드 HTML만 생성. QR 데이터는 data-qrtext 속성에 저장.
+  // QR 코드 실제 생성은 generateBatchQR에서 비동기로 처리
   function buildOverlay(teams, settings){
     var old = document.getElementById('batchQrOverlay');
     if (old) old.remove();
@@ -3113,11 +3113,11 @@ function test_doPost() {
 
     var grid = document.getElementById('batchQrGrid');
     var appUrl = window.location.href;
-    // 카드 구조만 먼저 생성 (QR은 나중에 비동기로 채움)
     teams.forEach(function(teamObj){
       var card = document.createElement('div');
       card.className = 'bqr-card';
       var qrText = makeQrUrl(appUrl, settings.webappUrl, settings.code, settings.date, teamObj);
+      // QR 텍스트를 data 속성에만 저장, 실제 QRCode 생성은 하지 않음
       card.innerHTML = ''
         + '<div class="bqr-title">' + esc(teamObj.team || '') + '</div>'
         + '<div class="bqr-qrbox" data-qrtext="' + qrText.replace(/"/g,'&quot;') + '"></div>'
@@ -3128,71 +3128,108 @@ function test_doPost() {
     return grid;
   }
 
-  // ★ 수정: evt 파라미터 수신 / window.event 제거 / btn.disabled 제거(iOS Safari 블로킹 버그 방지)
-  //         QR 코드를 4개씩 비동기 분산 생성 → 메인 스레드 블로킹 / "응답 없는 페이지" 방지
+  // ★ 전체 수정:
+  //  1. evt 파라미터 → window.event 비표준 제거 (Firefox/Safari 호환)
+  //  2. btn.disabled = true 제거 (iOS Safari async 중단 버그 방지)
+  //  3. AbortController 30초 타임아웃 → GAS 무한 대기 방지
+  //  4. QR 코드 1개씩 requestAnimationFrame으로 비동기 생성 → 메인 스레드 블로킹 완전 차단
   window.generateBatchQR = async function(evt){
     var s = getSettings();
     if (!s.code) { alert('대회코드를 먼저 저장해 주세요.'); return; }
     if (!s.webappUrl) { alert('웹앱 URL을 먼저 저장해 주세요.'); return; }
     if (!String(s.webappUrl).includes('script.google.com')) { alert('웹앱 URL 형식이 올바르지 않습니다.'); return; }
 
-    // evt.target 우선, 없으면 querySelector 폴백 (Firefox/Safari 호환)
+    // 버튼 참조: evt.target 우선, 없으면 querySelector 폴백 (모든 브라우저 호환)
     var btn = (evt && evt.target) ? evt.target : (document.querySelector('button[onclick*="generateBatchQR"]') || null);
     var oldText = btn ? btn.textContent : '';
-    // ★ btn.disabled = true 사용 금지: iOS Safari에서 async 중단 버그 유발
     if (btn) btn.textContent = '⏳ 조편성 불러오는 중...';
+    // btn.disabled = true 금지: iOS Safari에서 async 함수 중단 버그 유발
+
     try{
-      // res.text() → JSON.parse 방식으로 비-JSON 응답 오류도 명확히 표시
-      var res = await fetch(s.webappUrl, {
-        method:'POST',
-        headers:{'Content-Type':'text/plain;charset=utf-8'},
-        body: JSON.stringify({action:'getteams', code:s.code, mode:s.mode})
-      });
+      // AbortController로 30초 타임아웃 → GAS 냉기동 무한 대기 방지
+      var ctrl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+      var tId = ctrl ? setTimeout(function(){ ctrl.abort(); }, 30000) : null;
+      var res;
+      try {
+        res = await fetch(s.webappUrl, {
+          method:'POST',
+          headers:{'Content-Type':'text/plain;charset=utf-8'},
+          body: JSON.stringify({action:'getteams', code:s.code, mode:s.mode}),
+          signal: ctrl ? ctrl.signal : undefined
+        });
+      } finally {
+        if (tId) clearTimeout(tId);
+      }
+
+      // res.text() + JSON.parse → GAS 오류 HTML 응답도 안전하게 처리
       var txt = await res.text();
       var json;
       try { json = JSON.parse(txt); }
-      catch(e){ throw new Error('응답 해석 실패: ' + txt.slice(0, 120)); }
+      catch(e){ throw new Error('응답 해석 실패:\n' + txt.slice(0, 200)); }
+
       if (!json.success || !Array.isArray(json.teams) || !json.teams.length){
         throw new Error((json && json.message) || '조편성 데이터가 없습니다.\n\n구글시트에서 [파시스관리] → [조편성 실행]을 먼저 실행하세요.');
       }
 
-      // 오버레이 생성 (카드 구조만, QR 없음)
+      // 오버레이 구조 생성 (QR 없음)
       var grid = buildOverlay(json.teams, s);
-      var statusEl = document.getElementById('batchQrStatus');
       var total = json.teams.length;
 
-      // ★ QR 코드 비동기 분산 생성: 4개 생성 후 setTimeout(0)으로 메인 스레드에 양보
-      var qrBoxes = grid.querySelectorAll('.bqr-qrbox');
-      for (var i = 0; i < qrBoxes.length; i++){
-        var qrBox = qrBoxes[i];
-        var qrText = qrBox.getAttribute('data-qrtext') || '';
-        qrBox.innerHTML = '';
-        try {
-          new QRCode(qrBox, {
-            text: qrText,
-            width: 148,
-            height: 148,
-            colorDark: '#000000',
-            colorLight: '#ffffff',
-            correctLevel: QRCode.CorrectLevel.L
-          });
-          setTimeout((function(box){ return function(){ cleanupQrBox(box); }; })(qrBox), 80);
-        } catch(e) {
-          qrBox.textContent = 'QR 오류';
-          qrBox.style.fontSize = '11px';
-          qrBox.style.color = '#b91c1c';
-        }
-        if (statusEl) statusEl.textContent = '생성 중... ' + (i+1) + '/' + total;
-        if (btn) btn.textContent = '⏳ QR 생성 중 (' + (i+1) + '/' + total + ')';
-        // 4개마다 메인 스레드 양보 → 브라우저 "응답 없음" 방지
-        if ((i + 1) % 4 === 0) {
-          await new Promise(function(r){ setTimeout(r, 0); });
+      // 진행 상태 표시용 요소 추가
+      var statusEl = document.getElementById('batchQrStatus');
+      if (!statusEl) {
+        var topbar = document.getElementById('batchQrTopbar');
+        if (topbar) {
+          statusEl = document.createElement('div');
+          statusEl.id = 'batchQrStatus';
+          statusEl.style.cssText = 'font-size:13px;font-weight:800;color:#fff;opacity:.9;margin-right:8px;';
+          topbar.insertBefore(statusEl, topbar.lastElementChild);
         }
       }
-      if (statusEl) statusEl.textContent = '✅ 생성 완료 · ' + total + '개 조';
+
+      // ★ QR 코드 비동기 1개씩 생성: requestAnimationFrame으로 프레임마다 1개
+      //    → 메인 스레드를 점유하지 않아 "응답 없는 페이지" 완전 방지
+      var qrBoxes = Array.from(grid.querySelectorAll('.bqr-qrbox'));
+      var done = 0;
+      function genNext(){
+        return new Promise(function(resolve){
+          requestAnimationFrame(function(){
+            if (done >= qrBoxes.length) { resolve(); return; }
+            var box = qrBoxes[done];
+            var qrText = box.getAttribute('data-qrtext') || '';
+            box.removeAttribute('data-qrtext');
+            box.innerHTML = '';
+            try {
+              new QRCode(box, {
+                text: qrText, width:148, height:148,
+                colorDark:'#000000', colorLight:'#ffffff',
+                correctLevel: QRCode.CorrectLevel.L
+              });
+              setTimeout(function(){ cleanupQrBox(box); }, 100);
+            } catch(e){
+              box.textContent='QR오류'; box.style.fontSize='11px'; box.style.color='#b91c1c';
+            }
+            done++;
+            if (statusEl) statusEl.textContent = done + '/' + total;
+            if (btn) btn.textContent = '⏳ QR 생성 중 (' + done + '/' + total + ')';
+            resolve();
+          });
+        });
+      }
+      // 순차 실행 (for-of 방식)
+      for (var qi = 0; qi < qrBoxes.length; qi++) {
+        await genNext();
+      }
+
+      if (statusEl) statusEl.textContent = '✅ 완료 ' + total + '개 조';
       if (btn) btn.textContent = '✅ ' + total + '개 조 QR 생성 완료';
-    }catch(err){
-      alert('조별 QR 생성 실패\n\n' + (err && err.message ? err.message : err));
+
+    } catch(err) {
+      var msg = err && err.message ? err.message : String(err);
+      if (msg.indexOf('abort') !== -1 || msg.indexOf('Abort') !== -1) {
+        msg = '⏱ 타임아웃 (30초 초과)\nGAS 서버가 응답하지 않습니다.\n잠시 후 다시 시도하세요.';
+      }
+      alert('조별 QR 생성 실패\n\n' + msg);
       if (btn) btn.textContent = oldText || '📋 조별 QR 일괄생성 (인쇄용)';
     }
   };
