@@ -716,8 +716,6 @@ html, body {
         </button>
       </div>
 
-
-
       <!-- 닫기 -->
       <button onclick="closeAdminModal()"
         style="width:100%; padding:15px; background:#1f2937; color:#fff; border:none; border-radius:12px; font-size:16px; font-weight:900; cursor:pointer;">
@@ -2368,8 +2366,58 @@ function test_doPost() {
 </script>
 
 <!-- ═══ PASIS SV4.0 최종패치 ═══ -->
-<style id="pasis-final-style">
-/* ── 조별QR 오버레이 (화면) ── */
+
+<!-- 인쇄 전용 CSS: visibility 방식(가장 신뢰도 높음) -->
+<style id="pasis-print-css">
+@media print {
+  @page { size:A4 portrait; margin:8mm; }
+  /* 전체 숨기기 → pgBatchOv만 표시 */
+  body * { visibility:hidden !important; }
+  #pgBatchOv, #pgBatchOv * { visibility:visible !important; }
+  /* pgBatchOv를 페이지 좌상단 고정 */
+  #pgBatchOv {
+    position:absolute !important; left:0 !important; top:0 !important;
+    width:100% !important; background:#fff !important;
+    overflow:visible !important; z-index:auto !important;
+  }
+  /* 상단바 버튼 숨기기 */
+  #pgBatchTop .btn-print, #pgBatchTop .btn-close { visibility:hidden !important; }
+  #pgBatchTop {
+    position:static !important; background:none !important;
+    color:#000 !important; box-shadow:none !important; padding:0 0 3mm !important;
+  }
+  /* 카드 그리드: A4에 2열 */
+  #pgBatchGrid {
+    display:grid !important;
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:6mm !important; padding:0 !important;
+  }
+  /* 카드 */
+  .pgCard {
+    border:1.5px dashed #888 !important;
+    border-radius:3mm !important; box-shadow:none !important;
+    padding:3mm !important; background:#fff !important;
+    break-inside:avoid !important; page-break-inside:avoid !important;
+  }
+  /* ★ QR 박스: padding-top 트릭 제거, 단순 block으로 */
+  .pgCard-qr { padding-top:0 !important; height:auto !important; position:static !important; }
+  .pgCard-qr::before { display:none !important; }
+  .pgCard-qr > div { position:static !important; }
+  /* canvas + img 모두 표시, 두 번째 이후 숨김 */
+  .pgCard-qr canvas, .pgCard-qr img {
+    width:90% !important; height:auto !important;
+    display:block !important; margin:0 auto !important;
+  }
+  .pgCard-qr canvas:nth-child(n+2), .pgCard-qr img:nth-child(n+2) { display:none !important; }
+  .pgCard-title { font-size:13pt !important; margin-bottom:2mm !important; }
+  .pgCard-players { margin-top:2mm !important; }
+  .pgCard-pline { font-size:9pt !important; }
+  .pgCard-footer { font-size:8pt !important; }
+}
+</style>
+
+<!-- 화면 CSS + JS -->
+<style id="pasis-screen-css">
 #pgBatchOv {
   position:fixed; inset:0; z-index:100000; overflow-y:auto;
   background:#f3f4f6;
@@ -2383,104 +2431,39 @@ function test_doPost() {
   box-shadow:0 2px 8px rgba(0,0,0,.25);
 }
 #pgBatchTop .bt-title { font-size:15px; font-weight:900; }
-#pgBatchTop .bt-btns { display:flex; gap:8px; align-items:center; }
+#pgBatchTop .bt-btns { display:flex; gap:8px; }
 #pgBatchTop button { border:0; border-radius:8px; padding:8px 14px; font-size:14px; font-weight:800; cursor:pointer; }
 #pgBatchTop .btn-print { background:#fff; color:#7a4f00; }
-#pgBatchTop .btn-close { background:rgba(255,255,255,.18); color:#fff; border:1px solid rgba(255,255,255,.35); }
+#pgBatchTop .btn-close { background:rgba(255,255,255,.2); color:#fff; border:1px solid rgba(255,255,255,.4); }
 #pgBatchGrid {
   display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
   gap:12px; padding:14px; max-width:1200px; margin:0 auto;
 }
-/* ── 카드 ── */
 .pgCard {
-  background:#fff; border-radius:12px;
-  border:1px solid #e5e7eb; box-shadow:0 2px 8px rgba(0,0,0,.07);
+  background:#fff; border-radius:12px; border:1px solid #e5e7eb;
+  box-shadow:0 2px 8px rgba(0,0,0,.07);
   padding:12px 10px 10px;
   display:flex; flex-direction:column; align-items:center;
   break-inside:avoid; page-break-inside:avoid;
 }
 .pgCard-title { font-size:17px; font-weight:900; color:#c8860a; margin-bottom:8px; text-align:center; }
-/* QR 박스 ─ 화면: padding-top 정사각형 트릭 */
-.pgCard-qr {
-  width:100%; position:relative;
-}
+/* QR 정사각형 (화면) */
+.pgCard-qr { width:100%; position:relative; }
 .pgCard-qr::before { content:''; display:block; padding-top:100%; }
-.pgCard-qr > div {
-  position:absolute; inset:0;
-  display:flex; align-items:center; justify-content:center;
-}
-/* QRCode 라이브러리: canvas + img 둘 다 생성 → img만 표시 */
+.pgCard-qr > div { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
 .pgCard-qr canvas { display:none !important; }
 .pgCard-qr img { width:100% !important; height:auto !important; display:block !important; }
-/* ── 선수 행: 이름+소속 한 줄 ── */
+/* 선수: 이름+소속 한 줄 */
 .pgCard-players { width:100%; margin-top:8px; display:grid; grid-template-columns:1fr 1fr; gap:5px 8px; }
 .pgCard-player { display:flex; align-items:center; gap:5px; }
-.pgCard-num {
-  width:17px; height:17px; border-radius:50%;
-  background:#c8860a; color:#fff;
-  font-size:10px; font-weight:900;
-  display:flex; align-items:center; justify-content:center; flex-shrink:0;
-}
-.pgCard-pline { font-size:12px; line-height:1.3; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pgCard-num { width:17px; height:17px; border-radius:50%; background:#c8860a; color:#fff; font-size:10px; font-weight:900; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.pgCard-pline { font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .pgCard-pname { font-weight:800; color:#1e3c72; }
-.pgCard-paffil { color:#666; margin-left:4px; }
+.pgCard-paffil { color:#666; margin-left:3px; }
 .pgCard-footer { margin-top:7px; font-size:10px; color:#9ca3af; text-align:center; width:100%; }
 
-/* ══ 인쇄 전용 ══ */
-@media print {
-  @page { size:A4 portrait; margin:8mm; }
-  /* 오버레이 외 모두 숨기기 */
-  body > *:not(#pgBatchOv) { display:none !important; }
-  /* 오버레이를 일반 흐름으로 전환 */
-  #pgBatchOv {
-    position:static !important; overflow:visible !important;
-    background:#fff !important; z-index:auto !important;
-  }
-  #pgBatchTop {
-    position:static !important; background:none !important;
-    color:#000 !important; box-shadow:none !important; padding:0 0 3mm 0 !important;
-  }
-  #pgBatchTop .btn-print, #pgBatchTop .btn-close { display:none !important; }
-  #pgBatchGrid {
-    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-    gap:6mm !important; padding:0 !important;
-  }
-  .pgCard {
-    border:1.5px dashed #999 !important;
-    border-radius:3mm !important; box-shadow:none !important;
-    padding:3mm !important;
-  }
-  /* ★ 핵심: 인쇄 시 QR 정사각형 고정 (padding-top 트릭 무력화) */
-  .pgCard-qr {
-    width:100% !important;
-    /* padding-top 트릭 대신 직접 height 지정 */
-    padding-top:0 !important;
-    height:0 !important;
-    /* aspect-ratio로 정사각형 */
-    aspect-ratio:1/1 !important;
-    position:relative !important;
-  }
-  .pgCard-qr::before { display:none !important; }
-  .pgCard-qr > div {
-    position:static !important;
-    width:100% !important; height:100% !important;
-    display:flex !important; align-items:center !important; justify-content:center !important;
-  }
-  /* canvas도 인쇄에선 표시 (img가 안 될 경우 대비) */
-  .pgCard-qr canvas { display:block !important; width:100% !important; height:auto !important; }
-  .pgCard-qr img { width:100% !important; height:auto !important; display:block !important; }
-  .pgCard-title { font-size:13pt !important; margin-bottom:2mm !important; }
-  .pgCard-players { margin-top:2mm !important; gap:3px 6px !important; }
-  .pgCard-pline { font-size:9pt !important; }
-  .pgCard-footer { font-size:8pt !important; margin-top:2mm !important; }
-}
-
-/* ── 전송 확인 오버레이 ── */
-#pasisSendOv {
-  position:fixed; inset:0; z-index:200000; background:rgba(0,0,0,.55);
-  display:flex; align-items:center; justify-content:center;
-  font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;
-}
+/* 전송 확인/완료 오버레이 */
+#pasisSendOv { position:fixed; inset:0; z-index:200000; background:rgba(0,0,0,.55); display:flex; align-items:center; justify-content:center; font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif; }
 #pasisSendBox { background:#fff; border-radius:18px; width:min(400px,92vw); max-height:86vh; overflow-y:auto; box-shadow:0 24px 64px rgba(0,0,0,.3); }
 .psHead { background:linear-gradient(135deg,#c8860a,#7a4f00); color:#fff; padding:16px 20px 12px; font-size:16px; font-weight:900; border-radius:18px 18px 0 0; }
 .psHead small { display:block; font-size:12px; opacity:.8; margin-top:2px; font-weight:500; }
@@ -2506,12 +2489,12 @@ function test_doPost() {
 (function(){
   function esc(s){ return String(s||'').replace(/[&<>"]/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]}); }
 
-  /* ─── QR 일괄생성 완전 대체 ─── */
+  /* ─── QR 일괄생성 ─── */
   window.generateBatchQR = function(){
-    var webappUrl='', code='', qrDate='통합', mode='mixed';
+    var webappUrl='',code='',qrDate='통합',mode='mixed';
     try{
-      var wEl=document.getElementById('adminWebappUrl'), cEl=document.getElementById('adminCodeInput');
-      var dEl=document.getElementById('modalQrDate'), mEl=document.getElementById('modalTeamMode');
+      var wEl=document.getElementById('adminWebappUrl'),cEl=document.getElementById('adminCodeInput');
+      var dEl=document.getElementById('modalQrDate'),mEl=document.getElementById('modalTeamMode');
       webappUrl=((wEl&&wEl.value)||localStorage.getItem('parkgolf_webapp_url')||'').trim();
       code=(((cEl&&cEl.value)||localStorage.getItem('parkgolf_tournament_code')||'').trim()).toUpperCase();
       qrDate=(dEl&&dEl.value)||'통합';
@@ -2520,18 +2503,16 @@ function test_doPost() {
     if(!code){alert('대회코드를 먼저 저장해 주세요.');return;}
     if(!webappUrl){alert('웹앱 URL을 먼저 저장해 주세요.');return;}
     if(!webappUrl.includes('script.google.com')){alert('웹앱 URL 형식이 올바르지 않습니다.');return;}
-    if(!confirm('📋 조별 QR 일괄생성을 시작합니다.\n\n⚠️ 구글시트에서 조편성을 먼저 실행하세요!\n\n조편성이 완료되면 확인을 누르세요.')) return;
-
+    if(!confirm('📋 조별 QR 일괄생성을 시작합니다.\n\n구글시트 조편성이 완료된 경우 확인을 누르세요.')) return;
     var btn=document.querySelector('button[onclick*="generateBatchQR"]');
     var oldText=btn?btn.textContent:'';
     if(btn) btn.textContent='⏳ 조편성 불러오는 중...';
-
     fetch(webappUrl,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'getteams',code:code,mode:mode})})
     .then(function(r){return r.json();})
     .then(function(data){
       if(!data.success||!Array.isArray(data.teams)||!data.teams.length)
-        throw new Error((data&&data.message)||'조편성 데이터가 없습니다.\n구글시트에서 조편성을 먼저 실행하세요.');
-      buildQrOverlay(data.teams,code,qrDate,webappUrl);
+        throw new Error((data&&data.message)||'조편성 데이터가 없습니다.');
+      buildQrOv(data.teams,code,qrDate,webappUrl);
       if(btn) btn.textContent='✅ '+data.teams.length+'개 조 QR 생성 완료';
     })
     .catch(function(err){
@@ -2540,14 +2521,12 @@ function test_doPost() {
     });
   };
 
-  function buildQrOverlay(teams, code, qrDate, webappUrl){
-    var old=document.getElementById('pgBatchOv'); if(old) old.remove();
+  function buildQrOv(teams,code,qrDate,webappUrl){
+    var old=document.getElementById('pgBatchOv');if(old)old.remove();
     var appUrl=window.location.href.split('?')[0];
     var dateStr=new Date().toLocaleDateString('ko-KR');
-
-    var ov=document.createElement('div'); ov.id='pgBatchOv';
-    ov.innerHTML=
-      '<div id="pgBatchTop">'
+    var ov=document.createElement('div');ov.id='pgBatchOv';
+    ov.innerHTML='<div id="pgBatchTop">'
       +'<div class="bt-title">📋 조별 QR · '+esc(code)+' · '+esc(qrDate)+' · '+teams.length+'개 조</div>'
       +'<div class="bt-btns">'
       +'<button class="btn-print" onclick="window.print()">🖨 인쇄하기</button>'
@@ -2555,132 +2534,91 @@ function test_doPost() {
       +'</div></div>'
       +'<div id="pgBatchGrid"></div>';
     document.body.appendChild(ov);
-
     var grid=document.getElementById('pgBatchGrid');
-
     teams.forEach(function(teamObj){
-      // QR URL
-      var qrText=appUrl+'?c='+encodeURIComponent(code)
-        +'&u='+encodeURIComponent(webappUrl)
-        +'&d='+encodeURIComponent(qrDate)
-        +'&t='+encodeURIComponent(teamObj.team||'');
-      (teamObj.players||[]).forEach(function(p,i){
-        qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||''));
-      });
-
-      // 선수 HTML: 이름 + 소속 한 줄
-      var playersHtml=(teamObj.players||[]).slice(0,4).map(function(p,i){
-        return '<div class="pgCard-player">'
-          +'<span class="pgCard-num">'+(i+1)+'</span>'
-          +'<span class="pgCard-pline">'
-          +'<span class="pgCard-pname">'+esc(p.name||'')+'</span>'
+      var qrText=appUrl+'?c='+encodeURIComponent(code)+'&u='+encodeURIComponent(webappUrl)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'');
+      (teamObj.players||[]).forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||'')); });
+      var ph=(teamObj.players||[]).slice(0,4).map(function(p,i){
+        return '<div class="pgCard-player"><span class="pgCard-num">'+(i+1)+'</span>'
+          +'<span class="pgCard-pline"><span class="pgCard-pname">'+esc(p.name||'')+'</span>'
           +(p.affil?'<span class="pgCard-paffil">'+esc(p.affil)+'</span>':'')
           +'</span></div>';
       }).join('');
-
-      var card=document.createElement('div'); card.className='pgCard';
-      var boxId='pgqr'+Math.random().toString(36).slice(2,8);
-      card.innerHTML=
-        '<div class="pgCard-title">'+esc(teamObj.team||'')+'</div>'
-        +'<div class="pgCard-qr"><div id="'+boxId+'"></div></div>'
-        +'<div class="pgCard-players">'+playersHtml+'</div>'
+      var card=document.createElement('div');card.className='pgCard';
+      var bid='pgqr'+Math.random().toString(36).slice(2,8);
+      card.innerHTML='<div class="pgCard-title">'+esc(teamObj.team||'')+'</div>'
+        +'<div class="pgCard-qr"><div id="'+bid+'"></div></div>'
+        +'<div class="pgCard-players">'+ph+'</div>'
         +'<div class="pgCard-footer">'+esc(code)+' · '+esc(qrDate)+' · '+dateStr+'</div>';
       grid.appendChild(card);
-
-      var qrBox=card.querySelector('#'+boxId);
-      try{
-        new QRCode(qrBox,{
-          text:qrText, width:256, height:256,
-          colorDark:'#000000', colorLight:'#ffffff',
-          correctLevel:QRCode.CorrectLevel.M
-        });
-      }catch(e){ qrBox.textContent='QR오류'; qrBox.style.color='red'; }
+      try{ new QRCode(card.querySelector('#'+bid),{text:qrText,width:256,height:256,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M}); }
+      catch(e){ card.querySelector('#'+bid).textContent='QR오류'; }
     });
   }
 
   /* ─── QR 스캔 자동 라우팅 ─── */
   function hasQP(){ try{var p=new URLSearchParams(window.location.search||'');return !!(p.get('c')||p.get('t'));}catch(e){return false;} }
   function forceScoring(){
-    var cv=document.getElementById('sv4CoverPage');
-    if(cv) cv.style.setProperty('display','none','important');
-    var ap=document.querySelector('.parkgolf-app');
-    if(ap){ ap.style.removeProperty('display'); ap.style.setProperty('display','block','important'); }
-    var sm=document.getElementById('qrScanModal');
-    if(sm) sm.style.setProperty('display','none','important');
+    var cv=document.getElementById('sv4CoverPage');if(cv)cv.style.setProperty('display','none','important');
+    var ap=document.querySelector('.parkgolf-app');if(ap){ap.style.removeProperty('display');ap.style.setProperty('display','block','important');}
+    var sm=document.getElementById('qrScanModal');if(sm)sm.style.setProperty('display','none','important');
     window.scrollTo({top:0});
   }
   if(hasQP()){
     if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',forceScoring);
     else forceScoring();
-    setTimeout(forceScoring,100); setTimeout(forceScoring,500); setTimeout(forceScoring,1000);
+    setTimeout(forceScoring,100);setTimeout(forceScoring,500);setTimeout(forceScoring,1000);
   }
 
   /* ─── 전송 확인 오버레이 ─── */
-  function showDone(teamName,players){
+  function showDone(t,players){
     var names=(players||[]).map(function(p){return p.name;}).join(' · ');
-    var ov=document.createElement('div'); ov.id='pasisDoneOv';
-    ov.innerHTML='<div id="pasisDoneBox"><div class="pdIcon">✅</div>'
-      +'<div class="pdTitle">전송 완료!</div>'
-      +'<div class="pdSub"><strong>'+esc(teamName)+'</strong><br>'+esc(names)+'<br>'
+    var ov=document.createElement('div');ov.id='pasisDoneOv';
+    ov.innerHTML='<div id="pasisDoneBox"><div class="pdIcon">✅</div><div class="pdTitle">전송 완료!</div>'
+      +'<div class="pdSub"><strong>'+esc(t)+'</strong><br>'+esc(names)+'<br>'
       +'<span style="color:#c8860a;font-weight:700;">구글시트에 기록되었습니다.</span></div>'
-      +'<button class="pdClose" id="pdClose">확인</button></div>';
+      +'<button class="pdClose" id="pdC">확인</button></div>';
     document.body.appendChild(ov);
-    function cl(){ if(ov.parentNode) ov.remove(); }
-    document.getElementById('pdClose').onclick=cl;
-    setTimeout(cl,4000);
+    function cl(){if(ov.parentNode)ov.remove();}
+    document.getElementById('pdC').onclick=cl;setTimeout(cl,4000);
   }
-
   function showConfirm(players,teamName,onSend){
-    var old=document.getElementById('pasisSendOv'); if(old) old.remove();
+    var old=document.getElementById('pasisSendOv');if(old)old.remove();
     var rows=players.map(function(p){
       var sc=['A','B','C','D'].map(function(c){return c+':'+(p[c]||0);}).join(' ');
-      var hio=p.holeInOne?' / HIO:'+p.holeInOne:'';
-      return '<div class="psRow"><div>'
-        +'<div class="psName">'+esc(p.name)+(p.gender?' <span style="font-size:11px;color:#888;">('+esc(p.gender)+')</span>':'')+'</div>'
-        +'<div class="psDetail">'+esc(sc)+esc(hio)+'</div></div>'
+      return '<div class="psRow"><div><div class="psName">'+esc(p.name)+(p.gender?' <span style="font-size:11px;color:#888;">('+esc(p.gender)+')</span>':'')+'</div>'
+        +'<div class="psDetail">'+esc(sc)+(p.holeInOne?' / HIO:'+esc(p.holeInOne):'')+'</div></div>'
         +'<div class="psTotal">'+(p.total||0)+'<small> 타</small></div></div>';
     }).join('');
-    var ov=document.createElement('div'); ov.id='pasisSendOv';
-    ov.innerHTML='<div id="pasisSendBox">'
-      +'<div class="psHead">📋 전송 전 확인<small>'+esc(teamName)+' · '+players.length+'명</small></div>'
+    var ov=document.createElement('div');ov.id='pasisSendOv';
+    ov.innerHTML='<div id="pasisSendBox"><div class="psHead">📋 전송 전 확인<small>'+esc(teamName)+' · '+players.length+'명</small></div>'
       +'<div class="psBody">'+rows+'</div>'
-      +'<div class="psFoot">'
-      +'<button class="psBtnBack" id="psBtnBack">← 뒤로 (수정)</button>'
-      +'<button class="psBtnSend" id="psBtnSend">✅ 확인 · 전송</button>'
-      +'</div></div>';
+      +'<div class="psFoot"><button class="psBtnBack" id="psBack">← 뒤로(수정)</button>'
+      +'<button class="psBtnSend" id="psSend">✅ 확인·전송</button></div></div>';
     document.body.appendChild(ov);
-    document.getElementById('psBtnBack').onclick=function(){ ov.remove(); };
-    document.getElementById('psBtnSend').onclick=function(){ ov.remove(); onSend(players,teamName); };
-    ov.addEventListener('click',function(e){ if(e.target===ov) ov.remove(); });
+    document.getElementById('psBack').onclick=function(){ov.remove();};
+    document.getElementById('psSend').onclick=function(){ov.remove();onSend(players,teamName);};
+    ov.addEventListener('click',function(e){if(e.target===ov)ov.remove();});
   }
-
   function hookSendBtn(){
     var btn=document.getElementById('autoSendBtn');
-    if(!btn){ setTimeout(hookSendBtn,300); return; }
+    if(!btn){setTimeout(hookSendBtn,300);return;}
     btn.onclick=function(ev){
-      if(ev){ ev.preventDefault(); ev.stopPropagation(); }
-      if(typeof syncVisiblePlayersToHidden==='function') syncVisiblePlayersToHidden();
+      if(ev){ev.preventDefault();ev.stopPropagation();}
+      if(typeof syncVisiblePlayersToHidden==='function')syncVisiblePlayersToHidden();
       var players;
-      try{ players=(typeof collectPlayersForSendV4==='function')?collectPlayersForSendV4():[]; }
-      catch(e){ alert('❌ '+e.message); return false; }
-      if(!players||!players.length){
-        if(typeof sendToGoogleSheetPatchedV4==='function') sendToGoogleSheetPatchedV4();
-        return false;
-      }
+      try{players=(typeof collectPlayersForSendV4==='function')?collectPlayersForSendV4():[];}
+      catch(e){alert('❌ '+e.message);return false;}
+      if(!players||!players.length){if(typeof sendToGoogleSheetPatchedV4==='function')sendToGoogleSheetPatchedV4();return false;}
       var teamName=String(((document.getElementById('teamName')||{}).value||'')).trim()||'팀명';
       showConfirm(players,teamName,function(cp,ct){
         var origToast=window.showToast;
-        window.showToast=function(msg){
-          window.showToast=origToast;
-          if(String(msg).indexOf('완료')!==-1||String(msg).indexOf('전송')!==-1) showDone(ct,cp);
-          if(typeof origToast==='function') origToast(msg);
-        };
-        if(typeof sendToGoogleSheetPatchedV4==='function') sendToGoogleSheetPatchedV4();
+        window.showToast=function(msg){window.showToast=origToast;if(String(msg).indexOf('완료')!==-1||String(msg).indexOf('전송')!==-1)showDone(ct,cp);if(typeof origToast==='function')origToast(msg);};
+        if(typeof sendToGoogleSheetPatchedV4==='function')sendToGoogleSheetPatchedV4();
       });
       return false;
     };
   }
-  window.addEventListener('load',function(){ setTimeout(hookSendBtn,150); });
-
+  window.addEventListener('load',function(){setTimeout(hookSendBtn,150);});
 })();
 </script>
