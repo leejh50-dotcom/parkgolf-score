@@ -2067,6 +2067,219 @@ function test_doPost() {
 })();
 </script>
 
+
+<!-- PASIS KEEP-URL PHASE1 PATCH -->
+<style id="pasis-keepurl-phase1-style">
+/* QR 출력 4x5 최적화: URL 규격은 그대로 유지 */
+#batchQrGrid{
+  display:grid !important;
+  grid-template-columns:repeat(4, 1fr) !important;
+  gap:6px !important;
+  padding:8px !important;
+  max-width:1120px !important;
+  margin:0 auto !important;
+}
+#batchQrGrid .bqr-card{
+  padding:4px !important;
+  border:1px solid #d1d5db !important;
+  border-radius:8px !important;
+  background:#fff !important;
+  break-inside:avoid !important;
+}
+#batchQrGrid .bqr-card img,
+#batchQrGrid .bqr-card canvas{
+  width:100% !important;
+  height:auto !important;
+  max-width:120px !important;
+  margin:0 auto !important;
+  display:block !important;
+}
+#batchQrGrid .bqr-card .team-title,
+#batchQrGrid .bqr-card .team-name{
+  font-size:12px !important;
+  line-height:1.2 !important;
+  word-break:keep-all !important;
+}
+#batchQrGrid .bqr-card .meta,
+#batchQrGrid .bqr-card .small,
+#batchQrGrid .bqr-card small{
+  font-size:9px !important;
+  line-height:1.2 !important;
+}
+@media print{
+  @page{ size:A4 portrait; margin:7mm; }
+  html, body{ background:#fff !important; }
+  #batchQrGrid{
+    grid-template-columns:repeat(4, 1fr) !important;
+    gap:5px !important;
+    padding:0 !important;
+    max-width:none !important;
+  }
+  #batchQrGrid .bqr-card{
+    min-height:48mm !important;
+    padding:3mm !important;
+  }
+  #batchQrGrid .bqr-card img,
+  #batchQrGrid .bqr-card canvas{
+    max-width:24mm !important;
+  }
+}
+</style>
+<script id="pasis-keepurl-phase1-script">
+(function(){
+  function txt(id){
+    var el=document.getElementById(id);
+    if(!el) return '';
+    return ((el.value != null && el.value !== '') ? el.value : (el.textContent || el.innerText || '')).trim();
+  }
+  function num(id){
+    var v = txt(id);
+    var n = Number(String(v).replace(/[^\d.-]/g,''));
+    return isNaN(n) ? 0 : n;
+  }
+  function parseHeader(slot){
+    var raw = txt('nameHeader'+slot).replace(/^경기자\s*\d+$/,'').trim();
+    var m = raw.match(/^(.+?)\s*\(\s*(남|여)\s+(.+?)\s*\)$/);
+    return {
+      raw: raw,
+      name: m ? m[1].trim() : raw,
+      gender: m ? m[2].trim() : '',
+      affiliation: m ? m[3].trim() : ''
+    };
+  }
+  function collectPlayersStable(){
+    var out=[];
+    for(var i=1;i<=4;i++){
+      var header = parseHeader(i);
+      var name = (window.playerNames && window.playerNames[i-1]) || txt('player'+i) || header.name || '';
+      name = String(name||'').trim();
+      if(!name || /^경기자\s*\d+$/.test(name)) continue;
+      var gender = (window.playerGenders && window.playerGenders[i-1]) || txt('gender'+i) || header.gender || '';
+      var affiliation = (window.playerAffiliations && window.playerAffiliations[i-1]) || txt('affiliation'+i) || header.affiliation || '';
+      var note = txt('in-HIO-'+i);
+      var player = {
+        slot: i,
+        name: name,
+        gender: String(gender||'').trim(),
+        affiliation: String(affiliation||'').trim(),
+        A: num('in-A-'+i),
+        B: num('in-B-'+i),
+        C: num('in-C-'+i),
+        D: num('in-D-'+i),
+        note: note,
+        holeInOne: note,
+        total: num('in-A-'+i)+num('in-B-'+i)+num('in-C-'+i)+num('in-D-'+i)
+      };
+      out.push(player);
+    }
+    return out;
+  }
+  function syncStorageKeys(){
+    try{
+      var webapp = (localStorage.getItem('parkgolf_webapp_url') || localStorage.getItem('pasis_webapp_url') || '').trim();
+      var code = (localStorage.getItem('parkgolf_tournament_code') || localStorage.getItem('pasis_tournament_code') || '').trim();
+      if(webapp){
+        localStorage.setItem('parkgolf_webapp_url', webapp);
+        localStorage.setItem('pasis_webapp_url', webapp);
+      }
+      if(code){
+        localStorage.setItem('parkgolf_tournament_code', code);
+        localStorage.setItem('pasis_tournament_code', code);
+      }
+    }catch(e){}
+  }
+  async function warmup(url){
+    try{
+      await fetch(url + (url.indexOf('?') > -1 ? '&' : '?') + '_warm=' + Date.now(), { method:'GET', cache:'no-store' });
+    }catch(e){}
+  }
+  function saveHistory(team, code, players){
+    try{
+      var histories = JSON.parse(localStorage.getItem('parkGolfHistories_sv4') || '[]');
+      histories.unshift({
+        date: new Date().toLocaleString('ko-KR', { timeZone:'Asia/Seoul' }),
+        team: team,
+        code: code,
+        players: players.map(function(p){ return p.name; }),
+        notes: players.filter(function(p){ return (p.note||'').trim(); }).map(function(p){ return p.name + ':' + p.note; }),
+        summaryScores: JSON.parse(JSON.stringify(window.summaryScores || {})),
+        playerNames: players.map(function(p){ return p.name; })
+      });
+      if(histories.length > 30) histories = histories.slice(0,30);
+      localStorage.setItem('parkGolfHistories_sv4', JSON.stringify(histories));
+      var historyCount = document.getElementById('historyCount');
+      if(historyCount) historyCount.textContent = histories.length;
+    }catch(e){}
+  }
+  async function sendToGoogleSheetKeepUrl(){
+    syncStorageKeys();
+    var btn = document.getElementById('autoSendBtn');
+    if(btn && btn.disabled) return;
+    var reset = function(){
+      if(!btn) return;
+      btn.disabled = false;
+      btn.style.opacity = '';
+      btn.textContent = '구글 시트 자동 전송 (대회 자동 집계)';
+    };
+    try{
+      if(btn){
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+        btn.textContent = '⏳ 전송 중...';
+      }
+      var webappUrl = (txt('adminWebappUrl') || localStorage.getItem('parkgolf_webapp_url') || localStorage.getItem('pasis_webapp_url') || '').trim();
+      var code = (txt('tournamentCode') || localStorage.getItem('parkgolf_tournament_code') || localStorage.getItem('pasis_tournament_code') || '').trim().toUpperCase();
+      var team = txt('teamName');
+      if(!webappUrl) throw new Error('웹앱 URL이 없습니다.');
+      if(!code) throw new Error('대회 코드가 없습니다.');
+      if(!team) throw new Error('조명이 없습니다.');
+      var players = collectPlayersStable();
+      if(!players.length) throw new Error('전송할 선수 이름이 없습니다.');
+      await warmup(webappUrl);
+      var res = await fetch(webappUrl, {
+        method: 'POST',
+        headers: { 'Content-Type':'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          code: code,
+          team: team,
+          players: players,
+          time: new Date().toLocaleString('ko-KR', { timeZone:'Asia/Seoul' })
+        })
+      });
+      var json = await res.json();
+      if(!json || !json.success) throw new Error((json && json.message) || '전송 실패');
+      saveHistory(team, code, players);
+      var savedNames = Array.isArray(json.savedPlayerNames) ? json.savedPlayerNames.join(', ') : players.map(function(p){return p.name;}).join(', ');
+      var savedNotes = Array.isArray(json.savedNotes) && json.savedNotes.length ? '\n비고저장: ' + json.savedNotes.join(', ') : '';
+      var msg = '전송 완료! ' + team + '\n저장선수: ' + (json.savedCount || players.length) + '명\n' + savedNames + savedNotes;
+      if(typeof showToast === 'function'){
+        showToast('전송 완료! ' + team);
+        setTimeout(function(){ alert(msg); }, 120);
+      }else{
+        alert(msg);
+      }
+    }catch(err){
+      alert('❌ ' + (err && err.message ? err.message : err));
+    }finally{
+      reset();
+    }
+  }
+  window.collectPlayersForSend = collectPlayersStable;
+  window.sendToGoogleSheet = sendToGoogleSheetKeepUrl;
+  document.addEventListener('DOMContentLoaded', function(){
+    syncStorageKeys();
+    var btn = document.getElementById('autoSendBtn');
+    if(btn){
+      btn.onclick = function(e){
+        if(e){ e.preventDefault(); e.stopPropagation(); }
+        sendToGoogleSheetKeepUrl();
+        return false;
+      };
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
 
@@ -2133,3 +2346,267 @@ function test_doPost() {
 })();
 </script>
 
+
+
+<script>
+// ══════════════════════════════════════════
+// PASIS SV4 v4 누락 방지 패치
+// ══════════════════════════════════════════
+(function(){
+  function parseHeaderInfo(i){
+    var el = document.getElementById('nameHeader' + i);
+    var raw = el ? String(el.textContent || el.innerText || '').trim() : '';
+    var info = { raw: raw, name: '', gender: '', affiliation: '' };
+    if(!raw) return info;
+
+    var m = raw.match(/^\s*(.*?)\s*\(\s*([남여])\s+([^)]+?)\s*\)\s*$/);
+    if(m){
+      info.name = String(m[1] || '').trim();
+      info.gender = String(m[2] || '').trim();
+      info.affiliation = String(m[3] || '').trim();
+      return info;
+    }
+
+    var nameOnly = raw.replace(/^\d+\s*/, '').trim();
+    if(/^경기자\s*\d+$/.test(nameOnly)) nameOnly = '';
+    info.name = nameOnly;
+    return info;
+  }
+
+  function getFieldValue(id){
+    var el = document.getElementById(id);
+    if(!el) return '';
+    return String(el.value || el.textContent || '').trim();
+  }
+
+  function syncVisiblePlayersToHidden(){
+    for(var i=1;i<=4;i++){
+      var parsed = parseHeaderInfo(i);
+      var p = document.getElementById('player' + i);
+      var g = document.getElementById('gender' + i);
+      var a = document.getElementById('affiliation' + i);
+
+      if(parsed.name && p && !String(p.value || '').trim()) p.value = parsed.name;
+      if(parsed.gender && g && !String(g.value || '').trim()) g.value = parsed.gender;
+      if(parsed.affiliation && a && !String(a.value || '').trim()) a.value = parsed.affiliation;
+    }
+
+    try {
+      if(typeof autoSave === 'function') autoSave();
+    } catch(e){}
+  }
+
+  function getBigoText(i){
+    var el = document.getElementById('in-HIO-' + i);
+    if(!el) return '';
+    return String(el.value || el.textContent || '').trim();
+  }
+
+  function collectPlayersForSendV4(){
+    syncVisiblePlayersToHidden();
+
+    var players = [];
+    for(var i=1;i<=4;i++){
+      var parsed = parseHeaderInfo(i);
+
+      var name = '';
+      if(typeof playerNames !== 'undefined' && playerNames && playerNames[i-1]) {
+        name = String(playerNames[i-1] || '').trim();
+      }
+      if(!name) name = getFieldValue('player' + i);
+      if(!name) name = parsed.name;
+
+      var gender = '';
+      if(typeof playerGenders !== 'undefined' && playerGenders && playerGenders[i-1]) {
+        gender = String(playerGenders[i-1] || '').trim();
+      }
+      if(!gender) gender = getFieldValue('gender' + i);
+      if(!gender) gender = parsed.gender;
+
+      var affiliation = '';
+      if(typeof playerAffiliations !== 'undefined' && playerAffiliations && playerAffiliations[i-1]) {
+        affiliation = String(playerAffiliations[i-1] || '').trim();
+      }
+      if(!affiliation) affiliation = getFieldValue('affiliation' + i);
+      if(!affiliation) affiliation = parsed.affiliation;
+
+      var A = (typeof num2 === 'function') ? num2(summaryScores && summaryScores.A ? summaryScores.A[i] : 0) : (Number(summaryScores && summaryScores.A ? summaryScores.A[i] : 0) || 0);
+      var B = (typeof num2 === 'function') ? num2(summaryScores && summaryScores.B ? summaryScores.B[i] : 0) : (Number(summaryScores && summaryScores.B ? summaryScores.B[i] : 0) || 0);
+      var C = (typeof num2 === 'function') ? num2(summaryScores && summaryScores.C ? summaryScores.C[i] : 0) : (Number(summaryScores && summaryScores.C ? summaryScores.C[i] : 0) || 0);
+      var D = (typeof num2 === 'function') ? num2(summaryScores && summaryScores.D ? summaryScores.D[i] : 0) : (Number(summaryScores && summaryScores.D ? summaryScores.D[i] : 0) || 0);
+      var holeInOne = getBigoText(i);
+
+      var hasVisibleRow = !!(name || gender || affiliation || A || B || C || D || holeInOne);
+      if(!hasVisibleRow) continue;
+      if(!name) continue;
+      if(!gender) throw new Error('⚠️ ' + name + ' 선수의 성별을 선택해주세요.');
+
+      players.push({
+        slot: i,
+        name: name,
+        gender: gender,
+        affiliation: affiliation,
+        A: A,
+        B: B,
+        C: C,
+        D: D,
+        holeInOne: holeInOne,
+        total: A + B + C + D
+      });
+    }
+
+    return players;
+  }
+
+  async function sendToGoogleSheetPatchedV4(){
+    var btn = document.getElementById('autoSendBtn');
+    if(btn && btn.disabled) return;
+
+    function restoreBtn(){
+      if(!btn) return;
+      btn.disabled = false;
+      btn.style.opacity = '';
+      btn.textContent = '구글 시트 자동 전송 (대회 자동 집계)';
+    }
+
+    try {
+      if(btn){
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+        btn.textContent = '⏳ 전송 중...';
+      }
+
+      syncVisiblePlayersToHidden();
+
+      var webappUrl = ((document.getElementById('adminWebappUrl') || {}).value || localStorage.getItem('parkgolf_webapp_url') || localStorage.getItem('pasis_webapp_url') || '').trim();
+      var code = String(((document.getElementById('tournamentCode') || {}).value || localStorage.getItem('parkgolf_tournament_code') || localStorage.getItem('pasis_tournament_code') || '')).trim().toUpperCase();
+      var team = String(((document.getElementById('teamName') || {}).value || '')).trim();
+
+      if(!webappUrl) throw new Error('웹앱 URL이 없습니다.');
+      if(!code) throw new Error('대회 코드가 없습니다.');
+      if(!team) throw new Error('조명이 없습니다.');
+
+      var players = collectPlayersForSendV4();
+      if(!players.length) throw new Error('전송할 선수 이름이 없습니다.');
+
+      var payload = {
+        code: code,
+        team: team,
+        players: players.map(function(p){
+          return {
+            name: p.name,
+            gender: p.gender,
+            affiliation: p.affiliation,
+            A: p.A,
+            B: p.B,
+            C: p.C,
+            D: p.D,
+            holeInOne: p.holeInOne,
+            total: p.total
+          };
+        }),
+        time: new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })
+      };
+
+      if(typeof warmupWebApp === 'function'){
+        await warmupWebApp(webappUrl);
+      } else {
+        try { await fetch(webappUrl + '?ping=1', { method: 'GET', mode: 'no-cors' }); } catch(e){}
+        await new Promise(function(resolve){ setTimeout(resolve, 500); });
+      }
+
+      var res = await fetch(webappUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+
+      var json = await res.json();
+      if(!json || !json.success){
+        throw new Error((json && json.message) ? json.message : '전송 실패');
+      }
+
+      if(typeof showToast === 'function') showToast('전송 완료! ' + team);
+      else alert('전송 완료! ' + team);
+
+      var histories = [];
+      try { histories = JSON.parse(localStorage.getItem('parkGolfHistories_sv4') || '[]'); } catch(e){}
+
+      histories.unshift({
+        date: new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }),
+        team: team,
+        code: code,
+        players: players.map(function(p){ return p.name; }),
+        teamName: team,
+        summaryScores: JSON.parse(JSON.stringify(summaryScores || {})),
+        playerNames: players.map(function(p){ return p.name; }),
+        playerCount: players.length,
+        bigoList: players.map(function(p){ return p.holeInOne || ''; })
+      });
+
+      if(histories.length > 30) histories = histories.slice(0, 30);
+      localStorage.setItem('parkGolfHistories_sv4', JSON.stringify(histories));
+
+      var historyCount = document.getElementById('historyCount');
+      if(historyCount) historyCount.textContent = String(histories.length);
+    } catch(err){
+      alert('❌ ' + (err && err.message ? err.message : err));
+    } finally {
+      restoreBtn();
+    }
+  }
+
+  var prevFetch = window.fetch;
+  window.fetch = function(url, options){
+    try {
+      var isScorePost = (typeof url === 'string' && url.indexOf('script.google.com') !== -1 && options && String(options.method || '').toUpperCase() === 'POST');
+      if(isScorePost && options && options.body){
+        var body = JSON.parse(options.body);
+        if(body && Array.isArray(body.players)){
+          var freshPlayers = collectPlayersForSendV4().map(function(p){
+            return {
+              name: p.name,
+              gender: p.gender,
+              affiliation: p.affiliation,
+              A: p.A,
+              B: p.B,
+              C: p.C,
+              D: p.D,
+              holeInOne: p.holeInOne,
+              total: p.total
+            };
+          });
+          if(freshPlayers.length){
+            body.players = freshPlayers;
+            if(document.getElementById('teamName')) body.team = String(document.getElementById('teamName').value || body.team || '').trim();
+            options = Object.assign({}, options, { body: JSON.stringify(body) });
+          }
+        }
+      }
+    } catch(e){}
+    return prevFetch.apply(this, arguments);
+  };
+
+  window.collectPlayersForSend = collectPlayersForSendV4;
+  window.sendToGoogleSheet = sendToGoogleSheetPatchedV4;
+
+  document.addEventListener('DOMContentLoaded', function(){
+    syncVisiblePlayersToHidden();
+
+    var btn = document.getElementById('autoSendBtn');
+    if(btn){
+      btn.onclick = function(ev){
+        if(ev){
+          ev.preventDefault();
+          ev.stopPropagation();
+        }
+        sendToGoogleSheetPatchedV4();
+        return false;
+      };
+    }
+
+    setTimeout(syncVisiblePlayersToHidden, 300);
+    setTimeout(syncVisiblePlayersToHidden, 1200);
+  });
+})();
+</script>
