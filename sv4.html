@@ -950,7 +950,7 @@ html, body {
     <button id="copyBtn" style="background:linear-gradient(135deg,#6c757d 0%,#495057 100%);color:white;">텍스트 복사</button>
   </div>
 
-  <button id="autoSendBtn" class="parkgolf-send-button" style="width:100%;background:linear-gradient(135deg,#c8860a 0%,#7a4f00 100%);color:white;border:none;padding:20px;border-radius:12px;font-size:20px;font-weight:900;cursor:pointer;margin-top:8px!important;margin-bottom:25px!important;box-shadow:0 5px 10px rgba(122,79,0,.4);display:block;">
+  <button id="autoSendBtn" class="parkgolf-send-button" style="width:100%;background:linear-gradient(135deg,#28a745 0%,#20c997 100%);color:white;border:none;padding:20px;border-radius:12px;font-size:20px;font-weight:900;cursor:pointer;margin-top:8px!important;margin-bottom:25px!important;box-shadow:0 5px 10px rgba(40,167,69,.4);display:block;">
     구글 시트 자동 전송 (대회 자동 집계)
   </button>
 </div>
@@ -2036,99 +2036,203 @@ function test_doPost() {
 
 
 <script>
+/* ===== PASIS SV4 cleanup layer (UI 유지 / 저장목록 정리) ===== */
 (function(){
+  var KEY_CFG = 'pasis_config_v2';
+  var KEY_LIST = 'pasis_saved_configs_v2';
+  var LEGACY_LIST = 'parkgolf_saved_urls';
+  var LEGACY_URL_KEYS = ['parkgolf_webapp_url', 'pasis_webapp_url'];
+  var LEGACY_CODE_KEYS = ['parkgolf_tournament_code', 'pasis_tournament_code'];
+
+  function safeParse(v, fallback){
+    try { return JSON.parse(v); } catch(e){ return fallback; }
+  }
   function esc(s){
     return String(s == null ? '' : s)
       .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
       .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
   }
-  function ensureGold(btn){
-    if(!btn) return;
-    btn.style.background = 'linear-gradient(135deg,#c8860a 0%,#7a4f00 100%)';
-    btn.style.boxShadow = '0 5px 10px rgba(122,79,0,.4)';
-    btn.style.color = '#fff';
+  function normalizeUrl(url){
+    url = String(url || '').trim();
+    if (!url) return '';
+    if (!/^https:\/\/script\.google\.com\/macros\/s\//i.test(url)) return '';
+    return url;
   }
-  function showFinalConfirm(players, teamName, onConfirm){
-    var old = document.getElementById('sv4HardConfirm');
-    if(old) old.remove();
-    var rows = players.map(function(p){
-      return '<div style="display:flex;justify-content:space-between;align-items:center;background:#fef9f0;border:1px solid #f0d08a;border-radius:10px;padding:10px 14px;margin-bottom:8px;gap:10px;">'
-        + '<div><div style="font-size:15px;font-weight:800;color:#1e3c72;">'+esc(p.name)+'</div>'
-        + '<div style="font-size:12px;color:#666;margin-top:2px;">합계 '+(p.total||0)+'타'+(p.gender?' · '+esc(p.gender):'')+(p.affiliation?' · '+esc(p.affiliation):'')+'</div></div>'
-        + '<div style="font-size:22px;font-weight:900;color:#c8860a;white-space:nowrap;">'+(p.total||0)+'<small style="font-size:11px;color:#999;font-weight:600;"> 타</small></div>'
-        + '</div>';
-    }).join('');
-    var ov=document.createElement('div');
-    ov.id='sv4HardConfirm';
-    ov.style.cssText='position:fixed;inset:0;z-index:350000;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;';
-    ov.innerHTML='<div style="background:#fff;border-radius:18px;width:min(420px,92vw);max-height:86vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.3);">'
-      +'<div style="background:linear-gradient(135deg,#c8860a,#7a4f00);color:#fff;padding:16px 20px 12px;font-size:16px;font-weight:900;border-radius:18px 18px 0 0;">📋 전송 전 확인<small style="display:block;font-size:12px;opacity:.8;margin-top:2px;font-weight:500;">'+esc(teamName)+' · '+players.length+'명</small></div>'
-      +'<div style="padding:14px 18px;">'+rows+'</div>'
-      +'<div style="padding:10px 18px 18px;display:flex;gap:10px;">'
-      +'<button id="sv4HardBack" style="flex:1;padding:14px;border:none;border-radius:11px;font-size:15px;font-weight:900;cursor:pointer;background:#f3f4f6;color:#374151;">← 뒤로(수정)</button>'
-      +'<button id="sv4HardSend" style="flex:1;padding:14px;border:none;border-radius:11px;font-size:15px;font-weight:900;cursor:pointer;background:linear-gradient(135deg,#c8860a,#7a4f00);color:#fff;">✅ 확인·전송</button>'
-      +'</div></div>';
-    document.body.appendChild(ov);
-    document.getElementById('sv4HardBack').onclick=function(){ov.remove();};
-    document.getElementById('sv4HardSend').onclick=function(){ov.remove();onConfirm();};
-    ov.onclick=function(e){ if(e.target===ov) ov.remove(); };
+  function normalizeCode(code){
+    return String(code || '').trim().toUpperCase();
   }
-  function showFinalDone(teamName, players){
-    var old = document.getElementById('sv4HardDone');
-    if(old) old.remove();
-    var ov=document.createElement('div');
-    ov.id='sv4HardDone';
-    ov.style.cssText='position:fixed;inset:0;z-index:350001;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;';
-    ov.innerHTML='<div style="background:#fff;border-radius:18px;width:min(360px,90vw);box-shadow:0 24px 64px rgba(0,0,0,.3);padding:26px 22px;text-align:center;">'
-      +'<div style="font-size:42px;margin-bottom:10px;">✅</div>'
-      +'<div style="font-size:22px;font-weight:900;color:#1f2937;margin-bottom:8px;">전송 완료!</div>'
-      +'<div style="font-size:14px;line-height:1.7;color:#4b5563;">'+esc(teamName)+'<br>'+esc((players||[]).map(function(p){return p.name;}).join(' · '))+'<br><span style="color:#c8860a;font-weight:700;">구글시트에 기록되었습니다.</span></div>'
-      +'<button id="sv4HardDoneBtn" style="margin-top:16px;width:100%;padding:12px;border:none;border-radius:10px;background:linear-gradient(135deg,#c8860a,#7a4f00);color:#fff;font-size:15px;font-weight:900;cursor:pointer;">확인</button>'
-      +'</div>';
-    document.body.appendChild(ov);
-    function close(){var x=document.getElementById('sv4HardDone'); if(x) x.remove();}
-    document.getElementById('sv4HardDoneBtn').onclick=close;
-    setTimeout(close, 4000);
+  function nowStr(){
+    try { return new Date().toLocaleString('ko-KR'); } catch(e) { return String(new Date()); }
   }
-  function collectPlayers(){
-    if(typeof window.syncVisiblePlayersToHidden==='function') window.syncVisiblePlayersToHidden();
-    if(typeof window.collectPlayersForSendV4==='function') return window.collectPlayersForSendV4();
-    if(typeof window.collectPlayersForSend==='function') return window.collectPlayersForSend();
-    return [];
+  function readList(){
+    return safeParse(localStorage.getItem(KEY_LIST) || '[]', []);
   }
-  function sendReal(players, teamName){
-    var btn=document.getElementById('autoSendBtn');
-    ensureGold(btn);
-    if(btn){ btn.disabled=true; btn.style.opacity='0.5'; btn.textContent='⏳ 전송 중...'; }
-    var doneWrapped=false;
-    var origToast=window.showToast;
-    window.showToast=function(msg){
-      try{
-        if(!doneWrapped && /완료|전송/.test(String(msg||''))){ doneWrapped=true; showFinalDone(teamName, players); }
-      }catch(e){}
-      if(typeof origToast==='function') return origToast.apply(this, arguments);
-    };
-    Promise.resolve(typeof window.sendToGoogleSheet==='function' ? window.sendToGoogleSheet(true, players, teamName) : null)
-      .catch(function(err){ alert('❌ ' + (err && err.message ? err.message : err)); })
-      .finally(function(){
-        window.showToast=origToast;
-        if(btn){ btn.disabled=false; btn.style.opacity=''; btn.textContent='구글 시트 자동 전송 (대회 자동 집계)'; ensureGold(btn); }
+  function writeList(list){
+    localStorage.setItem(KEY_LIST, JSON.stringify(list));
+  }
+  function setCurrent(url, code){
+    var cfg = { url: normalizeUrl(url), code: normalizeCode(code), saved: nowStr() };
+    localStorage.setItem(KEY_CFG, JSON.stringify(cfg));
+    if (cfg.url) {
+      localStorage.setItem('parkgolf_webapp_url', cfg.url);
+      localStorage.setItem('pasis_webapp_url', cfg.url);
+    }
+    if (cfg.code) {
+      localStorage.setItem('parkgolf_tournament_code', cfg.code);
+      localStorage.setItem('pasis_tournament_code', cfg.code);
+    }
+    return cfg;
+  }
+  function getCurrent(){
+    var cfg = safeParse(localStorage.getItem(KEY_CFG) || '{}', {});
+    if (!cfg.url) {
+      for (var i=0;i<LEGACY_URL_KEYS.length;i++) {
+        var u = normalizeUrl(localStorage.getItem(LEGACY_URL_KEYS[i]) || '');
+        if (u) { cfg.url = u; break; }
+      }
+    }
+    if (!cfg.code) {
+      for (var j=0;j<LEGACY_CODE_KEYS.length;j++) {
+        var c = normalizeCode(localStorage.getItem(LEGACY_CODE_KEYS[j]) || '');
+        if (c) { cfg.code = c; break; }
+      }
+    }
+    return { url: normalizeUrl(cfg.url), code: normalizeCode(cfg.code), saved: cfg.saved || '' };
+  }
+  function dedupeList(list){
+    var seen = Object.create(null);
+    return (list || []).filter(function(item){
+      var url = normalizeUrl(item && item.url);
+      var code = normalizeCode(item && item.code);
+      if (!url || !code) return false;
+      var key = url + '||' + code;
+      if (seen[key]) return false;
+      seen[key] = true;
+      item.url = url;
+      item.code = code;
+      item.saved = item.saved || nowStr();
+      return true;
+    }).sort(function(a,b){
+      return String(b.saved || '').localeCompare(String(a.saved || ''));
+    }).slice(0, 12);
+  }
+  function migrateLegacyStorage(){
+    var list = readList();
+    var legacy = safeParse(localStorage.getItem(LEGACY_LIST) || '[]', []);
+    if (Array.isArray(legacy) && legacy.length) {
+      legacy.forEach(function(item){
+        list.push({
+          url: normalizeUrl(item && item.url),
+          code: normalizeCode(item && item.code),
+          saved: item && item.saved ? item.saved : nowStr()
+        });
       });
+    }
+    var current = getCurrent();
+    if (current.url && current.code) list.unshift(current);
+    list = dedupeList(list);
+    writeList(list);
+    if (current.url || current.code) setCurrent(current.url, current.code);
+    localStorage.removeItem(LEGACY_LIST);
   }
-  function intercept(ev){
-    var btn = ev.target && ev.target.closest ? ev.target.closest('#autoSendBtn') : null;
-    if(!btn) return;
-    ev.preventDefault(); ev.stopPropagation(); if(ev.stopImmediatePropagation) ev.stopImmediatePropagation();
-    ensureGold(btn);
-    var players=[];
-    try{ players=collectPlayers(); }catch(err){ alert('❌ ' + (err && err.message ? err.message : err)); return false; }
-    if(!players || !players.length){ alert('전송할 선수 이름이 없습니다.'); return false; }
-    var teamName=String(((document.getElementById('teamName')||{}).value||'')).trim()||'팀명';
-    showFinalConfirm(players, teamName, function(){ sendReal(players, teamName); });
-    return false;
+  function saveConfigEntry(url, code){
+    url = normalizeUrl(url);
+    code = normalizeCode(code);
+    if (!url) throw new Error('웹앱 URL이 올바르지 않습니다.');
+    if (!code) throw new Error('대회코드를 입력하세요.');
+    var list = readList();
+    list.unshift({ url: url, code: code, saved: nowStr() });
+    list = dedupeList(list);
+    writeList(list);
+    setCurrent(url, code);
+    return { url: url, code: code, list: list };
   }
-  document.addEventListener('click', intercept, true);
-  window.addEventListener('load', function(){ ensureGold(document.getElementById('autoSendBtn')); }, true);
+  function applyConfigEntry(idx){
+    var list = readList();
+    var item = list[idx];
+    if (!item) return;
+    setCurrent(item.url, item.code);
+    var urlEl = document.getElementById('adminWebappUrl');
+    var codeEl = document.getElementById('adminCodeInput');
+    var tCodeEl = document.getElementById('tournamentCode');
+    if (urlEl) urlEl.value = item.url;
+    if (codeEl) codeEl.value = item.code;
+    if (tCodeEl) tCodeEl.value = item.code;
+  }
+  function deleteConfigEntry(idx){
+    var list = readList();
+    if (idx < 0 || idx >= list.length) return;
+    list.splice(idx, 1);
+    writeList(dedupeList(list));
+    renderSavedUrlsList();
+  }
+  function renderSavedUrlsList(){
+    var wrap = document.getElementById('savedUrlsList');
+    if (!wrap) return;
+    var list = readList();
+    if (!list.length) {
+      wrap.innerHTML = '<div style="padding:18px 12px;color:#6b7280;text-align:center;">저장된 URL이 없습니다</div>';
+    } else {
+      wrap.innerHTML = list.map(function(item, idx){
+        return '<div style="border:1px solid #e5e7eb;border-radius:10px;padding:12px;margin-bottom:10px;background:#fff;">'
+          + '<div style="font-size:17px;font-weight:900;color:#111827;margin-bottom:6px;">' + esc(item.code) + '</div>'
+          + '<div style="font-size:12px;color:#6b7280;word-break:break-all;margin-bottom:6px;">' + esc(item.url) + '</div>'
+          + '<div style="font-size:11px;color:#9ca3af;margin-bottom:10px;">저장일: ' + esc(item.saved || '-') + '</div>'
+          + '<div style="display:flex;gap:8px;">'
+          + '<button onclick="applySavedUrl(' + idx + ')" style="flex:1;padding:8px 14px;background:#2563eb;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">적용</button>'
+          + '<button onclick="deleteSavedUrl(' + idx + ')" style="padding:8px 14px;background:#dc2626;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">🗑 삭제</button>'
+          + '</div></div>';
+      }).join('');
+    }
+    var modal = document.getElementById('savedUrlsModal');
+    if (modal) modal.style.display = 'block';
+  }
+
+  migrateLegacyStorage();
+
+  window.showSavedUrlsList = renderSavedUrlsList;
+  window.deleteSavedUrl = function(idx){
+    if (!confirm('삭제하시겠습니까?')) return;
+    deleteConfigEntry(idx);
+  };
+  window.applySavedUrl = function(idx){
+    applyConfigEntry(idx);
+    var modal = document.getElementById('savedUrlsModal');
+    if (modal) modal.style.display = 'none';
+    try { if (typeof showAdminFeedback === 'function') showAdminFeedback('✅ 저장된 URL·코드를 적용했습니다'); } catch(e){}
+  };
+
+  var _oldOpenAdminModal = window.openAdminModal;
+  window.openAdminModal = function(){
+    if (typeof _oldOpenAdminModal === 'function') _oldOpenAdminModal();
+    var current = getCurrent();
+    var urlEl = document.getElementById('adminWebappUrl');
+    var codeEl = document.getElementById('adminCodeInput');
+    if (urlEl && current.url) urlEl.value = current.url;
+    if (codeEl && current.code) codeEl.value = current.code;
+  };
+
+  window.saveAdminUrlAndCode = function(){
+    var urlEl = document.getElementById('adminWebappUrl');
+    var codeEl = document.getElementById('adminCodeInput');
+    var url = normalizeUrl(urlEl && urlEl.value);
+    var code = normalizeCode(codeEl && codeEl.value);
+    try {
+      var saved = saveConfigEntry(url, code);
+      var tCodeEl = document.getElementById('tournamentCode');
+      if (tCodeEl) tCodeEl.value = saved.code;
+      if (typeof showAdminFeedback === 'function') showAdminFeedback('✅ 저장되었습니다! 대회코드: ' + saved.code);
+      fetch(saved.url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ action: 'saveconfig', code: saved.code, webappUrl: saved.url })
+      }).then(function(r){ return r.json(); }).then(function(json){
+        if (json && json.success && typeof showToast === 'function') showToast('✅ PC 설정도 저장했습니다.');
+      }).catch(function(){});
+    } catch(err) {
+      alert('❌ ' + (err && err.message ? err.message : err));
+    }
+  };
 })();
 </script>
 
@@ -2310,55 +2414,36 @@ function test_doPost() {
     return players;
   }
 
-  async function sendToGoogleSheetPatchedV4(forceSend, preparedPlayers, preparedTeam){
+  async function sendToGoogleSheetPatchedV4(){
     var btn = document.getElementById('autoSendBtn');
     if(btn && btn.disabled) return;
-
-    function paintBtn(){
-      if(!btn) return;
-      btn.style.background = 'linear-gradient(135deg,#c8860a 0%,#7a4f00 100%)';
-      btn.style.boxShadow = '0 5px 10px rgba(122,79,0,.4)';
-      btn.style.color = '#fff';
-    }
 
     function restoreBtn(){
       if(!btn) return;
       btn.disabled = false;
       btn.style.opacity = '';
-      paintBtn();
       btn.textContent = '구글 시트 자동 전송 (대회 자동 집계)';
     }
 
     try {
-      paintBtn();
+      if(btn){
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+        btn.textContent = '⏳ 전송 중...';
+      }
+
       syncVisiblePlayersToHidden();
 
       var webappUrl = ((document.getElementById('adminWebappUrl') || {}).value || localStorage.getItem('parkgolf_webapp_url') || localStorage.getItem('pasis_webapp_url') || '').trim();
       var code = String(((document.getElementById('tournamentCode') || {}).value || localStorage.getItem('parkgolf_tournament_code') || localStorage.getItem('pasis_tournament_code') || '')).trim().toUpperCase();
-      var team = String(preparedTeam || ((document.getElementById('teamName') || {}).value || '')).trim();
+      var team = String(((document.getElementById('teamName') || {}).value || '')).trim();
 
       if(!webappUrl) throw new Error('웹앱 URL이 없습니다.');
       if(!code) throw new Error('대회 코드가 없습니다.');
       if(!team) throw new Error('조명이 없습니다.');
 
-      var players = Array.isArray(preparedPlayers) && preparedPlayers.length ? preparedPlayers : collectPlayersForSendV4();
+      var players = collectPlayersForSendV4();
       if(!players.length) throw new Error('전송할 선수 이름이 없습니다.');
-
-      if(!forceSend){
-        if(typeof showConfirm === 'function'){
-          showConfirm(players, team, function(confirmedPlayers, confirmedTeam){
-            sendToGoogleSheetPatchedV4(true, confirmedPlayers, confirmedTeam);
-          });
-          return;
-        }
-      }
-
-      if(btn){
-        btn.disabled = true;
-        btn.style.opacity = '0.5';
-        paintBtn();
-        btn.textContent = '⏳ 전송 중...';
-      }
 
       var payload = {
         code: code,
@@ -2397,7 +2482,6 @@ function test_doPost() {
         throw new Error((json && json.message) ? json.message : '전송 실패');
       }
 
-      if(typeof showDone === 'function') showDone(team, players);
       if(typeof showToast === 'function') showToast('전송 완료! ' + team);
       else alert('전송 완료! ' + team);
 
@@ -2506,96 +2590,48 @@ function test_doPost() {
   /* 전체 숨기기, pgBatchOv만 표시 */
   body * { visibility:hidden !important; }
   #pgBatchOv, #pgBatchOv * { visibility:visible !important; }
-  #pgBatchOv {
-    position:absolute !important;
-    left:0 !important;
-    top:0 !important;
-    width:100% !important;
-    background:#fff !important;
-    overflow:visible !important;
-  }
+  #pgBatchOv { position:absolute !important; left:0 !important; top:0 !important; width:100% !important; background:#fff !important; overflow:visible !important; }
 
-  #pgBatchTop {
-    position:static !important;
-    background:none !important;
-    color:#000 !important;
-    box-shadow:none !important;
-    padding:0 0 3mm !important;
-  }
-  #pgBatchTop .btn-print,
-  #pgBatchTop .btn-close { display:none !important; }
+  #pgBatchTop { position:static !important; background:none !important; color:#000 !important; box-shadow:none !important; padding:0 0 3mm !important; }
+  #pgBatchTop .btn-print, #pgBatchTop .btn-close { display:none !important; }
 
-  /* 인쇄도 화면처럼 균일한 카드 격자 유지 */
+  /* 3열 → A4에 3행×3열=9개/페이지 */
   #pgBatchGrid {
     display:grid !important;
-    grid-template-columns:repeat(3, 1fr) !important;
-    align-items:start !important;
-    gap:4mm !important;
-    padding:0 !important;
+    grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+    gap:4mm !important; padding:0 !important;
   }
-
   .pgCard {
-    border:1px dashed #999 !important;
-    border-radius:2mm !important;
-    box-shadow:none !important;
-    padding:2.2mm 2mm 1.8mm !important;
-    background:#fff !important;
-    break-inside:avoid !important;
-    page-break-inside:avoid !important;
+    border:1px dashed #999 !important; border-radius:2mm !important;
+    box-shadow:none !important; padding:2mm !important; background:#fff !important;
+    break-inside:avoid !important; page-break-inside:avoid !important;
   }
-
-  /* QR 영역을 화면과 동일하게 정사각형으로 고정 */
-  .pgCard-qr {
-    width:100% !important;
-    position:relative !important;
-    padding-top:100% !important;
-    overflow:hidden !important;
-  }
+  /* QR 박스: 정상 흐름으로 전환 */
+  .pgCard-qr { position:static !important; padding-top:0 !important; height:auto !important; }
   .pgCard-qr::before { display:none !important; }
-  .pgCard-qr > div {
-    position:absolute !important;
-    inset:0 !important;
-    display:flex !important;
-    align-items:center !important;
-    justify-content:center !important;
-  }
+  .pgCard-qr > div { position:static !important; width:100% !important; display:block !important; }
 
-  /* qrcodejs가 img+canvas를 둘 다 만들 수 있으므로 인쇄는 하나만 사용 */
-  .pgCard-qr img,
-  .pgCard-qr table { display:none !important; }
-
+  /* ★ canvas 크기 제한 → 카드 3개가 한 행에 들어가도록 */
   .pgCard-qr canvas {
     display:block !important;
     width:100% !important;
-    height:100% !important;
-    max-width:none !important;
-    max-height:none !important;
-    margin:0 !important;
+    max-width:55mm !important;
+    height:auto !important;
+    margin:0 auto !important;
   }
-
-  .pgCard-title {
-    font-size:10pt !important;
-    margin-bottom:1.2mm !important;
-    color:#c8860a !important;
-    line-height:1.2 !important;
-  }
-  .pgCard-players {
+  .pgCard-qr img {
+    display:block !important;
     width:100% !important;
-    margin-top:1.2mm !important;
-    gap:2px 4px !important;
+    max-width:55mm !important;
+    height:auto !important;
+    margin:0 auto !important;
   }
-  .pgCard-pline { font-size:7.4pt !important; }
+  .pgCard-title { font-size:10pt !important; margin-bottom:1mm !important; color:#c8860a !important; }
+  .pgCard-players { margin-top:1mm !important; gap:2px 4px !important; }
+  .pgCard-pline { font-size:7.5pt !important; }
   .pgCard-pname { font-weight:800 !important; }
-  .pgCard-footer {
-    font-size:7pt !important;
-    margin-top:1mm !important;
-    line-height:1.2 !important;
-  }
-  .pgCard-num {
-    width:13px !important;
-    height:13px !important;
-    font-size:8px !important;
-  }
+  .pgCard-footer { font-size:7pt !important; margin-top:1mm !important; }
+  .pgCard-num { width:13px !important; height:13px !important; font-size:8px !important; }
 }
 
 /* ══ 공통 카드 ══ */
@@ -2732,7 +2768,7 @@ function test_doPost() {
     var rows=players.map(function(p){
       var sc=['A','B','C','D'].map(function(c){return c+':'+(p[c]||0);}).join(' ');
       return '<div class="psRow"><div><div class="psName">'+esc(p.name)+(p.gender?' <span style="font-size:11px;color:#888;">('+esc(p.gender)+')</span>':'')+'</div>'
-        +'<div class="psDetail">합계 '+(p.total||0)+'타 · '+esc(sc)+(p.holeInOne?' · HIO:'+esc(p.holeInOne):'')+'</div></div>'
+        +'<div class="psDetail">'+esc(sc)+(p.holeInOne?' HIO:'+esc(p.holeInOne):'')+'</div></div>'
         +'<div class="psTotal">'+(p.total||0)+'<small> 타</small></div></div>';
     }).join('');
     var ov=document.createElement('div');ov.id='pasisSendOv';
