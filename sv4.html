@@ -710,7 +710,7 @@ html, body {
           </select>
         </div>
 
-        <button onclick="generateBatchQR(event)"
+        <button type="button" onclick="generateBatchQR(event)"
           style="width:100%; padding:16px; background:linear-gradient(135deg,#c8860a 0%,#7a4f00 100%); color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:900; cursor:pointer;">
           📋 조별 QR 일괄생성 (인쇄용)
         </button>
@@ -3097,30 +3097,26 @@ function test_doPost() {
         + '</div>';
     }).join('');
   }
-  // buildOverlay: 오버레이/카드 HTML만 생성. QR 데이터는 data-qrtext 속성에 저장.
-  // QR 코드 실제 생성은 generateBatchQR에서 비동기로 처리
+
+  // 오버레이 + 카드 HTML 생성 (QR 없음 - data-qrtext 속성에 저장)
   function buildOverlay(teams, settings){
     var old = document.getElementById('batchQrOverlay');
     if (old) old.remove();
-
     var overlay = document.createElement('div');
     overlay.id = 'batchQrOverlay';
     overlay.innerHTML = overlayHtml('파시스4.0', settings.code, teams.length);
     document.body.appendChild(overlay);
-
     document.getElementById('batchQrCloseBtn').onclick = function(){ overlay.remove(); };
     document.getElementById('batchQrPrintBtn').onclick = function(){ window.print(); };
-
     var grid = document.getElementById('batchQrGrid');
     var appUrl = window.location.href;
     teams.forEach(function(teamObj){
       var card = document.createElement('div');
       card.className = 'bqr-card';
       var qrText = makeQrUrl(appUrl, settings.webappUrl, settings.code, settings.date, teamObj);
-      // QR 텍스트를 data 속성에만 저장, 실제 QRCode 생성은 하지 않음
       card.innerHTML = ''
         + '<div class="bqr-title">' + esc(teamObj.team || '') + '</div>'
-        + '<div class="bqr-qrbox" data-qrtext="' + qrText.replace(/"/g,'&quot;') + '"></div>'
+        + '<div class="bqr-qrbox" data-qt="' + qrText.replace(/"/g,'&quot;') + '"></div>'
         + '<div class="bqr-players">' + playerRows(teamObj.players || []) + '</div>'
         + '<div class="bqr-footer">' + esc(settings.code) + ' ' + esc(settings.date || '') + '</div>';
       grid.appendChild(card);
@@ -3128,111 +3124,105 @@ function test_doPost() {
     return grid;
   }
 
-  // ★ 전체 수정:
-  //  1. evt 파라미터 → window.event 비표준 제거 (Firefox/Safari 호환)
-  //  2. btn.disabled = true 제거 (iOS Safari async 중단 버그 방지)
-  //  3. AbortController 30초 타임아웃 → GAS 무한 대기 방지
-  //  4. QR 코드 1개씩 requestAnimationFrame으로 비동기 생성 → 메인 스레드 블로킹 완전 차단
-  window.generateBatchQR = async function(evt){
+  // ★ 핵심 수정:
+  //   generateBatchQR → 동기 함수로 즉시 return (async 금지)
+  //   실제 작업은 setTimeout(fn,0)으로 완전 분리
+  //   → onclick 핸들러가 async Promise를 반환하면 Chrome이 "클릭 처리 중"으로
+  //      계속 인식하다 30초 후 "응답 없는 페이지" 표시하는 문제 완전 해결
+  window.generateBatchQR = function(evt){
+    if (evt){ evt.preventDefault(); evt.stopPropagation(); }
     var s = getSettings();
-    if (!s.code) { alert('대회코드를 먼저 저장해 주세요.'); return; }
-    if (!s.webappUrl) { alert('웹앱 URL을 먼저 저장해 주세요.'); return; }
-    if (!String(s.webappUrl).includes('script.google.com')) { alert('웹앱 URL 형식이 올바르지 않습니다.'); return; }
-
-    // 버튼 참조: evt.target 우선, 없으면 querySelector 폴백 (모든 브라우저 호환)
+    if (!s.code){ alert('대회코드를 먼저 저장해 주세요.'); return; }
+    if (!s.webappUrl){ alert('웹앱 URL을 먼저 저장해 주세요.'); return; }
+    if (!String(s.webappUrl).includes('script.google.com')){ alert('웹앱 URL 형식이 올바르지 않습니다.'); return; }
     var btn = (evt && evt.target) ? evt.target : (document.querySelector('button[onclick*="generateBatchQR"]') || null);
     var oldText = btn ? btn.textContent : '';
     if (btn) btn.textContent = '⏳ 조편성 불러오는 중...';
-    // btn.disabled = true 금지: iOS Safari에서 async 함수 중단 버그 유발
+    // btn.disabled = true 절대 금지 (async 실행 중단 버그)
+    // setTimeout(0)으로 클릭 이벤트와 완전 분리
+    setTimeout(function(){ _pasisBatchQRWork(s, btn, oldText); }, 0);
+  };
 
-    try{
-      // AbortController로 30초 타임아웃 → GAS 냉기동 무한 대기 방지
+  // 실제 작업 함수 (async - setTimeout으로 분리됐으므로 안전)
+  async function _pasisBatchQRWork(s, btn, oldText){
+    try {
+      // AbortController: 30초 타임아웃
       var ctrl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
       var tId = ctrl ? setTimeout(function(){ ctrl.abort(); }, 30000) : null;
       var res;
       try {
         res = await fetch(s.webappUrl, {
-          method:'POST',
-          headers:{'Content-Type':'text/plain;charset=utf-8'},
+          method: 'POST',
+          headers: {'Content-Type':'text/plain;charset=utf-8'},
           body: JSON.stringify({action:'getteams', code:s.code, mode:s.mode}),
           signal: ctrl ? ctrl.signal : undefined
         });
       } finally {
         if (tId) clearTimeout(tId);
       }
-
-      // res.text() + JSON.parse → GAS 오류 HTML 응답도 안전하게 처리
+      // res.text() → JSON.parse (비-JSON 오류 응답 안전 처리)
       var txt = await res.text();
       var json;
       try { json = JSON.parse(txt); }
       catch(e){ throw new Error('응답 해석 실패:\n' + txt.slice(0, 200)); }
-
       if (!json.success || !Array.isArray(json.teams) || !json.teams.length){
-        throw new Error((json && json.message) || '조편성 데이터가 없습니다.\n\n구글시트에서 [파시스관리] → [조편성 실행]을 먼저 실행하세요.');
+        throw new Error((json && json.message) || '조편성 데이터가 없습니다.\n\n구글시트 [파시스관리] → [조편성 실행]을 먼저 실행하세요.');
       }
 
-      // 오버레이 구조 생성 (QR 없음)
+      // 오버레이 + 카드 구조 생성
       var grid = buildOverlay(json.teams, s);
       var total = json.teams.length;
-
-      // 진행 상태 표시용 요소 추가
-      var statusEl = document.getElementById('batchQrStatus');
-      if (!statusEl) {
-        var topbar = document.getElementById('batchQrTopbar');
-        if (topbar) {
-          statusEl = document.createElement('div');
-          statusEl.id = 'batchQrStatus';
-          statusEl.style.cssText = 'font-size:13px;font-weight:800;color:#fff;opacity:.9;margin-right:8px;';
-          topbar.insertBefore(statusEl, topbar.lastElementChild);
-        }
+      // 상태 표시 div 동적 추가
+      var statDiv = null;
+      var topbar = document.getElementById('batchQrTopbar');
+      if (topbar) {
+        statDiv = document.createElement('div');
+        statDiv.style.cssText = 'font-size:13px;font-weight:800;color:#fff;opacity:.9;margin-right:8px;';
+        topbar.insertBefore(statDiv, topbar.lastElementChild);
       }
 
-      // ★ QR 코드 비동기 1개씩 생성: requestAnimationFrame으로 프레임마다 1개
-      //    → 메인 스레드를 점유하지 않아 "응답 없는 페이지" 완전 방지
-      var qrBoxes = Array.from(grid.querySelectorAll('.bqr-qrbox'));
-      var done = 0;
-      function genNext(){
-        return new Promise(function(resolve){
+      // QR 코드 1개씩 requestAnimationFrame으로 비동기 생성
+      // → 프레임 경계마다 브라우저에 제어 반환, 메인 스레드 독점 방지
+      var boxes = Array.from(grid.querySelectorAll('.bqr-qrbox'));
+      for (var i = 0; i < boxes.length; i++){
+        await new Promise(function(resolve){
           requestAnimationFrame(function(){
-            if (done >= qrBoxes.length) { resolve(); return; }
-            var box = qrBoxes[done];
-            var qrText = box.getAttribute('data-qrtext') || '';
-            box.removeAttribute('data-qrtext');
-            box.innerHTML = '';
-            try {
-              new QRCode(box, {
-                text: qrText, width:148, height:148,
-                colorDark:'#000000', colorLight:'#ffffff',
-                correctLevel: QRCode.CorrectLevel.L
-              });
-              setTimeout(function(){ cleanupQrBox(box); }, 100);
-            } catch(e){
-              box.textContent='QR오류'; box.style.fontSize='11px'; box.style.color='#b91c1c';
-            }
-            done++;
-            if (statusEl) statusEl.textContent = done + '/' + total;
-            if (btn) btn.textContent = '⏳ QR 생성 중 (' + done + '/' + total + ')';
+            var box = boxes[i];  // closure 필요
+            (function(b){
+              var qt = b.getAttribute('data-qt') || '';
+              b.removeAttribute('data-qt');
+              b.innerHTML = '';
+              try {
+                new QRCode(b, {
+                  text: qt, width:148, height:148,
+                  colorDark:'#000000', colorLight:'#ffffff',
+                  correctLevel: QRCode.CorrectLevel.L
+                });
+                setTimeout(function(){ cleanupQrBox(b); }, 100);
+              } catch(e){
+                b.textContent = 'QR오류';
+                b.style.cssText = 'font-size:11px;color:#b91c1c;';
+              }
+            })(box);
             resolve();
           });
         });
+        var done = i + 1;
+        if (statDiv) statDiv.textContent = done + '/' + total;
+        if (btn) btn.textContent = '⏳ QR 생성 중 (' + done + '/' + total + ')';
       }
-      // 순차 실행 (for-of 방식)
-      for (var qi = 0; qi < qrBoxes.length; qi++) {
-        await genNext();
-      }
-
-      if (statusEl) statusEl.textContent = '✅ 완료 ' + total + '개 조';
+      if (statDiv) statDiv.textContent = '✅ 완료';
       if (btn) btn.textContent = '✅ ' + total + '개 조 QR 생성 완료';
 
-    } catch(err) {
-      var msg = err && err.message ? err.message : String(err);
-      if (msg.indexOf('abort') !== -1 || msg.indexOf('Abort') !== -1) {
-        msg = '⏱ 타임아웃 (30초 초과)\nGAS 서버가 응답하지 않습니다.\n잠시 후 다시 시도하세요.';
+    } catch(err){
+      var msg = (err && err.message) ? err.message : String(err);
+      if (/abort/i.test(msg)){
+        msg = '⏱ 30초 타임아웃\nGAS 서버가 응답하지 않습니다. 잠시 후 다시 시도하세요.';
       }
       alert('조별 QR 생성 실패\n\n' + msg);
       if (btn) btn.textContent = oldText || '📋 조별 QR 일괄생성 (인쇄용)';
     }
-  };
+  }
 })();
 </script>
 
