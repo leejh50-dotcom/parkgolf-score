@@ -710,7 +710,7 @@ html, body {
           </select>
         </div>
 
-        <button onclick="generateBatchQR()"
+        <button onclick="generateBatchQR(event)"
           style="width:100%; padding:16px; background:linear-gradient(135deg,#c8860a 0%,#7a4f00 100%); color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:900; cursor:pointer;">
           📋 조별 QR 일괄생성 (인쇄용)
         </button>
@@ -3137,29 +3137,37 @@ function test_doPost() {
     });
   }
 
-  window.generateBatchQR = async function(){
+  // ★ FIX: evt 파라미터 수신, window.event 비표준 제거, btn.disabled 제거(iOS Safari 버그 방지)
+  //        res.text()+JSON.parse 사용으로 비-JSON 응답도 안전하게 처리
+  window.generateBatchQR = async function(evt){
     var s = getSettings();
     if (!s.code) { alert('대회코드를 먼저 저장해 주세요.'); return; }
     if (!s.webappUrl) { alert('웹앱 URL을 먼저 저장해 주세요.'); return; }
     if (!String(s.webappUrl).includes('script.google.com')) { alert('웹앱 URL 형식이 올바르지 않습니다.'); return; }
-    var btn = (window.event && window.event.target) || null;
+    // evt.target 우선, 없으면 querySelector로 버튼 탐색 (모든 브라우저 호환)
+    var btn = (evt && evt.target) ? evt.target : document.querySelector('button[onclick*="generateBatchQR"]') || null;
     var oldText = btn ? btn.textContent : '';
-    if (btn){ btn.textContent = '⏳ 조편성 불러오는 중...'; btn.disabled = true; }
+    if (btn){ btn.textContent = '⏳ 조편성 불러오는 중...'; }
+    // ★ btn.disabled = true 는 iOS Safari에서 async 중단 버그 유발 → 사용 금지
     try{
       var res = await fetch(s.webappUrl, {
         method:'POST',
         headers:{'Content-Type':'text/plain;charset=utf-8'},
         body: JSON.stringify({action:'getteams', code:s.code, mode:s.mode})
       });
-      var json = await res.json();
+      // res.text() → JSON.parse 방식으로 비-JSON 응답 오류 메시지도 명확히 표시
+      var txt = await res.text();
+      var json;
+      try { json = JSON.parse(txt); }
+      catch(e){ throw new Error('응답 해석 실패: ' + txt.slice(0, 120)); }
       if (!json.success || !Array.isArray(json.teams) || !json.teams.length){
-        throw new Error((json && json.message) || '조편성 데이터가 없습니다.');
+        throw new Error((json && json.message) || '조편성 데이터가 없습니다.\n\n구글시트에서 [파시스관리] → [조편성 실행]을 먼저 실행하세요.');
       }
       buildOverlay(json.teams, s);
     }catch(err){
       alert('조별 QR 생성 실패\n\n' + (err && err.message ? err.message : err));
     }finally{
-      if (btn){ btn.textContent = oldText || '📋 조별 QR 일괄생성 (인쇄용)'; btn.disabled = false; }
+      if (btn){ btn.textContent = oldText || '📋 조별 QR 일괄생성 (인쇄용)'; }
     }
   };
 })();
