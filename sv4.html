@@ -983,7 +983,7 @@ html, body {
     <button id="copyBtn" style="background:linear-gradient(135deg,#6c757d 0%,#495057 100%);color:white;">텍스트 복사</button>
   </div>
 
-  <button id="autoSendBtn" class="parkgolf-send-button" style="width:100%;background:linear-gradient(135deg,#28a745 0%,#20c997 100%);color:white;border:none;padding:20px;border-radius:12px;font-size:20px;font-weight:900;cursor:pointer;margin-top:8px!important;margin-bottom:25px!important;box-shadow:0 5px 10px rgba(40,167,69,.4);display:block;">
+  <button id="autoSendBtn" class="parkgolf-send-button" style="width:100%;background:linear-gradient(135deg,#c8860a 0%,#7a4f00 100%);color:white;border:none;padding:20px;border-radius:12px;font-size:20px;font-weight:900;cursor:pointer;margin-top:8px!important;margin-bottom:25px!important;box-shadow:0 5px 10px rgba(122,79,0,.4);display:block;">
     구글 시트 자동 전송 (대회 자동 집계)
   </button>
 </div>
@@ -2395,5 +2395,241 @@ function test_doPost() {
     setTimeout(syncVisiblePlayersToHidden, 300);
     setTimeout(syncVisiblePlayersToHidden, 1200);
   });
+})();
+</script>
+
+<!-- ══════════════════════════════════════════════════════
+     PASIS SV4.0 추가 기능
+     ① 조별QR 인쇄 여백 개선 (A4 오려 배부용)
+     ② 구글시트 전송 확인 오버레이 + 전송완료 안내
+     ══════════════════════════════════════════════════════ -->
+<style id="pasis-print-margin-style">
+/* ── 조별QR 인쇄 여백 개선 ── */
+@media print {
+  /* 카드 사이 여백 충분히 확보 (가위질 공간) */
+  #batchQrOverlay { background:#fff !important; }
+  #batchQrGrid,
+  [id$="BatchQrGrid"], [id$="batchQrGrid"] {
+    gap: 8mm !important;
+    padding: 4mm !important;
+    grid-template-columns: repeat(3,1fr) !important;
+  }
+  /* 각 카드에 절취선 표시 + 여백 */
+  .bqr-card, [class$="bqr-card"] {
+    padding: 4mm !important;
+    border: 1.5px dashed #bbb !important;
+    border-radius: 3mm !important;
+    box-shadow: none !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+  /* QR 크기 75%로 제한 → 카드 내 좌우 여백 확보 */
+  .bqr-card canvas, .bqr-card img,
+  [class$="bqr-card"] canvas, [class$="bqr-card"] img,
+  .bqr-qrbox canvas, .bqr-qrbox img,
+  .pasis-bqr-qbox canvas, .pasis-bqr-qbox img {
+    width: 75% !important;
+    height: auto !important;
+    max-width: 75% !important;
+    display: block !important;
+    margin: 0 auto !important;
+  }
+}
+/* ── 전송 확인 오버레이 CSS ── */
+#pasisSendConfirmOv {
+  position: fixed; inset: 0; z-index: 99998;
+  background: rgba(0,0,0,.55);
+  display: flex; align-items: center; justify-content: center;
+  font-family: "Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+  animation: pasisFadeIn .2s ease;
+}
+@keyframes pasisFadeIn { from{opacity:0;transform:scale(.96)} to{opacity:1;transform:scale(1)} }
+#pasisSendConfirmBox {
+  background: #fff; border-radius: 18px; width: min(420px, 94vw);
+  max-height: 88vh; overflow-y: auto;
+  box-shadow: 0 24px 64px rgba(0,0,0,.28);
+  padding: 0; overflow: hidden;
+}
+#pasisSendConfirmBox .sc-head {
+  background: linear-gradient(135deg,#c8860a,#7a4f00);
+  color: #fff; padding: 18px 20px 14px;
+  font-size: 17px; font-weight: 900; line-height: 1.3;
+}
+#pasisSendConfirmBox .sc-head small {
+  display:block; font-size:12px; font-weight:500; opacity:.85; margin-top:3px;
+}
+#pasisSendConfirmBox .sc-body { padding: 16px 20px; }
+#pasisSendConfirmBox .sc-player {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 12px; border-radius: 10px; margin-bottom: 8px;
+  background: #fef9f0; border: 1px solid #f0d08a;
+}
+#pasisSendConfirmBox .sc-player .sc-name {
+  font-size: 15px; font-weight: 800; color: #1e3c72;
+}
+#pasisSendConfirmBox .sc-player .sc-scores {
+  font-size: 13px; color: #555; text-align: right; line-height: 1.5;
+}
+#pasisSendConfirmBox .sc-player .sc-total {
+  font-size: 20px; font-weight: 900; color: #c8860a; min-width: 44px; text-align: right;
+}
+#pasisSendConfirmBox .sc-footer {
+  padding: 12px 20px 20px; display: flex; gap: 10px;
+}
+#pasisSendConfirmBox .sc-footer button {
+  flex: 1; padding: 14px; border: none; border-radius: 11px;
+  font-size: 16px; font-weight: 900; cursor: pointer; transition: opacity .15s;
+}
+#pasisSendConfirmBox .sc-footer button:active { opacity: .8; }
+#pasisSendConfirmBox .sc-btn-back {
+  background: #f3f4f6; color: #374151;
+}
+#pasisSendConfirmBox .sc-btn-send {
+  background: linear-gradient(135deg,#c8860a,#7a4f00); color: #fff;
+  box-shadow: 0 4px 12px rgba(122,79,0,.35);
+}
+/* 전송 완료 오버레이 */
+#pasisSendDoneOv {
+  position: fixed; inset: 0; z-index: 99999;
+  background: rgba(0,0,0,.6);
+  display: flex; align-items: center; justify-content: center;
+  animation: pasisFadeIn .2s ease;
+}
+#pasisSendDoneBox {
+  background: #fff; border-radius: 20px; padding: 36px 40px;
+  text-align: center; max-width: 320px; width: 90%;
+  box-shadow: 0 24px 64px rgba(0,0,0,.28);
+}
+#pasisSendDoneBox .sd-icon { font-size: 56px; margin-bottom: 12px; }
+#pasisSendDoneBox .sd-title {
+  font-size: 22px; font-weight: 900; color: #1e3c72; margin-bottom: 6px;
+}
+#pasisSendDoneBox .sd-sub {
+  font-size: 14px; color: #6b7280; margin-bottom: 20px; line-height: 1.5;
+}
+#pasisSendDoneBox .sd-close {
+  padding: 12px 32px; border: none; border-radius: 10px;
+  background: linear-gradient(135deg,#c8860a,#7a4f00);
+  color: #fff; font-size: 16px; font-weight: 900; cursor: pointer;
+}
+</style>
+
+<script>
+(function(){
+  /* ─── ① 전송 확인 오버레이 ─── */
+  function esc(s){ return String(s||'').replace(/[&<>"]/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]}); }
+
+  function showSendDone(teamName, players){
+    var box = document.createElement('div');
+    box.id = 'pasisSendDoneOv';
+    var names = players.map(function(p){ return p.name; }).join(', ');
+    box.innerHTML =
+      '<div id="pasisSendDoneBox">'
+      + '<div class="sd-icon">✅</div>'
+      + '<div class="sd-title">전송 완료!</div>'
+      + '<div class="sd-sub">'
+      +   '<strong>' + esc(teamName) + '</strong><br>'
+      +   esc(names) + '<br>'
+      +   '<span style="color:#c8860a;font-weight:700;">구글시트에 기록되었습니다.</span>'
+      + '</div>'
+      + '<button class="sd-close" id="pasisSendDoneClose">확인</button>'
+      + '</div>';
+    document.body.appendChild(box);
+    document.getElementById('pasisSendDoneClose').onclick = function(){
+      box.style.animation = 'none';
+      box.style.opacity = '0';
+      box.style.transition = 'opacity .2s';
+      setTimeout(function(){ if(box.parentNode) box.remove(); }, 200);
+    };
+    // 3초 후 자동 닫기
+    setTimeout(function(){ if(box.parentNode){ box.style.opacity='0'; box.style.transition='opacity .3s'; setTimeout(function(){ if(box.parentNode) box.remove(); },300); } }, 3000);
+  }
+
+  function showSendConfirm(players, teamName, onConfirm){
+    var old = document.getElementById('pasisSendConfirmOv');
+    if(old) old.remove();
+
+    var rows = players.map(function(p){
+      var scores = ['A','B','C','D'].map(function(c){ return c+':'+(p[c]||0); }).join(' ');
+      var hio = p.holeInOne ? ' HIO:'+p.holeInOne : '';
+      return '<div class="sc-player">'
+        + '<div>'
+        +   '<div class="sc-name">' + esc(p.name) + (p.gender ? ' <span style="font-size:11px;color:#888;">('+esc(p.gender)+')</span>' : '') + '</div>'
+        +   '<div class="sc-scores">' + esc(scores) + esc(hio) + '</div>'
+        + '</div>'
+        + '<div class="sc-total">' + (p.total||0) + '<span style="font-size:11px;font-weight:600;color:#999;"> 타</span></div>'
+        + '</div>';
+    }).join('');
+
+    var ov = document.createElement('div');
+    ov.id = 'pasisSendConfirmOv';
+    ov.innerHTML =
+      '<div id="pasisSendConfirmBox">'
+      + '<div class="sc-head">📋 전송 전 확인<small>' + esc(teamName) + ' · ' + players.length + '명</small></div>'
+      + '<div class="sc-body">' + rows + '</div>'
+      + '<div class="sc-footer">'
+      +   '<button class="sc-btn-back" id="scBtnBack">← 뒤로 (수정)</button>'
+      +   '<button class="sc-btn-send" id="scBtnSend">✅ 확인 · 전송</button>'
+      + '</div>'
+      + '</div>';
+    document.body.appendChild(ov);
+
+    document.getElementById('scBtnBack').onclick = function(){
+      ov.remove();
+    };
+    document.getElementById('scBtnSend').onclick = function(){
+      var sendBtn = document.getElementById('scBtnSend');
+      if(sendBtn){ sendBtn.textContent = '⏳ 전송 중...'; sendBtn.disabled = true; }
+      ov.remove();
+      onConfirm(players, teamName);
+    };
+    // 배경 클릭 닫기
+    ov.addEventListener('click', function(e){ if(e.target === ov) ov.remove(); });
+  }
+
+  function interceptSendButton(){
+    var btn = document.getElementById('autoSendBtn');
+    if(!btn) return;
+
+    btn.onclick = function(ev){
+      if(ev){ ev.preventDefault(); ev.stopPropagation(); }
+
+      // 선수 데이터 수집
+      if(typeof syncVisiblePlayersToHidden === 'function') syncVisiblePlayersToHidden();
+      var players = (typeof collectPlayersForSendV4 === 'function') ? collectPlayersForSendV4() : [];
+
+      if(!players || !players.length){
+        // 데이터 없으면 바로 전송 시도 (오류 메시지는 원래 함수에서 처리)
+        if(typeof sendToGoogleSheetPatchedV4 === 'function') sendToGoogleSheetPatchedV4();
+        return false;
+      }
+
+      var teamName = String(((document.getElementById('teamName')||{}).value||'')).trim() || '팀명 없음';
+
+      showSendConfirm(players, teamName, function(confirmedPlayers, confirmedTeam){
+        // 원래 전송 함수 실행 (실제 전송)
+        if(typeof sendToGoogleSheetPatchedV4 !== 'function'){ alert('전송 함수를 찾을 수 없습니다.'); return; }
+
+        // 전송 완료 후 done 오버레이 표시를 위해 원함수를 감싸기
+        var origShowToast = window.showToast;
+        window.showToast = function(msg){
+          window.showToast = origShowToast; // 복원
+          if(String(msg).indexOf('전송 완료') !== -1 || String(msg).indexOf('완료') !== -1){
+            showSendDone(confirmedTeam, confirmedPlayers);
+          }
+          if(typeof origShowToast === 'function') origShowToast(msg);
+        };
+        sendToGoogleSheetPatchedV4();
+      });
+      return false;
+    };
+  }
+
+  // DOMContentLoaded 또는 즉시 실행
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', interceptSendButton);
+  } else {
+    setTimeout(interceptSendButton, 200); // 다른 스크립트 먼저 완료 후
+  }
 })();
 </script>
