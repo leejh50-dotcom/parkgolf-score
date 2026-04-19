@@ -714,7 +714,22 @@ html, body {
           style="width:100%; padding:16px; background:linear-gradient(135deg,#c8860a 0%,#7a4f00 100%); color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:900; cursor:pointer;">
           📋 조별 QR 일괄생성 (인쇄용)
         </button>
+        <div style="font-size:12px; color:#6b7280; margin-top:6px; text-align:center;">조편성 완료 후 실행 · 조명·대회코드가 QR 안에 표시됨</div>
 
+        <!-- 조별 QR 사용법 안내 -->
+        <div style="margin-top:10px; background:#fef9f0; border:1px solid #f0d080; border-radius:10px; padding:12px; font-size:12px; color:#7a4f00; line-height:1.7;">
+          <div style="font-weight:900; margin-bottom:4px;">📋 조별 QR 생성 순서</div>
+          <div>① ①번에서 <b>웹앱 URL + 대회코드</b> 저장</div>
+          <div>② 구글시트 → <b>파시스관리 메뉴 → 조편성 실행</b></div>
+          <div>③ 예선일자·성별 선택 후 <b>조별 QR 일괄생성</b> 클릭</div>
+          <div>④ 팝업창에서 <b>🖨 인쇄하기</b> → 심판 배포</div>
+          <div>⑤ 심판이 QR 스캔 → 인적사항·조명 자동입력</div>
+          <div style="margin-top:6px;padding:6px 8px;background:#fff3cd;border-radius:6px;color:#856404;">
+            ⚠️ <b>심판 첫 사용 시 1회 설정 필요</b><br>
+            관리자 모달 → ①번 → 웹앱 URL + 코드 저장 → 이후 팀 QR만으로 작동
+          </div>
+        </div>
+      </div>
 
 
 
@@ -2383,106 +2398,69 @@ function test_doPost() {
 })();
 </script>
 
-<!-- ══ PASIS SV4.0 추가패치 ══ -->
+<!-- ══ PASIS SV4.0 패치: QR 자동 라우팅 + 전송 오버레이 + 인쇄 CSS ══ -->
 
-<!-- ① QR카드 정사각형 보정 + 인쇄 여백(절취선) CSS -->
-<style id="pasis-qr-fix">
-/* 화면: QR박스를 정사각형 강제 */
-.bqr-card { display:flex; flex-direction:column; align-items:center; }
-.bqr-card > div[style*="display:flex"] > div,   /* inner qr wrap */
-.bqr-card canvas, .bqr-card img {
-  aspect-ratio: 1 / 1 !important;
-  width: 100% !important;
-  max-width: 200px !important;
-  height: auto !important;
-  display: block !important;
-}
-/* 인쇄 전용 */
+<style id="pasis-extra-css">
+/* 인쇄: QR 카드 절취선 여백 */
 @media print {
-  #batchQrOverlay { position:static !important; overflow:visible !important; background:#fff !important; }
-  #batchQrGrid {
-    display:grid !important;
+  #batchQrGrid, [id$="BatchQrGrid"] {
+    gap: 7mm !important; padding: 4mm !important;
     grid-template-columns: repeat(3,1fr) !important;
-    gap: 7mm !important;
-    padding: 4mm 4mm 0 4mm !important;
-    max-width: none !important;
-    margin: 0 !important;
   }
   .bqr-card {
-    border: 1.5px dashed #aaa !important;
-    border-radius: 3mm !important;
-    padding: 3mm !important;
-    box-shadow: none !important;
-    break-inside: avoid !important;
-    page-break-inside: avoid !important;
+    border: 1.5px dashed #999 !important; border-radius: 3mm !important;
+    padding: 3mm !important; box-shadow: none !important;
+    break-inside: avoid !important; page-break-inside: avoid !important;
   }
-  /* QR 70% → 좌우 여백 확보 */
   .bqr-card canvas, .bqr-card img {
-    width: 70% !important;
-    max-width: 70% !important;
-    height: auto !important;
-    aspect-ratio: 1/1 !important;
-    margin: 2mm auto !important;
+    width: 68% !important; max-width: 68% !important;
+    height: auto !important; margin: 2mm auto !important; display:block !important;
   }
-  /* 상단바·버튼 숨기기 */
-  #batchQrTopbar .bqr-no-print,
-  #batchQrTopbar button { display:none !important; }
   @page { margin: 8mm; size: A4 portrait; }
 }
-</style>
 
-<!-- ② 전송 확인 오버레이 CSS -->
-<style id="pasis-send-overlay-css">
+/* 전송 확인 오버레이 */
 #pasisSendOv {
   position:fixed; inset:0; z-index:100000;
   background:rgba(0,0,0,.55);
   display:flex; align-items:center; justify-content:center;
   font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;
-  animation: psFadeIn .2s ease;
 }
-@keyframes psFadeIn { from{opacity:0;transform:scale(.96)} to{opacity:1;transform:scale(1)} }
 #pasisSendBox {
   background:#fff; border-radius:18px;
   width:min(400px,92vw); max-height:86vh; overflow-y:auto;
   box-shadow:0 24px 64px rgba(0,0,0,.3);
 }
-.ps-head {
+.psHead {
   background:linear-gradient(135deg,#c8860a,#7a4f00);
-  color:#fff; padding:16px 20px 12px;
-  font-size:16px; font-weight:900; line-height:1.3;
+  color:#fff; padding:16px 20px 12px; font-size:16px; font-weight:900;
   border-radius:18px 18px 0 0;
 }
-.ps-head small { display:block; font-size:12px; opacity:.8; margin-top:2px; font-weight:500; }
-.ps-body { padding:14px 18px; }
-.ps-row {
+.psHead small { display:block; font-size:12px; opacity:.8; margin-top:2px; font-weight:500; }
+.psBody { padding:14px 18px; }
+.psRow {
   display:flex; align-items:center; justify-content:space-between;
   background:#fef9f0; border:1px solid #f0d08a;
   border-radius:10px; padding:10px 14px; margin-bottom:8px;
 }
-.ps-name { font-size:15px; font-weight:800; color:#1e3c72; }
-.ps-detail { font-size:12px; color:#666; margin-top:2px; line-height:1.4; }
-.ps-total { font-size:22px; font-weight:900; color:#c8860a; white-space:nowrap; padding-left:12px; }
-.ps-total small { font-size:11px; color:#999; font-weight:600; }
-.ps-foot {
-  padding:10px 18px 18px;
-  display:flex; gap:10px;
-}
-.ps-foot button {
+.psName { font-size:15px; font-weight:800; color:#1e3c72; }
+.psDetail { font-size:12px; color:#666; margin-top:2px; }
+.psTotal { font-size:22px; font-weight:900; color:#c8860a; padding-left:12px; white-space:nowrap; }
+.psTotal small { font-size:11px; color:#999; font-weight:600; }
+.psFoot { padding:10px 18px 18px; display:flex; gap:10px; }
+.psFoot button {
   flex:1; padding:14px; border:none; border-radius:11px;
   font-size:15px; font-weight:900; cursor:pointer;
 }
-.ps-btn-back { background:#f3f4f6; color:#374151; }
-.ps-btn-send {
-  background:linear-gradient(135deg,#c8860a,#7a4f00); color:#fff;
-  box-shadow:0 4px 12px rgba(122,79,0,.3);
-}
+.psBtnBack { background:#f3f4f6; color:#374151; }
+.psBtnSend { background:linear-gradient(135deg,#c8860a,#7a4f00); color:#fff; box-shadow:0 4px 12px rgba(122,79,0,.3); }
 
-/* 전송완료 팝업 */
+/* 전송 완료 팝업 */
 #pasisDoneOv {
   position:fixed; inset:0; z-index:100001;
   background:rgba(0,0,0,.6);
   display:flex; align-items:center; justify-content:center;
-  animation: psFadeIn .15s ease;
+  font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;
 }
 #pasisDoneBox {
   background:#fff; border-radius:20px;
@@ -2490,102 +2468,121 @@ function test_doPost() {
   max-width:300px; width:88%;
   box-shadow:0 24px 64px rgba(0,0,0,.3);
 }
-.pd-icon { font-size:54px; margin-bottom:10px; }
-.pd-title { font-size:21px; font-weight:900; color:#1e3c72; margin-bottom:6px; }
-.pd-sub { font-size:13px; color:#6b7280; line-height:1.6; margin-bottom:18px; }
-.pd-close {
+.pdIcon { font-size:52px; margin-bottom:10px; }
+.pdTitle { font-size:21px; font-weight:900; color:#1e3c72; margin-bottom:6px; }
+.pdSub { font-size:13px; color:#6b7280; line-height:1.6; margin-bottom:18px; }
+.pdClose {
   padding:12px 30px; border:none; border-radius:10px;
   background:linear-gradient(135deg,#c8860a,#7a4f00);
   color:#fff; font-size:16px; font-weight:900; cursor:pointer;
 }
 </style>
 
-<!-- ③ 전송 확인 오버레이 JS (가장 마지막에 실행 → btn.onclick 최종 확보) -->
 <script>
 (function(){
+
+  /* ─── 1. QR 스캔 자동 라우팅 (외부 카메라로 URL 열릴 때 백지 방지) ─── */
+  function hasQrParams(){
+    try {
+      var p = new URLSearchParams(window.location.search || '');
+      return !!(p.get('c') || p.get('code') || p.get('t') || p.get('team'));
+    } catch(e){ return false; }
+  }
+
+  function forceShowScoringScreen(){
+    // 표지 숨기기
+    var cover = document.getElementById('sv4CoverPage');
+    if(cover){
+      cover.style.setProperty('display','none','important');
+      cover.setAttribute('aria-hidden','true');
+    }
+    // 점수판 표시 (inline display:none 제거 후 block 강제)
+    var app = document.querySelector('.parkgolf-app');
+    if(app){
+      app.style.removeProperty('display');
+      app.style.setProperty('display','block','important');
+      app.removeAttribute('hidden');
+    }
+    // QR 스캔 모달 숨기기
+    var scanModal = document.getElementById('qrScanModal');
+    if(scanModal) scanModal.style.setProperty('display','none','important');
+    window.scrollTo({top:0});
+  }
+
+  if(hasQrParams()){
+    // DOM 준비 후 즉시 + 500ms 후 재시도 (다른 스크립트가 되돌릴 수 있으므로)
+    if(document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', forceShowScoringScreen);
+    } else {
+      forceShowScoringScreen();
+    }
+    setTimeout(forceShowScoringScreen, 100);
+    setTimeout(forceShowScoringScreen, 500);
+    setTimeout(forceShowScoringScreen, 1000);
+  }
+
+  /* ─── 2. 전송 확인 오버레이 + 완료 팝업 ─── */
   function esc(s){ return String(s||'').replace(/[&<>"]/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]}); }
 
   function showDone(teamName, players){
     var names = (players||[]).map(function(p){return p.name;}).join(' · ');
-    var ov = document.createElement('div');
-    ov.id = 'pasisDoneOv';
+    var ov = document.createElement('div'); ov.id = 'pasisDoneOv';
     ov.innerHTML = '<div id="pasisDoneBox">'
-      + '<div class="pd-icon">✅</div>'
-      + '<div class="pd-title">전송 완료!</div>'
-      + '<div class="pd-sub"><strong>'+esc(teamName)+'</strong><br>'+esc(names)+'<br>'
-      + '<span style="color:#c8860a;font-weight:700;">구글시트에 기록되었습니다.</span></div>'
-      + '<button class="pd-close" id="pasisDoneClose">확인</button>'
-      + '</div>';
+      +'<div class="pdIcon">✅</div>'
+      +'<div class="pdTitle">전송 완료!</div>'
+      +'<div class="pdSub"><strong>'+esc(teamName)+'</strong><br>'+esc(names)+'<br>'
+      +'<span style="color:#c8860a;font-weight:700;">구글시트에 기록되었습니다.</span></div>'
+      +'<button class="pdClose" id="pasisDoneClose">확인</button></div>';
     document.body.appendChild(ov);
-    function close(){ if(ov.parentNode) ov.remove(); }
-    document.getElementById('pasisDoneClose').onclick = close;
-    setTimeout(close, 4000);
+    function closeIt(){ if(ov.parentNode) ov.remove(); }
+    document.getElementById('pasisDoneClose').onclick = closeIt;
+    setTimeout(closeIt, 4000);
   }
 
   function showConfirm(players, teamName, onSend){
     var old = document.getElementById('pasisSendOv'); if(old) old.remove();
-
     var rows = players.map(function(p){
-      var sc = ['A','B','C','D'].map(function(c){ return c+':'+(p[c]||0); }).join(' ');
+      var sc = ['A','B','C','D'].map(function(c){return c+':'+(p[c]||0);}).join(' ');
       var hio = p.holeInOne ? ' / HIO:'+p.holeInOne : '';
-      return '<div class="ps-row">'
-        +'<div><div class="ps-name">'+esc(p.name)
-        +(p.gender?' <span style="font-size:11px;color:#888;">('+esc(p.gender)+')</span>':'')
-        +'</div><div class="ps-detail">'+esc(sc)+esc(hio)+'</div></div>'
-        +'<div class="ps-total">'+(p.total||0)+'<small> 타</small></div>'
-        +'</div>';
+      return '<div class="psRow"><div>'
+        +'<div class="psName">'+esc(p.name)+(p.gender?' <span style="font-size:11px;color:#888;">('+esc(p.gender)+')</span>':'')+'</div>'
+        +'<div class="psDetail">'+esc(sc)+esc(hio)+'</div></div>'
+        +'<div class="psTotal">'+(p.total||0)+'<small> 타</small></div></div>';
     }).join('');
-
-    var ov = document.createElement('div');
-    ov.id = 'pasisSendOv';
+    var ov = document.createElement('div'); ov.id = 'pasisSendOv';
     ov.innerHTML = '<div id="pasisSendBox">'
-      +'<div class="ps-head">📋 전송 전 확인<small>'+esc(teamName)+' · '+players.length+'명</small></div>'
-      +'<div class="ps-body">'+rows+'</div>'
-      +'<div class="ps-foot">'
-      +'<button class="ps-btn-back" id="psBtnBack">← 뒤로 (수정)</button>'
-      +'<button class="ps-btn-send" id="psBtnSend">✅ 확인 · 전송</button>'
+      +'<div class="psHead">📋 전송 전 확인<small>'+esc(teamName)+' · '+players.length+'명</small></div>'
+      +'<div class="psBody">'+rows+'</div>'
+      +'<div class="psFoot">'
+      +'<button class="psBtnBack" id="psBtnBack">← 뒤로 (수정)</button>'
+      +'<button class="psBtnSend" id="psBtnSend">✅ 확인 · 전송</button>'
       +'</div></div>';
     document.body.appendChild(ov);
-
     document.getElementById('psBtnBack').onclick = function(){ ov.remove(); };
-    document.getElementById('psBtnSend').onclick = function(){
-      ov.remove();
-      onSend(players, teamName);
-    };
+    document.getElementById('psBtnSend').onclick = function(){ ov.remove(); onSend(players, teamName); };
     ov.addEventListener('click', function(e){ if(e.target===ov) ov.remove(); });
   }
 
-  function hookBtn(){
+  function hookSendBtn(){
     var btn = document.getElementById('autoSendBtn');
-    if(!btn){ setTimeout(hookBtn, 300); return; }
-
+    if(!btn){ setTimeout(hookSendBtn, 300); return; }
     btn.onclick = function(ev){
       if(ev){ ev.preventDefault(); ev.stopPropagation(); }
-
       if(typeof syncVisiblePlayersToHidden==='function') syncVisiblePlayersToHidden();
-
       var players;
       try {
         players = (typeof collectPlayersForSendV4==='function') ? collectPlayersForSendV4() : [];
-      } catch(e){
-        alert('❌ '+e.message); return false;
-      }
-
+      } catch(e){ alert('❌ '+e.message); return false; }
       if(!players || !players.length){
         if(typeof sendToGoogleSheetPatchedV4==='function') sendToGoogleSheetPatchedV4();
         return false;
       }
-
       var teamName = String(((document.getElementById('teamName')||{}).value||'')).trim() || '팀명';
-
-      showConfirm(players, teamName, function(confirmedPlayers, confirmedTeam){
-        // showToast를 일시 가로채 전송완료 감지
+      showConfirm(players, teamName, function(cp, ct){
         var origToast = window.showToast;
         window.showToast = function(msg){
           window.showToast = origToast;
-          if(String(msg).indexOf('완료')!==-1 || String(msg).indexOf('전송')!==-1){
-            showDone(confirmedTeam, confirmedPlayers);
-          }
+          if(String(msg).indexOf('완료')!==-1 || String(msg).indexOf('전송')!==-1) showDone(ct, cp);
           if(typeof origToast==='function') origToast(msg);
         };
         if(typeof sendToGoogleSheetPatchedV4==='function') sendToGoogleSheetPatchedV4();
@@ -2594,7 +2591,8 @@ function test_doPost() {
     };
   }
 
-  // window load 이후 가장 늦게 실행 → 다른 모든 DOMContentLoaded보다 후순위
-  window.addEventListener('load', function(){ setTimeout(hookBtn, 100); });
+  // window.load 이후 가장 늦게 훅 → 기존 DOMContentLoaded 핸들러보다 나중에 실행
+  window.addEventListener('load', function(){ setTimeout(hookSendBtn, 150); });
+
 })();
 </script>
