@@ -2152,6 +2152,134 @@ function test_doPost() {
 })();
 </script>
 
+
+<script>
+(function(){
+  function tuneBatchQrCards(){
+    const overlay = document.getElementById('batchQrOverlay');
+    if(!overlay) return;
+    const grid = document.getElementById('batchQrGrid') || overlay.querySelector('#batchQrGrid');
+    if(grid){
+      grid.style.gridTemplateColumns = 'repeat(4, minmax(0, 1fr))';
+      grid.style.gap = '8px';
+      grid.style.maxWidth = '1200px';
+      grid.style.padding = '12px';
+    }
+    overlay.querySelectorAll('.bqr-card').forEach(function(card){
+      card.style.padding = '6px';
+      card.style.overflow = 'hidden';
+      card.style.minHeight = '0';
+      card.style.justifyContent = 'flex-start';
+      card.style.alignItems = 'center';
+
+      const blocks = card.querySelectorAll(':scope > div');
+      if(blocks[0]){ // title
+        blocks[0].style.fontSize = '13px';
+        blocks[0].style.fontWeight = '800';
+        blocks[0].style.lineHeight = '1.15';
+        blocks[0].style.marginBottom = '4px';
+      }
+      if(blocks[1]){ // qr box
+        blocks[1].style.width = '136px';
+        blocks[1].style.height = '136px';
+        blocks[1].style.display = 'flex';
+        blocks[1].style.alignItems = 'center';
+        blocks[1].style.justifyContent = 'center';
+        blocks[1].style.margin = '2px auto 6px';
+        blocks[1].style.flex = '0 0 auto';
+      }
+      const qrMedia = card.querySelectorAll('canvas, img');
+      qrMedia.forEach(function(el){
+        el.style.width = '136px';
+        el.style.height = '136px';
+        el.style.maxWidth = '136px';
+        el.style.maxHeight = '136px';
+        el.style.display = 'block';
+        el.style.objectFit = 'contain';
+      });
+      if(blocks[2]){ // player list
+        blocks[2].style.width = '100%';
+        blocks[2].style.display = 'block';
+        blocks[2].style.marginTop = '2px';
+        blocks[2].style.marginBottom = '4px';
+        blocks[2].style.maxHeight = 'none';
+        blocks[2].style.overflow = 'visible';
+        blocks[2].style.flex = '0 0 auto';
+      }
+      if(blocks[3]){ // footer
+        blocks[3].style.fontSize = '8px';
+        blocks[3].style.lineHeight = '1.15';
+        blocks[3].style.marginTop = '2px';
+        blocks[3].style.wordBreak = 'keep-all';
+      }
+      card.querySelectorAll(':scope > div:nth-child(3) > div').forEach(function(row){
+        row.style.fontSize = '9px';
+        row.style.lineHeight = '1.2';
+        row.style.padding = '1px 0';
+      });
+      card.querySelectorAll(':scope > div:nth-child(3) span').forEach(function(span){
+        span.style.whiteSpace = 'nowrap';
+        span.style.overflow = 'hidden';
+        span.style.textOverflow = 'ellipsis';
+      });
+    });
+  }
+
+  const mo = new MutationObserver(function(){
+    tuneBatchQrCards();
+  });
+  mo.observe(document.documentElement, {childList:true, subtree:true});
+
+  window.addEventListener('load', function(){
+    setTimeout(tuneBatchQrCards, 500);
+    setTimeout(tuneBatchQrCards, 1200);
+    setTimeout(tuneBatchQrCards, 2500);
+  });
+
+  const printStyle = document.createElement('style');
+  printStyle.textContent = `
+    #batchQrOverlay .bqr-card canvas,
+    #batchQrOverlay .bqr-card img{
+      width:136px !important;
+      height:136px !important;
+      max-width:136px !important;
+      max-height:136px !important;
+    }
+    #batchQrOverlay .bqr-card > div:nth-child(3){
+      display:block !important;
+      width:100% !important;
+      max-height:none !important;
+      overflow:visible !important;
+      margin-top:2px !important;
+      margin-bottom:4px !important;
+    }
+    #batchQrOverlay .bqr-card > div:nth-child(3) > div{
+      font-size:9px !important;
+      line-height:1.2 !important;
+      padding:1px 0 !important;
+    }
+    @media print{
+      #batchQrOverlay .bqr-card{
+        padding:5px !important;
+        break-inside:avoid !important;
+      }
+      #batchQrOverlay .bqr-card canvas,
+      #batchQrOverlay .bqr-card img{
+        width:128px !important;
+        height:128px !important;
+        max-width:128px !important;
+        max-height:128px !important;
+      }
+      #batchQrOverlay .bqr-card > div:nth-child(3) > div{
+        font-size:8.5px !important;
+        line-height:1.15 !important;
+      }
+    }
+  `;
+  document.head.appendChild(printStyle);
+})();
+</script>
+
 </body>
 </html>
 
