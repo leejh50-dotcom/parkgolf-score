@@ -2694,3 +2694,294 @@ function test_doPost() {
   addQrNameStyle();
 })();
 </script>
+
+
+<script id="pasis-batchqr-hardfix">
+(function(){
+  function esc(s){
+    return String(s || '').replace(/[&<>"]/g, function(ch){
+      return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[ch];
+    });
+  }
+  function getSettings(){
+    var webappUrl = '';
+    var code = '';
+    var date = '';
+    var mode = 'mixed';
+    var webEl = document.getElementById('adminWebappUrl');
+    var codeEl = document.getElementById('adminCodeInput');
+    var dateEl = document.getElementById('modalQrDate') || document.getElementById('qrPreliminaryDate');
+    var modeEl = document.getElementById('modalTeamMode');
+    webappUrl = (webEl && webEl.value || localStorage.getItem('parkgolf_webapp_url') || localStorage.getItem('pasis_webapp_url') || '').trim();
+    code = ((codeEl && codeEl.value) || localStorage.getItem('parkgolf_tournament_code') || localStorage.getItem('pasis_tournament_code') || '').trim().toUpperCase();
+    date = (dateEl && dateEl.value || '').trim();
+    mode = (modeEl && modeEl.value || 'mixed').trim();
+    return {webappUrl:webappUrl, code:code, date:date, mode:mode};
+  }
+  function makeQrUrl(appUrl, webappUrl, code, date, teamObj){
+    var url = appUrl.split('?')[0] + '?c=' + encodeURIComponent(code) + '&u=' + encodeURIComponent(webappUrl) + '&d=' + encodeURIComponent(date || '') + '&t=' + encodeURIComponent(teamObj.team || '');
+    (teamObj.players || []).forEach(function(p, idx){
+      var v = [p.name || '', p.gender || '', p.affil || ''].join('|');
+      url += '&' + (idx + 1) + '=' + encodeURIComponent(v);
+    });
+    return url;
+  }
+  function cleanupQrBox(qrBox){
+    if (!qrBox) return;
+    var nodes = Array.from(qrBox.querySelectorAll('img,canvas'));
+    if (nodes.length <= 1) return;
+    var keep = nodes.find(function(n){ return n.tagName === 'CANVAS'; }) || nodes[0];
+    nodes.forEach(function(n){
+      if (n !== keep) n.remove();
+    });
+  }
+  function overlayHtml(title, code, count){
+    return ''
+      + '<div id="batchQrTopbar">'
+      +   '<div><strong>조별 QR 인쇄</strong> &nbsp; ' + esc(title) + ' (' + esc(code || '코드없음') + ') / ' + count + '개 조</div>'
+      +   '<div style="display:flex;gap:8px;align-items:center;">'
+      +     '<button type="button" id="batchQrPrintBtn">🖨 인쇄</button>'
+      +     '<button type="button" id="batchQrCloseBtn">닫기</button>'
+      +   '</div>'
+      + '</div>'
+      + '<div id="batchQrGrid"></div>';
+  }
+  function playerRows(players){
+    return (players || []).map(function(p, idx){
+      var aff = (p.affil || '').trim();
+      return '<div class="bqr-player-row">'
+        + '<span class="bqr-player-no">' + (idx + 1) + '.</span>'
+        + '<span class="bqr-player-name">' + esc(p.name || '') + '</span>'
+        + (aff ? '<span class="bqr-player-aff">(' + esc(aff) + ')</span>' : '')
+        + '</div>';
+    }).join('');
+  }
+  function buildOverlay(teams, settings){
+    var old = document.getElementById('batchQrOverlay');
+    if (old) old.remove();
+
+    var overlay = document.createElement('div');
+    overlay.id = 'batchQrOverlay';
+    overlay.innerHTML = overlayHtml('파시스4.0', settings.code, teams.length);
+    document.body.appendChild(overlay);
+
+    document.getElementById('batchQrCloseBtn').onclick = function(){ overlay.remove(); };
+    document.getElementById('batchQrPrintBtn').onclick = function(){ window.print(); };
+
+    var grid = document.getElementById('batchQrGrid');
+    var appUrl = window.location.href;
+    teams.forEach(function(teamObj){
+      var card = document.createElement('div');
+      card.className = 'bqr-card';
+      card.innerHTML = ''
+        + '<div class="bqr-title">' + esc(teamObj.team || '') + '</div>'
+        + '<div class="bqr-qrbox"></div>'
+        + '<div class="bqr-players">' + playerRows(teamObj.players || []) + '</div>'
+        + '<div class="bqr-footer">' + esc(settings.code) + ' ' + esc(settings.date || '') + '</div>';
+      grid.appendChild(card);
+
+      var qrText = makeQrUrl(appUrl, settings.webappUrl, settings.code, settings.date, teamObj);
+      var qrBox = card.querySelector('.bqr-qrbox');
+      qrBox.innerHTML = '';
+      new QRCode(qrBox, {
+        text: qrText,
+        width: 148,
+        height: 148,
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.L
+      });
+      setTimeout(function(){ cleanupQrBox(qrBox); }, 50);
+      setTimeout(function(){ cleanupQrBox(qrBox); }, 300);
+    });
+  }
+
+  window.generateBatchQR = async function(){
+    var s = getSettings();
+    if (!s.code) { alert('대회코드를 먼저 저장해 주세요.'); return; }
+    if (!s.webappUrl) { alert('웹앱 URL을 먼저 저장해 주세요.'); return; }
+    if (!String(s.webappUrl).includes('script.google.com')) { alert('웹앱 URL 형식이 올바르지 않습니다.'); return; }
+    var btn = (window.event && window.event.target) || null;
+    var oldText = btn ? btn.textContent : '';
+    if (btn){ btn.textContent = '⏳ 조편성 불러오는 중...'; btn.disabled = true; }
+    try{
+      var res = await fetch(s.webappUrl, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({action:'getteams', code:s.code, mode:s.mode})
+      });
+      var json = await res.json();
+      if (!json.success || !Array.isArray(json.teams) || !json.teams.length){
+        throw new Error((json && json.message) || '조편성 데이터가 없습니다.');
+      }
+      buildOverlay(json.teams, s);
+    }catch(err){
+      alert('조별 QR 생성 실패\n\n' + (err && err.message ? err.message : err));
+    }finally{
+      if (btn){ btn.textContent = oldText || '📋 조별 QR 일괄생성 (인쇄용)'; btn.disabled = false; }
+    }
+  };
+})();
+</script>
+
+<style id="pasis-batchqr-hardfix-style">
+#batchQrOverlay{
+  position:fixed; inset:0; z-index:100020; overflow:auto;
+  background:#f3f4f6;
+  font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;
+}
+#batchQrTopbar{
+  position:sticky; top:0; z-index:2;
+  display:flex; justify-content:space-between; align-items:center; gap:12px;
+  padding:10px 14px; color:#fff;
+  background:linear-gradient(135deg,#7a4f00 0%,#c8860a 100%);
+  box-shadow:0 2px 10px rgba(0,0,0,.18);
+}
+#batchQrTopbar button{
+  border:none; border-radius:10px; padding:10px 12px; cursor:pointer; font-weight:800;
+}
+#batchQrPrintBtn{ background:#fff; color:#7a4f00; }
+#batchQrCloseBtn{ background:#111827; color:#fff; }
+#batchQrGrid{
+  max-width:190mm;
+  margin:0 auto;
+  padding:10px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  align-items:start;
+}
+.bqr-card{
+  background:#fff;
+  border:1px solid #cfcfcf;
+  border-radius:10px;
+  box-shadow:0 1px 4px rgba(0,0,0,.08);
+  padding:7px 6px 6px;
+  min-height:0;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+.bqr-title{
+  font-size:13px;
+  line-height:1.1;
+  font-weight:900;
+  color:#7a4f00;
+  margin:0 0 4px 0;
+}
+.bqr-qrbox{
+  width:148px;
+  height:148px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  margin:0 auto 4px;
+}
+.bqr-qrbox canvas,
+.bqr-qrbox img{
+  width:148px !important;
+  height:148px !important;
+  max-width:148px !important;
+  max-height:148px !important;
+  display:block !important;
+  image-rendering:pixelated;
+}
+.bqr-qrbox > :not(:first-child){ display:none !important; }
+.bqr-players{
+  width:100%;
+  margin-top:1px;
+}
+.bqr-player-row{
+  display:flex;
+  align-items:baseline;
+  gap:2px;
+  width:100%;
+  font-size:10px;
+  line-height:1.18;
+  padding:1px 0;
+  overflow:hidden;
+}
+.bqr-player-no{
+  flex:0 0 12px;
+  color:#7a4f00;
+  font-weight:900;
+}
+.bqr-player-name{
+  flex:0 1 auto;
+  min-width:0;
+  max-width:calc(100% - 18px);
+  color:#111827;
+  font-weight:800;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.bqr-player-aff{
+  flex:0 1 auto;
+  min-width:0;
+  color:#6b7280;
+  font-size:8.5px;
+  font-weight:700;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.bqr-footer{
+  margin-top:3px;
+  font-size:8px;
+  line-height:1.1;
+  color:#7a4f00;
+  text-align:center;
+}
+@media print{
+  @page{ size:A4 portrait; margin:7mm; }
+  body *{ visibility:hidden; }
+  #batchQrOverlay, #batchQrOverlay *{ visibility:visible; }
+  #batchQrOverlay{ position:static; inset:auto; background:#fff; overflow:visible; }
+  #batchQrTopbar{ display:none !important; }
+  #batchQrGrid{
+    max-width:none;
+    padding:0;
+    gap:3.2mm;
+    grid-template-columns:repeat(4,1fr);
+  }
+  .bqr-card{
+    break-inside:avoid;
+    page-break-inside:avoid;
+    box-shadow:none;
+    border:0.25mm solid #bbb;
+    border-radius:2.8mm;
+    padding:2.2mm 2mm 1.8mm;
+  }
+  .bqr-title{
+    font-size:10pt;
+    margin-bottom:1.2mm;
+  }
+  .bqr-qrbox{
+    width:31mm;
+    height:31mm;
+    margin-bottom:1.2mm;
+  }
+  .bqr-qrbox canvas,
+  .bqr-qrbox img{
+    width:31mm !important;
+    height:31mm !important;
+    max-width:31mm !important;
+    max-height:31mm !important;
+  }
+  .bqr-player-row{
+    font-size:7.6pt;
+    line-height:1.08;
+    padding:0.2mm 0;
+  }
+  .bqr-player-aff{
+    font-size:6.8pt;
+  }
+  .bqr-footer{
+    margin-top:0.8mm;
+    font-size:6.6pt;
+  }
+}
+</style>
