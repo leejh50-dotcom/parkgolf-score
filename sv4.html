@@ -6,12 +6,12 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>파시스 sv4.0프로</title>
+<title>파시스 SV4.0 대회용 - 파크골프 점수판</title>
 <meta name="theme-color" content="#c8860a">
-<link rel="icon" type="image/png" sizes="192x192" href="sv4-192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="sv4-512.png">
-<link rel="apple-touch-icon" sizes="180x180" href="sv4-180.png">
-<link rel="manifest" href="manifest-sv4.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
 
 <style>
 .parkgolf-app #codeLabel, .parkgolf-app #teamLabel,
@@ -2750,6 +2750,7 @@ function test_doPost() {
 .pgCard-pline { font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .pgCard-pname { font-weight:800; color:#1e3c72; }
 .pgCard-paffil { color:#666; margin-left:3px; }
+.pgCard-pgender { color:#374151; margin-left:3px; font-weight:700; }
 .pgCard-footer { margin-top:7px; font-size:10px; color:#9ca3af; text-align:center; width:100%; }
 
 /* 전송 오버레이 */
@@ -2824,11 +2825,12 @@ function test_doPost() {
     teams.forEach(function(teamObj){
       var qrText=appUrl+'?c='+encodeURIComponent(code)+'&u='+encodeURIComponent(webappUrl)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'');
       (teamObj.players||[]).forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||'')); });
-      var ph=(teamObj.players||[]).slice(0,4).map(function(p,i){
-        return '<div class="pgCard-player"><span class="pgCard-num">'+(i+1)+'</span>'
-          +'<span class="pgCard-pline"><span class="pgCard-pname">'+esc(p.name||'')+'</span>'
-          +(p.affil?'<span class="pgCard-paffil">'+esc(p.affil)+'</span>':'')+'</span></div>';
-      }).join('');
+ var ph=(teamObj.players||[]).slice(0,4).map(function(p,i){
+  return '<div class="pgCard-player"><span class="pgCard-num">'+(i+1)+'</span>'
+    +'<span class="pgCard-pline"><span class="pgCard-pname">'+esc(p.name||'')+'</span>'
+    +(p.gender?'<span class="pgCard-pgender">('+esc(p.gender)+')</span>':'')
+    +(p.affil?'<span class="pgCard-paffil">'+esc(p.affil)+'</span>':'')+'</span></div>';
+}).join('');
       var card=document.createElement('div');card.className='pgCard';
       var bid='pgqr'+Math.random().toString(36).slice(2,8);
       card.innerHTML='<div class="pgCard-title">'+esc(teamObj.team||'')+'</div>'
