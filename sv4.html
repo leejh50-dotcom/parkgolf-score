@@ -2823,7 +2823,7 @@ function test_doPost() {
     document.body.appendChild(ov);
     var grid=document.getElementById('pgBatchGrid');
     teams.forEach(function(teamObj){
-      var qrText=appUrl+'?c='+encodeURIComponent(code)+'&u='+encodeURIComponent(webappUrl)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'');
+  var qrText=appUrl+'?c='+encodeURIComponent(code)+'&t='+encodeURIComponent(teamObj.team||'');
       (teamObj.players||[]).forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||'')); });
  var ph=(teamObj.players||[]).slice(0,4).map(function(p,i){
   return '<div class="pgCard-player"><span class="pgCard-num">'+(i+1)+'</span>'
