@@ -6,7 +6,9 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>파시스 SV4.0 대회용 - 파크골프 점수판</title>
+<title>파시스 SV4.0 프로 - 파크골프 대회용 점수판</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23c8860a'/%3E%3Ctext x='16' y='23' font-family='Arial Black,sans-serif' font-size='20' font-weight='900' text-anchor='middle' fill='white'%3EP%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23c8860a'/%3E%3Ctext x='16' y='23' font-family='Arial Black,sans-serif' font-size='20' font-weight='900' text-anchor='middle' fill='white'%3EP%3C/text%3E%3C/svg%3E">
 
 <style>
 .parkgolf-app #codeLabel, .parkgolf-app #teamLabel,
@@ -2596,6 +2598,8 @@ function test_doPost() {
       return false;
     };
   }
-  window.addEventListener('load',function(){setTimeout(hookSendBtn,150);});
+  /* ★ window.load가 </html> 이후 스크립트보다 먼저 발생하는 타이밍 버그 대응 */
+  if(document.readyState==='complete'){setTimeout(hookSendBtn,200);}
+  else{window.addEventListener('load',function(){setTimeout(hookSendBtn,200);});}
 })();
 </script>
