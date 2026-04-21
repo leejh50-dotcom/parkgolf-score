@@ -2514,16 +2514,35 @@ function test_doPost() {
     var old=document.getElementById('pgBatchOv');if(old)old.remove();
     var appUrl=window.location.href.split('?')[0];
     var dateStr=new Date().toLocaleDateString('ko-KR');
+    var total=teams.length;
+
     var ov=document.createElement('div');ov.id='pgBatchOv';
     ov.innerHTML='<div id="pgBatchTop">'
-      +'<div class="bt-title">📋 조별 QR · '+esc(code)+' · '+esc(qrDate)+' · '+teams.length+'개 조</div>'
+      +'<div class="bt-title">📋 조별 QR · '+esc(code)+' · '+esc(qrDate)+' · '+total+'개 조</div>'
       +'<div class="bt-btns">'
-      +'<button class="btn-print" onclick="window.print()">🖨 인쇄하기</button>'
+      +'<button class="btn-print" id="pgPrintBtn" onclick="window.print()" disabled style="opacity:.4;cursor:not-allowed;">🖨 인쇄하기</button>'
       +'<button class="btn-close" onclick="document.getElementById(\'pgBatchOv\').remove()">닫기</button>'
-      +'</div></div><div id="pgBatchGrid"></div>';
+      +'</div></div>'
+      /* ★ 진행률 바 */
+      +'<div id="pgProgress" style="background:rgba(0,0,0,.15);height:4px;margin:0;">'
+      +'<div id="pgProgressBar" style="height:4px;background:#fff;width:0%;transition:width .2s;"></div>'
+      +'</div>'
+      +'<div id="pgProgressTxt" style="text-align:center;font-size:12px;padding:4px 0;color:#fff;opacity:.85;">QR 생성 중... 0 / '+total+'</div>'
+      +'<div id="pgBatchGrid"></div>';
     document.body.appendChild(ov);
+
     var grid=document.getElementById('pgBatchGrid');
-    teams.forEach(function(teamObj){
+    var progressBar=document.getElementById('pgProgressBar');
+    var progressTxt=document.getElementById('pgProgressTxt');
+    var printBtn=document.getElementById('pgPrintBtn');
+
+    /* ★ 핵심: 배치 크기 — 한 프레임당 처리할 카드 수
+       소규모(<100조): 20개씩 → 빠르게 완료
+       대규모(100조+): 10개씩 → 브라우저 멈춤 방지          */
+    var BATCH = total > 100 ? 10 : 20;
+    var idx = 0;
+
+    function makeCard(teamObj){
       var qrText=appUrl+'?c='+encodeURIComponent(code)+'&u='+encodeURIComponent(webappUrl)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'');
       (teamObj.players||[]).forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||'')); });
       var ph=(teamObj.players||[]).slice(0,4).map(function(p,i){
@@ -2542,7 +2561,35 @@ function test_doPost() {
       grid.appendChild(card);
       try{ new QRCode(card.querySelector('#'+bid),{text:qrText,width:256,height:256,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M}); }
       catch(e){ card.querySelector('#'+bid).textContent='QR오류'; }
-    });
+    }
+
+    function nextBatch(){
+      var end=Math.min(idx+BATCH, total);
+      for(var i=idx;i<end;i++){ makeCard(teams[i]); }
+      idx=end;
+
+      /* 진행률 업데이트 */
+      var pct=Math.round(idx/total*100);
+      if(progressBar) progressBar.style.width=pct+'%';
+      if(progressTxt) progressTxt.textContent = idx < total
+        ? 'QR 생성 중... '+idx+' / '+total+' ('+pct+'%)'
+        : '✅ 완료! '+total+'개 조 · 인쇄 버튼을 누르세요.';
+
+      if(idx < total){
+        setTimeout(nextBatch, 0); /* ← 브라우저에 제어권 반납 후 다음 배치 */
+      } else {
+        /* 완료 → 인쇄 버튼 활성화, 진행바 숨김 */
+        if(printBtn){ printBtn.disabled=false; printBtn.style.opacity=''; printBtn.style.cursor=''; }
+        setTimeout(function(){
+          var pb=document.getElementById('pgProgress');
+          var pt=document.getElementById('pgProgressTxt');
+          if(pb) pb.style.display='none';
+          if(pt) pt.style.padding='0';
+        }, 1500);
+      }
+    }
+
+    nextBatch(); /* 첫 배치 시작 */
   }
 
   /* QR 스캔 자동 라우팅 */
