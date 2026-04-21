@@ -2910,81 +2910,132 @@ function test_doPost() {
 })();
 </script>
 
-<!-- ═══ PASIS 인쇄 패치 ═══ -->
-<style id="pasis-print-base">
-@media print {
-  @page { size:A4 portrait; margin:8mm; }
-  body * { visibility:hidden !important; }
-  #batchQrOverlay, #batchQrOverlay * { visibility:visible !important; }
-  #batchQrOverlay {
-    position:absolute !important; top:0 !important; left:0 !important;
-    width:100% !important; background:#fff !important; overflow:visible !important;
-  }
-  #batchQrTopbar {
-    position:static !important; background:none !important;
-    color:#000 !important; box-shadow:none !important; padding:0 0 3mm !important;
-  }
-  #batchQrTopbar button { display:none !important; }
-  #batchQrGrid {
-    display:grid !important;
-    grid-template-columns:repeat(3,1fr) !important;
-    gap:5mm !important; padding:0 !important; max-width:none !important;
-  }
-  .bqr-card {
-    border:1.5px solid #333 !important; border-radius:2mm !important;
-    padding:2mm !important; box-shadow:none !important;
-    background:#fff !important;
-    break-inside:avoid !important; page-break-inside:avoid !important;
-    display:flex !important; flex-direction:column !important; align-items:center !important;
-  }
-  /* pasis-qr-img: JS가 삽입하는 인쇄용 전용 이미지 */
-  .pasis-qr-img {
-    width:42mm !important; height:42mm !important; display:block !important;
-    margin:1mm auto !important;
-  }
-  /* 원본 canvas/img 인쇄 시 숨김 */
-  .bqr-card canvas, .bqr-card img:not(.pasis-qr-img) {
-    display:none !important;
-  }
-}
-</style>
+<!-- ═══ PASIS 인쇄 패치: 새 창 방식 ═══ -->
 <script>
 (function(){
-  /* beforeprint: 고품질 42mm 이미지로 교체 */
-  window.addEventListener('beforeprint', function(){
-    document.querySelectorAll('.bqr-card').forEach(function(card){
-      if(card.querySelector('.pasis-qr-img')) return; // 이미 처리됨
-      var canvas = card.querySelector('canvas');
-      if(!canvas) return;
-      try{
-        // 원본 캔버스를 새 캔버스에 그려서 img로 변환
-        var tmp = document.createElement('canvas');
-        tmp.width = 168; tmp.height = 168; // ~42mm @96dpi
-        tmp.getContext('2d').drawImage(canvas, 0, 0, 168, 168);
-        var img = document.createElement('img');
-        img.src = tmp.toDataURL('image/png');
-        img.className = 'pasis-qr-img';
-        // inline !important 최고 우선순위
-        img.style.setProperty('width',  '42mm', 'important');
-        img.style.setProperty('height', '42mm', 'important');
-        img.style.setProperty('display','block',  'important');
-        img.style.setProperty('margin', '1mm auto','important');
-        card.insertBefore(img, canvas.closest? canvas.closest('div:not(.bqr-card)') || canvas : canvas);
-      }catch(e){}
-    });
-    /* 그리드 인라인 강제 */
-    var g = document.getElementById('batchQrGrid');
-    if(g){
-      g.style.setProperty('display','grid','important');
-      g.style.setProperty('grid-template-columns','repeat(3,1fr)','important');
-      g.style.setProperty('gap','5mm','important');
-      g.style.setProperty('padding','0','important');
-    }
-  });
+  /* 인쇄 버튼 클릭 가로채기 (캡처 단계 - onclick보다 먼저) */
+  document.addEventListener('click', function(e){
+    var btn = e.target;
+    if(!btn) return;
+    /* 🖨 인쇄하기 버튼인지 확인 */
+    var text = btn.textContent || btn.innerText || '';
+    if(text.indexOf('인쇄') === -1) return;
+    var overlay = document.getElementById('batchQrOverlay');
+    if(!overlay || !overlay.contains(btn)) return;
 
-  /* afterprint: 삽입된 img 제거 */
-  window.addEventListener('afterprint', function(){
-    document.querySelectorAll('.pasis-qr-img').forEach(function(el){ el.remove(); });
-  });
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    pasisCustomPrint();
+  }, true); /* useCapture=true: onclick 이전에 실행 */
+
+  function esc(s){
+    return String(s||'').replace(/[&<>"]/g,function(c){
+      return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];
+    });
+  }
+
+  function pasisCustomPrint(){
+    var cards = document.querySelectorAll('#batchQrGrid .bqr-card');
+    if(!cards.length){ alert('QR 카드가 없습니다. 먼저 조별 QR을 생성해주세요.'); return; }
+
+    var topbar = document.getElementById('batchQrTopbar');
+    var topTitle = topbar ? topbar.querySelector('div') : null;
+    var title = topTitle ? topTitle.textContent.trim() : '';
+
+    /* 각 카드 정보 수집 */
+    var cardsData = [];
+    cards.forEach(function(card){
+      var canvas = card.querySelector('canvas');
+      var dataUrl = '';
+      if(canvas){
+        try{
+          var tmp = document.createElement('canvas');
+          tmp.width = 200; tmp.height = 200;
+          tmp.getContext('2d').drawImage(canvas, 0, 0, 200, 200);
+          dataUrl = tmp.toDataURL('image/png');
+        }catch(err){ console.warn('canvas2img:', err); }
+      }
+      /* 조명 */
+      var titleEl = card.firstElementChild;
+      var teamName = titleEl ? titleEl.textContent.trim() : '';
+
+      /* 선수 정보 */
+      var playerRows = card.querySelectorAll('[style*="display:flex"]');
+      var playersHtml = '';
+      playerRows.forEach(function(row){
+        /* 번호, 이름, 소속 파싱 */
+        var spans = row.querySelectorAll('span');
+        var texts = [];
+        spans.forEach(function(sp){ var t=sp.textContent.trim(); if(t) texts.push(t); });
+        if(texts.length){
+          playersHtml += '<div class="prow">' + texts.map(esc).join(' ') + '</div>';
+        }
+      });
+
+      /* 하단 푸터 */
+      var footerEl = card.lastElementChild;
+      var footer = footerEl ? footerEl.textContent.trim() : '';
+
+      cardsData.push({ teamName:teamName, dataUrl:dataUrl, playersHtml:playersHtml, footer:footer });
+    });
+
+    /* 새 창 HTML 생성 */
+    var html = '<!DOCTYPE html><html><head><meta charset="UTF-8">'
+      + '<style>'
+      + '@page{size:A4 portrait;margin:8mm}'
+      + 'body{margin:0;padding:0;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;background:#fff;}'
+      + 'h1{font-size:11pt;font-weight:900;color:#333;margin:0 0 3mm 0;padding:0;}'
+      + '.grid{'
+      +   'display:grid;'
+      +   'grid-template-columns:repeat(3,1fr);'
+      +   'gap:5mm;'
+      +   'width:100%;'
+      + '}'
+      + '.card{'
+      +   'border:1.5px solid #555;'
+      +   'border-radius:2mm;'
+      +   'padding:2.5mm 2mm 2mm;'
+      +   'display:flex;flex-direction:column;align-items:center;'
+      +   'break-inside:avoid;page-break-inside:avoid;'
+      +   'background:#fff;'
+      + '}'
+      + '.card-title{'
+      +   'font-size:10pt;font-weight:900;color:#c8860a;'
+      +   'margin-bottom:1.5mm;text-align:center;width:100%;'
+      + '}'
+      + '.card-qr{'
+      +   'width:44mm;height:44mm;'
+      +   'display:block;margin:0 auto 1.5mm;'
+      + '}'
+      + '.card-players{'
+      +   'width:100%;'
+      +   'display:grid;grid-template-columns:1fr 1fr;'
+      +   'gap:1px 4px;'
+      + '}'
+      + '.prow{font-size:7pt;line-height:1.4;}'
+      + '.card-footer{font-size:6.5pt;color:#888;margin-top:1mm;text-align:center;width:100%;}'
+      + '</style></head><body>'
+      + '<h1>' + esc(title) + '</h1>'
+      + '<div class="grid">';
+
+    cardsData.forEach(function(d){
+      html += '<div class="card">'
+        + '<div class="card-title">' + esc(d.teamName) + '</div>'
+        + (d.dataUrl ? '<img class="card-qr" src="' + d.dataUrl + '">' : '<div class="card-qr" style="background:#eee;display:flex;align-items:center;justify-content:center;font-size:9pt;color:#999;">QR없음</div>')
+        + '<div class="card-players">' + d.playersHtml + '</div>'
+        + '<div class="card-footer">' + esc(d.footer) + '</div>'
+        + '</div>';
+    });
+
+    html += '</div>'
+      + '<script>window.onload=function(){window.print();window.close();};<\/script>'
+      + '</body></html>';
+
+    var win = window.open('', '_blank', 'width=900,height=700');
+    if(!win){ alert('팝업이 차단되었습니다.\n브라우저 설정에서 팝업을 허용해주세요.'); return; }
+    win.document.open();
+    win.document.write(html);
+    win.document.close();
+  }
 })();
 </script>
