@@ -2911,56 +2911,80 @@ function test_doPost() {
 </script>
 
 <!-- ═══ PASIS 인쇄 패치 ═══ -->
-<style>
+<style id="pasis-print-base">
 @media print {
-  @page { size: A4 portrait; margin: 8mm; }
-
-  /* 전체 숨기고 오버레이만 표시 */
-  body * { visibility: hidden !important; }
-  #batchQrOverlay, #batchQrOverlay * { visibility: visible !important; }
+  @page { size:A4 portrait; margin:8mm; }
+  body * { visibility:hidden !important; }
+  #batchQrOverlay, #batchQrOverlay * { visibility:visible !important; }
   #batchQrOverlay {
-    position: absolute !important; top: 0 !important; left: 0 !important;
-    width: 100% !important; background: #fff !important; overflow: visible !important;
+    position:absolute !important; top:0 !important; left:0 !important;
+    width:100% !important; background:#fff !important; overflow:visible !important;
   }
-
-  /* 상단 바 */
   #batchQrTopbar {
-    position: static !important; background: none !important;
-    color: #000 !important; box-shadow: none !important;
-    padding: 0 0 3mm !important; font-size: 11pt !important;
+    position:static !important; background:none !important;
+    color:#000 !important; box-shadow:none !important; padding:0 0 3mm !important;
   }
-  #batchQrTopbar button { display: none !important; }
-
-  /* 3열 그리드 */
+  #batchQrTopbar button { display:none !important; }
   #batchQrGrid {
-    display: grid !important;
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 5mm !important;
-    padding: 0 !important; margin: 0 !important; max-width: none !important;
+    display:grid !important;
+    grid-template-columns:repeat(3,1fr) !important;
+    gap:5mm !important; padding:0 !important; max-width:none !important;
   }
-
-  /* 카드: 독립 테두리 + 여백 */
   .bqr-card {
-    border: 1.2px solid #444 !important;
-    border-radius: 2.5mm !important;
-    padding: 2mm 2mm 1.5mm !important;
-    box-shadow: none !important; background: #fff !important;
-    break-inside: avoid !important; page-break-inside: avoid !important;
-    display: flex !important; flex-direction: column !important;
-    align-items: center !important;
+    border:1.5px solid #333 !important; border-radius:2mm !important;
+    padding:2mm !important; box-shadow:none !important;
+    background:#fff !important;
+    break-inside:avoid !important; page-break-inside:avoid !important;
+    display:flex !important; flex-direction:column !important; align-items:center !important;
   }
-
-  /* ★ QR 크기 고정: 42mm 정사각형 → 3×3=9개/페이지 */
-  .bqr-card canvas,
-  .bqr-card img {
-    width:  42mm !important;
-    height: 42mm !important;
-    max-width:  42mm !important;
-    max-height: 42mm !important;
-    min-width:  42mm !important;
-    min-height: 42mm !important;
-    display: block !important;
-    margin: 1mm auto !important;
+  /* pasis-qr-img: JS가 삽입하는 인쇄용 전용 이미지 */
+  .pasis-qr-img {
+    width:42mm !important; height:42mm !important; display:block !important;
+    margin:1mm auto !important;
+  }
+  /* 원본 canvas/img 인쇄 시 숨김 */
+  .bqr-card canvas, .bqr-card img:not(.pasis-qr-img) {
+    display:none !important;
   }
 }
 </style>
+<script>
+(function(){
+  /* beforeprint: 고품질 42mm 이미지로 교체 */
+  window.addEventListener('beforeprint', function(){
+    document.querySelectorAll('.bqr-card').forEach(function(card){
+      if(card.querySelector('.pasis-qr-img')) return; // 이미 처리됨
+      var canvas = card.querySelector('canvas');
+      if(!canvas) return;
+      try{
+        // 원본 캔버스를 새 캔버스에 그려서 img로 변환
+        var tmp = document.createElement('canvas');
+        tmp.width = 168; tmp.height = 168; // ~42mm @96dpi
+        tmp.getContext('2d').drawImage(canvas, 0, 0, 168, 168);
+        var img = document.createElement('img');
+        img.src = tmp.toDataURL('image/png');
+        img.className = 'pasis-qr-img';
+        // inline !important 최고 우선순위
+        img.style.setProperty('width',  '42mm', 'important');
+        img.style.setProperty('height', '42mm', 'important');
+        img.style.setProperty('display','block',  'important');
+        img.style.setProperty('margin', '1mm auto','important');
+        card.insertBefore(img, canvas.closest? canvas.closest('div:not(.bqr-card)') || canvas : canvas);
+      }catch(e){}
+    });
+    /* 그리드 인라인 강제 */
+    var g = document.getElementById('batchQrGrid');
+    if(g){
+      g.style.setProperty('display','grid','important');
+      g.style.setProperty('grid-template-columns','repeat(3,1fr)','important');
+      g.style.setProperty('gap','5mm','important');
+      g.style.setProperty('padding','0','important');
+    }
+  });
+
+  /* afterprint: 삽입된 img 제거 */
+  window.addEventListener('afterprint', function(){
+    document.querySelectorAll('.pasis-qr-img').forEach(function(el){ el.remove(); });
+  });
+})();
+</script>
