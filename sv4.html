@@ -808,6 +808,7 @@ html, body {
 .scard-tbl th{background:#e8e8e8;font-size:16px;font-weight:900;color:#333;padding:6px 0;text-align:center;border-left:1.5px solid #ccc;border-bottom:1.5px solid #ccc}
 .scard-tbl th:first-child{border-left:none}
 .scard-tbl td{border:none;border-left:1.5px solid #ccc;padding:0;text-align:center;height:58px}
+.scard-tbl tr:last-child td, .scard-tbl tr.scard-bigo+tr td{height:auto !important;}
 .scard-tbl td:first-child{border-left:none}
 .scard-total{background:#fffde7;border-left:1.5px solid #ccc!important;text-align:center;vertical-align:middle;height:58px}
 .scard-total span{font-size:18px;font-weight:700;color:#1a5634;display:block;line-height:1.2;word-break:keep-all;white-space:nowrap;padding:1px 2px}
@@ -819,6 +820,12 @@ html, body {
 .scard-bigo-lbl{font-size:14px;font-weight:600;color:#666;text-align:center;width:14%}
 .scard-bigo-inp{border:none;background:transparent;font-size:14px;color:#111;outline:none;width:100%}
 .scard-bigo-inp::placeholder{color:#c0c0c0}
+/* 비고 빠른입력 버튼 */
+.bigo-presets{display:flex;gap:5px;padding:2px 10px 7px;flex-wrap:wrap;background:#f4f4f4;}
+.bigo-btn{font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid #ccc;background:#fff;color:#444;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.bigo-btn.absent{border-color:#fca5a5;color:#dc2626;background:#fff5f5;}
+.bigo-btn.quit{border-color:#fcd34d;color:#d97706;background:#fffbf0;}
+.bigo-btn.hio{border-color:#86efac;color:#16a34a;background:#f0fdf4;}
 .scorecard-section{padding:0 0 8px 0}
 .scorecard-title{text-align:center;font-size:20px;font-weight:900;color:#1a5634;margin:16px 0 12px;font-family:'Malgun Gothic',sans-serif}
 </style>
@@ -869,8 +876,16 @@ html, body {
         </tr>
         <tr class="scard-bigo">
           <td class="scard-bigo-lbl">비고</td>
-          <td colspan="4"><input id="in-HIO-1" class="scard-bigo-inp" type="text" inputmode="text" maxlength="20" placeholder="예: A9홀 홀인원"></td>
+          <td colspan="4"><input id="in-HIO-1" class="scard-bigo-inp" type="text" inputmode="text" maxlength="30" placeholder="불참 · 기권 · A9홀 홀인원 등"></td>
         </tr>
+        <tr><td colspan="5" style="padding:0;background:#f4f4f4;">
+          <div class="bigo-presets">
+            <button type="button" class="bigo-btn absent" onclick="setBigo(1,'불참')">🚫 불참</button>
+            <button type="button" class="bigo-btn quit"   onclick="setBigo(1,'기권')">🏳 기권</button>
+            <button type="button" class="bigo-btn hio"    onclick="setBigo(1,'홀인원')">⛳ 홀인원</button>
+            <button type="button" class="bigo-btn"        onclick="setBigo(1,'')">✕ 초기화</button>
+          </div>
+        </td></tr>
       </table>
     </div>
 
@@ -894,8 +909,16 @@ html, body {
         </tr>
         <tr class="scard-bigo">
           <td class="scard-bigo-lbl">비고</td>
-          <td colspan="4"><input id="in-HIO-2" class="scard-bigo-inp" type="text" inputmode="text" maxlength="20" placeholder="예: A9홀 홀인원"></td>
+          <td colspan="4"><input id="in-HIO-2" class="scard-bigo-inp" type="text" inputmode="text" maxlength="30" placeholder="불참 · 기권 · A9홀 홀인원 등"></td>
         </tr>
+        <tr><td colspan="5" style="padding:0;background:#f4f4f4;">
+          <div class="bigo-presets">
+            <button type="button" class="bigo-btn absent" onclick="setBigo(2,'불참')">🚫 불참</button>
+            <button type="button" class="bigo-btn quit"   onclick="setBigo(2,'기권')">🏳 기권</button>
+            <button type="button" class="bigo-btn hio"    onclick="setBigo(2,'홀인원')">⛳ 홀인원</button>
+            <button type="button" class="bigo-btn"        onclick="setBigo(2,'')">✕ 초기화</button>
+          </div>
+        </td></tr>
       </table>
     </div>
 
@@ -919,8 +942,16 @@ html, body {
         </tr>
         <tr class="scard-bigo">
           <td class="scard-bigo-lbl">비고</td>
-          <td colspan="4"><input id="in-HIO-3" class="scard-bigo-inp" type="text" inputmode="text" maxlength="20" placeholder="예: A9홀 홀인원"></td>
+          <td colspan="4"><input id="in-HIO-3" class="scard-bigo-inp" type="text" inputmode="text" maxlength="30" placeholder="불참 · 기권 · A9홀 홀인원 등"></td>
         </tr>
+        <tr><td colspan="5" style="padding:0;background:#f4f4f4;">
+          <div class="bigo-presets">
+            <button type="button" class="bigo-btn absent" onclick="setBigo(3,'불참')">🚫 불참</button>
+            <button type="button" class="bigo-btn quit"   onclick="setBigo(3,'기권')">🏳 기권</button>
+            <button type="button" class="bigo-btn hio"    onclick="setBigo(3,'홀인원')">⛳ 홀인원</button>
+            <button type="button" class="bigo-btn"        onclick="setBigo(3,'')">✕ 초기화</button>
+          </div>
+        </td></tr>
       </table>
     </div>
 
@@ -944,8 +975,16 @@ html, body {
         </tr>
         <tr class="scard-bigo">
           <td class="scard-bigo-lbl">비고</td>
-          <td colspan="4"><input id="in-HIO-4" class="scard-bigo-inp" type="text" inputmode="text" maxlength="20" placeholder="예: A9홀 홀인원"></td>
+          <td colspan="4"><input id="in-HIO-4" class="scard-bigo-inp" type="text" inputmode="text" maxlength="30" placeholder="불참 · 기권 · A9홀 홀인원 등"></td>
         </tr>
+        <tr><td colspan="5" style="padding:0;background:#f4f4f4;">
+          <div class="bigo-presets">
+            <button type="button" class="bigo-btn absent" onclick="setBigo(4,'불참')">🚫 불참</button>
+            <button type="button" class="bigo-btn quit"   onclick="setBigo(4,'기권')">🏳 기권</button>
+            <button type="button" class="bigo-btn hio"    onclick="setBigo(4,'홀인원')">⛳ 홀인원</button>
+            <button type="button" class="bigo-btn"        onclick="setBigo(4,'')">✕ 초기화</button>
+          </div>
+        </td></tr>
       </table>
     </div>
 
@@ -2374,6 +2413,13 @@ function test_doPost() {
 </script>
 
 <!-- ═══ PASIS SV4.0 최종패치 ═══ -->
+<script>
+/* ★ 비고 빠른입력 전역 함수 */
+function setBigo(n, val) {
+  var el = document.getElementById('in-HIO-' + n);
+  if (el) { el.value = val; el.focus(); }
+}
+</script>
 <style>
 /* ══ 화면 전용 ══ */
 @media screen {
@@ -2618,15 +2664,52 @@ function test_doPost() {
   }
   function showConfirm(players,teamName,onSend){
     var old=document.getElementById('pasisSendOv');if(old)old.remove();
+
+    /* ── 불참/기권 판정 헬퍼 ── */
+    function classify(p){
+      var bigo=(p.holeInOne||'').toString();
+      if(bigo.indexOf('불참')>-1) return 'absent';
+      if(bigo.indexOf('기권')>-1) return 'quit';
+      /* 모든 코스가 0 → 불참 */
+      if(p.A===0&&p.B===0&&p.C===0&&p.D===0&&p.total===0) return 'absent';
+      /* 일부 코스가 0 → 기권 */
+      if(p.A===0||p.B===0||p.C===0||p.D===0) return 'quit';
+      return 'normal';
+    }
+
     var rows=players.map(function(p){
       var sc=['A','B','C','D'].map(function(c){return c+':'+(p[c]||0);}).join(' ');
-      return '<div class="psRow"><div><div class="psName">'+esc(p.name)+(p.gender?' <span style="font-size:11px;color:#888;">('+esc(p.gender)+')</span>':'')+'</div>'
-        +'<div class="psDetail">'+esc(sc)+(p.holeInOne?' HIO:'+esc(p.holeInOne):'')+'</div></div>'
-        +'<div class="psTotal">'+(p.total||0)+'<small> 타</small></div></div>';
+      var cls=classify(p);
+      var badge='';
+      var rowStyle='';
+      var totalDisp=(p.total||0)+'<small> 타</small>';
+      if(cls==='absent'){
+        badge='<span style="background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;border-radius:4px;font-size:10px;padding:1px 7px;margin-left:5px;font-weight:800;">불참</span>';
+        rowStyle='background:#f9f9f9;border-color:#ddd;opacity:.7;';
+        totalDisp='<span style="font-size:12px;color:#aaa;font-weight:600;">순위제외</span>';
+      } else if(cls==='quit'){
+        badge='<span style="background:#fffbeb;color:#d97706;border:1px solid #fcd34d;border-radius:4px;font-size:10px;padding:1px 7px;margin-left:5px;font-weight:800;">기권</span>';
+        rowStyle='background:#fffdf0;border-color:#fcd34d;';
+        totalDisp='<span style="font-size:12px;color:#d97706;font-weight:700;">기권처리</span>';
+      }
+      return '<div class="psRow" style="'+rowStyle+'">'
+        +'<div><div class="psName">'+esc(p.name)+(p.gender?' <span style="font-size:11px;color:#888;">('+esc(p.gender)+')</span>':'')
+        +badge+'</div>'
+        +'<div class="psDetail">'+esc(sc)+(p.holeInOne?' · '+esc(p.holeInOne):'')+'</div></div>'
+        +'<div class="psTotal">'+totalDisp+'</div></div>';
     }).join('');
+
+    /* 불참/기권 포함 시 경고 */
+    var hasIssue=players.some(function(p){ return classify(p)!=='normal'; });
+    var warning=hasIssue
+      ? '<div style="background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;padding:8px 12px;margin:0 0 8px;font-size:12px;color:#92400e;line-height:1.5;">'
+        +'⚠️ <strong>불참·기권 선수</strong>는 점수 0 처리 후 전송됩니다.<br>'
+        +'GAS 순위 재계산 시 해당 선수는 순위에서 제외됩니다.</div>'
+      : '';
+
     var ov=document.createElement('div');ov.id='pasisSendOv';
     ov.innerHTML='<div id="pasisSendBox"><div class="psHead">📋 전송 전 확인<small>'+esc(teamName)+' · '+players.length+'명</small></div>'
-      +'<div class="psBody">'+rows+'</div>'
+      +'<div class="psBody">'+warning+rows+'</div>'
       +'<div class="psFoot"><button class="psBtnBack" id="psB">← 뒤로(수정)</button>'
       +'<button class="psBtnSend" id="psS">✅ 확인·전송</button></div></div>';
     document.body.appendChild(ov);
