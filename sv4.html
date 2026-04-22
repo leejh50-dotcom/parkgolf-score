@@ -810,11 +810,7 @@ html, body {
 .scard-bigo-inp{border:none;background:transparent;font-size:14px;color:#111;outline:none;width:100%}
 .scard-bigo-inp::placeholder{color:#c0c0c0}
 /* 비고 빠른입력 버튼 */
-.bigo-presets{display:flex;gap:5px;padding:2px 10px 7px;flex-wrap:wrap;background:#f4f4f4;}
-.bigo-btn{font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid #ccc;background:#fff;color:#444;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent;}
-.bigo-btn.absent{border-color:#fca5a5;color:#dc2626;background:#fff5f5;}
-.bigo-btn.quit{border-color:#fcd34d;color:#d97706;background:#fffbf0;}
-.bigo-btn.hio{border-color:#86efac;color:#16a34a;background:#f0fdf4;}
+/* 비고 빠른입력 버튼 — 삭제됨 */
 .scorecard-section{padding:0 0 8px 0}
 .scorecard-title{text-align:center;font-size:20px;font-weight:900;color:#1a5634;margin:16px 0 12px;font-family:'Malgun Gothic',sans-serif}
 </style>
@@ -865,15 +861,8 @@ html, body {
         </tr>
         <tr class="scard-bigo">
           <td class="scard-bigo-lbl">비고</td>
-          <td colspan="4"><input id="in-HIO-1" class="scard-bigo-inp" type="text" inputmode="text" maxlength="30" placeholder="불참 · 기권 · A9홀 홀인원 등"></td>
+          <td colspan="4"><input id="in-HIO-1" class="scard-bigo-inp" type="text" inputmode="text" maxlength="30" placeholder="예: A9홀인원"></td>
         </tr>
-        <tr><td colspan="5" style="padding:0;background:#f4f4f4;">
-          <div class="bigo-presets">
-            <button type="button" class="bigo-btn absent" onclick="setBigo(1,'불참')">🚫 불참</button>
-            <button type="button" class="bigo-btn quit"   onclick="setBigo(1,'기권')">🏳 기권</button>
-            <button type="button" class="bigo-btn hio"    onclick="setBigo(1,'홀인원')">⛳ 홀인원</button>
-          </div>
-        </td></tr>
       </table>
     </div>
 
@@ -897,15 +886,8 @@ html, body {
         </tr>
         <tr class="scard-bigo">
           <td class="scard-bigo-lbl">비고</td>
-          <td colspan="4"><input id="in-HIO-2" class="scard-bigo-inp" type="text" inputmode="text" maxlength="30" placeholder="불참 · 기권 · A9홀 홀인원 등"></td>
+          <td colspan="4"><input id="in-HIO-2" class="scard-bigo-inp" type="text" inputmode="text" maxlength="30" placeholder="예: A9홀인원"></td>
         </tr>
-        <tr><td colspan="5" style="padding:0;background:#f4f4f4;">
-          <div class="bigo-presets">
-            <button type="button" class="bigo-btn absent" onclick="setBigo(2,'불참')">🚫 불참</button>
-            <button type="button" class="bigo-btn quit"   onclick="setBigo(2,'기권')">🏳 기권</button>
-            <button type="button" class="bigo-btn hio"    onclick="setBigo(2,'홀인원')">⛳ 홀인원</button>
-          </div>
-        </td></tr>
       </table>
     </div>
 
@@ -929,15 +911,8 @@ html, body {
         </tr>
         <tr class="scard-bigo">
           <td class="scard-bigo-lbl">비고</td>
-          <td colspan="4"><input id="in-HIO-3" class="scard-bigo-inp" type="text" inputmode="text" maxlength="30" placeholder="불참 · 기권 · A9홀 홀인원 등"></td>
+          <td colspan="4"><input id="in-HIO-3" class="scard-bigo-inp" type="text" inputmode="text" maxlength="30" placeholder="예: A9홀인원"></td>
         </tr>
-        <tr><td colspan="5" style="padding:0;background:#f4f4f4;">
-          <div class="bigo-presets">
-            <button type="button" class="bigo-btn absent" onclick="setBigo(3,'불참')">🚫 불참</button>
-            <button type="button" class="bigo-btn quit"   onclick="setBigo(3,'기권')">🏳 기권</button>
-            <button type="button" class="bigo-btn hio"    onclick="setBigo(3,'홀인원')">⛳ 홀인원</button>
-          </div>
-        </td></tr>
       </table>
     </div>
 
@@ -961,15 +936,8 @@ html, body {
         </tr>
         <tr class="scard-bigo">
           <td class="scard-bigo-lbl">비고</td>
-          <td colspan="4"><input id="in-HIO-4" class="scard-bigo-inp" type="text" inputmode="text" maxlength="30" placeholder="불참 · 기권 · A9홀 홀인원 등"></td>
+          <td colspan="4"><input id="in-HIO-4" class="scard-bigo-inp" type="text" inputmode="text" maxlength="30" placeholder="예: A9홀인원"></td>
         </tr>
-        <tr><td colspan="5" style="padding:0;background:#f4f4f4;">
-          <div class="bigo-presets">
-            <button type="button" class="bigo-btn absent" onclick="setBigo(4,'불참')">🚫 불참</button>
-            <button type="button" class="bigo-btn quit"   onclick="setBigo(4,'기권')">🏳 기권</button>
-            <button type="button" class="bigo-btn hio"    onclick="setBigo(4,'홀인원')">⛳ 홀인원</button>
-          </div>
-        </td></tr>
       </table>
     </div>
 
@@ -2398,13 +2366,6 @@ function test_doPost() {
 </script>
 
 <!-- ═══ PASIS SV4.0 최종패치 ═══ -->
-<script>
-/* ★ 비고 빠른입력 전역 함수 */
-function setBigo(n, val) {
-  var el = document.getElementById('in-HIO-' + n);
-  if (el) { el.value = val; el.focus(); }
-}
-</script>
 <style>
 /* ══ 화면 전용 ══ */
 @media screen {
