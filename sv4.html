@@ -692,7 +692,7 @@ html, body {
 
         <!-- 예선일자 선택 -->
         <div style="margin-bottom:12px;">
-          <label style="display:block; font-size:13px; font-weight:700; color:#374151; margin-bottom:6px;">📅 예선일자 선택</label>
+          <label style="display:block; font-size:13px; font-weight:700; color:#374151; margin-bottom:6px;">예선일자 선택</label>
           <select id="modalQrDate"
             style="width:100%; padding:11px 12px; border:2px solid #e5e7eb; border-radius:10px; font-size:14px; background:white; cursor:pointer; outline:none;">
             <option value="통합">통합 (일자 구분 없음)</option>
@@ -706,21 +706,10 @@ html, body {
           </select>
         </div>
 
-        <!-- 조편성 성별 구분 -->
-        <div style="margin-bottom:10px;">
-          <label style="display:block; font-size:13px; font-weight:700; color:#374151; margin-bottom:6px;">👥 조편성 성별 구분</label>
-          <select id="modalTeamMode"
-            style="width:100%; padding:11px 12px; border:2px solid #e5e7eb; border-radius:10px; font-size:14px; background:white; cursor:pointer; outline:none;">
-            <option value="mixed">혼성 (남녀 무작위 섞어 4명 1조)</option>
-            <option value="male">남자부만</option>
-            <option value="female">여자부만</option>
-            <option value="separate">성별 분리 (남자부 조 → 여자부 조)</option>
-          </select>
-        </div>
 
         <button onclick="generateBatchQR()"
-          style="width:100%; padding:16px; background:linear-gradient(135deg,#c8860a 0%,#7a4f00 100%); color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:900; cursor:pointer;">
-          📋 조별 QR 일괄생성 (인쇄용)
+          style="width:100%; padding:16px; background:linear-gradient(135deg,#c8860a 0%,#7a4f00 100%); color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:900; cursor:pointer; line-height:1.5;">
+          조별 QR 일괄생성<br><span style="font-size:13px;font-weight:700;opacity:.9;">(인쇄용)</span>
         </button>
       </div>
 
@@ -883,7 +872,6 @@ html, body {
             <button type="button" class="bigo-btn absent" onclick="setBigo(1,'불참')">🚫 불참</button>
             <button type="button" class="bigo-btn quit"   onclick="setBigo(1,'기권')">🏳 기권</button>
             <button type="button" class="bigo-btn hio"    onclick="setBigo(1,'홀인원')">⛳ 홀인원</button>
-            <button type="button" class="bigo-btn"        onclick="setBigo(1,'')">✕ 초기화</button>
           </div>
         </td></tr>
       </table>
@@ -916,7 +904,6 @@ html, body {
             <button type="button" class="bigo-btn absent" onclick="setBigo(2,'불참')">🚫 불참</button>
             <button type="button" class="bigo-btn quit"   onclick="setBigo(2,'기권')">🏳 기권</button>
             <button type="button" class="bigo-btn hio"    onclick="setBigo(2,'홀인원')">⛳ 홀인원</button>
-            <button type="button" class="bigo-btn"        onclick="setBigo(2,'')">✕ 초기화</button>
           </div>
         </td></tr>
       </table>
@@ -949,7 +936,6 @@ html, body {
             <button type="button" class="bigo-btn absent" onclick="setBigo(3,'불참')">🚫 불참</button>
             <button type="button" class="bigo-btn quit"   onclick="setBigo(3,'기권')">🏳 기권</button>
             <button type="button" class="bigo-btn hio"    onclick="setBigo(3,'홀인원')">⛳ 홀인원</button>
-            <button type="button" class="bigo-btn"        onclick="setBigo(3,'')">✕ 초기화</button>
           </div>
         </td></tr>
       </table>
@@ -982,7 +968,6 @@ html, body {
             <button type="button" class="bigo-btn absent" onclick="setBigo(4,'불참')">🚫 불참</button>
             <button type="button" class="bigo-btn quit"   onclick="setBigo(4,'기권')">🏳 기권</button>
             <button type="button" class="bigo-btn hio"    onclick="setBigo(4,'홀인원')">⛳ 홀인원</button>
-            <button type="button" class="bigo-btn"        onclick="setBigo(4,'')">✕ 초기화</button>
           </div>
         </td></tr>
       </table>
@@ -2531,10 +2516,11 @@ function setBigo(n, val) {
     var webappUrl='',code='',qrDate='통합',mode='mixed';
     try{
       var wEl=document.getElementById('adminWebappUrl'),cEl=document.getElementById('adminCodeInput');
-      var dEl=document.getElementById('modalQrDate'),mEl=document.getElementById('modalTeamMode');
+      var dEl=document.getElementById('modalQrDate');
       webappUrl=((wEl&&wEl.value)||localStorage.getItem('parkgolf_webapp_url')||'').trim();
       code=(((cEl&&cEl.value)||localStorage.getItem('parkgolf_tournament_code')||'').trim()).toUpperCase();
-      qrDate=(dEl&&dEl.value)||'통합'; mode=(mEl&&mEl.value)||'mixed';
+      /* ★ 성별구분 select 삭제 → GAS가 조편성 시트에서 자동 판별 */
+      qrDate=(dEl&&dEl.value)||'통합'; mode='auto';
     }catch(e){}
     if(!code){alert('대회코드를 먼저 저장해 주세요.');return;}
     if(!webappUrl){alert('웹앱 URL을 먼저 저장해 주세요.');return;}
@@ -2699,19 +2685,16 @@ function setBigo(n, val) {
         +'<div class="psTotal">'+totalDisp+'</div></div>';
     }).join('');
 
-    /* 불참/기권 포함 시 경고 */
-    var hasIssue=players.some(function(p){ return classify(p)!=='normal'; });
-    var warning=hasIssue
-      ? '<div style="background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;padding:8px 12px;margin:0 0 8px;font-size:12px;color:#92400e;line-height:1.5;">'
-        +'⚠️ <strong>불참·기권 선수</strong>는 점수 0 처리 후 전송됩니다.<br>'
-        +'GAS 순위 재계산 시 해당 선수는 순위에서 제외됩니다.</div>'
-      : '';
+    /* 불참/기권 포함 시 경고 — 삭제 */
+    var warning='';
 
     var ov=document.createElement('div');ov.id='pasisSendOv';
     ov.innerHTML='<div id="pasisSendBox"><div class="psHead">📋 전송 전 확인<small>'+esc(teamName)+' · '+players.length+'명</small></div>'
       +'<div class="psBody">'+warning+rows+'</div>'
-      +'<div class="psFoot"><button class="psBtnBack" id="psB">← 뒤로(수정)</button>'
-      +'<button class="psBtnSend" id="psS">✅ 확인·전송</button></div></div>';
+      +'<div class="psFoot">'
+      +'<button class="psBtnBack" id="psB" style="line-height:1.3;">← 뒤로<br>(수정)</button>'
+      +'<button class="psBtnSend" id="psS" style="line-height:1.3;">✅ 확인·<br>전송</button>'
+      +'</div></div>';
     document.body.appendChild(ov);
     document.getElementById('psB').onclick=function(){ov.remove();};
     document.getElementById('psS').onclick=function(){ov.remove();onSend(players,teamName);};
