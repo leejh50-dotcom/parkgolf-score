@@ -2539,6 +2539,13 @@ function test_doPost() {
     function makeCard(teamObj){
       var qrText=appUrl+'?c='+encodeURIComponent(code)+'&u='+encodeURIComponent(webappUrl)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'');
       (teamObj.players||[]).forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||'')); });
+
+      /* ★ QR URL 길이 체크: 2000자 초과 시 소속 생략하여 단축 */
+      if(qrText.length > 2000){
+        qrText=appUrl+'?c='+encodeURIComponent(code)+'&u='+encodeURIComponent(webappUrl)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'');
+        (teamObj.players||[]).forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'); });
+      }
+
       var ph=(teamObj.players||[]).slice(0,4).map(function(p,i){
         var gStr=p.gender?' ('+esc(p.gender.charAt(0))+')':'';
         return '<div class="pgCard-player"><span class="pgCard-num">'+(i+1)+'</span>'
@@ -2553,8 +2560,9 @@ function test_doPost() {
         +'<div class="pgCard-players">'+ph+'</div>'
         +'<div class="pgCard-footer">'+esc(code)+' · '+esc(qrDate)+' · '+dateStr+'</div>';
       grid.appendChild(card);
+      /* ★ QRCode 생성 오류 시 오류 표시 (조명 포함) */
       try{ new QRCode(card.querySelector('#'+bid),{text:qrText,width:256,height:256,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M}); }
-      catch(e){ card.querySelector('#'+bid).textContent='QR오류'; }
+      catch(e){ card.querySelector('#'+bid).innerHTML='<div style="padding:8px;font-size:11px;color:red;text-align:center;">QR생성오류<br>'+esc(teamObj.team||'')+'</div>'; }
     }
 
     function nextBatch(){
@@ -2704,15 +2712,35 @@ function test_doPost() {
         +'<div style="font-size:13px;color:#6b7280;margin-top:6px;">잠시 기다려 주세요</div>'
         +'</div>';
       document.body.appendChild(sendingOv);
-      /* showToast 훅: 전송 완료 감지 */
+
+      /* 전송중 오버레이 제거 함수 */
+      function removeSendingOv(){
+        var sv=document.getElementById('pasisSendingOv');
+        if(sv)sv.remove();
+      }
+
+      /* ★ 안전장치: 10초 후 무조건 제거 (무한 대기 방지) */
+      var sendingTimeout=setTimeout(removeSendingOv, 10000);
+
+      /* showToast 훅: 전송 완료/실패 모두 감지 */
       var orig=window.showToast;
       window.showToast=function(msg){
         window.showToast=orig;
-        var sv=document.getElementById('pasisSendingOv');
-        if(sv)sv.remove();
+        clearTimeout(sendingTimeout);
+        removeSendingOv();
         if(String(msg).indexOf('완료')!==-1||String(msg).indexOf('전송')!==-1)showDone(teamName,players);
         if(typeof orig==='function')orig(msg);
       };
+
+      /* ★ alert 가로채기: 오류 alert 시에도 오버레이 제거 */
+      var origAlert=window.alert;
+      window.alert=function(msg){
+        window.alert=origAlert;
+        clearTimeout(sendingTimeout);
+        removeSendingOv();
+        origAlert(msg);
+      };
+
       onSend(players,teamName);
     };
     ov.addEventListener('click',function(e){if(e.target===ov)ov.remove();});
