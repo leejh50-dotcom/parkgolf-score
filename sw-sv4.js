@@ -1,4 +1,4 @@
-const CACHE = "sv4-cache-v1";
+const CACHE = "sv4-cache-v2";
 const ASSETS = [
   "/parkgolf-score/sv4.html",
   "/parkgolf-score/manifest-sv4.json",
