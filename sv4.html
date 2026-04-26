@@ -13,7 +13,7 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23c8860a'/%3E%3Ctext x='16' y='23' font-family='Arial Black,sans-serif' font-size='20' font-weight='900' text-anchor='middle' fill='white'%3EP%3C/text%3E%3C/svg%3E">
 <link rel="manifest" href="manifest-sv4.json">
 <meta name="theme-color" content="#c8860a">
-<meta name="apple-mobile-web-app-title" content="파시스4프로">
+<meta name="apple-mobile-web-app-title" content="파시스 SV4.0">
 <script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw-sv4.js').catch(function(){});});}</script>
 
 <style>
@@ -765,10 +765,10 @@ html, body {
   <!-- 🔑 대회코드 입력(선택) -->
   <div class="input-group">
     <div style="position: relative; width: 100%;">
-      <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-weight: 900; font-size: 20px; color: #00796B; pointer-events: none; z-index: 1;">코드명</span>
+      <label style="display:block;font-size:13px;font-weight:900;color:#00796B;margin-bottom:4px;padding-left:2px;">코드명</label>
       <input type="text" id="tournamentCode" placeholder="대회코드"
-        style="width: 100%; text-align: center; font-weight: 900; font-size_old: 20px; background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
-              border: 3px solid #00acc1; padding: 16px 14px; letter-spacing: 2px; text-transform: uppercase; box-sizing: border-box;font-size:20px!important;">
+        style="width: 100%; text-align: center; font-weight: 900; background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+              border: 3px solid #00acc1; padding: 14px 14px; letter-spacing: 2px; text-transform: uppercase; box-sizing: border-box;font-size:20px!important;">
     </div>
   </div>
 
@@ -2594,10 +2594,36 @@ function test_doPost() {
     var sm=document.getElementById('qrScanModal');if(sm)sm.style.setProperty('display','none','important');
     window.scrollTo({top:0});
   }
+  function forceInitQR(){
+    try{
+      /* ★ QR 스캔 시 이전 localStorage 데이터가 덮어쓰는 버그 방지
+         → parkGolfData_sv4 삭제 후 initFromQueryParams 실행 */
+      localStorage.removeItem('parkGolfData_sv4');
+      /* playerNames/Genders/Affiliations 초기화 */
+      try{if(typeof playerNames!=='undefined'){playerNames=['','','',''];}if(typeof playerGenders!=='undefined'){playerGenders=['','','',''];}if(typeof playerAffiliations!=='undefined'){playerAffiliations=['','','',''];}}catch(e2){}
+      /* initFromQueryParams 강제 실행 */
+      if(typeof initFromQueryParams==='function') initFromQueryParams();
+    }catch(e){}
+    forceScoring();
+  }
   if(hasQP()){
-    if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',forceScoring);
-    else forceScoring();
-    setTimeout(forceScoring,100);setTimeout(forceScoring,500);setTimeout(forceScoring,1000);
+    /* ★ loadData를 1회 차단 - QR 파라미터가 있을 때 localStorage 복원을 막음 */
+    var _origLoadData = window.loadData;
+    if(typeof _origLoadData==='function'){
+      var _loadDataBlocked = false;
+      window.loadData = function(){
+        if(!_loadDataBlocked){ _loadDataBlocked=true; return false; }
+        return _origLoadData.apply(this,arguments);
+      };
+    }
+    if(document.readyState==='loading'){
+      document.addEventListener('DOMContentLoaded', function(){ forceInitQR(); setTimeout(forceInitQR,300); });
+    } else {
+      forceInitQR();
+    }
+    setTimeout(forceInitQR,200);
+    setTimeout(forceInitQR,600);
+    setTimeout(forceInitQR,1500);
   }
 
   /* 전송 확인 오버레이 */
