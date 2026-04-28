@@ -14,7 +14,19 @@
 <link rel="manifest" href="manifest-sv4.json">
 <meta name="theme-color" content="#c8860a">
 <meta name="apple-mobile-web-app-title" content="파시스 SV4.0">
-<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw-sv4.js').catch(function(){});});}</script>
+<script>
+/* ★ 서비스워커 및 캐시 완전 제거 - 항상 최신 파일 사용 */
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.getRegistrations().then(function(regs){
+    regs.forEach(function(r){ r.unregister(); });
+  });
+}
+if('caches' in window){
+  caches.keys().then(function(keys){
+    keys.forEach(function(k){ caches.delete(k); });
+  });
+}
+</script>
 
 <style>
 .parkgolf-app #codeLabel, .parkgolf-app #teamLabel,
