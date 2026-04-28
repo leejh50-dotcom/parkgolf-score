@@ -2367,29 +2367,90 @@ function test_doPost() {
     var old = document.getElementById('pgAccessQrOv');
     if (old) old.remove();
 
+    var code = (localStorage.getItem('parkgolf_tournament_code')||'대회코드').toUpperCase();
+
+    /* 안내문 템플릿 (대회코드·URL 자동 삽입) */
+    var guideText =
+      '안녕하세요 😊\n' +
+      '이번 대회는 파시스 SV4.0 프로로 점수를 실시간 집계합니다.\n\n' +
+      '━━━━━━━━━━━━━━━━━━\n' +
+      '📋 경기 당일 점수 전송 방법\n' +
+      '━━━━━━━━━━━━━━━━━━\n' +
+      '① 경기 종료 후 QR카드를 꺼내세요\n' +
+      '② 기본 카메라 앱으로 QR 스캔\n' +
+      '③ 링크 팝업 탭 → 파시스 앱 열림\n' +
+      '④ 4명 × 4코스 점수 입력 (16칸)\n' +
+      '⑤ 전송 전 확인 화면에서 최종 확인\n' +
+      '⑥ 확인·전송 버튼\n\n' +
+      '━━━━━━━━━━━━━━━━━━\n' +
+      '⚠️ 주의사항\n' +
+      '━━━━━━━━━━━━━━━━━━\n' +
+      '• 전송은 1회만 가능합니다\n' +
+      '  (전송 후 수정 불가 — 오류 시 관리자 문의)\n' +
+      '• QR 스캔이 안 되면 아래 링크를 탭하세요 👇\n' +
+      appUrl + '\n\n' +
+      '━━━━━━━━━━━━━━━━━━\n' +
+      '📌 사전 연습 권장 (꼭 해보세요!)\n' +
+      '━━━━━━━━━━━━━━━━━━\n' +
+      '아래 주소로 들어가시면\n' +
+      '파시스 SV4.0 프로 화면이 열립니다.\n\n' +
+      '👉 ' + appUrl + '\n\n' +
+      '미리 접속해서 화면 구성을 확인해 두시면\n' +
+      '대회 당일 당황하지 않습니다 😊\n' +
+      '(연습 중 전송 버튼을 누르셔도\n' +
+      ' 실제 조 QR 없이는 전송되지 않습니다)\n\n' +
+      '대회코드: ' + code + '\n' +
+      '문의: 파시스 본부';
+
     var ov = document.createElement('div');
     ov.id = 'pgAccessQrOv';
-    ov.style.cssText = 'position:fixed;inset:0;z-index:200000;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;font-family:"Malgun Gothic",sans-serif;';
+    ov.style.cssText = 'position:fixed;inset:0;z-index:200000;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;font-family:"Malgun Gothic",sans-serif;overflow-y:auto;';
     ov.innerHTML =
-      '<div style="background:#fff;border-radius:18px;padding:24px 22px 20px;width:min(340px,90vw);text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.4);">' +
+      '<div style="background:#fff;border-radius:18px;padding:24px 22px 20px;width:min(340px,90vw);max-height:92vh;overflow-y:auto;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.4);">' +
       '<div style="font-size:17px;font-weight:900;color:#2e7d32;margin-bottom:4px;">📱 파시스 접속 QR</div>' +
       '<div style="font-size:12px;color:#666;margin-bottom:14px;">심판 배포 · 카톡 전송용</div>' +
       '<div id="pgAccessQrCode" style="display:inline-block;padding:10px;background:#fff;border:2px solid #e0e0e0;border-radius:10px;"></div>' +
-      '<div style="font-size:11px;color:#888;margin-top:10px;word-break:break-all;line-height:1.4;">' + appUrl + '</div>' +
-      '<div style="background:#e8f5e9;border-radius:8px;padding:10px 12px;margin:14px 0 6px;font-size:12px;color:#2e7d32;text-align:left;line-height:1.6;">' +
+      '<div style="font-size:11px;color:#888;margin-top:8px;word-break:break-all;line-height:1.4;">' + appUrl + '</div>' +
+
+      /* 카톡 전송 방법 */
+      '<div style="background:#e8f5e9;border-radius:8px;padding:10px 12px;margin:12px 0 6px;font-size:12px;color:#2e7d32;text-align:left;line-height:1.6;">' +
       '📤 <strong>카톡 전송 방법</strong><br>' +
-      '① 이 QR 화면 캡처 (전원+볼륨하 동시)<br>' +
-      '② 심판 단톡방에 이미지 전송<br>' +
-      '③ 심판이 카메라로 QR 스캔 → 파시스 접속' +
+      '① 이 QR 화면 캡처 → 심판 단톡방 전송<br>' +
+      '② 또는 아래 [안내문 복사] 버튼 탭 → 카톡 붙여넣기' +
       '</div>' +
-      '<div style="background:#fff3e0;border-radius:8px;padding:8px 12px;margin-bottom:14px;font-size:12px;color:#e65100;text-align:left;line-height:1.5;">' +
-      '💡 <strong>또는 아래 링크를 카톡으로 직접 전송</strong><br>' +
-      '<span style="color:#1e3c72;font-weight:700;">' + appUrl + '</span>' +
-      '</div>' +
+
+      /* ★ 심판 안내문 복사 버튼 */
+      '<button id="pgCopyGuideBtn" onclick="copyGuideText()" ' +
+      'style="width:100%;padding:13px;background:linear-gradient(135deg,#1e3c72,#0d2247);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:900;cursor:pointer;margin-bottom:8px;">' +
+      '📋 심판 안내문 복사</button>' +
+      '<div id="pgCopyDone" style="display:none;font-size:12px;color:#2e7d32;font-weight:700;margin-bottom:8px;">✅ 복사됐습니다! 카톡에 붙여넣기 하세요.</div>' +
+
       '<button onclick="document.getElementById(\'pgAccessQrOv\').remove()" ' +
       'style="width:100%;padding:12px;background:#2e7d32;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:900;cursor:pointer;">닫기</button>' +
       '</div>';
     document.body.appendChild(ov);
+
+    /* 안내문 복사 함수 */
+    window.copyGuideText = function() {
+      var txt = guideText;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(txt).then(function() {
+          var d = document.getElementById('pgCopyDone');
+          if (d) { d.style.display = 'block'; setTimeout(function(){ d.style.display='none'; }, 3000); }
+        }).catch(function() { fallbackCopy(txt); });
+      } else { fallbackCopy(txt); }
+    };
+    function fallbackCopy(txt) {
+      var ta = document.createElement('textarea');
+      ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try {
+        document.execCommand('copy');
+        var d = document.getElementById('pgCopyDone');
+        if (d) { d.style.display = 'block'; setTimeout(function(){ d.style.display='none'; }, 3000); }
+      } catch(e) { alert('복사 실패. 직접 선택해서 복사해 주세요.'); }
+      document.body.removeChild(ta);
+    }
 
     /* QR 생성 */
     try {
