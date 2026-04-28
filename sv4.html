@@ -2402,60 +2402,78 @@ function test_doPost() {
 
 /* ══ 인쇄 전용 ══ */
 @media print {
-  @page { size:A4 portrait; margin:8mm; }
+  @page { size:A4 portrait; margin:6mm; }
 
   /* 전체 숨기기, pgBatchOv만 표시 */
   body * { visibility:hidden !important; }
   #pgBatchOv, #pgBatchOv * { visibility:visible !important; }
   #pgBatchOv { position:absolute !important; left:0 !important; top:0 !important; width:100% !important; background:#fff !important; overflow:visible !important; }
 
-  #pgBatchTop { position:static !important; background:none !important; color:#000 !important; box-shadow:none !important; padding:0 0 3mm !important; }
-  #pgBatchTop .btn-print, #pgBatchTop .btn-close { display:none !important; }
+  /* 헤더·진행바·완료문구 모두 숨김 */
+  #pgBatchTop { display:none !important; }
+  #pgProgress, #pgProgressTxt { display:none !important; }
 
-  /* 3열 → A4에 3행×3열=9개/페이지 · 가로 8mm 세로 20mm 간격 */
+  /* ★ 9개/장: 3열, 가로 6mm 세로 14mm 간격 */
   #pgBatchGrid {
     display:grid !important;
     grid-template-columns:repeat(3,minmax(0,1fr)) !important;
-    column-gap:8mm !important;
-    row-gap:20mm !important;
+    column-gap:6mm !important;
+    row-gap:14mm !important;
     padding:0 !important;
   }
   /* ★ 6개/장 모드: 2열 */
   #pgBatchGrid[style*="repeat(2"] {
     grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-    column-gap:12mm !important;
-    row-gap:20mm !important;
+    column-gap:10mm !important;
+    row-gap:14mm !important;
   }
-  /* 6개/장 모드에서 QR 크기 키움 */
+  /* 6개/장 QR 크기 키움 */
   #pgBatchGrid[style*="repeat(2"] .pgCard-qr canvas {
-    width:65mm !important;
-    height:65mm !important;
+    width:62mm !important;
+    height:62mm !important;
   }
   .pgCard {
-    border:1.5px solid #888 !important; border-radius:2mm !important;
-    box-shadow:none !important; padding:2mm 2mm 1.5mm !important; background:#fff !important;
+    border:1.5px solid #999 !important; border-radius:2mm !important;
+    box-shadow:none !important; padding:1.5mm 2mm 1mm !important; background:#fff !important;
     break-inside:avoid !important; page-break-inside:avoid !important;
     display:flex !important; flex-direction:column !important; align-items:center !important;
+    overflow:hidden !important;
   }
-  /* QR 박스: 정상 흐름으로 전환 */
+  /* QR 박스 */
   .pgCard-qr { position:static !important; padding-top:0 !important; height:auto !important; }
   .pgCard-qr::before { display:none !important; }
   .pgCard-qr > div { position:static !important; width:100% !important; display:block !important; }
-
-  /* ★ 인쇄: canvas만 표시, img 숨김 / QR 크기 줄여 여백 확보 */
+  /* ★ QR 크기 */
   .pgCard-qr canvas {
     display:block !important;
-    width:50mm !important;
-    height:50mm !important;
+    width:48mm !important;
+    height:48mm !important;
     margin:0 auto !important;
   }
   .pgCard-qr img { display:none !important; }
-  .pgCard-title { font-size:9.5pt !important; margin-bottom:1mm !important; color:#c8860a !important; white-space:nowrap !important; overflow:hidden !important; text-overflow:ellipsis !important; width:100% !important; text-align:center !important; }
-  .pgCard-players { margin-top:1mm !important; gap:1px 3px !important; }
-  .pgCard-pline { font-size:7pt !important; }
+  /* 조명 */
+  .pgCard-title {
+    font-size:9pt !important; margin-bottom:0.8mm !important; color:#c8860a !important;
+    white-space:nowrap !important; overflow:hidden !important; text-overflow:ellipsis !important;
+    width:100% !important; text-align:center !important; line-height:1.2 !important;
+  }
+  /* 선수 목록: 2열 고정, 글자 줄바꿈 금지 */
+  .pgCard-players {
+    width:100% !important; margin-top:0.8mm !important;
+    display:grid !important; grid-template-columns:1fr 1fr !important;
+    gap:0px 2px !important;
+  }
+  .pgCard-player { overflow:hidden !important; }
+  .pgCard-pline {
+    font-size:6.5pt !important; white-space:nowrap !important;
+    overflow:hidden !important; text-overflow:ellipsis !important;
+    display:block !important; max-width:100% !important;
+  }
   .pgCard-pname { font-weight:800 !important; }
-  .pgCard-footer { font-size:6.5pt !important; margin-top:1mm !important; }
-  .pgCard-num { font-size:7px !important; min-width:10px !important; background:none !important; color:#c8860a !important; }
+  .pgCard-pgender { display:none !important; } /* 인쇄 시 성별 숨김으로 공간 확보 */
+  .pgCard-paffil { font-size:6pt !important; }
+  .pgCard-footer { font-size:6pt !important; margin-top:0.8mm !important; line-height:1.2 !important; }
+  .pgCard-num { font-size:6.5px !important; min-width:9px !important; background:none !important; color:#c8860a !important; }
 }
 
 /* ══ 공통 카드 ══ */
