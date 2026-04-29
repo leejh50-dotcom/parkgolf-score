@@ -2614,7 +2614,8 @@ function test_doPost() {
     display:block !important; max-width:100% !important;
   }
   .pgCard-pname { font-weight:800 !important; }
-  .pgCard-pgender { display:none !important; } /* 인쇄 시 성별 숨김으로 공간 확보 */
+  /* .pgCard-pgender: 인쇄 시에도 표시 */
+  .pgCard-pgender { font-size:6pt !important; color:#555 !important; }
   .pgCard-paffil { font-size:6pt !important; }
   .pgCard-footer { font-size:6pt !important; margin-top:0.8mm !important; line-height:1.2 !important; }
   .pgCard-num { font-size:6.5px !important; min-width:9px !important; background:none !important; color:#c8860a !important; }
@@ -2841,6 +2842,12 @@ function test_doPost() {
   }
   function showConfirm(players,teamName,onSend){
     var old=document.getElementById('pasisSendOv');if(old)old.remove();
+
+    /* players가 없으면 경고 */
+    if(!players||!players.length){
+      alert('⚠️ 선수 정보를 불러오지 못했습니다.\nQR 스캔 후 점수를 입력한 뒤 다시 시도해주세요.');
+      return;
+    }
 
     /* ── 불참/기권 판정 헬퍼 ── */
     function classify(p){
