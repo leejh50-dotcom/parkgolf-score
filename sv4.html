@@ -2946,7 +2946,6 @@ function test_doPost() {
     var newBtn = btn.cloneNode(true);
     btn.parentNode.replaceChild(newBtn, btn);
     btn = newBtn;
-    btn.onclick = null; /* ★ cloneNode가 복사한 onclick 제거 */
 
     btn.style.background='linear-gradient(135deg,#c8860a 0%,#7a4f00 100%)';
     btn.style.boxShadow='0 5px 10px rgba(122,79,0,.4)';
