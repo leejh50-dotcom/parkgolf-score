@@ -2943,9 +2943,15 @@ function test_doPost() {
   function hookSendBtn(){
     var btn=document.getElementById('autoSendBtn');
     if(!btn){setTimeout(hookSendBtn,300);return;}
+
+    /* ★ 기존 이벤트 리스너 완전 제거 - 버튼 복제 후 교체 */
+    var newBtn = btn.cloneNode(true);
+    btn.parentNode.replaceChild(newBtn, btn);
+    btn = newBtn;
+
     btn.style.background='linear-gradient(135deg,#c8860a 0%,#7a4f00 100%)';
     btn.style.boxShadow='0 5px 10px rgba(122,79,0,.4)';
-    btn.onclick=function(ev){
+    btn.addEventListener('click', function(ev){
       if(ev){ev.preventDefault();ev.stopPropagation();}
       if(typeof syncVisiblePlayersToHidden==='function')syncVisiblePlayersToHidden();
       var players;
@@ -2955,20 +2961,233 @@ function test_doPost() {
         else players=[];
       }
       catch(e){alert('❌ '+e.message);return false;}
-      if(!players||!players.length){
-        var sf=typeof sendToGoogleSheetPatchedV4==='function'?sendToGoogleSheetPatchedV4:window.sendToGoogleSheet;
-        if(typeof sf==='function')sf();return false;
-      }
       var teamName=String(((document.getElementById('teamName')||{}).value||'')).trim()||'팀명';
+
+      if(!players||!players.length){
+        setTimeout(function(){
+          try{
+            if(typeof collectPlayersForSendV4==='function') players=collectPlayersForSendV4();
+            else if(typeof window.collectPlayersForSend==='function') players=window.collectPlayersForSend();
+          }catch(e){}
+          showConfirm(players||[],teamName,function(cp,ct){
+            var sendFn=typeof sendToGoogleSheetPatchedV4==='function'?sendToGoogleSheetPatchedV4:window.sendToGoogleSheet;
+            if(typeof sendFn==='function')sendFn();
+          });
+        },300);
+        return false;
+      }
+
       showConfirm(players,teamName,function(cp,ct){
         var sendFn=typeof sendToGoogleSheetPatchedV4==='function'?sendToGoogleSheetPatchedV4:window.sendToGoogleSheet;
         if(typeof sendFn==='function')sendFn();
       });
       return false;
-    };
+    }, true); /* ★ capture:true — obfuscated 리스너보다 먼저 실행 */
   }
   /* ★ window.load가 </html> 이후 스크립트보다 먼저 발생하는 타이밍 버그 대응 */
   if(document.readyState==='complete'){setTimeout(hookSendBtn,200);}
   else{window.addEventListener('load',function(){setTimeout(hookSendBtn,200);});}
+})();
+</script>
+
+
+<script>
+/* ===== PASIS SV4 전송 상세 확인창 강제 복원 패치 v2 =====
+   - 기존 코드가 버튼을 다시 cloneNode 해도 이 패치가 다시 붙습니다.
+   - data-* 속성을 쓰지 않고 DOM expando 속성으로만 중복을 막습니다.
+*/
+(function(){
+  var realSendFn = window.sendToGoogleSheetPatchedV4 || window.sendToGoogleSheet;
+
+  function esc(s){
+    return String(s == null ? '' : s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+  function text(id){
+    var el = document.getElementById(id);
+    return el ? String(el.value || el.textContent || el.innerText || '').replace(/\u00a0/g,' ').trim() : '';
+  }
+  function num(v){
+    var n = parseInt(String(v == null ? '' : v).replace(/[^0-9]/g,''),10);
+    return isNaN(n) ? 0 : n;
+  }
+  function parseHeader(i){
+    var raw = text('nameHeader'+i).replace(/\s+/g,' ').trim();
+    var info = {name:'', gender:'', affiliation:''};
+    if(!raw) return info;
+    var m = raw.match(/^(.+?)\s*\(\s*([남여])\s*(?:[,/]?\s*([^\)]+?))?\s*\)$/);
+    if(m){
+      info.name = String(m[1]||'').trim();
+      info.gender = String(m[2]||'').trim();
+      info.affiliation = String(m[3]||'').trim();
+    }else{
+      var nm = raw.replace(/^\d+\s*/,'').trim();
+      if(!/^경기자\s*\d+$/.test(nm)) info.name = nm;
+    }
+    return info;
+  }
+  function syncBeforeCollect(){
+    for(var i=1;i<=4;i++){
+      var h = parseHeader(i);
+      var p = document.getElementById('player'+i);
+      var g = document.getElementById('gender'+i);
+      var a = document.getElementById('affiliation'+i);
+      var name = text('player'+i) || h.name;
+      var gender = text('gender'+i) || h.gender;
+      var aff = text('affiliation'+i) || h.affiliation;
+      if(p) p.value = name;
+      if(g) g.value = gender;
+      if(a) a.value = aff;
+      if(window.playerNames) window.playerNames[i-1] = name;
+      if(window.playerGenders) window.playerGenders[i-1] = gender;
+      if(window.playerAffiliations) window.playerAffiliations[i-1] = aff;
+      ['A','B','C','D'].forEach(function(c){
+        var el = document.getElementById('in-'+c+'-'+i);
+        var v = text('in-'+c+'-'+i).replace(/[^0-9]/g,'').slice(0,2);
+        if(el) el.value = v;
+        if(window.summaryScores && window.summaryScores[c]) window.summaryScores[c][i] = v;
+      });
+      if(window.summaryScores && window.summaryScores.HIO) window.summaryScores.HIO[i] = text('in-HIO-'+i);
+    }
+    try{ if(typeof window.autoSave === 'function') window.autoSave(); }catch(e){}
+  }
+  function collectPlayers(){
+    syncBeforeCollect();
+    var arr = [];
+    for(var i=1;i<=4;i++){
+      var h = parseHeader(i);
+      var name = text('player'+i) || h.name;
+      var gender = text('gender'+i) || h.gender;
+      var aff = text('affiliation'+i) || h.affiliation;
+      var A = num(text('in-A-'+i) || (window.summaryScores&&window.summaryScores.A&&window.summaryScores.A[i]));
+      var B = num(text('in-B-'+i) || (window.summaryScores&&window.summaryScores.B&&window.summaryScores.B[i]));
+      var C = num(text('in-C-'+i) || (window.summaryScores&&window.summaryScores.C&&window.summaryScores.C[i]));
+      var D = num(text('in-D-'+i) || (window.summaryScores&&window.summaryScores.D&&window.summaryScores.D[i]));
+      var note = text('in-HIO-'+i);
+      var exists = !!(name || gender || aff || A || B || C || D || note);
+      if(!exists) continue;
+      if(!name) continue;
+      if(!gender) throw new Error('⚠️ ' + name + ' 선수의 성별을 선택해주세요.');
+      arr.push({slot:i,name:name,gender:gender,affiliation:aff,A:A,B:B,C:C,D:D,holeInOne:note,total:A+B+C+D});
+    }
+    return arr;
+  }
+  function remove(id){ var el=document.getElementById(id); if(el) el.remove(); }
+  function classify(p){
+    var note = String(p.holeInOne||'');
+    if(note.indexOf('불참')>-1) return 'absent';
+    if(note.indexOf('기권')>-1) return 'quit';
+    if(p.A===0 && p.B===0 && p.C===0 && p.D===0 && p.total===0) return 'absent';
+    if((p.A===0 || p.B===0 || p.C===0 || p.D===0) && p.total>0) return 'quit';
+    return 'normal';
+  }
+  function done(team, players){
+    remove('pasisDoneOv_v2');
+    var ov=document.createElement('div');
+    ov.id='pasisDoneOv_v2';
+    ov.style.cssText='position:fixed;inset:0;z-index:2147483606;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:16px;font-family:"Malgun Gothic",sans-serif;';
+    ov.innerHTML='<div style="width:min(340px,92vw);background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.35);text-align:center;">'
+      +'<div style="padding:28px 20px 12px;"><div style="font-size:44px;">✅</div><div style="font-size:24px;font-weight:900;color:#1e3c72;">전송 완료!</div>'
+      +'<div style="font-size:14px;line-height:1.65;color:#4b5563;margin-top:10px;"><strong>'+esc(team)+'</strong><br>'+esc(players.map(function(p){return p.name;}).join(' · '))+'<br><span style="color:#c8860a;font-weight:800;">구글시트에 기록되었습니다.</span></div></div>'
+      +'<div style="padding:14px 20px 20px;"><button id="pasisDoneClose_v2" style="width:100%;padding:14px;border:none;border-radius:14px;background:#c8860a;color:#fff;font-size:18px;font-weight:900;">확인</button></div></div>';
+    document.body.appendChild(ov);
+    var cl=function(){remove('pasisDoneOv_v2');};
+    document.getElementById('pasisDoneClose_v2').onclick=cl;
+    ov.onclick=function(e){if(e.target===ov)cl();};
+    setTimeout(cl,4000);
+  }
+  function sending(){
+    remove('pasisSendingOv_v2');
+    var ov=document.createElement('div');
+    ov.id='pasisSendingOv_v2';
+    ov.style.cssText='position:fixed;inset:0;z-index:2147483605;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:16px;font-family:"Malgun Gothic",sans-serif;';
+    ov.innerHTML='<div style="background:#fff;border-radius:18px;padding:28px 36px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);"><div style="font-size:40px;">⏳</div><div style="font-size:20px;font-weight:900;color:#1e3c72;">전송 중...</div><div style="font-size:13px;color:#6b7280;margin-top:6px;">잠시 기다려 주세요</div></div>';
+    document.body.appendChild(ov);
+    return ov;
+  }
+  function showConfirm(players, team){
+    remove('pasisSendOv_v2');
+    var rows = players.map(function(p){
+      var st=classify(p), badge='', row='background:#fff;border:1.5px solid #e8d9b5;';
+      var total='<span style="font-size:26px;font-weight:900;color:#c8860a;">'+esc(p.total)+'</span><span style="font-size:12px;color:#8b6b2d;font-weight:700;"> 타</span>';
+      if(st==='absent'){ badge='<span style="margin-left:6px;padding:2px 7px;border-radius:6px;background:#fef2f2;border:1px solid #fca5a5;color:#dc2626;font-size:11px;font-weight:900;">불참</span>'; row+='opacity:.78;background:#f9f9f9;border-color:#ddd;'; total='<span style="font-size:13px;color:#9ca3af;font-weight:800;">순위제외</span>'; }
+      if(st==='quit'){ badge='<span style="margin-left:6px;padding:2px 7px;border-radius:6px;background:#fffbeb;border:1px solid #fcd34d;color:#d97706;font-size:11px;font-weight:900;">기권</span>'; row+='background:#fffdf4;border-color:#f2cf75;'; total='<span style="font-size:13px;color:#d97706;font-weight:900;">기권처리</span>'; }
+      var meta=[p.gender,p.affiliation].filter(Boolean).map(esc).join(', ');
+      return '<div style="'+row+'border-radius:14px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;">'
+        +'<div style="min-width:0;flex:1;"><div style="font-size:18px;font-weight:900;color:#1e3c72;line-height:1.35;">'+esc(p.name)+(meta?' <span style="font-size:13px;font-weight:700;color:#6b7280;">('+meta+')</span>':'')+badge+'</div>'
+        +'<div style="font-size:13px;color:#555;line-height:1.55;margin-top:4px;">A:'+esc(p.A)+' B:'+esc(p.B)+' C:'+esc(p.C)+' D:'+esc(p.D)+(p.holeInOne?' · '+esc(p.holeInOne):'')+'</div></div>'
+        +'<div style="min-width:80px;text-align:right;white-space:nowrap;">'+total+'</div></div>';
+    }).join('');
+    var ov=document.createElement('div');
+    ov.id='pasisSendOv_v2';
+    ov.style.cssText='position:fixed;inset:0;z-index:2147483604;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:14px;font-family:"Malgun Gothic",sans-serif;';
+    ov.innerHTML='<div style="width:min(360px,94vw);max-height:92vh;background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.35);">'
+      +'<div style="background:linear-gradient(135deg,#c8860a 0%,#9b6400 100%);padding:16px 18px 14px;color:#fff;"><div style="font-size:22px;font-weight:900;">📋 전송 전 확인</div><div style="font-size:15px;font-weight:700;margin-top:3px;">'+esc(team)+' · '+players.length+'명</div></div>'
+      +'<div style="padding:14px 14px 6px;max-height:calc(92vh - 220px);overflow-y:auto;background:#fffaf0;">'+rows+'</div>'
+      +'<div style="background:#fef3c7;border-top:1px solid #fcd34d;padding:11px 16px;font-size:13px;color:#92400e;line-height:1.55;text-align:center;">⚠️ <strong>전송 후 수정은 불가합니다.</strong><br>오류 발견 시 관리자에게 직접 문의하세요.</div>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px;background:#fff;"><button id="pasisBack_v2" style="padding:14px;border:none;border-radius:16px;background:#e5e7eb;color:#374151;font-size:20px;font-weight:900;line-height:1.25;">← 뒤로<br>(수정)</button><button id="pasisGo_v2" style="padding:14px;border:none;border-radius:16px;background:#c8860a;color:#fff;font-size:20px;font-weight:900;line-height:1.25;">✅ 확인·<br>전송</button></div></div>';
+    document.body.appendChild(ov);
+    document.getElementById('pasisBack_v2').onclick=function(){remove('pasisSendOv_v2');};
+    document.getElementById('pasisGo_v2').onclick=function(){
+      remove('pasisSendOv_v2');
+      doRealSend(players, team);
+    };
+    ov.onclick=function(e){if(e.target===ov)remove('pasisSendOv_v2');};
+  }
+  function doRealSend(players, team){
+    var ov=sending(), cleaned=false, timer;
+    var oldToast=window.showToast, oldAlert=window.alert;
+    function cleanup(){
+      if(cleaned) return;
+      cleaned=true; clearTimeout(timer); remove('pasisSendingOv_v2');
+      window.showToast=oldToast; window.alert=oldAlert;
+    }
+    timer=setTimeout(cleanup,10000);
+    window.showToast=function(msg){
+      cleanup();
+      if(String(msg).indexOf('완료')>-1 || String(msg).indexOf('전송')>-1) done(team,players);
+      if(typeof oldToast==='function') return oldToast.apply(this,arguments);
+    };
+    window.alert=function(msg){ cleanup(); return oldAlert.apply(this,arguments); };
+    var fn = realSendFn || window.sendToGoogleSheetPatchedV4 || window.sendToGoogleSheet;
+    if(typeof fn==='function') fn();
+    else { cleanup(); oldAlert('❌ 전송 함수를 찾을 수 없습니다.'); }
+  }
+  function onClick(ev){
+    if(ev){ ev.preventDefault(); ev.stopPropagation(); ev.stopImmediatePropagation && ev.stopImmediatePropagation(); }
+    var team=text('teamName') || '팀명', players;
+    try{ players=collectPlayers(); }
+    catch(e){ alert(e.message||String(e)); return false; }
+    if(!players.length){
+      setTimeout(function(){
+        try{ var ps=collectPlayers(); if(ps.length) showConfirm(ps,team); else alert('전송할 선수 정보를 아직 불러오지 못했습니다. 잠시 후 다시 눌러주세요.'); }
+        catch(e){ alert(e.message||String(e)); }
+      },150);
+      return false;
+    }
+    showConfirm(players,team);
+    return false;
+  }
+  function bind(){
+    var btn=document.getElementById('autoSendBtn');
+    if(!btn || btn.__pasisDetailV2Bound) return;
+    btn.__pasisDetailV2Bound=true;
+    btn.onclick=null;
+    btn.style.background='linear-gradient(135deg,#c8860a 0%,#7a4f00 100%)';
+    btn.style.boxShadow='0 5px 10px rgba(122,79,0,.4)';
+    btn.addEventListener('click',onClick,true);
+  }
+  function repeat(){
+    bind();
+    [50,200,500,1000,2000,3500,5000,8000].forEach(function(ms){setTimeout(bind,ms);});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',repeat);
+  else repeat();
+  window.addEventListener('load',repeat);
+  try{
+    new MutationObserver(function(){ setTimeout(bind,0); }).observe(document.documentElement,{childList:true,subtree:true});
+  }catch(e){}
+  window.collectPlayersForSendDetailedV2=collectPlayers;
 })();
 </script>
