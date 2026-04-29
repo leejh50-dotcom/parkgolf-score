@@ -2038,19 +2038,8 @@ function test_doPost() {
   }
 
   window.sendToGoogleSheet = sendToGoogleSheetPatched;
-
-  document.addEventListener('DOMContentLoaded', function() {
-    var btn = document.getElementById('autoSendBtn');
-    if (!btn) return;
-    btn.onclick = function(ev) {
-      if (ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-      }
-      sendToGoogleSheetPatched();
-      return false;
-    };
-  });
+  /* ★ DOMContentLoaded에서 btn.onclick 직접 바인딩 제거:
+     하단 hookSendBtn()이 capture:true로 showConfirm 오버레이를 먼저 처리 */
 })();
 </script>
 
