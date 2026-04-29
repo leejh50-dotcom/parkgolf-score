@@ -55,6 +55,7 @@
   }
   .player-name-wrap{flex:1;}
   .player-name{font-size:17px;font-weight:900;color:#1a1a1a;line-height:1.15;}
+  .player-affil{font-size:12px;font-weight:600;color:var(--gray);margin-left:5px;vertical-align:middle;}
   .player-meta-txt{font-size:11px;color:var(--gray);}
   .gender-badge{padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;flex-shrink:0;}
   .gender-m{background:#dbeafe;color:#1d4ed8;}
@@ -80,13 +81,13 @@
     display:flex;align-items:center;gap:8px;
     padding:5px 10px 9px;border-top:1px dashed #e5d9b8;
   }
-  .total-box{display:flex;align-items:baseline;gap:2px;}
+  .total-box{display:flex;align-items:baseline;gap:2px;margin-left:auto;}
   .total-label{font-size:12px;font-weight:700;color:var(--gray);}
   .total-val  {font-size:24px;font-weight:900;color:var(--gold);}
   .total-unit {font-size:11px;color:var(--gray);font-weight:600;}
 
   /* 비고 입력 */
-  .bigo-wrap{margin-left:auto;display:flex;align-items:center;gap:6px;}
+  .bigo-wrap{display:flex;align-items:center;gap:6px;}
   .bigo-label{font-size:11px;font-weight:700;color:var(--gray);white-space:nowrap;}
   .bigo-input{
     width:90px;height:30px;border:1.5px solid #e5d9b8;border-radius:8px;
@@ -237,7 +238,7 @@
   <div class="done-players" id="donePlayers"></div>
   <div class="done-promo">
     <div class="done-promo-title">── PASIS 시스템 안내 ──</div>
-    <a class="done-promo-btn" href="https://leejh50-dotcom.github.io/parkgolf-score/sv2.html" target="_blank">
+    <a class="done-promo-btn" href="https://songgeun25.tistory.com/332" target="_blank">
       <span class="done-promo-icon">📋</span>
       <span class="done-promo-info">
         <span class="done-promo-name">PASIS SV2.0 클럽용</span>
@@ -245,7 +246,7 @@
       </span>
       <span class="done-promo-arr">›</span>
     </a>
-    <a class="done-promo-btn" href="https://songgeun25.tistory.com" target="_blank">
+    <a class="done-promo-btn" href="https://songgeun25.tistory.com/555" target="_blank">
       <span class="done-promo-icon">🏅</span>
       <span class="done-promo-info">
         <span class="done-promo-name">PASIS SV3.0 클럽·대회용</span>
@@ -291,7 +292,7 @@
   <div class="promo-section">
     <div class="promo-title">── PASIS 시스템 안내 ──</div>
     <div class="promo-btns">
-      <a class="promo-btn" href="https://leejh50-dotcom.github.io/parkgolf-score/sv2.html" target="_blank">
+      <a class="promo-btn" href="https://songgeun25.tistory.com/332" target="_blank">
         <span class="promo-btn-icon">📋</span>
         <span class="promo-btn-info">
           <span class="promo-btn-name">PASIS SV2.0 클럽용</span>
@@ -299,7 +300,7 @@
         </span>
         <span class="promo-btn-arr">›</span>
       </a>
-      <a class="promo-btn" href="https://songgeun25.tistory.com" target="_blank">
+      <a class="promo-btn" href="https://songgeun25.tistory.com/555" target="_blank">
         <span class="promo-btn-icon">🏅</span>
         <span class="promo-btn-info">
           <span class="promo-btn-name">PASIS SV3.0 클럽·대회용</span>
@@ -383,8 +384,7 @@ function renderUI() {
       '<div class="player-head">' +
         '<div class="player-num">' + p.slot + '</div>' +
         '<div class="player-name-wrap">' +
-          '<div class="player-name">' + esc(p.name) + '</div>' +
-          (p.affil ? '<div class="player-meta-txt">' + esc(p.affil) + '</div>' : '') +
+          '<div class="player-name">' + esc(p.name) + (p.affil ? ' <span class="player-affil">' + esc(p.affil) + '</span>' : '') + '</div>' +
         '</div>' + gb +
       '</div>' +
       '<div class="score-grid">' +
@@ -395,12 +395,12 @@ function renderUI() {
         }).join('') +
       '</div>' +
       '<div class="bottom-row">' +
-        '<div class="total-box"><span class="total-label">합계&nbsp;</span><span class="total-val" id="tot-'+idx+'">—</span><span class="total-unit">&nbsp;타</span></div>' +
         '<div class="bigo-wrap">' +
           '<span class="bigo-label">비고</span>' +
           '<input class="bigo-input" type="text" placeholder="예)A9홀인원" maxlength="10" ' +
             'id="bigo-'+idx+'" oninput="onBigo(this,'+idx+')" onfocus="onFocus('+idx+')" onblur="onBlur('+idx+')">' +
         '</div>' +
+        '<div class="total-box"><span class="total-val" id="tot-'+idx+'">—</span><span class="total-unit">&nbsp;타</span><span class="total-label">&nbsp;합계</span></div>' +
       '</div>';
     list.appendChild(card);
   });
@@ -432,20 +432,20 @@ function onBlur(idx)  { setTimeout(function(){ var c=document.getElementById('ca
 function openConfirm() {
   // 유효성 검사: 빈 칸 있어도 통과 (불참/기권 자동 처리)
   // 단, 모든 칸이 비어있지 않은 선수 중 일부만 빈 경우 경고
-  var warn = [];
-  APP.players.forEach(function(p) {
+  // 일부 코스 비어있으면 안내만 표시하고 진행 (기권 자동 처리)
+  var hasPartial = APP.players.some(function(p) {
     var filled = ['A','B','C','D'].filter(function(c){ return p[c] !== ''; }).length;
-    if (filled > 0 && filled < 4) warn.push(p.name); // 일부만 입력
+    return filled > 0 && filled < 4;
   });
-  if (warn.length > 0) {
-    var b = document.getElementById('errBanner');
-    b.innerHTML = '⚠️ <strong>' + warn.join(', ') + '</strong> — 일부 코스가 비어있습니다.<br>기권이면 빈 칸을 0으로 입력하거나 비워두세요.';
+  var b = document.getElementById('errBanner');
+  if (hasPartial) {
+    b.innerHTML = 'ℹ️ 점수가 없는 칸은 <strong>불참 또는 기권</strong>으로 자동 처리됩니다.';
+    b.style.background = '#eff6ff'; b.style.borderColor = '#93c5fd'; b.style.color = '#1d4ed8';
     b.classList.add('show');
-    window.scrollTo({top:0,behavior:'smooth'});
-    setTimeout(function(){b.classList.remove('show');}, 5000);
-    return;
+    setTimeout(function(){ b.classList.remove('show'); b.style=''; }, 4000);
+  } else {
+    b.classList.remove('show');
   }
-  document.getElementById('errBanner').classList.remove('show');
   document.getElementById('confirmSub').textContent = APP.team + ' · ' + APP.players.length + '명';
 
   document.getElementById('confirmBody').innerHTML = APP.players.map(function(p) {
