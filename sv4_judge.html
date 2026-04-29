@@ -12,90 +12,66 @@
     --gold-dk: #7a4f00;
     --gold-lt: #fef3dc;
     --green:   #1a7a3c;
-    --green-lt:#e8f5ee;
     --red:     #c0392b;
     --gray:    #6b7280;
     --bg:      #f5f0e8;
     --white:   #ffffff;
-    --shadow:  0 4px 20px rgba(0,0,0,0.12);
+    --shadow:  0 3px 14px rgba(0,0,0,0.10);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
   body {
     font-family: 'Noto Sans KR', sans-serif;
-    background: #e8e0d0;
+    background: #ddd8cc;
     min-height: 100vh;
     color: #1a1a1a;
   }
 
-  /* ── 모바일 중심 컨테이너 ── */
   .wrap {
-    max-width: 480px;
+    max-width: 460px;
     margin: 0 auto;
     background: var(--bg);
     min-height: 100vh;
-    box-shadow: 0 0 40px rgba(0,0,0,0.08);
+    box-shadow: 0 0 40px rgba(0,0,0,0.12);
   }
 
-  /* ── 헤더 ── */
+  /* ── 헤더: 컴팩트 ── */
   .hdr {
     background: linear-gradient(135deg, var(--gold-dk) 0%, var(--gold) 100%);
-    padding: 16px 20px 14px;
+    padding: 9px 16px 8px;
     text-align: center;
     position: sticky; top: 0; z-index: 100;
-    box-shadow: 0 3px 12px rgba(122,79,0,0.35);
+    box-shadow: 0 2px 10px rgba(122,79,0,0.35);
   }
+  .hdr-row1 { display: flex; align-items: center; justify-content: center; gap: 7px; }
   .hdr-badge {
-    display: inline-block;
-    background: rgba(255,255,255,0.18);
-    color: #fff;
-    font-size: 11px; font-weight: 700;
-    letter-spacing: 2px;
-    padding: 2px 10px; border-radius: 20px;
-    margin-bottom: 4px;
+    background: rgba(255,255,255,0.2); color: #fff;
+    font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+    padding: 1px 8px; border-radius: 20px;
   }
-  .hdr-title {
-    color: #fff; font-size: 20px; font-weight: 900; line-height: 1.2;
-  }
-  .hdr-sub {
-    color: rgba(255,255,255,0.82); font-size: 13px; margin-top: 3px;
-  }
+  .hdr-title { color: #fff; font-size: 17px; font-weight: 900; }
+  .hdr-sub   { color: rgba(255,255,255,0.85); font-size: 12px; margin-top: 2px; }
 
-  /* ── 조 정보 배너 ── */
-  .team-banner {
+  /* ── 조 정보 ── */
+  .team-bar {
     background: var(--white);
-    margin: 14px 14px 0;
-    border-radius: 14px;
-    padding: 14px 18px;
+    margin: 10px 12px 0;
+    border-radius: 12px;
+    padding: 10px 14px;
     box-shadow: var(--shadow);
-    display: flex; align-items: center; gap: 12px;
-    border-left: 5px solid var(--gold);
+    display: flex; align-items: center; gap: 10px;
+    border-left: 4px solid var(--gold);
   }
-  .team-icon { font-size: 28px; }
-  .team-info { flex: 1; }
-  .team-label { font-size: 12px; color: var(--gray); font-weight: 600; }
-  .team-name  { font-size: 22px; font-weight: 900; color: var(--gold-dk); line-height: 1.2; }
-  .team-code  { font-size: 12px; color: var(--gray); margin-top: 2px; }
-
-  /* ── 섹션 타이틀 ── */
-  .sec-title {
-    font-size: 13px; font-weight: 800; color: var(--gold-dk);
-    letter-spacing: 1px; text-transform: uppercase;
-    padding: 16px 18px 8px;
-    display: flex; align-items: center; gap: 6px;
-  }
-  .sec-title::before {
-    content: ''; display: inline-block;
-    width: 4px; height: 16px; border-radius: 2px;
-    background: var(--gold);
-  }
+  .team-icon { font-size: 22px; }
+  .team-name { font-size: 20px; font-weight: 900; color: var(--gold-dk); }
+  .team-code { font-size: 11px; color: var(--gray); margin-left: auto; }
 
   /* ── 선수 카드 ── */
   .player-card {
     background: var(--white);
-    margin: 0 14px 10px;
-    border-radius: 16px;
+    margin: 8px 12px 0;
+    border-radius: 14px;
     box-shadow: var(--shadow);
     overflow: hidden;
     border: 2px solid transparent;
@@ -104,341 +80,340 @@
   .player-card.active { border-color: var(--gold); }
 
   .player-head {
-    background: linear-gradient(90deg, var(--gold-lt), #fff);
-    padding: 12px 16px;
-    display: flex; align-items: center; gap: 10px;
+    background: linear-gradient(90deg, var(--gold-lt) 0%, #fff 70%);
+    padding: 8px 12px;
+    display: flex; align-items: center; gap: 8px;
     border-bottom: 1px solid #f0d890;
   }
   .player-num {
-    width: 32px; height: 32px; border-radius: 50%;
-    background: var(--gold);
-    color: #fff; font-size: 15px; font-weight: 900;
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--gold); color: #fff;
+    font-size: 14px; font-weight: 900;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
   }
   .player-name-wrap { flex: 1; }
-  .player-name {
-    font-size: 19px; font-weight: 900; color: #1a1a1a; line-height: 1.1;
-  }
-  .player-meta {
-    font-size: 12px; color: var(--gray); margin-top: 2px;
-  }
-  .gender-badge {
-    padding: 3px 10px; border-radius: 20px;
-    font-size: 12px; font-weight: 700;
-    flex-shrink: 0;
-  }
+  .player-name { font-size: 18px; font-weight: 900; color: #1a1a1a; line-height: 1.15; }
+  .player-meta { font-size: 11px; color: var(--gray); }
+  .gender-badge { padding: 2px 9px; border-radius: 20px; font-size: 12px; font-weight: 700; flex-shrink: 0; }
   .gender-m { background: #dbeafe; color: #1d4ed8; }
   .gender-f { background: #fce7f3; color: #be185d; }
 
   /* ── 점수 그리드 ── */
   .score-grid {
     display: grid; grid-template-columns: repeat(4, 1fr);
-    gap: 8px; padding: 12px 14px 14px;
+    gap: 6px; padding: 8px 10px 6px;
   }
   .score-cell { text-align: center; }
-  .score-label {
-    font-size: 13px; font-weight: 800; color: var(--gold-dk);
-    margin-bottom: 5px; display: block;
-  }
+  .score-label { font-size: 12px; font-weight: 800; color: var(--gold-dk); margin-bottom: 4px; display: block; }
   .score-input {
-    width: 100%; height: 60px;
-    border: 2px solid #e5d9b8;
-    border-radius: 12px;
-    font-size: 28px; font-weight: 900; text-align: center;
+    width: 100%; height: 58px;
+    border: 2px solid #e5d9b8; border-radius: 10px;
+    font-size: 26px; font-weight: 900; text-align: center;
     color: #1a1a1a; background: #fffdf7;
-    -webkit-appearance: none; appearance: none;
-    outline: none;
-    transition: border-color .2s, background .2s, transform .1s;
+    -webkit-appearance: none; appearance: none; outline: none;
+    transition: border-color .15s, background .15s;
     font-family: 'Noto Sans KR', sans-serif;
   }
-  .score-input:focus {
-    border-color: var(--gold);
-    background: #fff8e8;
-    transform: scale(1.03);
-  }
+  .score-input:focus   { border-color: var(--gold); background: #fff8e8; }
   .score-input.has-val { border-color: var(--gold); color: var(--gold-dk); }
 
-  /* 합계 표시 */
-  .total-row {
-    padding: 0 14px 14px;
-    display: flex; align-items: center; justify-content: space-between;
+  /* ── 합계 + 비고 행 ── */
+  .bottom-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 10px 10px;
     border-top: 1px dashed #e5d9b8;
-    padding-top: 10px; margin-top: -4px;
   }
-  .total-label { font-size: 14px; font-weight: 700; color: var(--gray); }
-  .total-val   { font-size: 28px; font-weight: 900; color: var(--gold); }
-  .total-unit  { font-size: 14px; color: var(--gray); font-weight: 600; margin-left: 2px; }
+  .total-box { display: flex; align-items: baseline; gap: 3px; }
+  .total-label { font-size: 13px; font-weight: 700; color: var(--gray); }
+  .total-val   { font-size: 26px; font-weight: 900; color: var(--gold); }
+  .total-unit  { font-size: 12px; color: var(--gray); font-weight: 600; }
+
+  .bigo-wrap { margin-left: auto; display: flex; gap: 5px; }
+  .bigo-btn {
+    padding: 4px 9px; border-radius: 20px; border: 1.5px solid #ddd;
+    font-size: 11px; font-weight: 700; cursor: pointer;
+    background: #f9f9f9; color: #666;
+    font-family: 'Noto Sans KR', sans-serif; transition: all .15s;
+  }
+  .bigo-btn.on-absent { background: #fef2f2; border-color: #fca5a5; color: #dc2626; }
+  .bigo-btn.on-quit   { background: #fffbeb; border-color: #fcd34d; color: #d97706; }
+  .bigo-btn.on-hi     { background: #f0fdf4; border-color: #6ee7b7; color: #059669; }
 
   /* ── 주의 배너 ── */
   .warn-banner {
-    background: #fff8e8;
-    border: 1.5px solid #fcd34d;
-    border-radius: 12px;
-    margin: 4px 14px 16px;
-    padding: 12px 16px;
-    display: flex; gap: 10px; align-items: flex-start;
-    font-size: 13px; color: #92400e; line-height: 1.6;
+    background: #fff8e8; border: 1.5px solid #fcd34d;
+    border-radius: 10px; margin: 10px 12px 6px;
+    padding: 9px 14px; display: flex; gap: 8px;
+    font-size: 12px; color: #92400e; line-height: 1.6;
   }
-  .warn-icon { font-size: 18px; flex-shrink: 0; }
 
   /* ── 전송 버튼 ── */
   .send-wrap {
-    padding: 0 14px 32px;
+    padding: 8px 12px 20px;
     position: sticky; bottom: 0;
-    background: linear-gradient(to top, var(--bg) 70%, transparent);
-    padding-top: 12px;
+    background: linear-gradient(to top, var(--bg) 65%, transparent);
+    padding-top: 10px;
   }
   .send-btn {
     width: 100%;
     background: linear-gradient(135deg, var(--gold-dk), var(--gold));
-    color: #fff;
-    border: none; border-radius: 16px;
-    padding: 20px;
-    font-size: 20px; font-weight: 900;
-    cursor: pointer;
-    box-shadow: 0 6px 20px rgba(122,79,0,0.4);
-    transition: transform .1s, box-shadow .1s;
-    font-family: 'Noto Sans KR', sans-serif;
-    letter-spacing: 0.5px;
+    color: #fff; border: none; border-radius: 14px;
+    padding: 15px; font-size: 18px; font-weight: 900;
+    cursor: pointer; box-shadow: 0 5px 16px rgba(122,79,0,0.38);
+    transition: transform .1s; font-family: 'Noto Sans KR', sans-serif;
   }
-  .send-btn:active { transform: scale(0.97); box-shadow: 0 3px 10px rgba(122,79,0,0.3); }
+  .send-btn:active   { transform: scale(0.97); }
   .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ── 홍보 섹션 ── */
+  .promo-section { padding: 18px 12px 28px; border-top: 1px solid #e8e0cc; }
+  .promo-title { font-size: 11px; font-weight: 800; color: var(--gray); letter-spacing: 1px; margin-bottom: 10px; text-align: center; }
+  .promo-btns  { display: flex; flex-direction: column; gap: 8px; }
+  .promo-btn {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--white); border-radius: 12px;
+    padding: 11px 14px; text-decoration: none;
+    box-shadow: var(--shadow); border: 1.5px solid #e8e0cc;
+  }
+  .promo-btn-icon { font-size: 22px; flex-shrink: 0; }
+  .promo-btn-info { flex: 1; }
+  .promo-btn-name { font-size: 14px; font-weight: 900; color: #1a1a1a; display: block; }
+  .promo-btn-desc { font-size: 11px; color: var(--gray); display: block; margin-top: 1px; }
+  .promo-btn-arr  { font-size: 16px; color: #ccc; }
+
+  /* ── 오류 배너 ── */
+  .err-banner {
+    background: #fef2f2; border: 1.5px solid #fca5a5;
+    border-radius: 10px; margin: 0 12px 8px;
+    padding: 10px 14px; font-size: 13px; color: #dc2626;
+    font-weight: 700; display: none;
+  }
+  .err-banner.show { display: block; }
 
   /* ── 확인 오버레이 ── */
   .overlay {
     position: fixed; inset: 0; z-index: 1000;
     background: rgba(0,0,0,0.6);
     display: flex; align-items: center; justify-content: center;
-    padding: 20px;
-    backdrop-filter: blur(3px);
+    padding: 16px; backdrop-filter: blur(3px);
   }
   .overlay.hidden { display: none; }
-
   .confirm-box {
-    background: #fff;
-    border-radius: 20px;
-    width: 100%; max-width: 380px;
-    overflow: hidden;
+    background: #fff; border-radius: 18px;
+    width: 100%; max-width: 380px; overflow: hidden;
     box-shadow: 0 24px 60px rgba(0,0,0,0.35);
-    animation: slideUp .25s ease;
+    animation: slideUp .22s ease;
   }
-  @keyframes slideUp {
-    from { transform: translateY(30px); opacity: 0; }
-    to   { transform: translateY(0);    opacity: 1; }
-  }
+  @keyframes slideUp { from{transform:translateY(24px);opacity:0} to{transform:translateY(0);opacity:1} }
   .confirm-head {
     background: linear-gradient(135deg, var(--gold-dk), var(--gold));
-    color: #fff; padding: 16px 20px 14px;
-    font-size: 18px; font-weight: 900;
+    color: #fff; padding: 14px 18px 12px; font-size: 17px; font-weight: 900;
   }
-  .confirm-head small {
-    display: block; font-size: 13px; opacity: .85; margin-top: 2px; font-weight: 600;
-  }
-  .confirm-body { padding: 10px 14px; max-height: 55vh; overflow-y: auto; }
+  .confirm-head small { display: block; font-size: 12px; opacity: .85; margin-top: 2px; font-weight: 600; }
+  .confirm-body { padding: 10px 12px; max-height: 52vh; overflow-y: auto; }
   .confirm-row {
     display: flex; align-items: center; justify-content: space-between;
     background: var(--gold-lt); border: 1px solid #f0d08a;
-    border-radius: 12px; padding: 10px 14px; margin-bottom: 8px;
+    border-radius: 11px; padding: 9px 12px; margin-bottom: 7px;
   }
-  .confirm-row.absent { background: #f9f9f9; border-color: #ddd; opacity: .7; }
+  .confirm-row.absent { background: #f9f9f9; border-color: #ddd; opacity: .75; }
   .confirm-row.quit   { background: #fffdf0; border-color: #fcd34d; }
-  .cr-left { flex: 1; }
-  .cr-name  { font-size: 16px; font-weight: 900; color: #1a1a1a; }
-  .cr-detail{ font-size: 12px; color: var(--gray); margin-top: 2px; }
-  .cr-total { font-size: 22px; font-weight: 900; color: var(--gold); padding-left: 8px; white-space: nowrap; }
-  .bigo-badge {
-    display: inline-block; font-size: 10px; font-weight: 800;
-    padding: 1px 7px; border-radius: 4px; margin-left: 5px; vertical-align: middle;
-  }
-  .bigo-absent { background: #fef2f2; color: #dc2626; border: 1px solid #fca5a5; }
-  .bigo-quit   { background: #fffbeb; color: #d97706; border: 1px solid #fcd34d; }
-
+  .cr-left  { flex: 1; }
+  .cr-name  { font-size: 15px; font-weight: 900; }
+  .cr-detail{ font-size: 11px; color: var(--gray); margin-top: 2px; }
+  .cr-right { text-align: right; }
+  .cr-total { font-size: 21px; font-weight: 900; color: var(--gold); }
+  .cr-bigo  { font-size: 10px; font-weight: 800; padding: 1px 6px; border-radius: 4px; margin-top: 2px; display: inline-block; }
+  .cr-bigo-absent { background: #fef2f2; color: #dc2626; border: 1px solid #fca5a5; }
+  .cr-bigo-quit   { background: #fffbeb; color: #d97706; border: 1px solid #fcd34d; }
+  .cr-bigo-hi     { background: #f0fdf4; color: #059669; border: 1px solid #6ee7b7; }
   .confirm-warn {
     background: #fef3c7; border-top: 1px solid #fcd34d;
-    padding: 10px 16px; font-size: 12px; color: #92400e; line-height: 1.6; text-align: center;
+    padding: 9px 14px; font-size: 12px; color: #92400e; line-height: 1.6; text-align: center;
   }
-  .confirm-foot {
-    padding: 10px 14px 14px; display: flex; gap: 10px;
-  }
+  .confirm-foot { padding: 8px 12px 12px; display: flex; gap: 8px; }
   .btn-back, .btn-go {
-    flex: 1; padding: 14px; border: none; border-radius: 13px;
-    font-size: 17px; font-weight: 900; cursor: pointer;
+    flex: 1; padding: 13px; border: none; border-radius: 12px;
+    font-size: 16px; font-weight: 900; cursor: pointer;
     font-family: 'Noto Sans KR', sans-serif; line-height: 1.3;
   }
   .btn-back { background: #e5e7eb; color: #374151; }
   .btn-go   { background: linear-gradient(135deg, var(--gold-dk), var(--gold)); color: #fff; }
 
-  /* ── 전송중 오버레이 ── */
+  /* ── 전송중 ── */
   .sending-box {
-    background: #fff; border-radius: 20px;
-    padding: 40px 30px; text-align: center;
-    width: 260px;
+    background: #fff; border-radius: 18px;
+    padding: 36px 28px; text-align: center; width: 240px;
     box-shadow: 0 24px 60px rgba(0,0,0,0.35);
   }
-  .sending-spinner {
-    font-size: 44px; margin-bottom: 14px;
-    animation: spin 1.2s linear infinite;
-    display: block;
-  }
+  .sending-spinner { font-size: 40px; display: block; margin-bottom: 12px; animation: spin 1.2s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .sending-title { font-size: 20px; font-weight: 900; color: #1e3c72; }
-  .sending-sub   { font-size: 13px; color: var(--gray); margin-top: 6px; }
+  .sending-title { font-size: 18px; font-weight: 900; color: #1e3c72; }
+  .sending-sub   { font-size: 12px; color: var(--gray); margin-top: 5px; }
 
   /* ── 완료 화면 ── */
   #doneScreen {
-    display: none;
-    min-height: 100vh;
+    display: none; min-height: 100vh;
     background: linear-gradient(160deg, var(--green) 0%, #0d4d24 100%);
     align-items: center; justify-content: center;
-    flex-direction: column; text-align: center; padding: 40px 24px;
-    max-width: 480px; margin: 0 auto;
+    flex-direction: column; text-align: center; padding: 40px 20px;
+    max-width: 460px; margin: 0 auto;
   }
   #doneScreen.show { display: flex; }
-  .done-icon { font-size: 80px; margin-bottom: 20px; animation: bounce .6s ease; }
-  @keyframes bounce {
-    0%,100% { transform: scale(1); }
-    50%      { transform: scale(1.15); }
-  }
-  .done-title { font-size: 30px; font-weight: 900; color: #fff; margin-bottom: 8px; }
-  .done-team  { font-size: 22px; font-weight: 800; color: rgba(255,255,255,0.85); }
+  .done-icon  { font-size: 72px; margin-bottom: 16px; animation: bounce .6s ease; }
+  @keyframes bounce { 0%,100%{transform:scale(1)} 50%{transform:scale(1.15)} }
+  .done-title { font-size: 28px; font-weight: 900; color: #fff; }
+  .done-team  { font-size: 20px; font-weight: 800; color: rgba(255,255,255,.85); margin-top: 4px; }
   .done-sub   {
-    font-size: 15px; color: rgba(255,255,255,0.65);
-    margin-top: 14px; line-height: 1.8;
-    background: rgba(0,0,0,0.2); border-radius: 12px;
-    padding: 14px 20px;
+    font-size: 14px; color: rgba(255,255,255,.65); margin-top: 14px; line-height: 1.9;
+    background: rgba(0,0,0,.2); border-radius: 12px; padding: 12px 18px;
   }
-  .done-players {
-    margin-top: 20px; display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 320px;
-  }
+  .done-players { margin-top: 16px; width: 100%; max-width: 300px; display: flex; flex-direction: column; gap: 7px; }
   .done-player-row {
-    background: rgba(255,255,255,0.12);
-    border-radius: 12px; padding: 10px 16px;
-    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(255,255,255,.12); border-radius: 10px;
+    padding: 9px 14px; display: flex; justify-content: space-between; align-items: center;
   }
-  .dp-name  { font-size: 16px; font-weight: 800; color: #fff; }
-  .dp-total { font-size: 18px; font-weight: 900; color: #a7f3d0; }
-
-  /* ── 에러 배너 ── */
-  .err-banner {
-    background: #fef2f2; border: 1.5px solid #fca5a5;
-    border-radius: 12px; margin: 0 14px 12px;
-    padding: 12px 16px; font-size: 14px; color: #dc2626;
-    font-weight: 700; display: none;
+  .dp-name  { font-size: 15px; font-weight: 800; color: #fff; }
+  .dp-right { text-align: right; }
+  .dp-total { font-size: 17px; font-weight: 900; color: #a7f3d0; }
+  .dp-bigo  { font-size: 10px; color: rgba(255,255,255,.6); }
+  .done-promo { margin-top: 24px; width: 100%; max-width: 300px; }
+  .done-promo-title { font-size: 11px; color: rgba(255,255,255,.5); margin-bottom: 8px; letter-spacing: 1px; font-weight: 700; }
+  .done-promo-btn {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(255,255,255,.1); border-radius: 10px;
+    padding: 10px 14px; text-decoration: none; margin-bottom: 7px;
+    border: 1px solid rgba(255,255,255,.15);
   }
-  .err-banner.show { display: block; }
+  .done-promo-icon { font-size: 20px; }
+  .done-promo-info { flex: 1; text-align: left; }
+  .done-promo-name { font-size: 13px; font-weight: 900; color: #fff; display: block; }
+  .done-promo-desc { font-size: 10px; color: rgba(255,255,255,.6); display: block; }
+  .done-promo-arr  { font-size: 14px; color: rgba(255,255,255,.4); }
 
-  /* ── 로딩 화면 ── */
+  /* ── 로딩/오류 ── */
   #loadingScreen {
     display: flex; align-items: center; justify-content: center;
-    min-height: 100vh; flex-direction: column; gap: 16px;
-    background: var(--bg);
-    max-width: 480px; margin: 0 auto;
+    min-height: 100vh; flex-direction: column; gap: 14px;
+    background: var(--bg); max-width: 460px; margin: 0 auto;
   }
-  .loading-logo { font-size: 48px; }
-  .loading-text { font-size: 16px; font-weight: 700; color: var(--gold-dk); }
-
-  /* ── 오류 화면 ── */
+  .loading-logo { font-size: 44px; }
+  .loading-text { font-size: 15px; font-weight: 700; color: var(--gold-dk); }
   #errorScreen {
     display: none; min-height: 100vh;
     align-items: center; justify-content: center;
-    flex-direction: column; gap: 14px; padding: 30px; text-align: center;
-    background: var(--bg);
-    max-width: 480px; margin: 0 auto;
+    flex-direction: column; gap: 12px; padding: 28px; text-align: center;
+    background: var(--bg); max-width: 460px; margin: 0 auto;
   }
   #errorScreen.show { display: flex; }
-  .err-icon  { font-size: 60px; }
-  .err-title { font-size: 22px; font-weight: 900; color: var(--red); }
-  .err-msg   { font-size: 15px; color: var(--gray); line-height: 1.7; }
+  .err-icon  { font-size: 56px; }
+  .err-title { font-size: 20px; font-weight: 900; color: var(--red); }
+  .err-msg   { font-size: 14px; color: var(--gray); line-height: 1.8; }
 
-  /* 메인 콘텐츠 숨김 */
   #mainContent { display: none; }
   #mainContent.show { display: block; }
 </style>
 </head>
 <body>
-
-<!-- ── 로딩 ── -->
 <div class="wrap">
+
 <div id="loadingScreen">
   <div class="loading-logo">⛳</div>
   <div class="loading-text">파시스 점수 전송 준비 중...</div>
 </div>
 
-<!-- ── 오류 ── -->
 <div id="errorScreen">
   <div class="err-icon">⚠️</div>
   <div class="err-title">QR 코드 오류</div>
   <div class="err-msg" id="errorMsg">QR 코드를 다시 스캔해 주세요.<br>문제가 계속되면 관리자에게 문의하세요.</div>
 </div>
 
-<!-- ── 완료 화면 ── -->
 <div id="doneScreen">
   <div class="done-icon">✅</div>
   <div class="done-title">전송 완료!</div>
   <div class="done-team" id="doneTeamName"></div>
-  <div class="done-sub">
-    구글시트에 기록되었습니다.<br>
-    수고하셨습니다! 🏌️
-  </div>
+  <div class="done-sub">구글시트에 정상 기록되었습니다.<br>수고하셨습니다! 🏌️</div>
   <div class="done-players" id="donePlayers"></div>
+  <div class="done-promo">
+    <div class="done-promo-title">── PASIS 시스템 안내 ──</div>
+    <a class="done-promo-btn" href="https://songgeun25.tistory.com" target="_blank">
+      <span class="done-promo-icon">📋</span>
+      <span class="done-promo-info">
+        <span class="done-promo-name">PASIS SV2.0 · SV3.0</span>
+        <span class="done-promo-desc">클럽대회용 점수집계 시스템</span>
+      </span>
+      <span class="done-promo-arr">›</span>
+    </a>
+    <a class="done-promo-btn" href="https://songgeun25.tistory.com" target="_blank">
+      <span class="done-promo-icon">🏆</span>
+      <span class="done-promo-info">
+        <span class="done-promo-name">파시스 블로그</span>
+        <span class="done-promo-desc">파크골프 스마트 관리 솔루션</span>
+      </span>
+      <span class="done-promo-arr">›</span>
+    </a>
+  </div>
 </div>
 
-<!-- ── 메인 ── -->
 <div id="mainContent">
-
-  <!-- 헤더 -->
   <div class="hdr">
-    <div class="hdr-badge">PASIS SV4.0</div>
-    <div class="hdr-title">⛳ 파크골프 점수 전송</div>
+    <div class="hdr-row1">
+      <span class="hdr-badge">PASIS SV4.0</span>
+      <span class="hdr-title">⛳ 파크골프 점수 전송</span>
+    </div>
     <div class="hdr-sub" id="hdrSub">점수를 입력하고 전송하세요</div>
   </div>
 
-  <!-- 조 정보 -->
-  <div class="team-banner">
-    <div class="team-icon">🏌️</div>
-    <div class="team-info">
-      <div class="team-label">조 명</div>
-      <div class="team-name" id="teamNameDisp">—</div>
-      <div class="team-code" id="teamCodeDisp"></div>
-    </div>
+  <div class="team-bar">
+    <span class="team-icon">🏌️</span>
+    <span class="team-name" id="teamNameDisp">—</span>
+    <span class="team-code" id="teamCodeDisp"></span>
   </div>
 
-  <!-- 오류 배너 -->
+  <div style="height:8px"></div>
   <div class="err-banner" id="errBanner"></div>
-
-  <!-- 선수 목록 -->
-  <div class="sec-title">선수별 코스 점수 입력</div>
   <div id="playerList"></div>
 
-  <!-- 주의 -->
   <div class="warn-banner">
-    <span class="warn-icon">⚠️</span>
-    <span>전송 후 <strong>수정이 불가</strong>합니다.<br>점수를 꼭 확인하고 전송하세요.</span>
+    <span>⚠️</span>
+    <span>전송 후 <strong>수정이 불가</strong>합니다. 점수를 꼭 확인하고 전송하세요.</span>
   </div>
 
-  <!-- 전송 버튼 -->
   <div class="send-wrap">
     <button class="send-btn" id="sendBtn" onclick="openConfirm()">
       📤 구글시트 자동 전송
     </button>
   </div>
 
-</div><!-- /mainContent -->
-</div><!-- /wrap -->
+  <div class="promo-section">
+    <div class="promo-title">── PASIS 시스템 안내 ──</div>
+    <div class="promo-btns">
+      <a class="promo-btn" href="https://songgeun25.tistory.com" target="_blank">
+        <span class="promo-btn-icon">📋</span>
+        <span class="promo-btn-info">
+          <span class="promo-btn-name">PASIS SV2.0</span>
+          <span class="promo-btn-desc">클럽대회용 간편 점수집계</span>
+        </span>
+        <span class="promo-btn-arr">›</span>
+      </a>
+      <a class="promo-btn" href="https://songgeun25.tistory.com" target="_blank">
+        <span class="promo-btn-icon">🏅</span>
+        <span class="promo-btn-info">
+          <span class="promo-btn-name">PASIS SV3.0</span>
+          <span class="promo-btn-desc">클럽대회용 고급 점수집계</span>
+        </span>
+        <span class="promo-btn-arr">›</span>
+      </a>
+    </div>
+  </div>
+</div>
 
-<!-- ── 확인 오버레이 ── -->
 <div class="overlay hidden" id="confirmOv">
   <div class="confirm-box">
-    <div class="confirm-head">
-      📋 전송 전 확인
-      <small id="confirmSub"></small>
-    </div>
+    <div class="confirm-head">📋 전송 전 확인<small id="confirmSub"></small></div>
     <div class="confirm-body" id="confirmBody"></div>
-    <div class="confirm-warn">
-      ⚠️ <strong>전송 후 수정은 불가합니다.</strong><br>
-      오류 발견 시 관리자에게 직접 문의하세요.
-    </div>
+    <div class="confirm-warn">⚠️ <strong>전송 후 수정은 불가합니다.</strong><br>오류 발견 시 관리자에게 직접 문의하세요.</div>
     <div class="confirm-foot">
       <button class="btn-back" onclick="closeConfirm()">← 뒤로<br>(수정)</button>
       <button class="btn-go"   onclick="doSend()">✅ 확인·<br>전송</button>
@@ -446,7 +421,6 @@
   </div>
 </div>
 
-<!-- ── 전송중 오버레이 ── -->
 <div class="overlay hidden" id="sendingOv">
   <div class="sending-box">
     <span class="sending-spinner">⏳</span>
@@ -455,21 +429,11 @@
   </div>
 </div>
 
-<script>
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 상태
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-var APP = {
-  code:    '',
-  url:     '',
-  team:    '',
-  date:    '',
-  players: []   // [{name, gender, affil, A, B, C, D, total, holeInOne}]
-};
+</div><!-- /wrap -->
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 초기화: URL 파라미터 파싱
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+<script>
+var APP = { code:'', url:'', team:'', date:'', players:[] };
+
 function init() {
   try {
     var p = new URLSearchParams(window.location.search || '');
@@ -483,36 +447,20 @@ function init() {
       return;
     }
 
-    // 선수 파싱 (1~4번)
     APP.players = [];
     for (var i = 1; i <= 4; i++) {
       var raw = p.get(String(i)) || '';
       if (!raw) continue;
-      var parts = decodeURIComponent(raw).split('|');
-      APP.players.push({
-        slot: i,
-        name:   (parts[0] || '').trim(),
-        gender: (parts[1] || '').trim(),
-        affil:  (parts[2] || '').trim(),
-        A: '', B: '', C: '', D: '',
-        total: 0,
-        holeInOne: ''
-      });
+      var pts = decodeURIComponent(raw).split('|');
+      APP.players.push({ slot:i, name:(pts[0]||'').trim(), gender:(pts[1]||'').trim(), affil:(pts[2]||'').trim(), A:'', B:'', C:'', D:'', total:0, bigo:'' });
     }
 
-    if (APP.players.length === 0) {
-      showError('선수 정보가 없습니다.<br>QR 코드를 다시 스캔해 주세요.');
-      return;
-    }
+    if (!APP.players.length) { showError('선수 정보가 없습니다.<br>QR 코드를 다시 스캔해 주세요.'); return; }
 
-    // UI 렌더링
     renderUI();
     document.getElementById('loadingScreen').style.display = 'none';
     document.getElementById('mainContent').classList.add('show');
-
-  } catch(e) {
-    showError('초기화 오류: ' + e.message);
-  }
+  } catch(e) { showError('초기화 오류: ' + e.message); }
 }
 
 function showError(msg) {
@@ -521,240 +469,169 @@ function showError(msg) {
   document.getElementById('errorMsg').innerHTML = msg;
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// UI 렌더링
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function renderUI() {
   document.getElementById('teamNameDisp').textContent = APP.team;
-  document.getElementById('teamCodeDisp').textContent = '대회코드: ' + APP.code + (APP.date ? '  ·  ' + APP.date : '');
+  document.getElementById('teamCodeDisp').textContent = APP.code + (APP.date ? ' · ' + APP.date : '');
   document.getElementById('hdrSub').textContent = APP.team + ' · ' + APP.players.length + '명';
 
   var list = document.getElementById('playerList');
   list.innerHTML = '';
-
   APP.players.forEach(function(p, idx) {
     var card = document.createElement('div');
-    card.className = 'player-card';
-    card.id = 'card-' + idx;
-
-    var genderBadge = p.gender === '남'
-      ? '<span class="gender-badge gender-m">남</span>'
-      : p.gender === '여'
-        ? '<span class="gender-badge gender-f">여</span>'
-        : '';
-
-    var metaText = [p.gender ? '' : '', p.affil].filter(Boolean).join(' · ');
-
+    card.className = 'player-card'; card.id = 'card-' + idx;
+    var gb = p.gender==='남' ? '<span class="gender-badge gender-m">남</span>' : p.gender==='여' ? '<span class="gender-badge gender-f">여</span>' : '';
     card.innerHTML =
       '<div class="player-head">' +
         '<div class="player-num">' + p.slot + '</div>' +
         '<div class="player-name-wrap">' +
           '<div class="player-name">' + esc(p.name) + '</div>' +
           (p.affil ? '<div class="player-meta">' + esc(p.affil) + '</div>' : '') +
-        '</div>' +
-        genderBadge +
+        '</div>' + gb +
       '</div>' +
       '<div class="score-grid">' +
-        ['A','B','C','D'].map(function(c) {
-          return '<div class="score-cell">' +
-            '<span class="score-label">' + c + '코스</span>' +
-            '<input class="score-input" type="number" inputmode="numeric" pattern="[0-9]*" ' +
-              'min="0" max="99" maxlength="2" placeholder="—" ' +
-              'id="sc-' + idx + '-' + c + '" ' +
-              'oninput="onScoreInput(this,' + idx + ',\'' + c + '\')" ' +
-              'onfocus="onFocus(' + idx + ')" ' +
-              'onblur="onBlur(' + idx + ')">' +
-          '</div>';
+        ['A','B','C','D'].map(function(c){
+          return '<div class="score-cell"><span class="score-label">'+c+'코스</span>' +
+            '<input class="score-input" type="number" inputmode="numeric" pattern="[0-9]*" min="0" max="99" placeholder="—" ' +
+            'id="sc-'+idx+'-'+c+'" oninput="onScore(this,'+idx+',\''+c+'\')" onfocus="onFocus('+idx+')" onblur="onBlur('+idx+')"></div>';
         }).join('') +
       '</div>' +
-      '<div class="total-row">' +
-        '<span class="total-label">합 계</span>' +
-        '<span><span class="total-val" id="tot-' + idx + '">—</span><span class="total-unit"> 타</span></span>' +
+      '<div class="bottom-row">' +
+        '<div class="total-box"><span class="total-label">합계&nbsp;</span><span class="total-val" id="tot-'+idx+'">—</span><span class="total-unit">&nbsp;타</span></div>' +
+        '<div class="bigo-wrap">' +
+          '<button class="bigo-btn" id="bb-absent-'+idx+'" onclick="toggleBigo('+idx+',\'불참\')">불참</button>' +
+          '<button class="bigo-btn" id="bb-quit-'+idx+'"   onclick="toggleBigo('+idx+',\'기권\')">기권</button>' +
+          '<button class="bigo-btn" id="bb-hi-'+idx+'"     onclick="toggleBigo('+idx+',\'홀인원\')">홀인원</button>' +
+        '</div>' +
       '</div>';
-
     list.appendChild(card);
   });
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 점수 입력 핸들러
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function onScoreInput(el, idx, course) {
-  // 숫자만, 최대 2자리
+function onScore(el, idx, c) {
   var v = el.value.replace(/[^0-9]/g,'').slice(0,2);
   el.value = v;
-  APP.players[idx][course] = v === '' ? '' : Number(v);
+  APP.players[idx][c] = v === '' ? '' : Number(v);
   el.classList.toggle('has-val', v !== '');
-  updateTotal(idx);
+  calcTotal(idx);
+  if (v !== '' && (APP.players[idx].bigo === '불참' || APP.players[idx].bigo === '기권')) {
+    APP.players[idx].bigo = ''; refreshBigo(idx);
+  }
 }
 
-function updateTotal(idx) {
+function calcTotal(idx) {
+  var p = APP.players[idx], sum = 0, has = false;
+  ['A','B','C','D'].forEach(function(c){ if(p[c]!==''){sum+=Number(p[c]);has=true;} });
+  p.total = has ? sum : 0;
+  var el = document.getElementById('tot-'+idx);
+  if (el) el.textContent = has ? sum : '—';
+}
+
+function toggleBigo(idx, val) {
   var p = APP.players[idx];
-  var sum = 0, hasAny = false;
-  ['A','B','C','D'].forEach(function(c){
-    if (p[c] !== '') { sum += Number(p[c]); hasAny = true; }
+  if (p.bigo === val) { p.bigo = ''; }
+  else {
+    p.bigo = val;
+    if (val === '불참') {
+      ['A','B','C','D'].forEach(function(c){ p[c]=0; var e=document.getElementById('sc-'+idx+'-'+c); if(e){e.value='0';e.classList.add('has-val');} });
+      calcTotal(idx);
+    }
+    if (val === '기권') {
+      ['A','B','C','D'].forEach(function(c){ if(p[c]===''){p[c]=0;var e=document.getElementById('sc-'+idx+'-'+c);if(e){e.value='0';e.classList.add('has-val');}} });
+      calcTotal(idx);
+    }
+  }
+  refreshBigo(idx);
+}
+
+function refreshBigo(idx) {
+  var b = APP.players[idx].bigo;
+  var m = {'불참':'absent','기권':'quit','홀인원':'hi'};
+  ['불참','기권','홀인원'].forEach(function(v){
+    var btn = document.getElementById('bb-'+m[v]+'-'+idx);
+    if (btn) btn.className = 'bigo-btn' + (b===v ? ' on-'+m[v] : '');
   });
-  p.total = hasAny ? sum : 0;
-  var el = document.getElementById('tot-' + idx);
-  if (el) el.textContent = hasAny ? sum : '—';
 }
 
-function onFocus(idx) {
-  document.getElementById('card-' + idx).classList.add('active');
-}
-function onBlur(idx) {
-  setTimeout(function(){
-    var card = document.getElementById('card-' + idx);
-    if (card && !card.contains(document.activeElement))
-      card.classList.remove('active');
-  }, 100);
-}
+function onFocus(idx) { document.getElementById('card-'+idx).classList.add('active'); }
+function onBlur(idx)  { setTimeout(function(){ var c=document.getElementById('card-'+idx); if(c&&!c.contains(document.activeElement))c.classList.remove('active'); },100); }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 확인 오버레이
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function openConfirm() {
-  // 유효성 검사
   var missing = [];
   APP.players.forEach(function(p) {
-    ['A','B','C','D'].forEach(function(c){
-      if (p[c] === '') missing.push(p.name + ' ' + c + '코스');
-    });
+    if (p.bigo==='불참'||p.bigo==='기권') return;
+    ['A','B','C','D'].forEach(function(c){ if(p[c]==='') missing.push(p.name+' '+c+'코스'); });
   });
-
   if (missing.length > 0) {
-    var banner = document.getElementById('errBanner');
-    banner.textContent = '⚠️ 미입력 항목이 있습니다: ' + missing.slice(0,3).join(', ') + (missing.length > 3 ? ' 외 ' + (missing.length-3) + '개' : '');
-    banner.classList.add('show');
-    document.getElementById('playerList').scrollIntoView({behavior:'smooth'});
-    setTimeout(function(){ banner.classList.remove('show'); }, 4000);
-    return;
+    var b = document.getElementById('errBanner');
+    b.textContent = '⚠️ 미입력: ' + missing.slice(0,3).join(', ') + (missing.length>3?' 외 '+(missing.length-3)+'개':'');
+    b.classList.add('show'); window.scrollTo({top:0,behavior:'smooth'});
+    setTimeout(function(){b.classList.remove('show');},4000); return;
   }
   document.getElementById('errBanner').classList.remove('show');
-
-  // 확인창 내용 생성
   document.getElementById('confirmSub').textContent = APP.team + ' · ' + APP.players.length + '명';
 
-  var body = document.getElementById('confirmBody');
-  body.innerHTML = APP.players.map(function(p) {
-    var allZero  = (p.A===0&&p.B===0&&p.C===0&&p.D===0);
-    var someZero = !allZero && (p.A===0||p.B===0||p.C===0||p.D===0);
-    var cls = allZero ? 'absent' : someZero ? 'quit' : '';
-    var badge = allZero
-      ? '<span class="bigo-badge bigo-absent">불참</span>'
-      : someZero
-        ? '<span class="bigo-badge bigo-quit">기권</span>'
-        : '';
-    var totalDisp = allZero
-      ? '<span style="font-size:12px;color:#aaa;font-weight:600;">순위제외</span>'
-      : someZero
-        ? '<span style="font-size:12px;color:#d97706;font-weight:700;">기권처리</span>'
-        : '<span class="cr-total">' + p.total + '<small style="font-size:12px;color:#999;font-weight:600;"> 타</small></span>';
-    var detail = 'A:' + p.A + ' B:' + p.B + ' C:' + p.C + ' D:' + p.D;
-    return '<div class="confirm-row ' + cls + '">' +
-      '<div class="cr-left">' +
-        '<div class="cr-name">' + esc(p.name) + badge + '</div>' +
-        '<div class="cr-detail">' + detail + '</div>' +
-      '</div>' +
-      totalDisp +
-    '</div>';
+  document.getElementById('confirmBody').innerHTML = APP.players.map(function(p) {
+    var cls = p.bigo==='불참'?'absent':p.bigo==='기권'?'quit':'';
+    var badge = p.bigo==='불참'?'<span class="cr-bigo cr-bigo-absent">불참</span>':p.bigo==='기권'?'<span class="cr-bigo cr-bigo-quit">기권</span>':p.bigo==='홀인원'?'<span class="cr-bigo cr-bigo-hi">홀인원🌟</span>':'';
+    var tot = p.bigo==='불참'?'<span style="font-size:12px;color:#aaa;font-weight:700">순위제외</span>':p.bigo==='기권'?'<span style="font-size:12px;color:#d97706;font-weight:700">기권처리</span>':'<span class="cr-total">'+p.total+'<small style="font-size:11px;color:#999"> 타</small></span>';
+    var det = 'A:'+(p.A===''?'?':p.A)+' B:'+(p.B===''?'?':p.B)+' C:'+(p.C===''?'?':p.C)+' D:'+(p.D===''?'?':p.D);
+    return '<div class="confirm-row '+cls+'"><div class="cr-left"><div class="cr-name">'+esc(p.name)+'</div><div class="cr-detail">'+det+'</div></div><div class="cr-right">'+tot+(badge?'<br>'+badge:'')+'</div></div>';
   }).join('');
 
   document.getElementById('confirmOv').classList.remove('hidden');
 }
 
-function closeConfirm() {
-  document.getElementById('confirmOv').classList.add('hidden');
-}
+function closeConfirm() { document.getElementById('confirmOv').classList.add('hidden'); }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 전송
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function doSend() {
   closeConfirm();
   document.getElementById('sendingOv').classList.remove('hidden');
   document.getElementById('sendBtn').disabled = true;
 
-  // 비고 자동 설정
-  var playersData = APP.players.map(function(p) {
-    var allZero  = (p.A===0&&p.B===0&&p.C===0&&p.D===0);
-    var someZero = !allZero && (p.A===0||p.B===0||p.C===0||p.D===0);
-    var note = allZero ? '불참' : someZero ? '기권' : '';
-    return {
-      name:        p.name,
-      gender:      p.gender,
-      affiliation: p.affil,
-      A: Number(p.A), B: Number(p.B), C: Number(p.C), D: Number(p.D),
-      total: p.total,
-      holeInOne: note
-    };
-  });
-
-  var body = JSON.stringify({
-    code:    APP.code,
-    team:    APP.team,
-    players: playersData,
-    time:    new Date().toLocaleString('ko-KR', {timeZone:'Asia/Seoul'})
-  });
-
   fetch(APP.url, {
-    method: 'POST',
-    headers: {'Content-Type': 'text/plain'},
-    body: body
+    method:'POST', headers:{'Content-Type':'text/plain'},
+    body: JSON.stringify({
+      code: APP.code, team: APP.team,
+      players: APP.players.map(function(p){
+        return { name:p.name, gender:p.gender, affiliation:p.affil,
+          A:p.A===''?0:Number(p.A), B:p.B===''?0:Number(p.B),
+          C:p.C===''?0:Number(p.C), D:p.D===''?0:Number(p.D),
+          total:p.total, holeInOne:p.bigo };
+      }),
+      time: new Date().toLocaleString('ko-KR',{timeZone:'Asia/Seoul'})
+    })
   })
-  .then(function(r){ return r.json(); })
-  .then(function(res) {
+  .then(function(r){return r.json();})
+  .then(function(res){
     document.getElementById('sendingOv').classList.add('hidden');
-    if (res.success) {
-      showDone();
-    } else {
-      document.getElementById('sendBtn').disabled = false;
-      showSendError(res.message || '전송에 실패했습니다.');
-    }
+    if(res.success){showDone();}
+    else{document.getElementById('sendBtn').disabled=false;showSendError(res.message||'전송에 실패했습니다.');}
   })
-  .catch(function(e) {
+  .catch(function(e){
     document.getElementById('sendingOv').classList.add('hidden');
-    document.getElementById('sendBtn').disabled = false;
-    showSendError('네트워크 오류: ' + e.message);
+    document.getElementById('sendBtn').disabled=false;
+    showSendError('네트워크 오류: '+e.message);
   });
 }
 
 function showSendError(msg) {
-  var banner = document.getElementById('errBanner');
-  banner.textContent = '❌ ' + msg;
-  banner.classList.add('show');
-  window.scrollTo({top: 0, behavior:'smooth'});
+  var b=document.getElementById('errBanner'); b.textContent='❌ '+msg; b.classList.add('show');
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 완료 화면
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function showDone() {
-  document.getElementById('mainContent').style.display = 'none';
-  var done = document.getElementById('doneScreen');
-  done.classList.add('show');
-
+  document.getElementById('mainContent').style.display='none';
+  document.getElementById('doneScreen').classList.add('show');
   document.getElementById('doneTeamName').textContent = APP.team;
-
-  var rows = APP.players.map(function(p) {
-    var allZero = (p.A===0&&p.B===0&&p.C===0&&p.D===0);
-    var scoreDisp = allZero ? '불참' : p.total + ' 타';
-    return '<div class="done-player-row">' +
-      '<span class="dp-name">' + esc(p.name) + '</span>' +
-      '<span class="dp-total">' + scoreDisp + '</span>' +
-    '</div>';
+  document.getElementById('donePlayers').innerHTML = APP.players.map(function(p){
+    var s = p.bigo==='불참'?'불참':p.bigo==='기권'?'기권':p.total+' 타';
+    var b = p.bigo==='홀인원'?'🌟 홀인원':'';
+    return '<div class="done-player-row"><span class="dp-name">'+esc(p.name)+'</span><span class="dp-right"><span class="dp-total">'+s+'</span>'+(b?'<br><span class="dp-bigo">'+b+'</span>':'')+'</span></div>';
   }).join('');
-  document.getElementById('donePlayers').innerHTML = rows;
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 유틸
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function esc(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-// 실행
 window.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
