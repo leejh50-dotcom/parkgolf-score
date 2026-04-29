@@ -2039,7 +2039,19 @@ function test_doPost() {
 
   window.sendToGoogleSheet = sendToGoogleSheetPatched;
 
-  })();
+  document.addEventListener('DOMContentLoaded', function() {
+    var btn = document.getElementById('autoSendBtn');
+    if (!btn) return;
+    btn.onclick = function(ev) {
+      if (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+      }
+      sendToGoogleSheetPatched();
+      return false;
+    };
+  });
+})();
 </script>
 
 </body>
@@ -2474,7 +2486,25 @@ function test_doPost() {
   };
   window.sendToGoogleSheet = sendToGoogleSheetPatchedV4;
 
-  })();
+  document.addEventListener('DOMContentLoaded', function(){
+    syncVisiblePlayersToHidden();
+
+    var btn = document.getElementById('autoSendBtn');
+    if(btn){
+      btn.onclick = function(ev){
+        if(ev){
+          ev.preventDefault();
+          ev.stopPropagation();
+        }
+        sendToGoogleSheetPatchedV4();
+        return false;
+      };
+    }
+
+    setTimeout(syncVisiblePlayersToHidden, 300);
+    setTimeout(syncVisiblePlayersToHidden, 1200);
+  });
+})();
 </script>
 
 <!-- ═══ PASIS SV4.0 최종패치 ═══ -->
@@ -2916,17 +2946,11 @@ function test_doPost() {
     var newBtn = btn.cloneNode(true);
     btn.parentNode.replaceChild(newBtn, btn);
     btn = newBtn;
-    btn.onclick = null;
-    btn.removeAttribute('onclick');
 
     btn.style.background='linear-gradient(135deg,#c8860a 0%,#7a4f00 100%)';
     btn.style.boxShadow='0 5px 10px rgba(122,79,0,.4)';
     btn.addEventListener('click', function(ev){
-      if(ev){
-      ev.preventDefault();
-      ev.stopPropagation();
-      if(ev.stopImmediatePropagation) ev.stopImmediatePropagation();
-    }
+      if(ev){ev.preventDefault();ev.stopPropagation();}
       if(typeof syncVisiblePlayersToHidden==='function')syncVisiblePlayersToHidden();
       var players;
       try{
@@ -2943,11 +2967,7 @@ function test_doPost() {
             if(typeof collectPlayersForSendV4==='function') players=collectPlayersForSendV4();
             else if(typeof window.collectPlayersForSend==='function') players=window.collectPlayersForSend();
           }catch(e){}
-          if(!players||!players.length){
-            alert('전송할 선수 정보를 아직 불러오지 못했습니다. 잠시 후 다시 눌러주세요.');
-            return false;
-          }
-          showConfirm(players,teamName,function(cp,ct){
+          showConfirm(players||[],teamName,function(cp,ct){
             var sendFn=typeof sendToGoogleSheetPatchedV4==='function'?sendToGoogleSheetPatchedV4:window.sendToGoogleSheet;
             if(typeof sendFn==='function')sendFn();
           });
