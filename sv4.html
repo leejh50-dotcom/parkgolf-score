@@ -2800,34 +2800,24 @@ function test_doPost() {
   }
   function forceInitQR(){
     try{
-      /* ★ QR 스캔 시 이전 localStorage 데이터가 덮어쓰는 버그 방지
-         → parkGolfData_sv4 삭제 후 initFromQueryParams 실행 */
-      localStorage.removeItem('parkGolfData_sv4');
-      /* playerNames/Genders/Affiliations 초기화 */
-      try{if(typeof playerNames!=='undefined'){playerNames=['','','',''];}if(typeof playerGenders!=='undefined'){playerGenders=['','','',''];}if(typeof playerAffiliations!=='undefined'){playerAffiliations=['','','',''];}}catch(e2){}
-      /* initFromQueryParams 강제 실행 */
+      /* ★ initFromQueryParams 강제 실행 - QR URL 파라미터로 선수 데이터 로드 */
       if(typeof initFromQueryParams==='function') initFromQueryParams();
     }catch(e){}
     forceScoring();
   }
   if(hasQP()){
-    /* ★ loadData를 1회 차단 - QR 파라미터가 있을 때 localStorage 복원을 막음 */
-    var _origLoadData = window.loadData;
-    if(typeof _origLoadData==='function'){
-      var _loadDataBlocked = false;
-      window.loadData = function(){
-        if(!_loadDataBlocked){ _loadDataBlocked=true; return false; }
-        return _origLoadData.apply(this,arguments);
-      };
-    }
     if(document.readyState==='loading'){
-      document.addEventListener('DOMContentLoaded', function(){ forceInitQR(); setTimeout(forceInitQR,300); });
+      document.addEventListener('DOMContentLoaded', function(){
+        forceInitQR();
+        setTimeout(forceInitQR, 500);
+        setTimeout(forceInitQR, 1200);
+      });
     } else {
       forceInitQR();
+      setTimeout(forceInitQR, 300);
+      setTimeout(forceInitQR, 800);
+      setTimeout(forceInitQR, 1500);
     }
-    setTimeout(forceInitQR,200);
-    setTimeout(forceInitQR,600);
-    setTimeout(forceInitQR,1500);
   }
 
   /* 전송 확인 오버레이 */
@@ -2843,9 +2833,10 @@ function test_doPost() {
   function showConfirm(players,teamName,onSend){
     var old=document.getElementById('pasisSendOv');if(old)old.remove();
 
-    /* players가 없으면 경고 */
+    /* players가 없으면 원본 전송 함수로 폴백 */
     if(!players||!players.length){
-      alert('⚠️ 선수 정보를 불러오지 못했습니다.\nQR 스캔 후 점수를 입력한 뒤 다시 시도해주세요.');
+      var sendFn=typeof sendToGoogleSheetPatchedV4==='function'?sendToGoogleSheetPatchedV4:window.sendToGoogleSheet;
+      if(typeof sendFn==='function') sendFn();
       return;
     }
 
