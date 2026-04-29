@@ -2989,3 +2989,358 @@ function test_doPost() {
   else{window.addEventListener('load',function(){setTimeout(hookSendBtn,200);});}
 })();
 </script>
+
+
+<script>
+/* ===== PASIS SV4 전송 전 상세 확인 복원 패치 (최종) ===== */
+(function(){
+  var originalSendFn = window.sendToGoogleSheetPatchedV4 || window.sendToGoogleSheet;
+
+  function esc(s){
+    return String(s == null ? '' : s)
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;')
+      .replace(/'/g,'&#39;');
+  }
+
+  function getText(el){
+    return el ? String(el.value || el.textContent || el.innerText || '').replace(/\u00a0/g,' ').trim() : '';
+  }
+
+  function readNum(v){
+    var n = parseInt(String(v == null ? '' : v).replace(/[^0-9]/g,''), 10);
+    return isNaN(n) ? 0 : n;
+  }
+
+  function parseHeader(slot){
+    var raw = getText(document.getElementById('nameHeader' + slot));
+    var info = { raw: raw, name: '', gender: '', affiliation: '' };
+    if(!raw) return info;
+
+    raw = raw.replace(/\s+/g, ' ').trim();
+    var m = raw.match(/^(.+?)\s*\(\s*([남여])\s*(?:[,/]?\s*([^\)]+?))?\s*\)$/);
+    if(m){
+      info.name = String(m[1] || '').trim();
+      info.gender = String(m[2] || '').trim();
+      info.affiliation = String(m[3] || '').trim();
+      return info;
+    }
+
+    var nameOnly = raw.replace(/^\d+\s*/, '').trim();
+    if(/^경기자\s*\d+$/.test(nameOnly)) nameOnly = '';
+    info.name = nameOnly;
+    return info;
+  }
+
+  function forceSyncVisiblePlayers(){
+    for(var i=1;i<=4;i++){
+      var parsed = parseHeader(i);
+      var p = document.getElementById('player' + i);
+      var g = document.getElementById('gender' + i);
+      var a = document.getElementById('affiliation' + i);
+      var noteEl = document.getElementById('in-HIO-' + i);
+
+      var name = getText(p) || parsed.name;
+      var gender = getText(g) || parsed.gender;
+      var affiliation = getText(a) || parsed.affiliation;
+
+      if(p) p.value = name;
+      if(g) g.value = gender;
+      if(a) a.value = affiliation;
+
+      if(Array.isArray(window.playerNames)) window.playerNames[i-1] = name;
+      if(Array.isArray(window.playerGenders)) window.playerGenders[i-1] = gender;
+      if(Array.isArray(window.playerAffiliations)) window.playerAffiliations[i-1] = affiliation;
+
+      ['A','B','C','D'].forEach(function(course){
+        var input = document.getElementById('in-' + course + '-' + i);
+        var val = getText(input).replace(/[^0-9]/g,'').slice(0,2);
+        if(input) input.value = val;
+        if(window.summaryScores && window.summaryScores[course]) window.summaryScores[course][i] = val;
+      });
+
+      var note = getText(noteEl);
+      if(window.summaryScores && window.summaryScores.HIO) window.summaryScores.HIO[i] = note;
+    }
+
+    try { if(typeof window.syncNameHeaders === 'function') window.syncNameHeaders(); } catch(e) {}
+    try { if(typeof window.autoSave === 'function') window.autoSave(); } catch(e) {}
+  }
+
+  function collectRobustPlayers(){
+    forceSyncVisiblePlayers();
+    var players = [];
+
+    for(var i=1;i<=4;i++){
+      var parsed = parseHeader(i);
+      var name = getText(document.getElementById('player' + i)) || parsed.name;
+      var gender = getText(document.getElementById('gender' + i)) || parsed.gender;
+      var affiliation = getText(document.getElementById('affiliation' + i)) || parsed.affiliation;
+
+      var A = readNum(getText(document.getElementById('in-A-' + i)) || (window.summaryScores && window.summaryScores.A ? window.summaryScores.A[i] : ''));
+      var B = readNum(getText(document.getElementById('in-B-' + i)) || (window.summaryScores && window.summaryScores.B ? window.summaryScores.B[i] : ''));
+      var C = readNum(getText(document.getElementById('in-C-' + i)) || (window.summaryScores && window.summaryScores.C ? window.summaryScores.C[i] : ''));
+      var D = readNum(getText(document.getElementById('in-D-' + i)) || (window.summaryScores && window.summaryScores.D ? window.summaryScores.D[i] : ''));
+      var note = getText(document.getElementById('in-HIO-' + i));
+      var hasVisibleRow = !!(name || gender || affiliation || A || B || C || D || note);
+
+      if(!hasVisibleRow) continue;
+      if(!name) continue;
+      if(!gender) throw new Error('⚠️ ' + name + ' 선수의 성별을 선택해주세요.');
+
+      players.push({
+        slot: i,
+        name: name,
+        gender: gender,
+        affiliation: affiliation,
+        A: A,
+        B: B,
+        C: C,
+        D: D,
+        holeInOne: note,
+        total: A + B + C + D
+      });
+    }
+    return players;
+  }
+
+  function classifyPlayer(p){
+    var note = String(p.holeInOne || '');
+    if(note.indexOf('불참') > -1) return 'absent';
+    if(note.indexOf('기권') > -1) return 'quit';
+    if(p.A === 0 && p.B === 0 && p.C === 0 && p.D === 0 && p.total === 0) return 'absent';
+    if((p.A === 0 || p.B === 0 || p.C === 0 || p.D === 0) && p.total > 0) return 'quit';
+    return 'normal';
+  }
+
+  function removeNode(id){
+    var el = document.getElementById(id);
+    if(el) el.remove();
+  }
+
+  function showDoneOverlay(teamName, players){
+    removeNode('pasisDoneOv');
+    var ov = document.createElement('div');
+    ov.id = 'pasisDoneOv';
+    ov.style.cssText = 'position:fixed;inset:0;z-index:200005;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:18px;font-family:"Malgun Gothic",sans-serif;';
+    ov.innerHTML = ''
+      + '<div style="width:min(340px,92vw);background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.35);text-align:center;">'
+      +   '<div style="padding:26px 20px 10px;">'
+      +     '<div style="font-size:44px;line-height:1;margin-bottom:10px;">✅</div>'
+      +     '<div style="font-size:24px;font-weight:900;color:#1e3c72;">전송 완료!</div>'
+      +     '<div style="margin-top:10px;font-size:14px;line-height:1.65;color:#4b5563;">'
+      +       '<strong style="color:#111827;">' + esc(teamName) + '</strong><br>'
+      +       esc((players || []).map(function(p){ return p.name; }).join(' · ')) + '<br>'
+      +       '<span style="color:#c8860a;font-weight:800;">구글시트에 기록되었습니다.</span>'
+      +     '</div>'
+      +   '</div>'
+      +   '<div style="padding:14px 20px 20px;">'
+      +     '<button id="pasisDoneCloseBtn" style="width:100%;padding:14px 12px;border:none;border-radius:14px;background:#c8860a;color:#fff;font-size:18px;font-weight:900;cursor:pointer;">확인</button>'
+      +   '</div>'
+      + '</div>';
+    document.body.appendChild(ov);
+    var close = function(){ if(ov && ov.parentNode) ov.remove(); };
+    document.getElementById('pasisDoneCloseBtn').onclick = close;
+    ov.addEventListener('click', function(e){ if(e.target === ov) close(); });
+    setTimeout(close, 4000);
+  }
+
+  function showSendingOverlay(){
+    removeNode('pasisSendingOv');
+    var ov = document.createElement('div');
+    ov.id = 'pasisSendingOv';
+    ov.style.cssText = 'position:fixed;inset:0;z-index:200003;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:18px;font-family:"Malgun Gothic",sans-serif;';
+    ov.innerHTML = ''
+      + '<div style="background:#fff;border-radius:18px;padding:28px 34px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);">'
+      +   '<div style="font-size:40px;line-height:1;margin-bottom:10px;">⏳</div>'
+      +   '<div style="font-size:20px;font-weight:900;color:#1e3c72;">전송 중...</div>'
+      +   '<div style="font-size:13px;color:#6b7280;margin-top:6px;">잠시 기다려 주세요</div>'
+      + '</div>';
+    document.body.appendChild(ov);
+    return ov;
+  }
+
+  function showDetailedConfirm(players, teamName){
+    removeNode('pasisSendOv');
+    var rows = players.map(function(p){
+      var cls = classifyPlayer(p);
+      var badge = '';
+      var rowStyle = 'background:#fff;border:1.5px solid #e8d9b5;';
+      var totalHtml = '<span style="font-size:18px;font-weight:900;color:#c8860a;">' + esc(p.total) + '</span><span style="font-size:11px;color:#8b6b2d;font-weight:700;"> 타</span>';
+      if(cls === 'absent'){
+        badge = '<span style="display:inline-block;margin-left:6px;padding:2px 7px;border-radius:6px;background:#fef2f2;border:1px solid #fca5a5;color:#dc2626;font-size:11px;font-weight:900;">불참</span>';
+        rowStyle += 'opacity:.78;background:#f9f9f9;border-color:#ddd;';
+        totalHtml = '<span style="font-size:13px;color:#9ca3af;font-weight:800;">순위제외</span>';
+      } else if(cls === 'quit'){
+        badge = '<span style="display:inline-block;margin-left:6px;padding:2px 7px;border-radius:6px;background:#fffbeb;border:1px solid #fcd34d;color:#d97706;font-size:11px;font-weight:900;">기권</span>';
+        rowStyle += 'background:#fffdf4;border-color:#f2cf75;';
+        totalHtml = '<span style="font-size:13px;color:#d97706;font-weight:900;">기권처리</span>';
+      }
+      var meta = [];
+      if(p.gender) meta.push(esc(p.gender));
+      if(p.affiliation) meta.push(esc(p.affiliation));
+      return ''
+        + '<div style="' + rowStyle + 'border-radius:14px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;">'
+        +   '<div style="min-width:0;flex:1;">'
+        +     '<div style="font-size:15px;font-weight:900;color:#1e3c72;line-height:1.35;word-break:keep-all;">'
+        +       esc(p.name)
+        +       (meta.length ? ' <span style="font-size:12px;font-weight:700;color:#6b7280;">(' + meta.join(', ') + ')</span>' : '')
+        +       badge
+        +     '</div>'
+        +     '<div style="font-size:12px;color:#555;line-height:1.55;margin-top:4px;word-break:keep-all;">'
+        +       'A:' + esc(p.A) + ' B:' + esc(p.B) + ' C:' + esc(p.C) + ' D:' + esc(p.D)
+        +       (p.holeInOne ? ' · ' + esc(p.holeInOne) : '')
+        +     '</div>'
+        +   '</div>'
+        +   '<div style="flex:0 0 auto;min-width:76px;text-align:right;white-space:nowrap;">' + totalHtml + '</div>'
+        + '</div>';
+    }).join('');
+
+    var ov = document.createElement('div');
+    ov.id = 'pasisSendOv';
+    ov.style.cssText = 'position:fixed;inset:0;z-index:200002;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:14px;font-family:"Malgun Gothic",sans-serif;';
+    ov.innerHTML = ''
+      + '<div style="width:min(360px,94vw);max-height:92vh;background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.35);">'
+      +   '<div style="background:linear-gradient(135deg,#c8860a 0%, #9b6400 100%);padding:16px 18px 14px;color:#fff;">'
+      +     '<div style="font-size:15px;font-weight:900;line-height:1.3;">📋 전송 전 확인</div>'
+      +     '<div style="font-size:13px;font-weight:700;opacity:.95;margin-top:3px;">' + esc(teamName) + ' · ' + players.length + '명</div>'
+      +   '</div>'
+      +   '<div style="padding:14px 14px 6px;max-height:calc(92vh - 205px);overflow-y:auto;background:#fffaf0;">' + rows + '</div>'
+      +   '<div style="background:#fef3c7;border-top:1px solid #fcd34d;padding:11px 16px;font-size:12px;color:#92400e;line-height:1.55;text-align:center;">'
+      +     '⚠️ <strong>전송 후 수정은 불가합니다.</strong><br>오류 발견 시 관리자에게 직접 문의하세요.'
+      +   '</div>'
+      +   '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px;background:#fff;">'
+      +     '<button id="pasisSendBackBtn" style="padding:14px 10px;border:none;border-radius:16px;background:#e5e7eb;color:#374151;font-size:18px;font-weight:900;line-height:1.3;cursor:pointer;">← 뒤로<br>(수정)</button>'
+      +     '<button id="pasisSendGoBtn" style="padding:14px 10px;border:none;border-radius:16px;background:#c8860a;color:#fff;font-size:18px;font-weight:900;line-height:1.3;cursor:pointer;">✅ 확인·<br>전송</button>'
+      +   '</div>'
+      + '</div>';
+    document.body.appendChild(ov);
+    return ov;
+  }
+
+  function executeRealSend(players, teamName){
+    var sendingOv = showSendingOverlay();
+    var cleaned = false;
+    var timeoutId;
+    var origToast = window.showToast;
+    var origAlert = window.alert;
+
+    function cleanup(){
+      if(cleaned) return;
+      cleaned = true;
+      clearTimeout(timeoutId);
+      if(sendingOv && sendingOv.parentNode) sendingOv.remove();
+      window.showToast = origToast;
+      window.alert = origAlert;
+    }
+
+    timeoutId = setTimeout(cleanup, 10000);
+
+    window.showToast = function(msg){
+      cleanup();
+      if(String(msg).indexOf('완료') !== -1 || String(msg).indexOf('전송') !== -1) {
+        showDoneOverlay(teamName, players);
+      }
+      if(typeof origToast === 'function') return origToast.apply(this, arguments);
+    };
+
+    window.alert = function(msg){
+      cleanup();
+      return origAlert.apply(this, arguments);
+    };
+
+    if(typeof originalSendFn === 'function') {
+      originalSendFn();
+    } else if(typeof window.sendToGoogleSheetPatchedV4 === 'function') {
+      window.sendToGoogleSheetPatchedV4();
+    } else if(typeof window.sendToGoogleSheet === 'function') {
+      window.sendToGoogleSheet();
+    } else {
+      cleanup();
+      origAlert('❌ 전송 함수를 찾을 수 없습니다.');
+    }
+  }
+
+  function handleDetailedSendClick(ev){
+    if(ev){ ev.preventDefault(); ev.stopPropagation(); }
+    removeNode('pasisSendOv');
+    removeNode('pasisDoneOv');
+
+    var teamName = getText(document.getElementById('teamName')) || '팀명';
+    var players;
+    try {
+      players = collectRobustPlayers();
+    } catch(err) {
+      alert(err && err.message ? err.message : String(err));
+      return false;
+    }
+
+    if(!players || !players.length){
+      setTimeout(function(){
+        try {
+          var retryPlayers = collectRobustPlayers();
+          if(!retryPlayers || !retryPlayers.length){
+            alert('전송할 선수 정보를 아직 불러오지 못했습니다. 잠시 후 다시 눌러주세요.');
+            return;
+          }
+          openConfirm(retryPlayers, teamName);
+        } catch(err2) {
+          alert(err2 && err2.message ? err2.message : String(err2));
+        }
+      }, 150);
+      return false;
+    }
+
+    openConfirm(players, teamName);
+    return false;
+  }
+
+  function openConfirm(players, teamName){
+    var ov = showDetailedConfirm(players, teamName);
+    var backBtn = document.getElementById('pasisSendBackBtn');
+    var sendBtn = document.getElementById('pasisSendGoBtn');
+    if(backBtn) backBtn.onclick = function(){ if(ov && ov.parentNode) ov.remove(); };
+    if(sendBtn) sendBtn.onclick = function(){ if(ov && ov.parentNode) ov.remove(); executeRealSend(players, teamName); };
+    ov.addEventListener('click', function(e){ if(e.target === ov) ov.remove(); });
+  }
+
+  function bindDetailedSendButton(){
+    var btn = document.getElementById('autoSendBtn');
+    if(!btn || !btn.parentNode) return;
+    if(btn.dataset && btn.dataset.pasisDetailedBound === '1') return;
+
+    var cloned = btn.cloneNode(true);
+    cloned.dataset.pasisDetailedBound = '1';
+    cloned.style.background = 'linear-gradient(135deg,#c8860a 0%,#7a4f00 100%)';
+    cloned.style.boxShadow = '0 5px 10px rgba(122,79,0,.4)';
+    cloned.onclick = null;
+    btn.parentNode.replaceChild(cloned, btn);
+    cloned.addEventListener('click', handleDetailedSendClick, true);
+  }
+
+  function initBindTries(){
+    bindDetailedSendButton();
+    setTimeout(bindDetailedSendButton, 200);
+    setTimeout(bindDetailedSendButton, 800);
+    setTimeout(bindDetailedSendButton, 1500);
+    setTimeout(bindDetailedSendButton, 3000);
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', initBindTries);
+  } else {
+    initBindTries();
+  }
+  window.addEventListener('load', initBindTries);
+
+  try {
+    var mo = new MutationObserver(function(){ bindDetailedSendButton(); });
+    mo.observe(document.documentElement || document.body, { childList:true, subtree:true });
+  } catch(e) {}
+
+  window.collectPlayersForSendDetailedV4 = collectRobustPlayers;
+  window.bindDetailedSendButton = bindDetailedSendButton;
+})();
+</script>
