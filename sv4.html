@@ -2363,22 +2363,24 @@ function test_doPost() {
 
   /* ★ 파시스 접속 QR 생성 (심판 배포·카톡 전송용) */
   window.generateAccessQR = function() {
-    var appUrl = window.location.href.split('?')[0];
+    var appUrl = 'https://leejh50-dotcom.github.io/parkgolf-score/pasis-send.html';
     var old = document.getElementById('pgAccessQrOv');
     if (old) old.remove();
 
     var code = (localStorage.getItem('parkgolf_tournament_code')||'대회코드').toUpperCase();
 
     /* 안내문 템플릿 (대회코드·URL 자동 삽입) */
+    var sendUrl = 'https://leejh50-dotcom.github.io/parkgolf-score/pasis-send.html';
     var guideText =
       '안녕하세요 😊\n' +
-      '이번 대회는 파시스 SV4.0 프로로 점수를 실시간 집계합니다.\n\n' +
+      '이번 대회는 파시스(PASIS) SV4.0 프로로\n' +
+      '점수를 실시간 집계합니다.\n\n' +
       '━━━━━━━━━━━━━━━━━━\n' +
       '📋 경기 당일 점수 전송 방법\n' +
       '━━━━━━━━━━━━━━━━━━\n' +
       '① 경기 종료 후 QR카드를 꺼내세요\n' +
       '② 기본 카메라 앱으로 QR 스캔\n' +
-      '③ 링크 팝업 탭 → 파시스 앱 열림\n' +
+      '③ 링크 팝업 탭 → 파시스 전송화면 열림\n' +
       '④ 4명 × 4코스 점수 입력 (16칸)\n' +
       '⑤ 전송 전 확인 화면에서 최종 확인\n' +
       '⑥ 확인·전송 버튼\n\n' +
@@ -2387,18 +2389,19 @@ function test_doPost() {
       '━━━━━━━━━━━━━━━━━━\n' +
       '• 전송은 1회만 가능합니다\n' +
       '  (전송 후 수정 불가 — 오류 시 관리자 문의)\n' +
-      '• QR 스캔이 안 되면 아래 링크를 탭하세요 👇\n' +
-      appUrl + '\n\n' +
+      '• QR 스캔이 안 되면 아래 링크를 직접 탭하세요 👇\n' +
+      sendUrl + '\n\n' +
       '━━━━━━━━━━━━━━━━━━\n' +
       '📌 사전 연습 권장 (꼭 해보세요!)\n' +
       '━━━━━━━━━━━━━━━━━━\n' +
-      '아래 주소로 들어가시면\n' +
-      '파시스 SV4.0 프로 화면이 열립니다.\n\n' +
-      '👉 ' + appUrl + '\n\n' +
-      '미리 접속해서 화면 구성을 확인해 두시면\n' +
-      '대회 당일 당황하지 않습니다 😊\n' +
-      '(연습 중 전송 버튼을 누르셔도\n' +
-      ' 실제 조 QR 없이는 전송되지 않습니다)\n\n' +
+      '아래 주소로 미리 접속해 보세요.\n' +
+      '파시스 전송 화면이 열립니다.\n\n' +
+      '👉 ' + sendUrl + '\n\n' +
+      '화면 구성을 미리 확인해 두시면\n' +
+      '대회 당일 당황하지 않습니다 😊\n\n' +
+      '※ 연습 중 전송 버튼을 누르셔도\n' +
+      '  실제 조 QR 없이는 전송되지 않습니다.\n\n' +
+      '━━━━━━━━━━━━━━━━━━\n' +
       '대회코드: ' + code + '\n' +
       '문의: 파시스 본부';
 
@@ -2410,7 +2413,7 @@ function test_doPost() {
       '<div style="font-size:17px;font-weight:900;color:#2e7d32;margin-bottom:4px;">📱 파시스 접속 QR</div>' +
       '<div style="font-size:12px;color:#666;margin-bottom:14px;">심판 배포 · 카톡 전송용</div>' +
       '<div id="pgAccessQrCode" style="display:inline-block;padding:10px;background:#fff;border:2px solid #e0e0e0;border-radius:10px;"></div>' +
-      '<div style="font-size:11px;color:#888;margin-top:8px;word-break:break-all;line-height:1.4;">' + appUrl + '</div>' +
+      '<div style="font-size:11px;color:#888;margin-top:8px;word-break:break-all;line-height:1.4;">' + sendUrl + '</div>' +
 
       /* 카톡 전송 방법 */
       '<div style="background:#e8f5e9;border-radius:8px;padding:10px 12px;margin:12px 0 6px;font-size:12px;color:#2e7d32;text-align:left;line-height:1.6;">' +
