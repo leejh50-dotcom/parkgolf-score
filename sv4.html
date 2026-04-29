@@ -2039,6 +2039,18 @@ function test_doPost() {
 
   window.sendToGoogleSheet = sendToGoogleSheetPatched;
 
+  document.addEventListener('DOMContentLoaded', function() {
+    var btn = document.getElementById('autoSendBtn');
+    if (!btn) return;
+    btn.onclick = function(ev) {
+      if (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+      }
+      sendToGoogleSheetPatched();
+      return false;
+    };
+  });
 })();
 </script>
 
@@ -2476,6 +2488,19 @@ function test_doPost() {
 
   document.addEventListener('DOMContentLoaded', function(){
     syncVisiblePlayersToHidden();
+
+    var btn = document.getElementById('autoSendBtn');
+    if(btn){
+      btn.onclick = function(ev){
+        if(ev){
+          ev.preventDefault();
+          ev.stopPropagation();
+        }
+        sendToGoogleSheetPatchedV4();
+        return false;
+      };
+    }
+
     setTimeout(syncVisiblePlayersToHidden, 300);
     setTimeout(syncVisiblePlayersToHidden, 1200);
   });
@@ -2921,6 +2946,7 @@ function test_doPost() {
     var newBtn = btn.cloneNode(true);
     btn.parentNode.replaceChild(newBtn, btn);
     btn = newBtn;
+    btn.onclick = null; /* ★ cloneNode가 복사한 onclick 제거 */
 
     btn.style.background='linear-gradient(135deg,#c8860a 0%,#7a4f00 100%)';
     btn.style.boxShadow='0 5px 10px rgba(122,79,0,.4)';
