@@ -191,7 +191,7 @@
   @keyframes fadeUp   { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
 
   /* ════════════════════════════
-     입력 화면
+     입력 화면 — 종이 기록지 스타일
   ════════════════════════════ */
   #mainContent { display: none; }
   #mainContent.show { display: block; }
@@ -214,79 +214,108 @@
   .hdr-title { color: #fff; font-size: 16px; font-weight: 900; white-space: nowrap; }
   .hdr-sub   { color: rgba(255,255,255,.82); font-size: 11px; margin-top: 2px; font-weight: 600; }
 
+  /* 기록표 제목 */
+  .score-sheet-title {
+    text-align: center; font-size: 18px; font-weight: 900;
+    color: var(--gold-dk); padding: 12px 0 4px;
+    letter-spacing: .5px;
+  }
+
   /* 조 정보 */
   .team-bar {
-    background: var(--white); margin: 10px 12px 0;
-    border-radius: 12px; padding: 9px 14px;
+    background: var(--white); margin: 6px 12px 0;
+    border-radius: 10px; padding: 8px 14px;
     box-shadow: var(--shadow);
     display: flex; align-items: center; gap: 10px;
     border-left: 4px solid var(--gold);
   }
-  .team-icon { font-size: 20px; }
+  .team-icon { font-size: 18px; }
   .team-info { flex: 1; min-width: 0; }
-  .team-name { font-size: 17px; font-weight: 900; color: var(--gold-dk); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .team-name { font-size: 15px; font-weight: 900; color: var(--gold-dk); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .team-meta { font-size: 11px; color: var(--gray); margin-top: 1px; }
 
-  /* 선수 카드 */
+  /* 경기자 카드 — 종이 기록지 스타일 */
   .player-card {
     background: var(--white); margin: 8px 12px 0;
-    border-radius: 14px; box-shadow: var(--shadow);
-    overflow: hidden; border: 2px solid transparent; transition: border-color .2s;
+    border-radius: 12px; box-shadow: var(--shadow);
+    overflow: hidden; border: 1.5px solid #e8dfc8;
+    transition: border-color .2s;
   }
   .player-card.active { border-color: var(--gold); }
+
+  /* 경기자 헤더: 번호 + 이름 + 소속/성별 */
   .player-head {
-    background: linear-gradient(90deg, var(--gold-lt), #fff 70%);
-    padding: 7px 12px; display: flex; align-items: center; gap: 8px;
-    border-bottom: 1px solid #f0d890;
+    padding: 8px 12px 7px;
+    display: flex; align-items: center; gap: 10px;
+    border-bottom: 1.5px solid #e8dfc8;
+    background: #fff;
   }
   .player-num {
-    width: 26px; height: 26px; border-radius: 50%;
-    background: var(--gold); color: #fff;
-    font-size: 13px; font-weight: 900;
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--gold-dk); color: #fff;
+    font-size: 15px; font-weight: 900;
     display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   }
-  .player-name-wrap { flex: 1; }
-  .player-name   { font-size: 17px; font-weight: 900; color: #1a1a1a; line-height: 1.15; }
-  .player-affil  { font-size: 12px; font-weight: 600; color: var(--gray); margin-left: 5px; vertical-align: middle; }
-  .gender-badge  { padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+  .player-name-wrap { flex: 1; display: flex; align-items: baseline; gap: 0; flex-wrap: wrap; }
+  .player-name  { font-size: 19px; font-weight: 900; color: #1a1a1a; line-height: 1.2; }
+  .player-meta-row {
+    display: flex; align-items: center; gap: 5px; margin-left: 8px;
+  }
+  .player-affil { font-size: 12px; font-weight: 600; color: var(--gray); }
+  .gender-badge { padding: 1px 7px; border-radius: 20px; font-size: 11px; font-weight: 700; }
   .gender-m { background: #dbeafe; color: #1d4ed8; }
   .gender-f { background: #fce7f3; color: #be185d; }
 
-  .score-grid {
-    display: grid; grid-template-columns: repeat(4,1fr);
-    gap: 5px; padding: 7px 10px 5px;
+  /* 점수 테이블 — 종이 기록지처럼 */
+  .score-table-wrap { padding: 0 12px 0; }
+  .score-table {
+    width: 100%; border-collapse: collapse; margin-top: 0;
   }
-  .score-cell { text-align: center; }
-  .score-label { font-size: 12px; font-weight: 800; color: var(--gold-dk); margin-bottom: 3px; display: block; }
+  .score-table th {
+    background: #f5f0e4; color: var(--gold-dk);
+    font-size: 13px; font-weight: 800;
+    padding: 6px 0; text-align: center;
+    border: 1px solid #e0d5b8;
+  }
+  .score-table th.col-total {
+    background: #efe8d0; color: var(--gold-dk);
+  }
+  .score-table td {
+    border: 1px solid #e0d5b8; padding: 0; text-align: center;
+    background: #fff;
+  }
+  .score-table td.col-total {
+    background: #fef8ec;
+  }
   .score-input {
-    width: 100%; height: 56px; border: 2px solid #e5d9b8; border-radius: 10px;
-    font-size: 25px; font-weight: 900; text-align: center;
-    color: #1a1a1a; background: #fffdf7;
-    -webkit-appearance: none; appearance: none; outline: none;
-    transition: border-color .15s, background .15s;
+    width: 100%; height: 52px;
+    border: none; outline: none;
+    font-size: 24px; font-weight: 900; text-align: center;
+    color: #1a1a1a; background: transparent;
+    -webkit-appearance: none; appearance: none;
     font-family: 'Noto Sans KR', sans-serif;
   }
-  .score-input:focus   { border-color: var(--gold); background: #fff8e8; }
-  .score-input.has-val { border-color: var(--gold); color: var(--gold-dk); }
-
-  .bottom-row {
-    display: flex; align-items: center; gap: 8px;
-    padding: 5px 10px 9px; border-top: 1px dashed #e5d9b8;
+  .score-input:focus   { background: #fff8e8; color: var(--gold-dk); }
+  .score-input.has-val { color: var(--gold-dk); }
+  .total-disp {
+    font-size: 22px; font-weight: 900; color: var(--gold);
+    display: block; line-height: 52px;
   }
-  .bigo-wrap  { display: flex; align-items: center; gap: 6px; }
-  .bigo-label { font-size: 11px; font-weight: 700; color: var(--gray); white-space: nowrap; }
+
+  /* 비고 행 */
+  .bigo-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 5px 12px 8px; border-top: 1px dashed #e0d5b8;
+  }
+  .bigo-label { font-size: 12px; font-weight: 700; color: var(--gray); white-space: nowrap; }
   .bigo-input {
-    width: 90px; height: 30px; border: 1.5px solid #e5d9b8; border-radius: 8px;
-    font-size: 12px; font-weight: 700; text-align: center; padding: 0 6px;
+    flex: 1; height: 28px; border: 1.5px solid #e5d9b8; border-radius: 6px;
+    font-size: 12px; font-weight: 600; padding: 0 8px;
     color: #1a1a1a; background: #fffdf7; outline: none;
     font-family: 'Noto Sans KR', sans-serif; transition: border-color .15s;
   }
   .bigo-input:focus { border-color: var(--gold); background: #fff8e8; }
   .bigo-input::placeholder { color: #ccc; font-weight: 400; }
-  .total-box  { display: flex; align-items: baseline; gap: 2px; margin-left: auto; }
-  .total-val  { font-size: 24px; font-weight: 900; color: var(--gold); }
-  .total-unit { font-size: 11px; color: var(--gray); font-weight: 600; }
-  .total-label{ font-size: 12px; font-weight: 700; color: var(--gray); }
 
   .warn-banner {
     background: #fff8e8; border: 1.5px solid #fcd34d; border-radius: 10px;
@@ -495,6 +524,9 @@
     </div>
   </div>
 
+  <!-- 기록표 제목 -->
+  <div class="score-sheet-title">개인별 점수 기록표</div>
+
   <div class="team-bar">
     <span class="team-icon">🏌️</span>
     <span class="team-info">
@@ -503,7 +535,7 @@
     </span>
   </div>
 
-  <div style="height:8px"></div>
+  <div style="height:6px"></div>
   <div class="err-banner" id="errBanner"></div>
   <div id="playerList"></div>
 
@@ -715,27 +747,41 @@ function renderUI() {
   players.forEach(function(p, idx) {
     var card = document.createElement('div');
     card.className = 'player-card'; card.id = 'card-' + idx;
-    var gb = p.gender==='남'?'<span class="gender-badge gender-m">남</span>':p.gender==='여'?'<span class="gender-badge gender-f">여</span>':'';
+    var gb = p.gender==='남'
+      ? '<span class="gender-badge gender-m">남</span>'
+      : p.gender==='여' ? '<span class="gender-badge gender-f">여</span>' : '';
     card.innerHTML =
       '<div class="player-head">' +
         '<div class="player-num">'+p.slot+'</div>' +
-        '<div class="player-name-wrap"><div class="player-name">'+esc(p.name)+(p.affil?'<span class="player-affil">'+esc(p.affil)+'</span>':'')+'</div></div>' +
-        gb +
+        '<div class="player-name-wrap">' +
+          '<span class="player-name">'+esc(p.name)+'</span>' +
+          '<span class="player-meta-row">' +
+            (p.affil?'<span class="player-affil">'+esc(p.affil)+'</span>':'') +
+            gb +
+          '</span>' +
+        '</div>' +
       '</div>' +
-      '<div class="score-grid">' +
-        ['A','B','C','D'].map(function(c){
-          return '<div class="score-cell"><span class="score-label">'+c+'코스</span>' +
-            '<input class="score-input" type="number" inputmode="numeric" pattern="[0-9]*" min="0" max="99" placeholder="—" ' +
-            'id="sc-'+idx+'-'+c+'" oninput="onScore(this,'+idx+',\''+c+'\')" onfocus="onFocus('+idx+')" onblur="onBlur('+idx+')"></div>';
-        }).join('') +
+      '<div class="score-table-wrap">' +
+        '<table class="score-table">' +
+          '<thead><tr>' +
+            '<th>A</th><th>B</th><th>C</th><th>D</th><th class="col-total">합계</th>' +
+          '</tr></thead>' +
+          '<tbody><tr>' +
+            ['A','B','C','D'].map(function(c){
+              return '<td><input class="score-input" type="number" inputmode="numeric" pattern="[0-9]*" min="0" max="99" placeholder="—" ' +
+                'id="sc-'+idx+'-'+c+'" oninput="onScore(this,'+idx+',\''+c+'\')" onfocus="onFocus('+idx+')" onblur="onBlur('+idx+')"></td>';
+            }).join('') +
+            '<td class="col-total"><span class="total-disp" id="tot-'+idx+'">—</span></td>' +
+          '</tr></tbody>' +
+        '</table>' +
       '</div>' +
-      '<div class="bottom-row">' +
-        '<div class="bigo-wrap"><span class="bigo-label">비고</span>' +
-          '<input class="bigo-input" type="text" placeholder="예)A9홀인원" maxlength="10" ' +
-          'id="bigo-'+idx+'" oninput="onBigo(this,'+idx+')" onfocus="onFocus('+idx+')" onblur="onBlur('+idx+')"></div>' +
-        '<div class="total-box"><span class="total-val" id="tot-'+idx+'">—</span><span class="total-unit">&nbsp;타</span><span class="total-label">&nbsp;합계</span></div>' +
+      '<div class="bigo-row">' +
+        '<span class="bigo-label">비고</span>' +
+        '<input class="bigo-input" type="text" placeholder="예: A9홀인원" maxlength="12" ' +
+          'id="bigo-'+idx+'" oninput="onBigo(this,'+idx+')" onfocus="onFocus('+idx+')" onblur="onBlur('+idx+')">' +
       '</div>';
     list.appendChild(card);
+  });
   });
 }
 
