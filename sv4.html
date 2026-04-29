@@ -2485,6 +2485,7 @@ function test_doPost() {
     }
   };
   window.sendToGoogleSheet = sendToGoogleSheetPatchedV4;
+  window.collectPlayersForSendV4 = collectPlayersForSendV4; /* ★ hookSendBtn에서 접근 가능하도록 전역 노출 */
 
   document.addEventListener('DOMContentLoaded', function(){
     syncVisiblePlayersToHidden();
@@ -2956,7 +2957,7 @@ function test_doPost() {
       if(typeof syncVisiblePlayersToHidden==='function')syncVisiblePlayersToHidden();
       var players;
       try{
-        if(typeof collectPlayersForSendV4==='function') players=collectPlayersForSendV4();
+        if(typeof window.collectPlayersForSendV4==='function') players=window.collectPlayersForSendV4();
         else if(typeof window.collectPlayersForSend==='function') players=window.collectPlayersForSend();
         else players=[];
       }
@@ -2966,7 +2967,7 @@ function test_doPost() {
       if(!players||!players.length){
         setTimeout(function(){
           try{
-            if(typeof collectPlayersForSendV4==='function') players=collectPlayersForSendV4();
+            if(typeof window.collectPlayersForSendV4==='function') players=window.collectPlayersForSendV4();
             else if(typeof window.collectPlayersForSend==='function') players=window.collectPlayersForSend();
           }catch(e){}
           showConfirm(players||[],teamName,function(cp,ct){
