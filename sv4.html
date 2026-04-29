@@ -14,19 +14,7 @@
 <link rel="manifest" href="manifest-sv4.json">
 <meta name="theme-color" content="#c8860a">
 <meta name="apple-mobile-web-app-title" content="파시스 SV4.0">
-<script>
-/* ★ 서비스워커 및 캐시 완전 제거 - 항상 최신 파일 사용 */
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.getRegistrations().then(function(regs){
-    regs.forEach(function(r){ r.unregister(); });
-  });
-}
-if('caches' in window){
-  caches.keys().then(function(keys){
-    keys.forEach(function(k){ caches.delete(k); });
-  });
-}
-</script>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw-sv4.js').catch(function(){});});}</script>
 
 <style>
 .parkgolf-app #codeLabel, .parkgolf-app #teamLabel,
@@ -535,7 +523,7 @@ html, body {
     <div style="width:78px;height:78px;background:linear-gradient(135deg,#4caf50 0%,#2e7d32 100%);border-radius:50%;margin:0 auto 22px;display:flex;align-items:center;justify-content:center;font-size:38px;box-shadow:0 8px 24px rgba(0,0,0,0.35);">⛳</div>
 
     <p style="color:rgba(255,255,255,0.70);font-size:11px;letter-spacing:4px;margin:0 0 6px 0;font-weight:600;">PARKGOLF SCORING SYSTEM</p>
-    <h1 style="color:#fff;font-size:34px;font-weight:900;margin:0 0 4px 0;letter-spacing:-1px;text-shadow:0 2px 8px rgba(0,0,0,0.3);">파시스 sv4.0 프로</h1>
+    <h1 style="color:#fff;font-size:34px;font-weight:900;margin:0 0 4px 0;letter-spacing:-1px;text-shadow:0 2px 8px rgba(0,0,0,0.3);">파시스 sv4.0</h1>
     <p style="color:rgba(255,255,255,0.85);font-size:16px;font-weight:700;margin:0 0 14px 0;">대회용</p>
     <span style="background:rgba(255,255,255,0.18);color:rgba(255,255,255,0.92);font-size:13px;font-weight:600;padding:5px 16px;border-radius:20px;display:inline-block;margin-bottom:34px;border:1px solid rgba(255,255,255,0.30);">Tournament Edition</span>
 
@@ -723,14 +711,6 @@ html, body {
           style="width:100%; padding:16px; background:linear-gradient(135deg,#c8860a 0%,#7a4f00 100%); color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:900; cursor:pointer; line-height:1.5;">
           조별 QR 일괄생성<br><span style="font-size:13px;font-weight:700;opacity:.9;">(인쇄용)</span>
         </button>
-
-        <!-- 파시스 접속 QR 생성 -->
-        <div style="margin-top:10px;">
-          <button onclick="generateAccessQR()"
-            style="width:100%; padding:14px; background:linear-gradient(135deg,#2e7d32,#1b5e20); color:#fff; border:none; border-radius:10px; font-size:15px; font-weight:900; cursor:pointer; line-height:1.5;">
-            📱 파시스 접속 QR 생성<br><span style="font-size:12px;font-weight:600;opacity:.9;">(심판 배포·카톡 전송용)</span>
-          </button>
-        </div>
       </div>
 
       <!-- 닫기 -->
@@ -2361,129 +2341,7 @@ function test_doPost() {
     return prevFetch.apply(this, arguments);
   };
 
-  /* ★ 파시스 접속 QR 생성 (심판 배포·카톡 전송용) */
-  window.generateAccessQR = function() {
-    var appUrl = window.location.href.split('?')[0];
-    var old = document.getElementById('pgAccessQrOv');
-    if (old) old.remove();
-
-    var code = (localStorage.getItem('parkgolf_tournament_code')||'대회코드').toUpperCase();
-
-    /* 안내문 템플릿 (대회코드·URL 자동 삽입) */
-    var guideText =
-      '안녕하세요 😊\n' +
-      '이번 대회는 파시스 SV4.0 프로로 점수를 실시간 집계합니다.\n\n' +
-      '━━━━━━━━━━━━━━━━━━\n' +
-      '📋 경기 당일 점수 전송 방법\n' +
-      '━━━━━━━━━━━━━━━━━━\n' +
-      '① 경기 종료 후 QR카드를 꺼내세요\n' +
-      '② 기본 카메라 앱으로 QR 스캔\n' +
-      '③ 링크 팝업 탭 → 파시스 앱 열림\n' +
-      '④ 4명 × 4코스 점수 입력 (16칸)\n' +
-      '⑤ 전송 전 확인 화면에서 최종 확인\n' +
-      '⑥ 확인·전송 버튼\n\n' +
-      '━━━━━━━━━━━━━━━━━━\n' +
-      '⚠️ 주의사항\n' +
-      '━━━━━━━━━━━━━━━━━━\n' +
-      '• 전송은 1회만 가능합니다\n' +
-      '  (전송 후 수정 불가 — 오류 시 관리자 문의)\n' +
-      '• QR 스캔이 안 되면 아래 링크를 탭하세요 👇\n' +
-      appUrl + '\n\n' +
-      '━━━━━━━━━━━━━━━━━━\n' +
-      '📌 사전 연습 권장 (꼭 해보세요!)\n' +
-      '━━━━━━━━━━━━━━━━━━\n' +
-      '아래 주소로 들어가시면\n' +
-      '파시스 SV4.0 프로 화면이 열립니다.\n\n' +
-      '👉 ' + appUrl + '\n\n' +
-      '미리 접속해서 화면 구성을 확인해 두시면\n' +
-      '대회 당일 당황하지 않습니다 😊\n' +
-      '(연습 중 전송 버튼을 누르셔도\n' +
-      ' 실제 조 QR 없이는 전송되지 않습니다)\n\n' +
-      '대회코드: ' + code + '\n' +
-      '문의: 파시스 본부';
-
-    var ov = document.createElement('div');
-    ov.id = 'pgAccessQrOv';
-    ov.style.cssText = 'position:fixed;inset:0;z-index:200000;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;font-family:"Malgun Gothic",sans-serif;overflow-y:auto;';
-    ov.innerHTML =
-      '<div style="background:#fff;border-radius:18px;padding:24px 22px 20px;width:min(340px,90vw);max-height:92vh;overflow-y:auto;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.4);">' +
-      '<div style="font-size:17px;font-weight:900;color:#2e7d32;margin-bottom:4px;">📱 파시스 접속 QR</div>' +
-      '<div style="font-size:12px;color:#666;margin-bottom:14px;">심판 배포 · 카톡 전송용</div>' +
-      '<div id="pgAccessQrCode" style="display:inline-block;padding:10px;background:#fff;border:2px solid #e0e0e0;border-radius:10px;"></div>' +
-      '<div style="font-size:11px;color:#888;margin-top:8px;word-break:break-all;line-height:1.4;">' + appUrl + '</div>' +
-
-      /* 카톡 전송 방법 */
-      '<div style="background:#e8f5e9;border-radius:8px;padding:10px 12px;margin:12px 0 6px;font-size:12px;color:#2e7d32;text-align:left;line-height:1.6;">' +
-      '📤 <strong>카톡 전송 방법</strong><br>' +
-      '① 이 QR 화면 캡처 → 심판 단톡방 전송<br>' +
-      '② 또는 아래 [안내문 복사] 버튼 탭 → 카톡 붙여넣기' +
-      '</div>' +
-
-      /* ★ 심판 안내문 복사 버튼 */
-      '<button id="pgCopyGuideBtn" onclick="copyGuideText()" ' +
-      'style="width:100%;padding:13px;background:linear-gradient(135deg,#1e3c72,#0d2247);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:900;cursor:pointer;margin-bottom:8px;">' +
-      '📋 심판 안내문 복사</button>' +
-      '<div id="pgCopyDone" style="display:none;font-size:12px;color:#2e7d32;font-weight:700;margin-bottom:8px;">✅ 복사됐습니다! 카톡에 붙여넣기 하세요.</div>' +
-
-      '<button onclick="document.getElementById(\'pgAccessQrOv\').remove()" ' +
-      'style="width:100%;padding:12px;background:#2e7d32;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:900;cursor:pointer;">닫기</button>' +
-      '</div>';
-    document.body.appendChild(ov);
-
-    /* 안내문 복사 함수 */
-    window.copyGuideText = function() {
-      var txt = guideText;
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(txt).then(function() {
-          var d = document.getElementById('pgCopyDone');
-          if (d) { d.style.display = 'block'; setTimeout(function(){ d.style.display='none'; }, 3000); }
-        }).catch(function() { fallbackCopy(txt); });
-      } else { fallbackCopy(txt); }
-    };
-    function fallbackCopy(txt) {
-      var ta = document.createElement('textarea');
-      ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0';
-      document.body.appendChild(ta); ta.select();
-      try {
-        document.execCommand('copy');
-        var d = document.getElementById('pgCopyDone');
-        if (d) { d.style.display = 'block'; setTimeout(function(){ d.style.display='none'; }, 3000); }
-      } catch(e) { alert('복사 실패. 직접 선택해서 복사해 주세요.'); }
-      document.body.removeChild(ta);
-    }
-
-    /* QR 생성 */
-    try {
-      new QRCode(document.getElementById('pgAccessQrCode'), {
-        text: appUrl,
-        width: 200, height: 200,
-        colorDark: '#000000', colorLight: '#ffffff',
-        correctLevel: QRCode.CorrectLevel.M
-      });
-    } catch(e) {
-      document.getElementById('pgAccessQrCode').textContent = 'QR 생성 오류';
-    }
-
-    ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); });
-  };
-  window.setPrintLayout = function(n) {
-    var grid = document.getElementById('pgBatchGrid');
-    var btn6 = document.getElementById('pgLayout6Btn');
-    var btn9 = document.getElementById('pgLayout9Btn');
-    if (!grid) return;
-
-    if (n === 6) {
-      /* 6개/장: 2열, 세로 간격 더 넓게 */
-      grid.style.setProperty('grid-template-columns', 'repeat(2,minmax(0,1fr))', 'important');
-      if (btn6) { btn6.style.background='#fff'; btn6.style.color='#7a4f00'; btn6.style.border='none'; btn6.textContent='6개/장 ✓'; }
-      if (btn9) { btn9.style.background='rgba(255,255,255,.2)'; btn9.style.color='#fff'; btn9.style.border='1px solid rgba(255,255,255,.5)'; btn9.textContent='9개/장'; }
-    } else {
-      /* 9개/장: 3열, 기본 */
-      grid.style.setProperty('grid-template-columns', 'repeat(3,minmax(0,1fr))', 'important');
-      if (btn9) { btn9.style.background='#fff'; btn9.style.color='#7a4f00'; btn9.style.border='none'; btn9.textContent='9개/장 ✓'; }
-      if (btn6) { btn6.style.background='rgba(255,255,255,.2)'; btn6.style.color='#fff'; btn6.style.border='1px solid rgba(255,255,255,.5)'; btn6.textContent='6개/장'; }
-    }
-  };
+  window.collectPlayersForSend = collectPlayersForSendV4;
   window.sendToGoogleSheet = sendToGoogleSheetPatchedV4;
 
   document.addEventListener('DOMContentLoaded', function(){
@@ -2526,98 +2384,47 @@ function test_doPost() {
 
 /* ══ 인쇄 전용 ══ */
 @media print {
-  @page { size:A4 portrait; margin:10mm 6mm 10mm 6mm; }
+  @page { size:A4 portrait; margin:8mm; }
 
   /* 전체 숨기기, pgBatchOv만 표시 */
   body * { visibility:hidden !important; }
   #pgBatchOv, #pgBatchOv * { visibility:visible !important; }
   #pgBatchOv { position:absolute !important; left:0 !important; top:0 !important; width:100% !important; background:#fff !important; overflow:visible !important; }
 
-  /* iOS Safari: display:none 무시 대응 → 크기 0으로 강제 */
-  #pgBatchTop {
-    display:none !important;
-    visibility:hidden !important;
-    height:0 !important;
-    max-height:0 !important;
-    overflow:hidden !important;
-    padding:0 !important;
-    margin:0 !important;
-    opacity:0 !important;
-    position:absolute !important;
-  }
-  #pgProgress, #pgProgressTxt {
-    display:none !important;
-    height:0 !important;
-    max-height:0 !important;
-    overflow:hidden !important;
-    padding:0 !important;
-    margin:0 !important;
-  }
+  #pgBatchTop { position:static !important; background:none !important; color:#000 !important; box-shadow:none !important; padding:0 0 3mm !important; }
+  #pgBatchTop .btn-print, #pgBatchTop .btn-close { display:none !important; }
 
-  /* ★ 9개/장: 3열, 가로 6mm 세로 14mm 간격 */
+  /* 3열 → A4에 3행×3열=9개/페이지 · 카드 간격을 충분히 줘서 독립성 확보 */
   #pgBatchGrid {
     display:grid !important;
     grid-template-columns:repeat(3,minmax(0,1fr)) !important;
-    column-gap:6mm !important;
-    row-gap:14mm !important;
-    padding:0 !important;
-    align-content:center !important;
-    min-height:calc(297mm - 20mm) !important;
-  }
-  /* ★ 6개/장 모드: 2열 */
-  #pgBatchGrid[style*="repeat(2"] {
-    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-    column-gap:10mm !important;
-    row-gap:14mm !important;
-  }
-  /* 6개/장 QR 크기 키움 */
-  #pgBatchGrid[style*="repeat(2"] .pgCard-qr canvas {
-    width:62mm !important;
-    height:62mm !important;
+    gap:4mm !important; padding:0 !important;
   }
   .pgCard {
-    border:1.5px solid #999 !important; border-radius:2mm !important;
-    box-shadow:none !important; padding:1.5mm 2mm 1mm !important; background:#fff !important;
+    border:1.5px solid #888 !important; border-radius:2mm !important;
+    box-shadow:none !important; padding:2mm 2mm 1.5mm !important; background:#fff !important;
     break-inside:avoid !important; page-break-inside:avoid !important;
     display:flex !important; flex-direction:column !important; align-items:center !important;
-    overflow:hidden !important;
-    margin-bottom:14mm !important; /* iOS Safari row-gap 보완 */
   }
-  /* QR 박스 */
+  /* QR 박스: 정상 흐름으로 전환 */
   .pgCard-qr { position:static !important; padding-top:0 !important; height:auto !important; }
   .pgCard-qr::before { display:none !important; }
   .pgCard-qr > div { position:static !important; width:100% !important; display:block !important; }
-  /* ★ QR 크기 */
+
+  /* ★ 인쇄: canvas만 표시, img 숨김 / QR 크기 줄여 여백 확보 */
   .pgCard-qr canvas {
     display:block !important;
-    width:48mm !important;
-    height:48mm !important;
+    width:50mm !important;
+    height:50mm !important;
     margin:0 auto !important;
   }
   .pgCard-qr img { display:none !important; }
-  /* 조명 */
-  .pgCard-title {
-    font-size:9pt !important; margin-bottom:0.8mm !important; color:#c8860a !important;
-    white-space:nowrap !important; overflow:hidden !important; text-overflow:ellipsis !important;
-    width:100% !important; text-align:center !important; line-height:1.2 !important;
-  }
-  /* 선수 목록: 2열 고정, 글자 줄바꿈 금지 */
-  .pgCard-players {
-    width:100% !important; margin-top:0.8mm !important;
-    display:grid !important; grid-template-columns:1fr 1fr !important;
-    gap:0px 2px !important;
-  }
-  .pgCard-player { overflow:hidden !important; }
-  .pgCard-pline {
-    font-size:6.5pt !important; white-space:nowrap !important;
-    overflow:hidden !important; text-overflow:ellipsis !important;
-    display:block !important; max-width:100% !important;
-  }
+  .pgCard-title { font-size:9.5pt !important; margin-bottom:1mm !important; color:#c8860a !important; white-space:nowrap !important; overflow:hidden !important; text-overflow:ellipsis !important; width:100% !important; text-align:center !important; }
+  .pgCard-players { margin-top:1mm !important; gap:1px 3px !important; }
+  .pgCard-pline { font-size:7pt !important; }
   .pgCard-pname { font-weight:800 !important; }
-  .pgCard-pgender { display:none !important; } /* 인쇄 시 성별 숨김으로 공간 확보 */
-  .pgCard-paffil { font-size:6pt !important; }
-  .pgCard-footer { font-size:6pt !important; margin-top:0.8mm !important; line-height:1.2 !important; }
-  .pgCard-num { font-size:6.5px !important; min-width:9px !important; background:none !important; color:#c8860a !important; }
+  .pgCard-footer { font-size:6.5pt !important; margin-top:1mm !important; }
+  .pgCard-num { font-size:7px !important; min-width:10px !important; background:none !important; color:#c8860a !important; }
 }
 
 /* ══ 공통 카드 ══ */
@@ -2707,8 +2514,6 @@ function test_doPost() {
     ov.innerHTML='<div id="pgBatchTop">'
       +'<div class="bt-title">📋 조별 QR · '+esc(code)+' · '+esc(qrDate)+' · '+total+'개 조</div>'
       +'<div class="bt-btns">'
-      +'<button class="btn-layout" id="pgLayout6Btn" onclick="setPrintLayout(6)" title="6개/장" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.5);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer;">6개/장</button>'
-      +'<button class="btn-layout" id="pgLayout9Btn" onclick="setPrintLayout(9)" title="9개/장" style="background:#fff;color:#7a4f00;border:none;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer;">9개/장 ✓</button>'
       +'<button class="btn-print" id="pgPrintBtn" onclick="window.print()" disabled style="opacity:.4;cursor:not-allowed;">🖨 인쇄하기</button>'
       +'<button class="btn-close" onclick="document.getElementById(\'pgBatchOv\').remove()">닫기</button>'
       +'</div></div>'
