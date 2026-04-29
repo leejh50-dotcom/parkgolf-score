@@ -2038,7 +2038,19 @@ function test_doPost() {
   }
 
   window.sendToGoogleSheet = sendToGoogleSheetPatched;
-  /* ★ btn.onclick 등록 제거 — sendToGoogleSheet 래퍼(최종패치)에서 통합 처리 */
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var btn = document.getElementById('autoSendBtn');
+    if (!btn) return;
+    btn.onclick = function(ev) {
+      if (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+      }
+      sendToGoogleSheetPatched();
+      return false;
+    };
+  });
 })();
 </script>
 
@@ -2476,7 +2488,19 @@ function test_doPost() {
 
   document.addEventListener('DOMContentLoaded', function(){
     syncVisiblePlayersToHidden();
-    /* ★ btn.onclick 등록 제거 — sendToGoogleSheet 래퍼(최종패치)에서 통합 처리 */
+
+    var btn = document.getElementById('autoSendBtn');
+    if(btn){
+      btn.onclick = function(ev){
+        if(ev){
+          ev.preventDefault();
+          ev.stopPropagation();
+        }
+        sendToGoogleSheetPatchedV4();
+        return false;
+      };
+    }
+
     setTimeout(syncVisiblePlayersToHidden, 300);
     setTimeout(syncVisiblePlayersToHidden, 1200);
   });
@@ -2590,8 +2614,7 @@ function test_doPost() {
     display:block !important; max-width:100% !important;
   }
   .pgCard-pname { font-weight:800 !important; }
-  /* .pgCard-pgender: 인쇄 시에도 표시 */
-  .pgCard-pgender { font-size:6pt !important; color:#555 !important; }
+  .pgCard-pgender { display:none !important; } /* 인쇄 시 성별 숨김으로 공간 확보 */
   .pgCard-paffil { font-size:6pt !important; }
   .pgCard-footer { font-size:6pt !important; margin-top:0.8mm !important; line-height:1.2 !important; }
   .pgCard-num { font-size:6.5px !important; min-width:9px !important; background:none !important; color:#c8860a !important; }
@@ -2641,219 +2664,6 @@ function test_doPost() {
 </style>
 
 <script>
-(function(){
-  /* ════════════════════════════════════════════════════════
-     PASIS SV4.0 최종패치 v5 — sendToGoogleSheet 래퍼 방식
-     ★ 핵심: 버튼 이벤트 가로채기 대신,
-             sendToGoogleSheet 함수 자체를 showConfirm 래퍼로 교체.
-             obfuscated의 addEventListener가 어떤 경로로 호출하든
-             showConfirm → 확인·전송 → 실제 GAS 전송 흐름을 보장.
-  ════════════════════════════════════════════════════════ */
-
-  /* ── HTML 이스케이프 ── */
-  function esc(s){ return String(s||'').replace(/[&<>"]/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];}); }
-
-  /* ── 전송 완료 오버레이 ── */
-  function showDone(teamName, players){
-    var old = document.getElementById('pasisDoneOv'); if(old) old.remove();
-    var ov = document.createElement('div'); ov.id = 'pasisDoneOv';
-    ov.innerHTML = '<div id="pasisDoneBox"><div class="pdIcon">✅</div><div class="pdTitle">전송 완료!</div>'
-      + '<div class="pdSub"><strong>'+esc(teamName)+'</strong><br>'
-      + esc((players||[]).map(function(p){return p.name||p;}).join(' · '))+'<br>'
-      + '<span style="color:#c8860a;font-weight:700;">구글시트에 기록되었습니다.</span></div>'
-      + '<button class="pdClose" id="pdC">확인</button></div>';
-    document.body.appendChild(ov);
-    function cl(){ if(ov.parentNode) ov.remove(); }
-    document.getElementById('pdC').onclick = cl;
-    setTimeout(cl, 4000);
-  }
-
-  /* ── 전송 확인 오버레이 ── */
-  function showConfirm(players, teamName, onSend){
-    var old = document.getElementById('pasisSendOv'); if(old) old.remove();
-
-    /* players 없으면 실제 전송 함수 직접 호출 */
-    if(!players || !players.length){
-      if(typeof window._pasisRealSend === 'function') window._pasisRealSend();
-      return;
-    }
-
-    function classify(p){
-      var bigo = (p.holeInOne||'').toString();
-      if(bigo.indexOf('불참')>-1) return 'absent';
-      if(bigo.indexOf('기권')>-1) return 'quit';
-      if(p.A===0&&p.B===0&&p.C===0&&p.D===0&&p.total===0) return 'absent';
-      if(p.A===0||p.B===0||p.C===0||p.D===0) return 'quit';
-      return 'normal';
-    }
-
-    var rows = players.map(function(p){
-      var sc = ['A','B','C','D'].map(function(c){ return c+':'+(p[c]||0); }).join(' ');
-      var cls = classify(p);
-      var badge='', rowStyle='', totalDisp=(p.total||0)+'<small> 타</small>';
-      if(cls==='absent'){
-        badge='<span style="background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;border-radius:4px;font-size:10px;padding:1px 7px;margin-left:5px;font-weight:800;">불참</span>';
-        rowStyle='background:#f9f9f9;border-color:#ddd;opacity:.7;';
-        totalDisp='<span style="font-size:12px;color:#aaa;font-weight:600;">순위제외</span>';
-      } else if(cls==='quit'){
-        badge='<span style="background:#fffbeb;color:#d97706;border:1px solid #fcd34d;border-radius:4px;font-size:10px;padding:1px 7px;margin-left:5px;font-weight:800;">기권</span>';
-        rowStyle='background:#fffdf0;border-color:#fcd34d;';
-        totalDisp='<span style="font-size:12px;color:#d97706;font-weight:700;">기권처리</span>';
-      }
-      return '<div class="psRow" style="'+rowStyle+'">'
-        +'<div><div class="psName">'+esc(p.name)
-        +(p.gender||p.affiliation ? ' <span class="psNameSub">('+[p.gender,p.affiliation].filter(Boolean).map(esc).join(', ')+')</span>' : '')
-        +badge+'</div>'
-        +'<div class="psDetail">'+esc(sc)+(p.holeInOne?' · '+esc(p.holeInOne):'')+'</div></div>'
-        +'<div class="psTotal">'+totalDisp+'</div></div>';
-    }).join('');
-
-    var ov = document.createElement('div'); ov.id = 'pasisSendOv';
-    ov.innerHTML = '<div id="pasisSendBox">'
-      +'<div class="psHead">📋 전송 전 확인<small>'+esc(teamName)+' · '+players.length+'명</small></div>'
-      +'<div class="psBody">'+rows+'</div>'
-      +'<div style="background:#fef3c7;border-top:1px solid #fcd34d;padding:10px 18px;font-size:12px;color:#92400e;line-height:1.6;text-align:center;">'
-      +'⚠️ <strong>전송 후 수정은 불가합니다.</strong><br>오류 발견 시 관리자에게 직접 문의하세요.'
-      +'</div>'
-      +'<div class="psFoot">'
-      +'<button class="psBtnBack" id="psB" style="line-height:1.3;">← 뒤로<br>(수정)</button>'
-      +'<button class="psBtnSend" id="psS" style="line-height:1.3;">✅ 확인·<br>전송</button>'
-      +'</div></div>';
-    document.body.appendChild(ov);
-
-    document.getElementById('psB').onclick = function(){ ov.remove(); };
-    document.getElementById('psS').onclick = function(){
-      ov.remove();
-
-      /* 전송중 오버레이 */
-      var sendingOv = document.createElement('div');
-      sendingOv.id = 'pasisSendingOv';
-      sendingOv.style.cssText = 'position:fixed;inset:0;z-index:200001;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;font-family:"Malgun Gothic",sans-serif;';
-      sendingOv.innerHTML = '<div style="background:#fff;border-radius:16px;padding:30px 40px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);">'
-        +'<div style="font-size:36px;margin-bottom:10px;">⏳</div>'
-        +'<div style="font-size:18px;font-weight:900;color:#1e3c72;">전송 중...</div>'
-        +'<div style="font-size:13px;color:#6b7280;margin-top:6px;">잠시 기다려 주세요</div>'
-        +'</div>';
-      document.body.appendChild(sendingOv);
-
-      function removeSendingOv(){
-        var sv = document.getElementById('pasisSendingOv'); if(sv) sv.remove();
-      }
-      var sendingTimeout = setTimeout(removeSendingOv, 10000);
-
-      /* showToast 훅 */
-      var origToast = window.showToast;
-      window.showToast = function(msg){
-        window.showToast = origToast;
-        clearTimeout(sendingTimeout); removeSendingOv();
-        if(String(msg).indexOf('완료')!==-1||String(msg).indexOf('전송')!==-1) showDone(teamName, players);
-        if(typeof origToast==='function') origToast(msg);
-      };
-      /* alert 훅 */
-      var origAlert = window.alert;
-      window.alert = function(msg){
-        window.alert = origAlert;
-        clearTimeout(sendingTimeout); removeSendingOv();
-        origAlert(msg);
-      };
-
-      onSend(players, teamName);
-    };
-
-    ov.addEventListener('click', function(e){ if(e.target===ov) ov.remove(); });
-  }
-  window.showConfirm = showConfirm;
-  window.showDone = showDone;
-
-  /* ════════════════════════════════════════════════════════
-     ★★★ 핵심: sendToGoogleSheet를 showConfirm 래퍼로 교체
-     ★ 타이밍: DOMContentLoaded 후 obfuscated 코드가
-       window.sendToGoogleSheet를 덮어쓰므로,
-       패치는 반드시 그 이후에 실행되어야 함.
-       → MutationObserver + 폴링으로 실제 전송 함수가
-         등록된 직후 래퍼 씌우기.
-  ════════════════════════════════════════════════════════ */
-
-  var _wrapping = false;
-
-  function wrapSendToGoogleSheet(){
-    if(_wrapping) return;
-    var real = window.sendToGoogleSheet;
-    /* 래퍼 자신이거나 없으면 스킵 */
-    if(!real || real._isConfirmWrapper) return;
-
-    _wrapping = true;
-
-    /* 실제 전송 함수 보존 */
-    window._pasisRealSend = real;
-
-    /* ★ 래퍼 함수: 항상 showConfirm 먼저 */
-    window.sendToGoogleSheet = function(){
-      /* 이미 오버레이가 있으면 중복 방지 */
-      if(document.getElementById('pasisSendOv') || document.getElementById('pasisSendingOv')) return;
-
-      /* 선수 데이터 수집 */
-      if(typeof syncVisiblePlayersToHidden === 'function') syncVisiblePlayersToHidden();
-      var players;
-      try {
-        players = (typeof collectPlayersForSendV4 === 'function')
-          ? collectPlayersForSendV4()
-          : [];
-      } catch(e){
-        alert('❌ ' + e.message);
-        return;
-      }
-      var teamName = String(((document.getElementById('teamName')||{}).value||'')).trim() || '팀명';
-
-      showConfirm(players, teamName, function(cp, ct){
-        /* 실제 전송 함수 호출 */
-        var fn = window._pasisRealSend;
-        if(typeof fn === 'function') fn();
-      });
-    };
-    window.sendToGoogleSheet._isConfirmWrapper = true;
-
-    _wrapping = false;
-  }
-
-  /* 폴링: sendToGoogleSheet가 정의된 시점을 감지해 즉시 래핑
-     (obfuscated DOMContentLoaded 이후 실행되므로 짧은 폴링으로 충분) */
-  function pollAndWrap(){
-    var real = window.sendToGoogleSheet;
-    if(real && !real._isConfirmWrapper){
-      wrapSendToGoogleSheet();
-    }
-  }
-
-  /* DOMContentLoaded 이후 폴링 시작 */
-  function startPolling(){
-    /* 즉시 1회 */
-    pollAndWrap();
-    /* 50ms 간격으로 10번 (0.5초 동안) */
-    var count = 0;
-    var timer = setInterval(function(){
-      pollAndWrap();
-      count++;
-      if(count >= 10) clearInterval(timer);
-    }, 50);
-    /* 혹시 늦게 교체되는 경우 대비 추가 폴링 */
-    setTimeout(pollAndWrap, 600);
-    setTimeout(pollAndWrap, 1200);
-    setTimeout(pollAndWrap, 2000);
-  }
-
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', startPolling);
-  } else {
-    startPolling();
-  }
-  window.addEventListener('load', pollAndWrap);
-
-  /* ════════════════════════════════════════════════════════
-     나머지 기능: QR 생성, generateAccessQR, setPrintLayout,
-     generateBatchQR, QR 스캔 자동 라우팅
-     (기존 코드 그대로 유지)
-  ════════════════════════════════════════════════════════ */
 (function(){
   function esc(s){ return String(s||'').replace(/[&<>"]/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];}); }
 
@@ -2989,29 +2799,176 @@ function test_doPost() {
   }
   function forceInitQR(){
     try{
-      /* ★ initFromQueryParams 강제 실행 - QR URL 파라미터로 선수 데이터 로드 */
+      /* ★ QR 스캔 시 이전 localStorage 데이터가 덮어쓰는 버그 방지
+         → parkGolfData_sv4 삭제 후 initFromQueryParams 실행 */
+      localStorage.removeItem('parkGolfData_sv4');
+      /* playerNames/Genders/Affiliations 초기화 */
+      try{if(typeof playerNames!=='undefined'){playerNames=['','','',''];}if(typeof playerGenders!=='undefined'){playerGenders=['','','',''];}if(typeof playerAffiliations!=='undefined'){playerAffiliations=['','','',''];}}catch(e2){}
+      /* initFromQueryParams 강제 실행 */
       if(typeof initFromQueryParams==='function') initFromQueryParams();
     }catch(e){}
     forceScoring();
   }
   if(hasQP()){
+    /* ★ loadData를 1회 차단 - QR 파라미터가 있을 때 localStorage 복원을 막음 */
+    var _origLoadData = window.loadData;
+    if(typeof _origLoadData==='function'){
+      var _loadDataBlocked = false;
+      window.loadData = function(){
+        if(!_loadDataBlocked){ _loadDataBlocked=true; return false; }
+        return _origLoadData.apply(this,arguments);
+      };
+    }
     if(document.readyState==='loading'){
-      document.addEventListener('DOMContentLoaded', function(){
-        forceInitQR();
-        setTimeout(forceInitQR, 500);
-        setTimeout(forceInitQR, 1200);
-      });
+      document.addEventListener('DOMContentLoaded', function(){ forceInitQR(); setTimeout(forceInitQR,300); });
     } else {
       forceInitQR();
-      setTimeout(forceInitQR, 300);
-      setTimeout(forceInitQR, 800);
-      setTimeout(forceInitQR, 1500);
     }
+    setTimeout(forceInitQR,200);
+    setTimeout(forceInitQR,600);
+    setTimeout(forceInitQR,1500);
   }
 
+  /* 전송 확인 오버레이 */
+  function showDone(t,ps){
+    var ov=document.createElement('div');ov.id='pasisDoneOv';
+    ov.innerHTML='<div id="pasisDoneBox"><div class="pdIcon">✅</div><div class="pdTitle">전송 완료!</div>'
+      +'<div class="pdSub"><strong>'+esc(t)+'</strong><br>'+esc((ps||[]).map(function(p){return p.name;}).join(' · '))+'<br>'
+      +'<span style="color:#c8860a;font-weight:700;">구글시트에 기록되었습니다.</span></div>'
+      +'<button class="pdClose" id="pdC">확인</button></div>';
+    document.body.appendChild(ov);
+    function cl(){if(ov.parentNode)ov.remove();} document.getElementById('pdC').onclick=cl; setTimeout(cl,4000);
+  }
+  function showConfirm(players,teamName,onSend){
+    var old=document.getElementById('pasisSendOv');if(old)old.remove();
 
+    /* ── 불참/기권 판정 헬퍼 ── */
+    function classify(p){
+      var bigo=(p.holeInOne||'').toString();
+      if(bigo.indexOf('불참')>-1) return 'absent';
+      if(bigo.indexOf('기권')>-1) return 'quit';
+      /* 모든 코스가 0 → 불참 */
+      if(p.A===0&&p.B===0&&p.C===0&&p.D===0&&p.total===0) return 'absent';
+      /* 일부 코스가 0 → 기권 */
+      if(p.A===0||p.B===0||p.C===0||p.D===0) return 'quit';
+      return 'normal';
+    }
+
+    var rows=players.map(function(p){
+      var sc=['A','B','C','D'].map(function(c){return c+':'+(p[c]||0);}).join(' ');
+      var cls=classify(p);
+      var badge='';
+      var rowStyle='';
+      var totalDisp=(p.total||0)+'<small> 타</small>';
+      if(cls==='absent'){
+        badge='<span style="background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;border-radius:4px;font-size:10px;padding:1px 7px;margin-left:5px;font-weight:800;">불참</span>';
+        rowStyle='background:#f9f9f9;border-color:#ddd;opacity:.7;';
+        totalDisp='<span style="font-size:12px;color:#aaa;font-weight:600;">순위제외</span>';
+      } else if(cls==='quit'){
+        badge='<span style="background:#fffbeb;color:#d97706;border:1px solid #fcd34d;border-radius:4px;font-size:10px;padding:1px 7px;margin-left:5px;font-weight:800;">기권</span>';
+        rowStyle='background:#fffdf0;border-color:#fcd34d;';
+        totalDisp='<span style="font-size:12px;color:#d97706;font-weight:700;">기권처리</span>';
+      }
+      return '<div class="psRow" style="'+rowStyle+'">'
+        +'<div><div class="psName">'+esc(p.name)
+        +(p.gender||p.affiliation
+          ? ' <span class="psNameSub">('+[p.gender,p.affiliation].filter(Boolean).map(esc).join(', ')+')</span>'
+          : '')
+        +badge+'</div>'
+        +'<div class="psDetail">'+esc(sc)+(p.holeInOne?' · '+esc(p.holeInOne):'')+'</div></div>'
+        +'<div class="psTotal">'+totalDisp+'</div></div>';
+    }).join('');
+
+    /* 불참/기권 포함 시 경고 — 삭제 */
+    var warning='';
+
+    var ov=document.createElement('div');ov.id='pasisSendOv';
+    ov.innerHTML='<div id="pasisSendBox"><div class="psHead">📋 전송 전 확인<small>'+esc(teamName)+' · '+players.length+'명</small></div>'
+      +'<div class="psBody">'+warning+rows+'</div>'
+      +'<div style="background:#fef3c7;border-top:1px solid #fcd34d;padding:10px 18px;font-size:12px;color:#92400e;line-height:1.6;text-align:center;">'
+      +'⚠️ <strong>전송 후 수정은 불가합니다.</strong><br>오류 발견 시 관리자에게 직접 문의하세요.'
+      +'</div>'
+      +'<div class="psFoot">'
+      +'<button class="psBtnBack" id="psB" style="line-height:1.3;">← 뒤로<br>(수정)</button>'
+      +'<button class="psBtnSend" id="psS" style="line-height:1.3;">✅ 확인·<br>전송</button>'
+      +'</div></div>';
+    document.body.appendChild(ov);
+    document.getElementById('psB').onclick=function(){ov.remove();};
+    document.getElementById('psS').onclick=function(){
+      /* 오버레이 즉시 제거 후 전송 실행 */
+      ov.remove();
+      /* 전송중 표시 */
+      var sendingOv=document.createElement('div');
+      sendingOv.id='pasisSendingOv';
+      sendingOv.style.cssText='position:fixed;inset:0;z-index:200001;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;font-family:"Malgun Gothic",sans-serif;';
+      sendingOv.innerHTML='<div style="background:#fff;border-radius:16px;padding:30px 40px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);">'
+        +'<div style="font-size:36px;margin-bottom:10px;">⏳</div>'
+        +'<div style="font-size:18px;font-weight:900;color:#1e3c72;">전송 중...</div>'
+        +'<div style="font-size:13px;color:#6b7280;margin-top:6px;">잠시 기다려 주세요</div>'
+        +'</div>';
+      document.body.appendChild(sendingOv);
+
+      /* 전송중 오버레이 제거 함수 */
+      function removeSendingOv(){
+        var sv=document.getElementById('pasisSendingOv');
+        if(sv)sv.remove();
+      }
+
+      /* ★ 안전장치: 10초 후 무조건 제거 (무한 대기 방지) */
+      var sendingTimeout=setTimeout(removeSendingOv, 10000);
+
+      /* showToast 훅: 전송 완료/실패 모두 감지 */
+      var orig=window.showToast;
+      window.showToast=function(msg){
+        window.showToast=orig;
+        clearTimeout(sendingTimeout);
+        removeSendingOv();
+        if(String(msg).indexOf('완료')!==-1||String(msg).indexOf('전송')!==-1)showDone(teamName,players);
+        if(typeof orig==='function')orig(msg);
+      };
+
+      /* ★ alert 가로채기: 오류 alert 시에도 오버레이 제거 */
+      var origAlert=window.alert;
+      window.alert=function(msg){
+        window.alert=origAlert;
+        clearTimeout(sendingTimeout);
+        removeSendingOv();
+        origAlert(msg);
+      };
+
+      onSend(players,teamName);
+    };
+    ov.addEventListener('click',function(e){if(e.target===ov)ov.remove();});
+  }
+  function hookSendBtn(){
+    var btn=document.getElementById('autoSendBtn');
+    if(!btn){setTimeout(hookSendBtn,300);return;}
+    btn.style.background='linear-gradient(135deg,#c8860a 0%,#7a4f00 100%)';
+    btn.style.boxShadow='0 5px 10px rgba(122,79,0,.4)';
+    btn.onclick=function(ev){
+      if(ev){ev.preventDefault();ev.stopPropagation();}
+      if(typeof syncVisiblePlayersToHidden==='function')syncVisiblePlayersToHidden();
+      var players;
+      try{
+        if(typeof collectPlayersForSendV4==='function') players=collectPlayersForSendV4();
+        else if(typeof window.collectPlayersForSend==='function') players=window.collectPlayersForSend();
+        else players=[];
+      }
+      catch(e){alert('❌ '+e.message);return false;}
+      if(!players||!players.length){
+        var sf=typeof sendToGoogleSheetPatchedV4==='function'?sendToGoogleSheetPatchedV4:window.sendToGoogleSheet;
+        if(typeof sf==='function')sf();return false;
+      }
+      var teamName=String(((document.getElementById('teamName')||{}).value||'')).trim()||'팀명';
+      showConfirm(players,teamName,function(cp,ct){
+        var sendFn=typeof sendToGoogleSheetPatchedV4==='function'?sendToGoogleSheetPatchedV4:window.sendToGoogleSheet;
+        if(typeof sendFn==='function')sendFn();
+      });
+      return false;
+    };
+  }
+  /* ★ window.load가 </html> 이후 스크립트보다 먼저 발생하는 타이밍 버그 대응 */
+  if(document.readyState==='complete'){setTimeout(hookSendBtn,200);}
+  else{window.addEventListener('load',function(){setTimeout(hookSendBtn,200);});}
 })();
 </script>
-
-</body>
-</html>
