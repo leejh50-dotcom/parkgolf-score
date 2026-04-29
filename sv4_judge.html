@@ -6,313 +6,213 @@
 <title>PASIS 점수 전송</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;900&display=swap');
-
   :root {
-    --gold:    #c8860a;
-    --gold-dk: #7a4f00;
-    --gold-lt: #fef3dc;
-    --green:   #1a7a3c;
-    --red:     #c0392b;
-    --gray:    #6b7280;
-    --bg:      #f5f0e8;
-    --white:   #ffffff;
-    --shadow:  0 3px 14px rgba(0,0,0,0.10);
+    --gold:#c8860a; --gold-dk:#7a4f00; --gold-lt:#fef3dc;
+    --green:#1a7a3c; --red:#c0392b; --gray:#6b7280;
+    --bg:#f5f0e8; --white:#fff; --shadow:0 3px 14px rgba(0,0,0,.10);
   }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;color:#1a1a1a;}
+  .wrap{max-width:460px;margin:0 auto;background:var(--bg);min-height:100vh;box-shadow:0 0 40px rgba(0,0,0,.12);}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-  body {
-    font-family: 'Noto Sans KR', sans-serif;
-    background: #ddd8cc;
-    min-height: 100vh;
-    color: #1a1a1a;
+  /* ── 헤더 ── */
+  .hdr{
+    background:linear-gradient(135deg,var(--gold-dk),var(--gold));
+    padding:10px 16px 10px; text-align:center;
+    position:sticky;top:0;z-index:100;
+    box-shadow:0 2px 10px rgba(122,79,0,.35);
   }
-
-  .wrap {
-    max-width: 460px;
-    margin: 0 auto;
-    background: var(--bg);
-    min-height: 100vh;
-    box-shadow: 0 0 40px rgba(0,0,0,0.12);
-  }
-
-  /* ── 헤더: 컴팩트 ── */
-  .hdr {
-    background: linear-gradient(135deg, var(--gold-dk) 0%, var(--gold) 100%);
-    padding: 9px 16px 8px;
-    text-align: center;
-    position: sticky; top: 0; z-index: 100;
-    box-shadow: 0 2px 10px rgba(122,79,0,0.35);
-  }
-  .hdr-row1 { display: flex; align-items: center; justify-content: center; gap: 7px; }
-  .hdr-badge {
-    background: rgba(255,255,255,0.2); color: #fff;
-    font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
-    padding: 1px 8px; border-radius: 20px;
-  }
-  .hdr-title { color: #fff; font-size: 17px; font-weight: 900; }
-  .hdr-sub   { color: rgba(255,255,255,0.85); font-size: 12px; margin-top: 2px; }
+  .hdr-title{color:#fff;font-size:19px;font-weight:900;white-space:nowrap;line-height:1.2;}
+  .hdr-sub  {color:rgba(255,255,255,.82);font-size:11px;margin-top:2px;font-weight:600;letter-spacing:.5px;}
 
   /* ── 조 정보 ── */
-  .team-bar {
-    background: var(--white);
-    margin: 10px 12px 0;
-    border-radius: 12px;
-    padding: 10px 14px;
-    box-shadow: var(--shadow);
-    display: flex; align-items: center; gap: 10px;
-    border-left: 4px solid var(--gold);
+  .team-bar{
+    background:var(--white);margin:10px 12px 0;
+    border-radius:12px;padding:9px 14px;box-shadow:var(--shadow);
+    display:flex;align-items:center;gap:10px;border-left:4px solid var(--gold);
   }
-  .team-icon { font-size: 22px; }
-  .team-name { font-size: 20px; font-weight: 900; color: var(--gold-dk); }
-  .team-code { font-size: 11px; color: var(--gray); margin-left: auto; }
+  .team-icon{font-size:20px;}
+  .team-info{flex:1;min-width:0;}
+  .team-name{font-size:17px;font-weight:900;color:var(--gold-dk);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .team-meta{font-size:11px;color:var(--gray);margin-top:1px;white-space:nowrap;}
 
   /* ── 선수 카드 ── */
-  .player-card {
-    background: var(--white);
-    margin: 8px 12px 0;
-    border-radius: 14px;
-    box-shadow: var(--shadow);
-    overflow: hidden;
-    border: 2px solid transparent;
-    transition: border-color .2s;
+  .player-card{
+    background:var(--white);margin:8px 12px 0;
+    border-radius:14px;box-shadow:var(--shadow);
+    overflow:hidden;border:2px solid transparent;transition:border-color .2s;
   }
-  .player-card.active { border-color: var(--gold); }
-
-  .player-head {
-    background: linear-gradient(90deg, var(--gold-lt) 0%, #fff 70%);
-    padding: 8px 12px;
-    display: flex; align-items: center; gap: 8px;
-    border-bottom: 1px solid #f0d890;
+  .player-card.active{border-color:var(--gold);}
+  .player-head{
+    background:linear-gradient(90deg,var(--gold-lt),#fff 70%);
+    padding:7px 12px;display:flex;align-items:center;gap:8px;
+    border-bottom:1px solid #f0d890;
   }
-  .player-num {
-    width: 28px; height: 28px; border-radius: 50%;
-    background: var(--gold); color: #fff;
-    font-size: 14px; font-weight: 900;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
+  .player-num{
+    width:26px;height:26px;border-radius:50%;background:var(--gold);
+    color:#fff;font-size:13px;font-weight:900;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
   }
-  .player-name-wrap { flex: 1; }
-  .player-name { font-size: 18px; font-weight: 900; color: #1a1a1a; line-height: 1.15; }
-  .player-meta { font-size: 11px; color: var(--gray); }
-  .gender-badge { padding: 2px 9px; border-radius: 20px; font-size: 12px; font-weight: 700; flex-shrink: 0; }
-  .gender-m { background: #dbeafe; color: #1d4ed8; }
-  .gender-f { background: #fce7f3; color: #be185d; }
+  .player-name-wrap{flex:1;}
+  .player-name{font-size:17px;font-weight:900;color:#1a1a1a;line-height:1.15;}
+  .player-meta-txt{font-size:11px;color:var(--gray);}
+  .gender-badge{padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;flex-shrink:0;}
+  .gender-m{background:#dbeafe;color:#1d4ed8;}
+  .gender-f{background:#fce7f3;color:#be185d;}
 
   /* ── 점수 그리드 ── */
-  .score-grid {
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    gap: 6px; padding: 8px 10px 6px;
+  .score-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;padding:7px 10px 5px;}
+  .score-cell{text-align:center;}
+  .score-label{font-size:12px;font-weight:800;color:var(--gold-dk);margin-bottom:3px;display:block;}
+  .score-input{
+    width:100%;height:56px;border:2px solid #e5d9b8;border-radius:10px;
+    font-size:25px;font-weight:900;text-align:center;
+    color:#1a1a1a;background:#fffdf7;
+    -webkit-appearance:none;appearance:none;outline:none;
+    transition:border-color .15s,background .15s;
+    font-family:'Noto Sans KR',sans-serif;
   }
-  .score-cell { text-align: center; }
-  .score-label { font-size: 12px; font-weight: 800; color: var(--gold-dk); margin-bottom: 4px; display: block; }
-  .score-input {
-    width: 100%; height: 58px;
-    border: 2px solid #e5d9b8; border-radius: 10px;
-    font-size: 26px; font-weight: 900; text-align: center;
-    color: #1a1a1a; background: #fffdf7;
-    -webkit-appearance: none; appearance: none; outline: none;
-    transition: border-color .15s, background .15s;
-    font-family: 'Noto Sans KR', sans-serif;
-  }
-  .score-input:focus   { border-color: var(--gold); background: #fff8e8; }
-  .score-input.has-val { border-color: var(--gold); color: var(--gold-dk); }
+  .score-input:focus  {border-color:var(--gold);background:#fff8e8;}
+  .score-input.has-val{border-color:var(--gold);color:var(--gold-dk);}
 
   /* ── 합계 + 비고 행 ── */
-  .bottom-row {
-    display: flex; align-items: center; gap: 8px;
-    padding: 6px 10px 10px;
-    border-top: 1px dashed #e5d9b8;
+  .bottom-row{
+    display:flex;align-items:center;gap:8px;
+    padding:5px 10px 9px;border-top:1px dashed #e5d9b8;
   }
-  .total-box { display: flex; align-items: baseline; gap: 3px; }
-  .total-label { font-size: 13px; font-weight: 700; color: var(--gray); }
-  .total-val   { font-size: 26px; font-weight: 900; color: var(--gold); }
-  .total-unit  { font-size: 12px; color: var(--gray); font-weight: 600; }
+  .total-box{display:flex;align-items:baseline;gap:2px;}
+  .total-label{font-size:12px;font-weight:700;color:var(--gray);}
+  .total-val  {font-size:24px;font-weight:900;color:var(--gold);}
+  .total-unit {font-size:11px;color:var(--gray);font-weight:600;}
 
-  .bigo-wrap { margin-left: auto; display: flex; gap: 5px; }
-  .bigo-btn {
-    padding: 4px 9px; border-radius: 20px; border: 1.5px solid #ddd;
-    font-size: 11px; font-weight: 700; cursor: pointer;
-    background: #f9f9f9; color: #666;
-    font-family: 'Noto Sans KR', sans-serif; transition: all .15s;
+  /* 비고 입력 */
+  .bigo-wrap{margin-left:auto;display:flex;align-items:center;gap:6px;}
+  .bigo-label{font-size:11px;font-weight:700;color:var(--gray);white-space:nowrap;}
+  .bigo-input{
+    width:90px;height:30px;border:1.5px solid #e5d9b8;border-radius:8px;
+    font-size:12px;font-weight:700;text-align:center;padding:0 6px;
+    color:#1a1a1a;background:#fffdf7;outline:none;
+    font-family:'Noto Sans KR',sans-serif;
+    transition:border-color .15s;
   }
-  .bigo-btn.on-absent { background: #fef2f2; border-color: #fca5a5; color: #dc2626; }
-  .bigo-btn.on-quit   { background: #fffbeb; border-color: #fcd34d; color: #d97706; }
-  .bigo-btn.on-hi     { background: #f0fdf4; border-color: #6ee7b7; color: #059669; }
+  .bigo-input:focus{border-color:var(--gold);background:#fff8e8;}
+  .bigo-input::placeholder{color:#ccc;font-weight:400;}
 
   /* ── 주의 배너 ── */
-  .warn-banner {
-    background: #fff8e8; border: 1.5px solid #fcd34d;
-    border-radius: 10px; margin: 10px 12px 6px;
-    padding: 9px 14px; display: flex; gap: 8px;
-    font-size: 12px; color: #92400e; line-height: 1.6;
+  .warn-banner{
+    background:#fff8e8;border:1.5px solid #fcd34d;border-radius:10px;
+    margin:10px 12px 4px;padding:8px 13px;
+    display:flex;gap:7px;font-size:12px;color:#92400e;line-height:1.6;
   }
 
   /* ── 전송 버튼 ── */
-  .send-wrap {
-    padding: 8px 12px 20px;
-    position: sticky; bottom: 0;
-    background: linear-gradient(to top, var(--bg) 65%, transparent);
-    padding-top: 10px;
+  .send-wrap{padding:6px 12px 20px;}
+  .send-btn{
+    width:100%;background:linear-gradient(135deg,var(--gold-dk),var(--gold));
+    color:#fff;border:none;border-radius:14px;
+    padding:15px;font-size:17px;font-weight:900;
+    cursor:pointer;box-shadow:0 5px 16px rgba(122,79,0,.38);
+    transition:transform .1s;font-family:'Noto Sans KR',sans-serif;
   }
-  .send-btn {
-    width: 100%;
-    background: linear-gradient(135deg, var(--gold-dk), var(--gold));
-    color: #fff; border: none; border-radius: 14px;
-    padding: 15px; font-size: 18px; font-weight: 900;
-    cursor: pointer; box-shadow: 0 5px 16px rgba(122,79,0,0.38);
-    transition: transform .1s; font-family: 'Noto Sans KR', sans-serif;
-  }
-  .send-btn:active   { transform: scale(0.97); }
-  .send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .send-btn:active  {transform:scale(0.97);}
+  .send-btn:disabled{opacity:.5;cursor:not-allowed;}
 
   /* ── 홍보 섹션 ── */
-  .promo-section { padding: 18px 12px 28px; border-top: 1px solid #e8e0cc; }
-  .promo-title { font-size: 11px; font-weight: 800; color: var(--gray); letter-spacing: 1px; margin-bottom: 10px; text-align: center; }
-  .promo-btns  { display: flex; flex-direction: column; gap: 8px; }
-  .promo-btn {
-    display: flex; align-items: center; gap: 12px;
-    background: var(--white); border-radius: 12px;
-    padding: 11px 14px; text-decoration: none;
-    box-shadow: var(--shadow); border: 1.5px solid #e8e0cc;
+  .promo-section{padding:16px 12px 28px;border-top:1px solid #e8e0cc;}
+  .promo-title{font-size:11px;font-weight:800;color:var(--gray);letter-spacing:1px;margin-bottom:10px;text-align:center;}
+  .promo-btns{display:flex;flex-direction:column;gap:8px;}
+  .promo-btn{
+    display:flex;align-items:center;gap:12px;
+    background:var(--white);border-radius:12px;padding:11px 14px;
+    text-decoration:none;box-shadow:var(--shadow);border:1.5px solid #e8e0cc;
   }
-  .promo-btn-icon { font-size: 22px; flex-shrink: 0; }
-  .promo-btn-info { flex: 1; }
-  .promo-btn-name { font-size: 14px; font-weight: 900; color: #1a1a1a; display: block; }
-  .promo-btn-desc { font-size: 11px; color: var(--gray); display: block; margin-top: 1px; }
-  .promo-btn-arr  { font-size: 16px; color: #ccc; }
+  .promo-btn-icon{font-size:21px;flex-shrink:0;}
+  .promo-btn-info{flex:1;}
+  .promo-btn-name{font-size:14px;font-weight:900;color:#1a1a1a;display:block;}
+  .promo-btn-desc{font-size:11px;color:var(--gray);display:block;margin-top:1px;}
+  .promo-btn-arr{font-size:15px;color:#ccc;}
 
   /* ── 오류 배너 ── */
-  .err-banner {
-    background: #fef2f2; border: 1.5px solid #fca5a5;
-    border-radius: 10px; margin: 0 12px 8px;
-    padding: 10px 14px; font-size: 13px; color: #dc2626;
-    font-weight: 700; display: none;
+  .err-banner{
+    background:#fef2f2;border:1.5px solid #fca5a5;border-radius:10px;
+    margin:0 12px 8px;padding:9px 13px;font-size:13px;color:#dc2626;
+    font-weight:700;display:none;
   }
-  .err-banner.show { display: block; }
+  .err-banner.show{display:block;}
 
   /* ── 확인 오버레이 ── */
-  .overlay {
-    position: fixed; inset: 0; z-index: 1000;
-    background: rgba(0,0,0,0.6);
-    display: flex; align-items: center; justify-content: center;
-    padding: 16px; backdrop-filter: blur(3px);
-  }
-  .overlay.hidden { display: none; }
-  .confirm-box {
-    background: #fff; border-radius: 18px;
-    width: 100%; max-width: 380px; overflow: hidden;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.35);
-    animation: slideUp .22s ease;
-  }
-  @keyframes slideUp { from{transform:translateY(24px);opacity:0} to{transform:translateY(0);opacity:1} }
-  .confirm-head {
-    background: linear-gradient(135deg, var(--gold-dk), var(--gold));
-    color: #fff; padding: 14px 18px 12px; font-size: 17px; font-weight: 900;
-  }
-  .confirm-head small { display: block; font-size: 12px; opacity: .85; margin-top: 2px; font-weight: 600; }
-  .confirm-body { padding: 10px 12px; max-height: 52vh; overflow-y: auto; }
-  .confirm-row {
-    display: flex; align-items: center; justify-content: space-between;
-    background: var(--gold-lt); border: 1px solid #f0d08a;
-    border-radius: 11px; padding: 9px 12px; margin-bottom: 7px;
-  }
-  .confirm-row.absent { background: #f9f9f9; border-color: #ddd; opacity: .75; }
-  .confirm-row.quit   { background: #fffdf0; border-color: #fcd34d; }
-  .cr-left  { flex: 1; }
-  .cr-name  { font-size: 15px; font-weight: 900; }
-  .cr-detail{ font-size: 11px; color: var(--gray); margin-top: 2px; }
-  .cr-right { text-align: right; }
-  .cr-total { font-size: 21px; font-weight: 900; color: var(--gold); }
-  .cr-bigo  { font-size: 10px; font-weight: 800; padding: 1px 6px; border-radius: 4px; margin-top: 2px; display: inline-block; }
-  .cr-bigo-absent { background: #fef2f2; color: #dc2626; border: 1px solid #fca5a5; }
-  .cr-bigo-quit   { background: #fffbeb; color: #d97706; border: 1px solid #fcd34d; }
-  .cr-bigo-hi     { background: #f0fdf4; color: #059669; border: 1px solid #6ee7b7; }
-  .confirm-warn {
-    background: #fef3c7; border-top: 1px solid #fcd34d;
-    padding: 9px 14px; font-size: 12px; color: #92400e; line-height: 1.6; text-align: center;
-  }
-  .confirm-foot { padding: 8px 12px 12px; display: flex; gap: 8px; }
-  .btn-back, .btn-go {
-    flex: 1; padding: 13px; border: none; border-radius: 12px;
-    font-size: 16px; font-weight: 900; cursor: pointer;
-    font-family: 'Noto Sans KR', sans-serif; line-height: 1.3;
-  }
-  .btn-back { background: #e5e7eb; color: #374151; }
-  .btn-go   { background: linear-gradient(135deg, var(--gold-dk), var(--gold)); color: #fff; }
+  .overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px);}
+  .overlay.hidden{display:none;}
+  .confirm-box{background:#fff;border-radius:18px;width:100%;max-width:380px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.35);animation:slideUp .22s ease;}
+  @keyframes slideUp{from{transform:translateY(24px);opacity:0}to{transform:translateY(0);opacity:1}}
+  .confirm-head{background:linear-gradient(135deg,var(--gold-dk),var(--gold));color:#fff;padding:13px 17px 11px;font-size:17px;font-weight:900;}
+  .confirm-head small{display:block;font-size:12px;opacity:.85;margin-top:2px;font-weight:600;}
+  .confirm-body{padding:10px 12px;max-height:52vh;overflow-y:auto;}
+  .confirm-row{display:flex;align-items:center;justify-content:space-between;background:var(--gold-lt);border:1px solid #f0d08a;border-radius:11px;padding:9px 12px;margin-bottom:7px;}
+  .confirm-row.absent{background:#f9f9f9;border-color:#ddd;opacity:.75;}
+  .confirm-row.quit  {background:#fffdf0;border-color:#fcd34d;}
+  .cr-left{flex:1;}
+  .cr-name {font-size:15px;font-weight:900;}
+  .cr-detail{font-size:11px;color:var(--gray);margin-top:2px;}
+  .cr-right{text-align:right;}
+  .cr-total{font-size:21px;font-weight:900;color:var(--gold);}
+  .cr-bigo{font-size:10px;font-weight:800;padding:1px 6px;border-radius:4px;margin-top:2px;display:inline-block;}
+  .cr-bigo-absent{background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;}
+  .cr-bigo-quit  {background:#fffbeb;color:#d97706;border:1px solid #fcd34d;}
+  .cr-bigo-note  {background:#f0fdf4;color:#059669;border:1px solid #6ee7b7;}
+  .confirm-warn{background:#fef3c7;border-top:1px solid #fcd34d;padding:9px 14px;font-size:12px;color:#92400e;line-height:1.6;text-align:center;}
+  .confirm-foot{padding:8px 12px 12px;display:flex;gap:8px;}
+  .btn-back,.btn-go{flex:1;padding:13px;border:none;border-radius:12px;font-size:16px;font-weight:900;cursor:pointer;font-family:'Noto Sans KR',sans-serif;line-height:1.3;}
+  .btn-back{background:#e5e7eb;color:#374151;}
+  .btn-go  {background:linear-gradient(135deg,var(--gold-dk),var(--gold));color:#fff;}
 
   /* ── 전송중 ── */
-  .sending-box {
-    background: #fff; border-radius: 18px;
-    padding: 36px 28px; text-align: center; width: 240px;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.35);
-  }
-  .sending-spinner { font-size: 40px; display: block; margin-bottom: 12px; animation: spin 1.2s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .sending-title { font-size: 18px; font-weight: 900; color: #1e3c72; }
-  .sending-sub   { font-size: 12px; color: var(--gray); margin-top: 5px; }
+  .sending-box{background:#fff;border-radius:18px;padding:36px 28px;text-align:center;width:240px;box-shadow:0 24px 60px rgba(0,0,0,.35);}
+  .sending-spinner{font-size:40px;display:block;margin-bottom:12px;animation:spin 1.2s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .sending-title{font-size:18px;font-weight:900;color:#1e3c72;}
+  .sending-sub  {font-size:12px;color:var(--gray);margin-top:5px;}
 
   /* ── 완료 화면 ── */
-  #doneScreen {
-    display: none; min-height: 100vh;
-    background: linear-gradient(160deg, var(--green) 0%, #0d4d24 100%);
-    align-items: center; justify-content: center;
-    flex-direction: column; text-align: center; padding: 40px 20px;
-    max-width: 460px; margin: 0 auto;
+  #doneScreen{
+    display:none;min-height:100vh;
+    background:linear-gradient(160deg,var(--green),#0d4d24);
+    align-items:center;justify-content:center;
+    flex-direction:column;text-align:center;padding:40px 20px;
+    max-width:460px;margin:0 auto;
   }
-  #doneScreen.show { display: flex; }
-  .done-icon  { font-size: 72px; margin-bottom: 16px; animation: bounce .6s ease; }
-  @keyframes bounce { 0%,100%{transform:scale(1)} 50%{transform:scale(1.15)} }
-  .done-title { font-size: 28px; font-weight: 900; color: #fff; }
-  .done-team  { font-size: 20px; font-weight: 800; color: rgba(255,255,255,.85); margin-top: 4px; }
-  .done-sub   {
-    font-size: 14px; color: rgba(255,255,255,.65); margin-top: 14px; line-height: 1.9;
-    background: rgba(0,0,0,.2); border-radius: 12px; padding: 12px 18px;
-  }
-  .done-players { margin-top: 16px; width: 100%; max-width: 300px; display: flex; flex-direction: column; gap: 7px; }
-  .done-player-row {
-    background: rgba(255,255,255,.12); border-radius: 10px;
-    padding: 9px 14px; display: flex; justify-content: space-between; align-items: center;
-  }
-  .dp-name  { font-size: 15px; font-weight: 800; color: #fff; }
-  .dp-right { text-align: right; }
-  .dp-total { font-size: 17px; font-weight: 900; color: #a7f3d0; }
-  .dp-bigo  { font-size: 10px; color: rgba(255,255,255,.6); }
-  .done-promo { margin-top: 24px; width: 100%; max-width: 300px; }
-  .done-promo-title { font-size: 11px; color: rgba(255,255,255,.5); margin-bottom: 8px; letter-spacing: 1px; font-weight: 700; }
-  .done-promo-btn {
-    display: flex; align-items: center; gap: 10px;
-    background: rgba(255,255,255,.1); border-radius: 10px;
-    padding: 10px 14px; text-decoration: none; margin-bottom: 7px;
-    border: 1px solid rgba(255,255,255,.15);
-  }
-  .done-promo-icon { font-size: 20px; }
-  .done-promo-info { flex: 1; text-align: left; }
-  .done-promo-name { font-size: 13px; font-weight: 900; color: #fff; display: block; }
-  .done-promo-desc { font-size: 10px; color: rgba(255,255,255,.6); display: block; }
-  .done-promo-arr  { font-size: 14px; color: rgba(255,255,255,.4); }
+  #doneScreen.show{display:flex;}
+  .done-icon {font-size:68px;margin-bottom:14px;animation:bounce .6s ease;}
+  @keyframes bounce{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+  .done-title{font-size:26px;font-weight:900;color:#fff;}
+  .done-team {font-size:18px;font-weight:800;color:rgba(255,255,255,.85);margin-top:4px;}
+  .done-sub  {font-size:13px;color:rgba(255,255,255,.65);margin-top:12px;line-height:1.9;background:rgba(0,0,0,.2);border-radius:12px;padding:11px 16px;}
+  .done-players{margin-top:14px;width:100%;max-width:300px;display:flex;flex-direction:column;gap:6px;}
+  .done-player-row{background:rgba(255,255,255,.12);border-radius:10px;padding:8px 14px;display:flex;justify-content:space-between;align-items:center;}
+  .dp-name {font-size:14px;font-weight:800;color:#fff;}
+  .dp-right{text-align:right;}
+  .dp-total{font-size:16px;font-weight:900;color:#a7f3d0;}
+  .dp-bigo {font-size:10px;color:rgba(255,255,255,.6);}
+  .done-promo{margin-top:22px;width:100%;max-width:300px;}
+  .done-promo-title{font-size:11px;color:rgba(255,255,255,.5);margin-bottom:8px;letter-spacing:1px;font-weight:700;}
+  .done-promo-btn{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.1);border-radius:10px;padding:10px 14px;text-decoration:none;margin-bottom:7px;border:1px solid rgba(255,255,255,.15);}
+  .done-promo-icon{font-size:19px;}
+  .done-promo-info{flex:1;text-align:left;}
+  .done-promo-name{font-size:13px;font-weight:900;color:#fff;display:block;}
+  .done-promo-desc{font-size:10px;color:rgba(255,255,255,.6);display:block;}
+  .done-promo-arr {font-size:14px;color:rgba(255,255,255,.4);}
 
   /* ── 로딩/오류 ── */
-  #loadingScreen {
-    display: flex; align-items: center; justify-content: center;
-    min-height: 100vh; flex-direction: column; gap: 14px;
-    background: var(--bg); max-width: 460px; margin: 0 auto;
-  }
-  .loading-logo { font-size: 44px; }
-  .loading-text { font-size: 15px; font-weight: 700; color: var(--gold-dk); }
-  #errorScreen {
-    display: none; min-height: 100vh;
-    align-items: center; justify-content: center;
-    flex-direction: column; gap: 12px; padding: 28px; text-align: center;
-    background: var(--bg); max-width: 460px; margin: 0 auto;
-  }
-  #errorScreen.show { display: flex; }
-  .err-icon  { font-size: 56px; }
-  .err-title { font-size: 20px; font-weight: 900; color: var(--red); }
-  .err-msg   { font-size: 14px; color: var(--gray); line-height: 1.8; }
-
-  #mainContent { display: none; }
-  #mainContent.show { display: block; }
+  #loadingScreen{display:flex;align-items:center;justify-content:center;min-height:100vh;flex-direction:column;gap:14px;background:var(--bg);max-width:460px;margin:0 auto;}
+  .loading-logo{font-size:44px;}
+  .loading-text{font-size:15px;font-weight:700;color:var(--gold-dk);}
+  #errorScreen{display:none;min-height:100vh;align-items:center;justify-content:center;flex-direction:column;gap:12px;padding:28px;text-align:center;background:var(--bg);max-width:460px;margin:0 auto;}
+  #errorScreen.show{display:flex;}
+  .err-icon {font-size:56px;}
+  .err-title{font-size:20px;font-weight:900;color:var(--red);}
+  .err-msg  {font-size:14px;color:var(--gray);line-height:1.8;}
+  #mainContent{display:none;}
+  #mainContent.show{display:block;}
 </style>
 </head>
 <body>
@@ -337,19 +237,19 @@
   <div class="done-players" id="donePlayers"></div>
   <div class="done-promo">
     <div class="done-promo-title">── PASIS 시스템 안내 ──</div>
-    <a class="done-promo-btn" href="https://songgeun25.tistory.com" target="_blank">
+    <a class="done-promo-btn" href="https://leejh50-dotcom.github.io/parkgolf-score/sv2.html" target="_blank">
       <span class="done-promo-icon">📋</span>
       <span class="done-promo-info">
-        <span class="done-promo-name">PASIS SV2.0 · SV3.0</span>
-        <span class="done-promo-desc">클럽대회용 점수집계 시스템</span>
+        <span class="done-promo-name">PASIS SV2.0 클럽용</span>
+        <span class="done-promo-desc">클럽대회 간편 점수집계</span>
       </span>
       <span class="done-promo-arr">›</span>
     </a>
     <a class="done-promo-btn" href="https://songgeun25.tistory.com" target="_blank">
-      <span class="done-promo-icon">🏆</span>
+      <span class="done-promo-icon">🏅</span>
       <span class="done-promo-info">
-        <span class="done-promo-name">파시스 블로그</span>
-        <span class="done-promo-desc">파크골프 스마트 관리 솔루션</span>
+        <span class="done-promo-name">PASIS SV3.0 클럽·대회용</span>
+        <span class="done-promo-desc">고급 대회 점수집계 시스템</span>
       </span>
       <span class="done-promo-arr">›</span>
     </a>
@@ -357,18 +257,20 @@
 </div>
 
 <div id="mainContent">
+
+  <!-- 헤더 -->
   <div class="hdr">
-    <div class="hdr-row1">
-      <span class="hdr-badge">PASIS SV4.0</span>
-      <span class="hdr-title">⛳ 파크골프 점수 전송</span>
-    </div>
-    <div class="hdr-sub" id="hdrSub">점수를 입력하고 전송하세요</div>
+    <div class="hdr-title">⛳ 파크골프 점수 전송</div>
+    <div class="hdr-sub">PASIS SV4 Pro (대회용)</div>
   </div>
 
+  <!-- 조 정보 -->
   <div class="team-bar">
     <span class="team-icon">🏌️</span>
-    <span class="team-name" id="teamNameDisp">—</span>
-    <span class="team-code" id="teamCodeDisp"></span>
+    <span class="team-info">
+      <span class="team-name" id="teamNameDisp">—</span>
+      <span class="team-meta" id="teamCodeDisp"></span>
+    </span>
   </div>
 
   <div style="height:8px"></div>
@@ -389,26 +291,28 @@
   <div class="promo-section">
     <div class="promo-title">── PASIS 시스템 안내 ──</div>
     <div class="promo-btns">
-      <a class="promo-btn" href="https://songgeun25.tistory.com" target="_blank">
+      <a class="promo-btn" href="https://leejh50-dotcom.github.io/parkgolf-score/sv2.html" target="_blank">
         <span class="promo-btn-icon">📋</span>
         <span class="promo-btn-info">
-          <span class="promo-btn-name">PASIS SV2.0</span>
-          <span class="promo-btn-desc">클럽대회용 간편 점수집계</span>
+          <span class="promo-btn-name">PASIS SV2.0 클럽용</span>
+          <span class="promo-btn-desc">클럽대회 간편 점수집계</span>
         </span>
         <span class="promo-btn-arr">›</span>
       </a>
       <a class="promo-btn" href="https://songgeun25.tistory.com" target="_blank">
         <span class="promo-btn-icon">🏅</span>
         <span class="promo-btn-info">
-          <span class="promo-btn-name">PASIS SV3.0</span>
-          <span class="promo-btn-desc">클럽대회용 고급 점수집계</span>
+          <span class="promo-btn-name">PASIS SV3.0 클럽·대회용</span>
+          <span class="promo-btn-desc">고급 대회 점수집계 시스템</span>
         </span>
         <span class="promo-btn-arr">›</span>
       </a>
     </div>
   </div>
-</div>
 
+</div><!-- /mainContent -->
+
+<!-- 확인 오버레이 -->
 <div class="overlay hidden" id="confirmOv">
   <div class="confirm-box">
     <div class="confirm-head">📋 전송 전 확인<small id="confirmSub"></small></div>
@@ -421,6 +325,7 @@
   </div>
 </div>
 
+<!-- 전송중 -->
 <div class="overlay hidden" id="sendingOv">
   <div class="sending-box">
     <span class="sending-spinner">⏳</span>
@@ -441,22 +346,17 @@ function init() {
     APP.url  = decodeURIComponent(p.get('u') || '');
     APP.team = decodeURIComponent(p.get('t') || '');
     APP.date = decodeURIComponent(p.get('d') || '');
-
     if (!APP.code || !APP.url || !APP.team) {
-      showError('QR 코드 정보가 올바르지 않습니다.<br>대회코드·조명·웹앱 URL이 필요합니다.<br><br>QR 코드를 다시 스캔해 주세요.');
-      return;
+      showError('QR 코드 정보가 올바르지 않습니다.<br>QR 코드를 다시 스캔해 주세요.'); return;
     }
-
     APP.players = [];
     for (var i = 1; i <= 4; i++) {
       var raw = p.get(String(i)) || '';
       if (!raw) continue;
       var pts = decodeURIComponent(raw).split('|');
-      APP.players.push({ slot:i, name:(pts[0]||'').trim(), gender:(pts[1]||'').trim(), affil:(pts[2]||'').trim(), A:'', B:'', C:'', D:'', total:0, bigo:'' });
+      APP.players.push({ slot:i, name:(pts[0]||'').trim(), gender:(pts[1]||'').trim(), affil:(pts[2]||'').trim(), A:'',B:'',C:'',D:'', total:0, bigo:'' });
     }
-
     if (!APP.players.length) { showError('선수 정보가 없습니다.<br>QR 코드를 다시 스캔해 주세요.'); return; }
-
     renderUI();
     document.getElementById('loadingScreen').style.display = 'none';
     document.getElementById('mainContent').classList.add('show');
@@ -472,20 +372,19 @@ function showError(msg) {
 function renderUI() {
   document.getElementById('teamNameDisp').textContent = APP.team;
   document.getElementById('teamCodeDisp').textContent = APP.code + (APP.date ? ' · ' + APP.date : '');
-  document.getElementById('hdrSub').textContent = APP.team + ' · ' + APP.players.length + '명';
 
   var list = document.getElementById('playerList');
   list.innerHTML = '';
   APP.players.forEach(function(p, idx) {
     var card = document.createElement('div');
     card.className = 'player-card'; card.id = 'card-' + idx;
-    var gb = p.gender==='남' ? '<span class="gender-badge gender-m">남</span>' : p.gender==='여' ? '<span class="gender-badge gender-f">여</span>' : '';
+    var gb = p.gender==='남'?'<span class="gender-badge gender-m">남</span>':p.gender==='여'?'<span class="gender-badge gender-f">여</span>':'';
     card.innerHTML =
       '<div class="player-head">' +
         '<div class="player-num">' + p.slot + '</div>' +
         '<div class="player-name-wrap">' +
           '<div class="player-name">' + esc(p.name) + '</div>' +
-          (p.affil ? '<div class="player-meta">' + esc(p.affil) + '</div>' : '') +
+          (p.affil ? '<div class="player-meta-txt">' + esc(p.affil) + '</div>' : '') +
         '</div>' + gb +
       '</div>' +
       '<div class="score-grid">' +
@@ -498,9 +397,9 @@ function renderUI() {
       '<div class="bottom-row">' +
         '<div class="total-box"><span class="total-label">합계&nbsp;</span><span class="total-val" id="tot-'+idx+'">—</span><span class="total-unit">&nbsp;타</span></div>' +
         '<div class="bigo-wrap">' +
-          '<button class="bigo-btn" id="bb-absent-'+idx+'" onclick="toggleBigo('+idx+',\'불참\')">불참</button>' +
-          '<button class="bigo-btn" id="bb-quit-'+idx+'"   onclick="toggleBigo('+idx+',\'기권\')">기권</button>' +
-          '<button class="bigo-btn" id="bb-hi-'+idx+'"     onclick="toggleBigo('+idx+',\'홀인원\')">홀인원</button>' +
+          '<span class="bigo-label">비고</span>' +
+          '<input class="bigo-input" type="text" placeholder="예)A9홀인원" maxlength="10" ' +
+            'id="bigo-'+idx+'" oninput="onBigo(this,'+idx+')" onfocus="onFocus('+idx+')" onblur="onBlur('+idx+')">' +
         '</div>' +
       '</div>';
     list.appendChild(card);
@@ -513,9 +412,6 @@ function onScore(el, idx, c) {
   APP.players[idx][c] = v === '' ? '' : Number(v);
   el.classList.toggle('has-val', v !== '');
   calcTotal(idx);
-  if (v !== '' && (APP.players[idx].bigo === '불참' || APP.players[idx].bigo === '기권')) {
-    APP.players[idx].bigo = ''; refreshBigo(idx);
-  }
 }
 
 function calcTotal(idx) {
@@ -526,56 +422,55 @@ function calcTotal(idx) {
   if (el) el.textContent = has ? sum : '—';
 }
 
-function toggleBigo(idx, val) {
-  var p = APP.players[idx];
-  if (p.bigo === val) { p.bigo = ''; }
-  else {
-    p.bigo = val;
-    if (val === '불참') {
-      ['A','B','C','D'].forEach(function(c){ p[c]=0; var e=document.getElementById('sc-'+idx+'-'+c); if(e){e.value='0';e.classList.add('has-val');} });
-      calcTotal(idx);
-    }
-    if (val === '기권') {
-      ['A','B','C','D'].forEach(function(c){ if(p[c]===''){p[c]=0;var e=document.getElementById('sc-'+idx+'-'+c);if(e){e.value='0';e.classList.add('has-val');}} });
-      calcTotal(idx);
-    }
-  }
-  refreshBigo(idx);
-}
-
-function refreshBigo(idx) {
-  var b = APP.players[idx].bigo;
-  var m = {'불참':'absent','기권':'quit','홀인원':'hi'};
-  ['불참','기권','홀인원'].forEach(function(v){
-    var btn = document.getElementById('bb-'+m[v]+'-'+idx);
-    if (btn) btn.className = 'bigo-btn' + (b===v ? ' on-'+m[v] : '');
-  });
+function onBigo(el, idx) {
+  APP.players[idx].bigo = el.value.trim();
 }
 
 function onFocus(idx) { document.getElementById('card-'+idx).classList.add('active'); }
-function onBlur(idx)  { setTimeout(function(){ var c=document.getElementById('card-'+idx); if(c&&!c.contains(document.activeElement))c.classList.remove('active'); },100); }
+function onBlur(idx)  { setTimeout(function(){ var c=document.getElementById('card-'+idx); if(c&&!c.contains(document.activeElement))c.classList.remove('active'); }, 100); }
 
 function openConfirm() {
-  var missing = [];
+  // 유효성 검사: 빈 칸 있어도 통과 (불참/기권 자동 처리)
+  // 단, 모든 칸이 비어있지 않은 선수 중 일부만 빈 경우 경고
+  var warn = [];
   APP.players.forEach(function(p) {
-    if (p.bigo==='불참'||p.bigo==='기권') return;
-    ['A','B','C','D'].forEach(function(c){ if(p[c]==='') missing.push(p.name+' '+c+'코스'); });
+    var filled = ['A','B','C','D'].filter(function(c){ return p[c] !== ''; }).length;
+    if (filled > 0 && filled < 4) warn.push(p.name); // 일부만 입력
   });
-  if (missing.length > 0) {
+  if (warn.length > 0) {
     var b = document.getElementById('errBanner');
-    b.textContent = '⚠️ 미입력: ' + missing.slice(0,3).join(', ') + (missing.length>3?' 외 '+(missing.length-3)+'개':'');
-    b.classList.add('show'); window.scrollTo({top:0,behavior:'smooth'});
-    setTimeout(function(){b.classList.remove('show');},4000); return;
+    b.innerHTML = '⚠️ <strong>' + warn.join(', ') + '</strong> — 일부 코스가 비어있습니다.<br>기권이면 빈 칸을 0으로 입력하거나 비워두세요.';
+    b.classList.add('show');
+    window.scrollTo({top:0,behavior:'smooth'});
+    setTimeout(function(){b.classList.remove('show');}, 5000);
+    return;
   }
   document.getElementById('errBanner').classList.remove('show');
   document.getElementById('confirmSub').textContent = APP.team + ' · ' + APP.players.length + '명';
 
   document.getElementById('confirmBody').innerHTML = APP.players.map(function(p) {
-    var cls = p.bigo==='불참'?'absent':p.bigo==='기권'?'quit':'';
-    var badge = p.bigo==='불참'?'<span class="cr-bigo cr-bigo-absent">불참</span>':p.bigo==='기권'?'<span class="cr-bigo cr-bigo-quit">기권</span>':p.bigo==='홀인원'?'<span class="cr-bigo cr-bigo-hi">홀인원🌟</span>':'';
-    var tot = p.bigo==='불참'?'<span style="font-size:12px;color:#aaa;font-weight:700">순위제외</span>':p.bigo==='기권'?'<span style="font-size:12px;color:#d97706;font-weight:700">기권처리</span>':'<span class="cr-total">'+p.total+'<small style="font-size:11px;color:#999"> 타</small></span>';
-    var det = 'A:'+(p.A===''?'?':p.A)+' B:'+(p.B===''?'?':p.B)+' C:'+(p.C===''?'?':p.C)+' D:'+(p.D===''?'?':p.D);
-    return '<div class="confirm-row '+cls+'"><div class="cr-left"><div class="cr-name">'+esc(p.name)+'</div><div class="cr-detail">'+det+'</div></div><div class="cr-right">'+tot+(badge?'<br>'+badge:'')+'</div></div>';
+    var filled = ['A','B','C','D'].filter(function(c){ return p[c] !== ''; }).length;
+    var allEmpty = filled === 0;
+    var someEmpty = !allEmpty && filled < 4;
+    // 비고 자동 설정
+    var autoNote = p.bigo;
+    if (!autoNote) { if (allEmpty) autoNote = '불참'; else if (someEmpty) autoNote = '기권'; }
+
+    var cls = allEmpty ? 'absent' : someEmpty ? 'quit' : '';
+    var badgeHtml = '';
+    if (autoNote === '불참') badgeHtml = '<span class="cr-bigo cr-bigo-absent">불참</span>';
+    else if (autoNote === '기권') badgeHtml = '<span class="cr-bigo cr-bigo-quit">기권</span>';
+    else if (autoNote) badgeHtml = '<span class="cr-bigo cr-bigo-note">' + esc(autoNote) + '</span>';
+
+    var tot = allEmpty ? '<span style="font-size:11px;color:#aaa;font-weight:700">순위제외</span>'
+      : someEmpty ? '<span style="font-size:11px;color:#d97706;font-weight:700">기권처리</span>'
+      : '<span class="cr-total">'+p.total+'<small style="font-size:10px;color:#999"> 타</small></span>';
+
+    var det = ['A','B','C','D'].map(function(c){ return c+':'+(p[c]===''?'미입력':p[c]); }).join(' ');
+    return '<div class="confirm-row '+cls+'">'+
+      '<div class="cr-left"><div class="cr-name">'+esc(p.name)+'</div><div class="cr-detail">'+det+'</div></div>'+
+      '<div class="cr-right">'+tot+(badgeHtml?'<br>'+badgeHtml:'')+'</div>'+
+    '</div>';
   }).join('');
 
   document.getElementById('confirmOv').classList.remove('hidden');
@@ -593,10 +488,17 @@ function doSend() {
     body: JSON.stringify({
       code: APP.code, team: APP.team,
       players: APP.players.map(function(p){
-        return { name:p.name, gender:p.gender, affiliation:p.affil,
+        var filled = ['A','B','C','D'].filter(function(c){ return p[c] !== ''; }).length;
+        var allEmpty = filled === 0;
+        var someEmpty = !allEmpty && filled < 4;
+        var note = p.bigo;
+        if (!note) { if (allEmpty) note = '불참'; else if (someEmpty) note = '기권'; }
+        return {
+          name:p.name, gender:p.gender, affiliation:p.affil,
           A:p.A===''?0:Number(p.A), B:p.B===''?0:Number(p.B),
           C:p.C===''?0:Number(p.C), D:p.D===''?0:Number(p.D),
-          total:p.total, holeInOne:p.bigo };
+          total:p.total, holeInOne:note
+        };
       }),
       time: new Date().toLocaleString('ko-KR',{timeZone:'Asia/Seoul'})
     })
@@ -604,8 +506,8 @@ function doSend() {
   .then(function(r){return r.json();})
   .then(function(res){
     document.getElementById('sendingOv').classList.add('hidden');
-    if(res.success){showDone();}
-    else{document.getElementById('sendBtn').disabled=false;showSendError(res.message||'전송에 실패했습니다.');}
+    if (res.success) { showDone(); }
+    else { document.getElementById('sendBtn').disabled=false; showSendError(res.message||'전송에 실패했습니다.'); }
   })
   .catch(function(e){
     document.getElementById('sendingOv').classList.add('hidden');
@@ -624,14 +526,15 @@ function showDone() {
   document.getElementById('doneScreen').classList.add('show');
   document.getElementById('doneTeamName').textContent = APP.team;
   document.getElementById('donePlayers').innerHTML = APP.players.map(function(p){
-    var s = p.bigo==='불참'?'불참':p.bigo==='기권'?'기권':p.total+' 타';
-    var b = p.bigo==='홀인원'?'🌟 홀인원':'';
-    return '<div class="done-player-row"><span class="dp-name">'+esc(p.name)+'</span><span class="dp-right"><span class="dp-total">'+s+'</span>'+(b?'<br><span class="dp-bigo">'+b+'</span>':'')+'</span></div>';
+    var filled = ['A','B','C','D'].filter(function(c){ return p[c]!==''; }).length;
+    var s = filled===0?'불참':filled<4?'기권':p.total+' 타';
+    var note = p.bigo && p.bigo!=='불참' && p.bigo!=='기권' ? p.bigo : '';
+    return '<div class="done-player-row"><span class="dp-name">'+esc(p.name)+'</span>'+
+      '<span class="dp-right"><span class="dp-total">'+s+'</span>'+(note?'<br><span class="dp-bigo">'+esc(note)+'</span>':'')+'</span></div>';
   }).join('');
 }
 
 function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
 window.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
