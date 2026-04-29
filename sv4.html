@@ -2363,14 +2363,14 @@ function test_doPost() {
 
   /* ★ 파시스 접속 QR 생성 (심판 배포·카톡 전송용) */
   window.generateAccessQR = function() {
-    var appUrl = 'https://leejh50-dotcom.github.io/parkgolf-score/pasis-send.html';
+    var appUrl = 'https://leejh50-dotcom.github.io/parkgolf-score/pasis4-send.html';
     var old = document.getElementById('pgAccessQrOv');
     if (old) old.remove();
 
     var code = (localStorage.getItem('parkgolf_tournament_code')||'대회코드').toUpperCase();
 
     /* 안내문 템플릿 (대회코드·URL 자동 삽입) */
-    var sendUrl = 'https://leejh50-dotcom.github.io/parkgolf-score/pasis-send.html';
+    var sendUrl = 'https://leejh50-dotcom.github.io/parkgolf-score/pasis4-send.html';
     var guideText =
       '안녕하세요 😊\n' +
       '이번 대회는 파시스(PASIS) SV4.0 프로로\n' +
@@ -2702,7 +2702,7 @@ function test_doPost() {
 
   function buildQrOv(teams,code,qrDate,webappUrl){
     var old=document.getElementById('pgBatchOv');if(old)old.remove();
-    var appUrl='https://leejh50-dotcom.github.io/parkgolf-score/pasis-send.html';
+    var appUrl='https://leejh50-dotcom.github.io/parkgolf-score/pasis4-send.html';
     var dateStr=new Date().toLocaleDateString('ko-KR');
     var total=teams.length;
 
