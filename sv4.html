@@ -2950,7 +2950,11 @@ function test_doPost() {
     btn.style.background='linear-gradient(135deg,#c8860a 0%,#7a4f00 100%)';
     btn.style.boxShadow='0 5px 10px rgba(122,79,0,.4)';
     btn.addEventListener('click', function(ev){
-      if(ev){ev.preventDefault();ev.stopPropagation();}
+      if(ev){
+      ev.preventDefault();
+      ev.stopPropagation();
+      if(ev.stopImmediatePropagation) ev.stopImmediatePropagation();
+    }
       if(typeof syncVisiblePlayersToHidden==='function')syncVisiblePlayersToHidden();
       var players;
       try{
