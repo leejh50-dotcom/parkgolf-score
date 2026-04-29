@@ -2614,8 +2614,7 @@ function test_doPost() {
     display:block !important; max-width:100% !important;
   }
   .pgCard-pname { font-weight:800 !important; }
-  /* .pgCard-pgender: 인쇄 시에도 표시 */
-  .pgCard-pgender { font-size:6pt !important; color:#555 !important; }
+  .pgCard-pgender { display:none !important; } /* 인쇄 시 성별 숨김으로 공간 확보 */
   .pgCard-paffil { font-size:6pt !important; }
   .pgCard-footer { font-size:6pt !important; margin-top:0.8mm !important; line-height:1.2 !important; }
   .pgCard-num { font-size:6.5px !important; min-width:9px !important; background:none !important; color:#c8860a !important; }
@@ -2800,24 +2799,34 @@ function test_doPost() {
   }
   function forceInitQR(){
     try{
-      /* ★ initFromQueryParams 강제 실행 - QR URL 파라미터로 선수 데이터 로드 */
+      /* ★ QR 스캔 시 이전 localStorage 데이터가 덮어쓰는 버그 방지
+         → parkGolfData_sv4 삭제 후 initFromQueryParams 실행 */
+      localStorage.removeItem('parkGolfData_sv4');
+      /* playerNames/Genders/Affiliations 초기화 */
+      try{if(typeof playerNames!=='undefined'){playerNames=['','','',''];}if(typeof playerGenders!=='undefined'){playerGenders=['','','',''];}if(typeof playerAffiliations!=='undefined'){playerAffiliations=['','','',''];}}catch(e2){}
+      /* initFromQueryParams 강제 실행 */
       if(typeof initFromQueryParams==='function') initFromQueryParams();
     }catch(e){}
     forceScoring();
   }
   if(hasQP()){
+    /* ★ loadData를 1회 차단 - QR 파라미터가 있을 때 localStorage 복원을 막음 */
+    var _origLoadData = window.loadData;
+    if(typeof _origLoadData==='function'){
+      var _loadDataBlocked = false;
+      window.loadData = function(){
+        if(!_loadDataBlocked){ _loadDataBlocked=true; return false; }
+        return _origLoadData.apply(this,arguments);
+      };
+    }
     if(document.readyState==='loading'){
-      document.addEventListener('DOMContentLoaded', function(){
-        forceInitQR();
-        setTimeout(forceInitQR, 500);
-        setTimeout(forceInitQR, 1200);
-      });
+      document.addEventListener('DOMContentLoaded', function(){ forceInitQR(); setTimeout(forceInitQR,300); });
     } else {
       forceInitQR();
-      setTimeout(forceInitQR, 300);
-      setTimeout(forceInitQR, 800);
-      setTimeout(forceInitQR, 1500);
     }
+    setTimeout(forceInitQR,200);
+    setTimeout(forceInitQR,600);
+    setTimeout(forceInitQR,1500);
   }
 
   /* 전송 확인 오버레이 */
@@ -2832,13 +2841,6 @@ function test_doPost() {
   }
   function showConfirm(players,teamName,onSend){
     var old=document.getElementById('pasisSendOv');if(old)old.remove();
-
-    /* players가 없으면 원본 전송 함수로 폴백 */
-    if(!players||!players.length){
-      var sendFn=typeof sendToGoogleSheetPatchedV4==='function'?sendToGoogleSheetPatchedV4:window.sendToGoogleSheet;
-      if(typeof sendFn==='function') sendFn();
-      return;
-    }
 
     /* ── 불참/기권 판정 헬퍼 ── */
     function classify(p){
