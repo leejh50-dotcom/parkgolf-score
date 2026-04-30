@@ -360,7 +360,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
   <div style="height:6px"></div>
   <div class="err-banner" id="errBanner"></div>
   <div id="playerList"></div>
-  <div style="height:360px"></div><!-- 키보드 여백 -->
   <div class="warn-banner">
     <span>⚠️</span>
     <span>전송 후 <strong>수정이 불가</strong>합니다. 점수를 꼭 확인하고 전송하세요.</span>
@@ -786,26 +785,12 @@ function esc(s) {
 
 window.addEventListener('DOMContentLoaded', init);
 
-// ── 키보드 올라오면 전송버튼 숨기기 ──
+// ── 포커스 시 카드를 키보드 위로 스크롤 ──
 document.addEventListener('focusin', function(e) {
   if (e.target.classList.contains('score-input') || e.target.classList.contains('bigo-input')) {
-    var sw = document.querySelector('.send-wrap');
-    var wb = document.querySelector('.warn-banner');
-    if (sw) sw.style.display = 'none';
-    if (wb) wb.style.display = 'none';
-  }
-});
-document.addEventListener('focusout', function(e) {
-  if (e.target.classList.contains('score-input') || e.target.classList.contains('bigo-input')) {
     setTimeout(function() {
-      var active = document.activeElement;
-      if (!active || (!active.classList.contains('score-input') && !active.classList.contains('bigo-input'))) {
-        var sw = document.querySelector('.send-wrap');
-        var wb = document.querySelector('.warn-banner');
-        if (sw) sw.style.display = '';
-        if (wb) wb.style.display = '';
-      }
-    }, 100);
+      e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 300);
   }
 });
 </script>
