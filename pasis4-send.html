@@ -20,7 +20,7 @@
 body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;color:#1a1a1a;}
 .wrap{max-width:460px;margin:0 auto;background:var(--bg);min-height:100vh;box-shadow:0 0 40px rgba(0,0,0,.12);}
 
-/* ── 로딩/오류 ── */
+/* ── 로딩 ── */
 #loadingScreen{
   display:flex;align-items:center;justify-content:center;
   min-height:100vh;flex-direction:column;gap:14px;background:var(--bg);
@@ -80,7 +80,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
 
 /* ── 입력 화면 ── */
 #mainContent{display:none;}
-#mainContent.show{display:block;}
 
 .hdr{
   background:linear-gradient(135deg,var(--gold-dk),var(--gold));
@@ -97,13 +96,10 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
 .hdr-title{color:#fff;font-size:16px;font-weight:900;}
 .hdr-sub{color:rgba(255,255,255,.82);font-size:11px;margin-top:2px;font-weight:600;}
 
-/* 기록표 제목 */
 .sheet-title{
   text-align:center;font-size:18px;font-weight:900;
   color:var(--gold-dk);padding:12px 0 4px;letter-spacing:.5px;
 }
-
-/* 조 정보 */
 .team-bar{
   background:var(--white);margin:6px 12px 0;
   border-radius:10px;padding:8px 14px;box-shadow:var(--shadow);
@@ -113,7 +109,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
 .team-name{font-size:15px;font-weight:900;color:var(--gold-dk);}
 .team-meta{font-size:11px;color:var(--gray);margin-top:1px;}
 
-/* 오류 배너 */
 .err-banner{
   background:#fef2f2;border:1.5px solid #fca5a5;border-radius:10px;
   margin:8px 12px 0;padding:9px 13px;font-size:13px;color:#dc2626;
@@ -122,7 +117,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
 .err-banner.show{display:block;}
 .err-banner.info{background:#eff6ff;border-color:#93c5fd;color:#1d4ed8;}
 
-/* 경기자 카드 - 종이 기록지 스타일 */
+/* 경기자 카드 */
 .player-card{
   background:var(--white);margin:8px 12px 0;
   border-radius:12px;box-shadow:var(--shadow);
@@ -253,16 +248,13 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
 
 /* ── 완료 화면 ── */
 #doneScreen{
-  display:none;
+  display:none;min-height:100vh;
   background:linear-gradient(160deg,var(--green),#0d4d24);
-  flex-direction:column;
-  align-items:center;
-  text-align:center;
-  padding:20px 20px 24px;
-  min-height:100vh;
+  flex-direction:column;align-items:center;
+  text-align:center;padding:20px 20px 24px;
 }
 #doneScreen.show{display:flex;}
-.done-top{width:100%;max-width:320px;flex-shrink:0;}
+.done-top{width:100%;max-width:320px;}
 .done-icon{font-size:72px;margin-bottom:6px;animation:dBounce .6s ease;display:block;}
 @keyframes dBounce{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
 .done-title{font-size:32px;font-weight:900;color:#fff;}
@@ -272,22 +264,20 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
 .done-row{background:rgba(255,255,255,.12);border-radius:10px;padding:8px 14px;display:flex;justify-content:space-between;align-items:center;}
 .done-name{font-size:14px;font-weight:800;color:#fff;}
 .done-score{font-size:16px;font-weight:900;color:#a7f3d0;}
-.done-promo{margin-top:22px;width:100%;max-width:300px;}
+
+/* 완료 후 홍보 */
+#donePromo{
+  display:none;
+  background:linear-gradient(160deg,#0a3d1c,#072b15);
+  padding:0 20px 40px;text-align:center;
+}
+#donePromo.show{display:block;}
 .done-promo-title{font-size:11px;color:rgba(255,255,255,.5);margin-bottom:8px;letter-spacing:1px;font-weight:700;}
 .done-promo-btn{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.1);border-radius:10px;padding:10px 14px;text-decoration:none;margin-bottom:7px;border:1px solid rgba(255,255,255,.15);}
 .done-promo-icon{font-size:19px;}
 .done-promo-name{font-size:13px;font-weight:900;color:#fff;display:block;}
 .done-promo-desc{font-size:10px;color:rgba(255,255,255,.6);display:block;}
 .done-promo-arr{font-size:14px;color:rgba(255,255,255,.4);margin-left:auto;}
-
-/* 완료 후 홍보 - doneScreen 아래 연결 영역 */
-#donePromo{
-  display:none;
-  background:linear-gradient(160deg,#0a3d1c,#072b15);
-  padding:0 20px 40px;
-  text-align:center;
-}
-#donePromo.show{display:block;}
 </style>
 </head>
 <body>
@@ -308,11 +298,9 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
     <div class="done-sub">구글시트에 정상 기록되었습니다. ✅</div>
   </div>
   <div class="done-players" id="donePlayers"></div>
-
-
 </div>
 
-<!-- 완료 후 홍보 (doneScreen 밖) -->
+<!-- 완료 후 홍보 -->
 <div id="donePromo">
   <div class="done-promo-title">── PASIS 시스템 안내 ──</div>
   <a class="done-promo-btn" href="https://songgeun25.tistory.com/332" target="_blank">
@@ -426,6 +414,15 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
 
 <script>
 var APP = { code:'', url:'', team:'', date:'', players:[], hasParam:false };
+var COURSES = ['A','B','C','D'];
+
+// ── 화면 전환 헬퍼 ──
+function show(id, flex) {
+  document.getElementById(id).style.display = flex ? 'flex' : 'block';
+}
+function hide(id) {
+  document.getElementById(id).style.display = 'none';
+}
 
 // ── 초기화 ──
 function init() {
@@ -454,38 +451,38 @@ function init() {
     }
   } catch(e) {}
 
-  document.getElementById('loadingScreen').style.display = 'none';
+  hide('loadingScreen');
   showCover();
 }
 
 // ── 표지 ──
 function showCover() {
-  document.getElementById('coverScreen').style.display = 'flex';
-  document.getElementById('mainContent').style.display = 'none';
+  show('coverScreen', true);
+  hide('mainContent');
 
-  if (APP.hasParam) {
-    document.getElementById('cvTeamCard').style.display = 'block';
-    document.getElementById('cvNoParam').style.display  = 'none';
+  var hasParam = APP.hasParam;
+  document.getElementById('cvTeamCard').style.display = hasParam ? 'block' : 'none';
+  document.getElementById('cvNoParam').style.display  = hasParam ? 'none'  : 'block';
+
+  if (hasParam) {
     document.getElementById('cvTeamName').textContent = APP.team;
     document.getElementById('cvTeamCode').textContent = APP.code + (APP.date ? ' · ' + APP.date : '');
     document.getElementById('cvStartBtn').textContent = '▶ 점수 입력 시작';
   } else {
-    document.getElementById('cvTeamCard').style.display = 'none';
-    document.getElementById('cvNoParam').style.display  = 'block';
     document.getElementById('cvStartBtn').textContent = '연습 화면 열기';
   }
 }
 
 // ── 입력 화면 ──
 function startInput() {
-  document.getElementById('coverScreen').style.display = 'none';
-  document.getElementById('mainContent').style.display = 'block';
+  hide('coverScreen');
+  show('mainContent', false);
   renderUI();
   window.scrollTo({ top: 0 });
 }
 
 function goBack() {
-  document.getElementById('mainContent').style.display = 'none';
+  hide('mainContent');
   showCover();
   window.scrollTo({ top: 0 });
 }
@@ -537,27 +534,26 @@ function copyGuide() {
   ].join('\n');
 
   var done = document.getElementById('cvCopyDone');
+  var onOk = function() {
+    done.classList.add('show');
+    setTimeout(function() { done.classList.remove('show'); }, 3000);
+  };
+
   if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(txt).then(function() {
-      done.classList.add('show');
-      setTimeout(function() { done.classList.remove('show'); }, 3000);
-    }).catch(function() { fallbackCopy(txt, done); });
+    navigator.clipboard.writeText(txt).then(onOk).catch(function() { fallbackCopy(txt, onOk); });
   } else {
-    fallbackCopy(txt, done);
+    fallbackCopy(txt, onOk);
   }
 }
 
-function fallbackCopy(txt, done) {
+function fallbackCopy(txt, onOk) {
   var ta = document.createElement('textarea');
   ta.value = txt;
   ta.style.cssText = 'position:fixed;opacity:0;';
   document.body.appendChild(ta);
   ta.select();
-  try {
-    document.execCommand('copy');
-    done.classList.add('show');
-    setTimeout(function() { done.classList.remove('show'); }, 3000);
-  } catch(e) { alert('복사 실패. 직접 선택해서 복사해 주세요.'); }
+  try { document.execCommand('copy'); onOk(); }
+  catch(e) { alert('복사 실패. 직접 선택해서 복사해 주세요.'); }
   document.body.removeChild(ta);
 }
 
@@ -569,9 +565,6 @@ function renderUI() {
   } else {
     document.getElementById('teamNameDisp').textContent = '연습 모드';
     document.getElementById('teamCodeDisp').textContent = '실제 QR 스캔 시 선수 정보 자동 입력';
-  }
-
-  if (!APP.hasParam) {
     APP.players = [
       { slot:1, name:'경기자1', gender:'남', affil:'소속', A:'',B:'',C:'',D:'', total:0, bigo:'' },
       { slot:2, name:'경기자2', gender:'여', affil:'소속', A:'',B:'',C:'',D:'', total:0, bigo:'' },
@@ -588,32 +581,25 @@ function renderUI() {
     card.className = 'player-card';
     card.id = 'card-' + idx;
 
-    // 성별 뱃지
-    var gBadge = '';
-    if (p.gender === '남') gBadge = '<span class="gender-badge gender-m">남</span>';
-    else if (p.gender === '여') gBadge = '<span class="gender-badge gender-f">여</span>';
+    var gBadge = p.gender === '남' ? '<span class="gender-badge gender-m">남</span>'
+               : p.gender === '여' ? '<span class="gender-badge gender-f">여</span>' : '';
 
-    // 점수 입력 td 생성 (innerHTML 내 따옴표 충돌 방지)
-    var tds = '';
-    var courses = ['A','B','C','D'];
-    for (var ci = 0; ci < courses.length; ci++) {
-      var c = courses[ci];
-      tds += '<td><input class="score-input" type="number" inputmode="numeric" pattern="[0-9]*" '
+    var tds = COURSES.map(function(c) {
+      return '<td><input class="score-input" type="number" inputmode="numeric" pattern="[0-9]*" '
            + 'min="0" max="99" placeholder="—" '
            + 'id="sc' + idx + c + '" '
-           + 'data-idx="' + idx + '" data-c="' + c + '" '
            + 'onblur="sfBlur(' + idx + ')"'
            + '></td>';
-    }
+    }).join('');
 
     card.innerHTML =
       '<div class="player-head">'
-        + '<div class="player-num">' + p.slot + '</div>'
-        + '<div style="flex:1;display:flex;align-items:center;flex-wrap:wrap;">'
-          + '<span class="player-name">' + esc(p.name) + '</span>'
-          + (p.affil ? '<span class="player-affil">' + esc(p.affil) + '</span>' : '')
-          + gBadge
-        + '</div>'
+      + '<div class="player-num">' + p.slot + '</div>'
+      + '<div style="flex:1;display:flex;align-items:center;flex-wrap:wrap;">'
+        + '<span class="player-name">' + esc(p.name) + '</span>'
+        + (p.affil ? '<span class="player-affil">' + esc(p.affil) + '</span>' : '')
+        + gBadge
+      + '</div>'
       + '</div>'
       + '<div class="score-tbl-wrap">'
         + '<table class="score-tbl">'
@@ -627,28 +613,20 @@ function renderUI() {
       + '<div class="bigo-row">'
         + '<span class="bigo-label">비고</span>'
         + '<input class="bigo-input" type="text" placeholder="예: A9홀인원" maxlength="12" '
-          + 'id="bigo' + idx + '" '
-          + 'data-idx="' + idx + '" '
-          + 'onblur="sfBlur(' + idx + ')"'
-        + '>'
+          + 'id="bigo' + idx + '">'
       + '</div>';
 
     list.appendChild(card);
 
-    // oninput 이벤트 - 직접 addEventlistener로 등록 (따옴표 충돌 없음)
-    for (var ci2 = 0; ci2 < courses.length; ci2++) {
-      (function(pidx, course) {
-        var el = document.getElementById('sc' + pidx + course);
-        el.addEventListener('input', function() { onScore(this, pidx, course); });
-        el.addEventListener('focus', function() { onFocus(pidx); });
-      })(idx, courses[ci2]);
-    }
+    COURSES.forEach(function(c) {
+      var el = document.getElementById('sc' + idx + c);
+      el.addEventListener('input', function() { onScore(this, idx, c); });
+      el.addEventListener('focus', function() { onFocus(idx); });
+    });
 
-    (function(pidx) {
-      var el = document.getElementById('bigo' + pidx);
-      el.addEventListener('input', function() { APP.players[pidx].bigo = this.value.trim(); });
-      el.addEventListener('focus', function() { onFocus(pidx); });
-    })(idx);
+    var bigoEl = document.getElementById('bigo' + idx);
+    bigoEl.addEventListener('input', function() { APP.players[idx].bigo = this.value.trim(); });
+    bigoEl.addEventListener('focus', function() { onFocus(idx); });
   });
 }
 
@@ -669,7 +647,7 @@ function onScore(el, idx, c) {
 
 function calcTotal(idx) {
   var p = APP.players[idx], sum = 0, has = false;
-  ['A','B','C','D'].forEach(function(c) {
+  COURSES.forEach(function(c) {
     if (p[c] !== '') { sum += Number(p[c]); has = true; }
   });
   p.total = has ? sum : 0;
@@ -681,6 +659,12 @@ function onFocus(idx) {
   document.getElementById('card-' + idx).classList.add('active');
 }
 
+// ── 참가 상태 판별 (공통 유틸) ──
+function getStatus(p) {
+  var filled = COURSES.filter(function(c) { return p[c] !== ''; }).length;
+  return filled === 0 ? 'absent' : filled < 4 ? 'quit' : 'present';
+}
+
 // ── 확인 오버레이 ──
 function openConfirm() {
   if (!APP.hasParam) {
@@ -688,11 +672,7 @@ function openConfirm() {
     return;
   }
 
-  var hasPartial = APP.players.some(function(p) {
-    var f = ['A','B','C','D'].filter(function(c) { return p[c] !== ''; }).length;
-    return f > 0 && f < 4;
-  });
-
+  var hasPartial = APP.players.some(function(p) { return getStatus(p) === 'quit'; });
   var b = document.getElementById('errBanner');
   if (hasPartial) {
     b.innerHTML = 'ℹ️ 점수가 없는 칸은 <strong>불참 또는 기권</strong>으로 자동 처리됩니다.';
@@ -705,21 +685,17 @@ function openConfirm() {
   document.getElementById('cfSub').textContent = APP.team + ' · ' + APP.players.length + '명';
 
   var rows = APP.players.map(function(p) {
-    var f = ['A','B','C','D'].filter(function(c) { return p[c] !== ''; }).length;
-    var allEmpty = f === 0, someEmpty = !allEmpty && f < 4;
-    var note = p.bigo;
-    if (!note) { if (allEmpty) note = '불참'; else if (someEmpty) note = '기권'; }
-
-    var cls = allEmpty ? 'absent' : someEmpty ? 'quit' : '';
+    var st = getStatus(p);
+    var note = p.bigo || (st === 'absent' ? '불참' : st === 'quit' ? '기권' : '');
     var badge = note === '불참' ? '<span class="cf-bigo cf-bigo-absent">불참</span>'
               : note === '기권' ? '<span class="cf-bigo cf-bigo-quit">기권</span>'
               : note ? '<span class="cf-bigo cf-bigo-note">' + esc(note) + '</span>' : '';
-    var totHtml = allEmpty ? '<span style="font-size:11px;color:#aaa;font-weight:700">순위제외</span>'
-                : someEmpty ? '<span style="font-size:11px;color:#d97706;font-weight:700">기권처리</span>'
+    var totHtml = st === 'absent' ? '<span style="font-size:11px;color:#aaa;font-weight:700">순위제외</span>'
+                : st === 'quit'   ? '<span style="font-size:11px;color:#d97706;font-weight:700">기권처리</span>'
                 : '<span class="cf-total">' + p.total + '<small style="font-size:10px;color:#999"> 타</small></span>';
-    var det = ['A','B','C','D'].map(function(c) { return c + ':' + (p[c] === '' ? '미입력' : p[c]); }).join(' ');
+    var det = COURSES.map(function(c) { return c + ':' + (p[c] === '' ? '미입력' : p[c]); }).join(' ');
 
-    return '<div class="cf-row ' + cls + '">'
+    return '<div class="cf-row ' + (st !== 'present' ? st : '') + '">'
       + '<div><div class="cf-name">' + esc(p.name) + '</div><div class="cf-detail">' + det + '</div></div>'
       + '<div class="cf-right">' + totHtml + (badge ? '<br>' + badge : '') + '</div>'
       + '</div>';
@@ -740,15 +716,13 @@ function doSend() {
   document.getElementById('sendBtn').disabled = true;
 
   var playersData = APP.players.map(function(p) {
-    var f = ['A','B','C','D'].filter(function(c) { return p[c] !== ''; }).length;
-    var note = p.bigo;
-    if (!note) { if (f === 0) note = '불참'; else if (f < 4) note = '기권'; }
+    var st = getStatus(p);
+    var note = p.bigo || (st === 'absent' ? '불참' : st === 'quit' ? '기권' : '');
+    var scores = {};
+    COURSES.forEach(function(c) { scores[c] = p[c] === '' ? 0 : Number(p[c]); });
     return {
       name: p.name, gender: p.gender, affiliation: p.affil,
-      A: p.A === '' ? 0 : Number(p.A),
-      B: p.B === '' ? 0 : Number(p.B),
-      C: p.C === '' ? 0 : Number(p.C),
-      D: p.D === '' ? 0 : Number(p.D),
+      A: scores.A, B: scores.B, C: scores.C, D: scores.D,
       total: p.total, holeInOne: note
     };
   });
@@ -785,16 +759,15 @@ function showErr(msg) {
 
 // ── 완료 화면 ──
 function showDone() {
-  document.getElementById('mainContent').style.display = 'none';
-  document.getElementById('coverScreen').style.display = 'none';
-  var done = document.getElementById('doneScreen');
-  done.classList.add('show');
-  window.scrollTo({ top: 0, behavior: 'instant' });
+  hide('mainContent');
+  hide('coverScreen');
+  document.getElementById('doneScreen').classList.add('show');
   document.getElementById('donePromo').classList.add('show');
+  window.scrollTo({ top: 0, behavior: 'instant' });
   document.getElementById('doneTeamName').textContent = APP.team;
   document.getElementById('donePlayers').innerHTML = APP.players.map(function(p) {
-    var f = ['A','B','C','D'].filter(function(c) { return p[c] !== ''; }).length;
-    var s = f === 0 ? '불참' : f < 4 ? '기권' : p.total + ' 타';
+    var st = getStatus(p);
+    var s = st === 'absent' ? '불참' : st === 'quit' ? '기권' : p.total + ' 타';
     return '<div class="done-row"><span class="done-name">' + esc(p.name) + '</span><span class="done-score">' + s + '</span></div>';
   }).join('');
 }
