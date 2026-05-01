@@ -254,13 +254,11 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
 /* ── 완료 화면 ── */
 #doneScreen{
   display:none;
-  min-height:100vh;
   background:linear-gradient(160deg,var(--green),#0d4d24);
   flex-direction:column;
   align-items:center;
-  justify-content:flex-start;
   text-align:center;
-  padding:16px 20px 24px;
+  padding:20px 20px 24px;
 }
 #doneScreen.show{display:flex;}
 .done-top{width:100%;max-width:320px;flex-shrink:0;}
@@ -281,11 +279,11 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
 .done-promo-desc{font-size:10px;color:rgba(255,255,255,.6);display:block;}
 .done-promo-arr{font-size:14px;color:rgba(255,255,255,.4);margin-left:auto;}
 
-/* 완료 후 홍보 - doneScreen 밖 별도 영역 */
+/* 완료 후 홍보 - doneScreen 아래 연결 영역 */
 #donePromo{
   display:none;
-  background:linear-gradient(160deg,#0d4d24,#0a3d1c);
-  padding:16px 20px 32px;
+  background:linear-gradient(160deg,#0a3d1c,#072b15);
+  padding:0 20px 40px;
   text-align:center;
 }
 #donePromo.show{display:block;}
