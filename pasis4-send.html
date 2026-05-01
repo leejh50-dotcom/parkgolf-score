@@ -53,11 +53,10 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
 .cv-team-code{font-size:12px;color:rgba(255,255,255,.7);margin-top:3px;font-weight:600;}
 .cv-no-param{
   background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.2);
-  border-radius:14px;padding:14px 18px;margin-bottom:24px;
+  border-radius:14px;padding:10px 18px;margin-bottom:24px;
   width:100%;max-width:320px;text-align:center;
 }
-.cv-no-param-icon{font-size:28px;margin-bottom:6px;display:block;}
-.cv-no-param-txt{font-size:13px;color:rgba(255,255,255,.85);line-height:1.7;font-weight:600;}
+.cv-no-param-txt{font-size:13px;color:rgba(255,255,255,.85);line-height:1.8;font-weight:600;}
 .cv-btns{width:100%;max-width:320px;display:flex;flex-direction:column;gap:10px;}
 .cv-start-btn{
   width:100%;padding:18px;background:#fff;color:var(--gold-dk);
@@ -321,7 +320,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
     <span class="cv-icon">⛳</span>
     <div class="cv-brand">PASIS · 파시스</div>
     <div class="cv-title">파크골프 점수 전송</div>
-    <div class="cv-sub">SV4.0 Pro · 대회용 전송 시스템</div>
+    <div class="cv-sub">SV4.0 Pro · 대회용 원격 전송 시스템</div>
   </div>
   <div class="cv-team-card" id="cvTeamCard" style="display:none">
     <div class="cv-team-label">담당 조</div>
@@ -329,11 +328,9 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
     <div class="cv-team-code" id="cvTeamCode"></div>
   </div>
   <div class="cv-no-param" id="cvNoParam" style="display:none">
-    <span class="cv-no-param-icon">📱</span>
     <div class="cv-no-param-txt">
-      대회 당일 조별 QR을 스캔하면<br>
-      선수 정보가 자동으로 입력됩니다.<br><br>
-      지금은 <strong style="color:#fff">사전 연습 모드</strong>입니다.
+      대회 당일 QR코드를 카메라 스캔하면<br>
+      조별 선수 정보가 자동으로 입력됩니다.
     </div>
   </div>
   <div class="cv-btns">
