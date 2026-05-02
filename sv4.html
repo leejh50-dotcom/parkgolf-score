@@ -2063,7 +2063,7 @@ function test_doPost() {
     try{
       var saved = JSON.parse(localStorage.getItem('parkgolf_saved_urls')||'[]');
       if(saved.length){
-        var latest = saved[0]; /* 이미 최신이 앞에 오도록 저장 */
+        var latest = saved[0];
         var cEl = document.getElementById('adminCodeInput');
         var uEl = document.getElementById('adminWebappUrl');
         if(cEl && latest.code) cEl.value = latest.code;
@@ -2073,26 +2073,30 @@ function test_doPost() {
   };
 })();
 
-/* ── saveAdminUrlAndCode override: 최신 항목을 배열 앞에 저장 ── */
+/* ── localStorage.setItem 가로채기: parkgolf_saved_urls 저장 시 최신순 정렬 ── */
 (function(){
-  var _origSave = window.saveAdminUrlAndCode;
-  window.saveAdminUrlAndCode = function(){
-    if(_origSave) _origSave.apply(this, arguments);
-    /* 난독화 함수가 push로 뒤에 추가한 것을 꺼내서 앞으로 이동 */
-    try{
-      var saved = JSON.parse(localStorage.getItem('parkgolf_saved_urls')||'[]');
-      if(saved.length < 2) return;
-      var last = saved.pop();           /* 방금 추가된 항목(맨 뒤) */
-      /* 동일 url+code 중복 제거 */
-      saved = saved.filter(function(x){ return !(x.url===last.url && x.code===last.code); });
-      saved.unshift(last);              /* 맨 앞으로 */
-      if(saved.length > 10) saved = saved.slice(0, 10);
-      localStorage.setItem('parkgolf_saved_urls', JSON.stringify(saved));
-    }catch(e){}
+  var _origSetItem = localStorage.setItem.bind(localStorage);
+  localStorage.setItem = function(key, value){
+    if(key === 'parkgolf_saved_urls'){
+      try{
+        var arr = JSON.parse(value||'[]');
+        if(Array.isArray(arr) && arr.length >= 2){
+          var last = arr[arr.length-1];
+          /* 마지막 항목이 나머지와 다른 경우 = 새로 추가된 항목 → 앞으로 이동 */
+          var rest = arr.slice(0, arr.length-1).filter(function(x){
+            return !(x.url===last.url && x.code===last.code);
+          });
+          arr = [last].concat(rest);
+          if(arr.length > 10) arr = arr.slice(0, 10);
+          value = JSON.stringify(arr);
+        }
+      }catch(e){}
+    }
+    _origSetItem(key, value);
   };
 })();
 
-/* ── savedUrlsList: 최근 순(앞에서부터) 표시 override ── */
+/* ── savedUrlsList: localStorage 기준(이미 최신순)으로 렌더링 override ── */
 (function(){
   var _origShow = window.showSavedUrlsList;
   window.showSavedUrlsList = function(){
