@@ -2072,6 +2072,39 @@ function test_doPost() {
     }catch(e){}
   };
 })();
+
+/* ── savedUrlsList: 최근 순(역순) 표시 override ── */
+(function(){
+  var _origShow = window.showSavedUrlsList;
+  window.showSavedUrlsList = function(){
+    if(_origShow) _origShow.apply(this, arguments);
+    // 렌더링 후 목록을 역순으로 재정렬
+    setTimeout(function(){
+      try{
+        var saved = JSON.parse(localStorage.getItem('parkgolf_saved_urls')||'[]');
+        var el = document.getElementById('savedUrlsList');
+        if(!el || !saved.length) return;
+        // 역순으로 재렌더링
+        el.innerHTML = saved.slice().reverse().map(function(item, idx){
+          var realIdx = saved.length - 1 - idx;
+          return '<div style="border:1px solid #e5e7eb;border-radius:10px;padding:12px;margin-bottom:10px;">'
+            +'<div style="font-size:15px;font-weight:900;color:#1e3c72;margin-bottom:4px;">'+escHtmlSimple(item.code)+'</div>'
+            +'<div style="font-size:12px;color:#6b7280;word-break:break-all;margin-bottom:6px;">'+(item.url||'').slice(0,50)+'...</div>'
+            +'<div style="font-size:11px;color:#9ca3af;margin-bottom:8px;">'+(item.saved||'')+'</div>'
+            +'<div style="display:flex;gap:8px;">'
+            +'<button onclick="applySavedUrl('+realIdx+')" style="flex:1;padding:8px 14px;background:#c8860a;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✅ 적용</button>'
+            +'<button onclick="deleteSavedUrl('+realIdx+')" style="padding:8px 14px;background:#dc2626;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">🗑 삭제</button>'
+            +'</div>'
+            +'</div>';
+        }).join('');
+      }catch(e){}
+    }, 50);
+  };
+
+  function escHtmlSimple(s){
+    return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+})();
 </script>
 </body>
 </html>
@@ -2580,7 +2613,7 @@ function test_doPost() {
     column-gap:4mm !important;
     row-gap:0 !important;
     padding:0 !important;
-    align-content:space-between !important;
+    align-content:space-evenly !important;
     min-height:calc(297mm - 20mm) !important;
   }
   /* ★ 6개/장 모드: 2열 */
@@ -2588,7 +2621,7 @@ function test_doPost() {
     grid-template-columns:repeat(2,minmax(0,1fr)) !important;
     column-gap:8mm !important;
     row-gap:0 !important;
-    align-content:space-between !important;
+    align-content:space-evenly !important;
     min-height:calc(297mm - 20mm) !important;
   }
   /* 6개/장 QR 크기 키움 */
