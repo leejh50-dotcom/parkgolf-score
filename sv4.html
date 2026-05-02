@@ -2573,20 +2573,23 @@ function test_doPost() {
     margin:0 !important;
   }
 
-  /* ★ 9개/장: 3열, 가로 6mm 세로 간격 */
+  /* ★ 9개/장: 3열, A4 전체 높이 균등 분산 */
   #pgBatchGrid {
     display:grid !important;
     grid-template-columns:repeat(3,minmax(0,1fr)) !important;
     column-gap:4mm !important;
-    row-gap:6mm !important;
+    row-gap:0 !important;
     padding:0 !important;
-    align-content:start !important;
+    align-content:space-between !important;
+    min-height:calc(297mm - 20mm) !important;
   }
   /* ★ 6개/장 모드: 2열 */
   #pgBatchGrid[style*="repeat(2"] {
     grid-template-columns:repeat(2,minmax(0,1fr)) !important;
     column-gap:8mm !important;
-    row-gap:8mm !important;
+    row-gap:0 !important;
+    align-content:space-between !important;
+    min-height:calc(297mm - 20mm) !important;
   }
   /* 6개/장 QR 크기 키움 */
   #pgBatchGrid[style*="repeat(2"] .pgCard-qr canvas {
