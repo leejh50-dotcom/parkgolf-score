@@ -1,11 +1,12 @@
 <!DOCTYPE html>
+<!-- © 2026 송근 / PASIS SV4.0 Pro - 무단 복제·상업적 이용 금지 / Unauthorized copying or commercial use is strictly prohibited. -->
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="파시스4전송">
+<meta name="apple-mobile-web-app-title" content="PS전송">
 <meta name="theme-color" content="#c8860a">
 <link rel="manifest" href="manifest-sv4.json">
 <link rel="apple-touch-icon" href="pasis4-send-icon.png">
@@ -412,6 +413,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
 </div><!-- /wrap -->
 
 <script>
+var PASIS_SECRET = 'PASIS2026SV4'; // GAS SECRET_KEY 와 반드시 일치
 var APP = { code:'', url:'', team:'', date:'', players:[], hasParam:false };
 var COURSES = ['A','B','C','D'];
 
@@ -731,6 +733,7 @@ function doSend() {
     headers: { 'Content-Type': 'text/plain' },
     body: JSON.stringify({
       code: APP.code, team: APP.team, players: playersData,
+      secret: PASIS_SECRET,
       time: new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })
     })
   })
