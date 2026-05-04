@@ -2074,7 +2074,15 @@ function test_doPost() {
   };
 })();
 
-/* ── localStorage.setItem 가로채기: parkgolf_saved_urls 저장 시 최신순 정렬 ── */
+/* ── QR 생성 URL 강제 설정: sv4.html 대신 pasis4-send.html로 고정 ── */
+window.addEventListener('load', function(){
+  setTimeout(function(){
+    var el = document.getElementById('qrUrl');
+    if(el) el.value = 'https://leejh50-dotcom.github.io/parkgolf-score/pasis4-send.html';
+  }, 100);
+});
+</script>
+</body> */
 (function(){
   var _origSetItem = localStorage.setItem.bind(localStorage);
   localStorage.setItem = function(key, value){
