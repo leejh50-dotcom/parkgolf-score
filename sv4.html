@@ -2631,21 +2631,21 @@ window.addEventListener('load', function(){
     margin:0 !important;
   }
 
-  /* ★ 9개/장: 3열, A4 전체 높이 균등 분산 */
+  /* ★ 9개/장: 3열 */
   #pgBatchGrid {
     display:grid !important;
     grid-template-columns:repeat(3,minmax(0,1fr)) !important;
-    column-gap:4mm !important;
-    row-gap:18mm !important;
-    padding:6mm 0 6mm 0 !important;
+    column-gap:3mm !important;
+    row-gap:6mm !important;
+    padding:3mm 0 3mm 0 !important;
     align-content:start !important;
   }
   /* ★ 6개/장 모드: 2열 */
   #pgBatchGrid[style*="repeat(2"] {
     grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-    column-gap:8mm !important;
-    row-gap:20mm !important;
-    padding:8mm 0 8mm 0 !important;
+    column-gap:6mm !important;
+    row-gap:8mm !important;
+    padding:4mm 0 4mm 0 !important;
     align-content:start !important;
   }
   /* 6개/장 QR 크기 키움 */
@@ -2819,11 +2819,9 @@ window.addEventListener('load', function(){
       }
 
       var ph=(teamObj.players||[]).slice(0,4).map(function(p,i){
-        var gStr=p.gender?' ('+esc(p.gender.charAt(0))+')':'';
         return '<div class="pgCard-player"><span class="pgCard-num">'+(i+1)+'</span>'
           +'<span class="pgCard-pline"><span class="pgCard-pname">'+esc(p.name||'')+'</span>'
-          +(gStr?'<span class="pgCard-pgender">'+gStr+'</span>':'')
-          +(p.affil?'<span class="pgCard-paffil"> '+esc(p.affil)+'</span>':'')+'</span></div>';
+          +'</span></div>';
       }).join('');
       var card=document.createElement('div');card.className='pgCard';
       var bid='pgqr'+Math.random().toString(36).slice(2,8);
