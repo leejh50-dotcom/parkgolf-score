@@ -2819,9 +2819,14 @@ window.addEventListener('load', function(){
       }
 
       var ph=(teamObj.players||[]).slice(0,4).map(function(p,i){
+        var gStr=p.gender?' ('+esc(p.gender.charAt(0))+')':'';
+        /* affil에서 성별 접두사(남 /여 ) 제거 */
+        var affClean=(p.affil||'').replace(/^(남|여)\s+/,'').trim();
+        var aStr=affClean?' '+esc(affClean):'';
         return '<div class="pgCard-player"><span class="pgCard-num">'+(i+1)+'</span>'
           +'<span class="pgCard-pline"><span class="pgCard-pname">'+esc(p.name||'')+'</span>'
-          +'</span></div>';
+          +(gStr?'<span class="pgCard-pgender">'+gStr+'</span>':'')
+          +(aStr?'<span class="pgCard-paffil">'+aStr+'</span>':'')+'</span></div>';
       }).join('');
       var card=document.createElement('div');card.className='pgCard';
       var bid='pgqr'+Math.random().toString(36).slice(2,8);
