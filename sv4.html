@@ -2082,7 +2082,7 @@ window.addEventListener('load', function(){
   }, 100);
 });
 </script>
-</body> */
+<script>
 (function(){
   var _origSetItem = localStorage.setItem.bind(localStorage);
   localStorage.setItem = function(key, value){
@@ -2617,8 +2617,10 @@ window.addEventListener('load', function(){
     padding:0 !important;
     margin:0 !important;
     opacity:0 !important;
-    position:absolute !important;
+    position:fixed !important;
+    top:-9999px !important;
   }
+  #pgBatchTop .btn-close { display:none !important; }
   #pgProgress, #pgProgressTxt {
     display:none !important;
     height:0 !important;
@@ -2626,6 +2628,10 @@ window.addEventListener('load', function(){
     overflow:hidden !important;
     padding:0 !important;
     margin:0 !important;
+  }
+  #pgBatchOv {
+    padding-top:0 !important;
+    margin-top:0 !important;
   }
 
   /* ★ 9개/장: 3열 */
@@ -2647,8 +2653,8 @@ window.addEventListener('load', function(){
   }
   /* 6개/장 QR 크기 키움 */
   #pgBatchGrid[style*="repeat(2"] .pgCard-qr canvas {
-    width:62mm !important;
-    height:62mm !important;
+    width:52mm !important;
+    height:52mm !important;
   }
   .pgCard {
     border:1.5px solid #999 !important; border-radius:2mm !important;
