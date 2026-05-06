@@ -2082,8 +2082,7 @@ window.addEventListener('load', function(){
   }, 100);
 });
 </script>
-</body>
-<script>
+</body> */
 (function(){
   var _origSetItem = localStorage.setItem.bind(localStorage);
   localStorage.setItem = function(key, value){
@@ -2609,7 +2608,6 @@ window.addEventListener('load', function(){
   #pgBatchOv { position:absolute !important; left:0 !important; top:0 !important; width:100% !important; background:#fff !important; overflow:visible !important; }
 
   /* iOS Safari: display:none 무시 대응 → 크기 0으로 강제 */
-  #pgBatchTop .btn-close { display:none !important; }
   #pgBatchTop {
     display:none !important;
     visibility:hidden !important;
@@ -2634,17 +2632,17 @@ window.addEventListener('load', function(){
   #pgBatchGrid {
     display:grid !important;
     grid-template-columns:repeat(3,minmax(0,1fr)) !important;
-    column-gap:3mm !important;
-    row-gap:6mm !important;
-    padding:3mm 0 3mm 0 !important;
+    column-gap:2mm !important;
+    row-gap:3mm !important;
+    padding:2mm 0 2mm 0 !important;
     align-content:start !important;
   }
   /* ★ 6개/장 모드: 2열 */
   #pgBatchGrid[style*="repeat(2"] {
     grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-    column-gap:6mm !important;
-    row-gap:8mm !important;
-    padding:4mm 0 4mm 0 !important;
+    column-gap:4mm !important;
+    row-gap:4mm !important;
+    padding:2mm 0 2mm 0 !important;
     align-content:start !important;
   }
   /* 6개/장 QR 크기 키움 */
@@ -2654,7 +2652,7 @@ window.addEventListener('load', function(){
   }
   .pgCard {
     border:1.5px solid #999 !important; border-radius:2mm !important;
-    box-shadow:none !important; padding:1mm 2mm 1mm !important; background:#fff !important;
+    box-shadow:none !important; padding:0.5mm 1.5mm 0.5mm !important; background:#fff !important;
     break-inside:avoid !important; page-break-inside:avoid !important;
     display:flex !important; flex-direction:column !important; align-items:center !important;
     overflow:hidden !important;
@@ -2701,7 +2699,16 @@ window.addEventListener('load', function(){
 #pgBatchTop .bt-btns { display:flex; gap:8px; }
 #pgBatchTop button { border:0; border-radius:8px; padding:8px 14px; font-size:14px; font-weight:800; cursor:pointer; }
 #pgBatchTop .btn-print { background:#fff; color:#7a4f00; }
-#pgBatchTop .btn-close { position:fixed; top:10px; right:10px; z-index:999999; width:44px; height:44px; border-radius:50%; background:#fff; color:#7a4f00; border:2px solid #c8860a; font-size:20px; font-weight:900; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,.3); }
+#pgBatchTop .btn-close {
+  position:fixed; top:12px; right:12px; z-index:999999;
+  width:48px; height:48px; border-radius:50%;
+  background:#fff; color:#7a4f00;
+  border:2px solid #c8860a;
+  font-size:22px; font-weight:900; cursor:pointer;
+  box-shadow:0 2px 8px rgba(0,0,0,.3);
+  display:flex; align-items:center; justify-content:center;
+  -webkit-tap-highlight-color:transparent;
+}
 /* 화면: 카드 컴팩트하게 */
 .pgCard { background:#fff; border-radius:10px; border:1px solid #e5e7eb; box-shadow:0 1px 4px rgba(0,0,0,.08); padding:10px 6px 10px; display:flex; flex-direction:column; align-items:center; break-inside:avoid; page-break-inside:avoid; }
 /* 제목: 1줄 강제, 넘치면 ... */
@@ -2786,7 +2793,7 @@ window.addEventListener('load', function(){
       +'<button class="btn-layout" id="pgLayout6Btn" onclick="setPrintLayout(6)" title="6개/장" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.5);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer;">6개/장</button>'
       +'<button class="btn-layout" id="pgLayout9Btn" onclick="setPrintLayout(9)" title="9개/장" style="background:#fff;color:#7a4f00;border:none;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer;">9개/장 ✓</button>'
       +'<button class="btn-print" id="pgPrintBtn" onclick="window.print()" disabled style="opacity:.4;cursor:not-allowed;">🖨 인쇄하기</button>'
-      +'<button class="btn-close" onclick="document.getElementById(\'pgBatchOv\').remove()">닫기</button>'
+      +'<button class="btn-close" onclick="document.getElementById(\'pgBatchOv\').remove()">✕</button>'
       +'</div></div>'
       /* ★ 진행률 바 */
       +'<div id="pgProgress" style="background:rgba(0,0,0,.15);height:4px;margin:0;">'
