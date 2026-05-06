@@ -1,7 +1,7 @@
 {
-  "name": "파시스4전송",
-  "short_name": "파시스4전송",
- "start_url": "./pasis4-send.html",
+  "name": "파시스4프로",
+  "short_name": "파시스4프로",
+  "start_url": "./sv4.html",
   "scope": "/parkgolf-score/",
   "display": "standalone",
   "background_color": "#c8860a",
