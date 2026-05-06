@@ -71,14 +71,14 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
 .cv-guide-btn{
   width:100%;padding:14px;background:rgba(255,255,255,.15);color:#fff;
   border:1.5px solid rgba(255,255,255,.35);border-radius:14px;
-  font-size:15px;font-weight:800;cursor:pointer;
+  font-size:18px;font-weight:900;cursor:pointer;
   font-family:'Noto Sans KR',sans-serif;transition:background .15s;
 }
 .cv-guide-btn:active{background:rgba(255,255,255,.25);}
 .cv-copy-done{display:none;font-size:12px;color:#a7f3d0;font-weight:700;text-align:center;margin-top:-4px;}
 .cv-copy-done.show{display:block;}
 .cv-footer{margin-top:28px;display:flex;gap:16px;justify-content:center;position:relative;z-index:10;}
-.cv-footer a,.cv-footer span{font-size:13px;color:#ffffff;text-decoration:none;font-weight:800;border-bottom:2px solid rgba(255,255,255,.8);padding:8px 4px;cursor:pointer;-webkit-tap-highlight-color:rgba(255,255,255,.3);}
+.cv-footer a,.cv-footer span{font-size:13px;color:#ffffff;text-decoration:none;font-weight:800;border-bottom:2px solid rgba(255,255,255,.8);padding:8px 4px;cursor:pointer;-webkit-tap-highlight-color:rgba(255,255,255,.3);text-align:center;line-height:1.5;}
 
 /* ── 입력 화면 ── */
 #mainContent{display:none;}
@@ -382,12 +382,12 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
   </div>
   <div class="cv-btns">
     <button class="cv-start-btn" id="cvStartBtn" onclick="startInput()">▶ 점수 입력 시작</button>
-    <button class="cv-guide-btn" onclick="openGuideModal()">📋 심판 안내문</button>
+    <button class="cv-guide-btn" onclick="openGuideModal()">심판 안내문</button>
   </div>
   <div class="cv-footer">
-    <span onclick="location.href='https://leejh50-dotcom.github.io/parkgolf-score/sv2.html'" style="cursor:pointer;">SV2.0 클럽용</span>
-    <span onclick="location.href='https://leejh50-dotcom.github.io/parkgolf-score/cover.html'" style="cursor:pointer;">SV3.0 대회용</span>
-    <span onclick="window.open('https://songgeun25.tistory.com','_blank')" style="cursor:pointer;">파시스 블로그</span>
+    <span onclick="location.href='https://leejh50-dotcom.github.io/parkgolf-score/sv2.html'" style="cursor:pointer;">SV2.0<br>클럽용</span>
+    <span onclick="location.href='https://leejh50-dotcom.github.io/parkgolf-score/cover.html'" style="cursor:pointer;">SV3.0<br>대회용</span>
+    <span onclick="window.open('https://songgeun25.tistory.com','_blank')" style="cursor:pointer;">파시스<br>블로그</span>
   </div>
 </div>
 
