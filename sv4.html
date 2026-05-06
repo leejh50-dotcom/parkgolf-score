@@ -2639,22 +2639,22 @@ window.addEventListener('load', function(){
     display:grid !important;
     grid-template-columns:repeat(3,minmax(0,1fr)) !important;
     column-gap:2mm !important;
-    row-gap:3mm !important;
-    padding:2mm 0 2mm 0 !important;
+    row-gap:2mm !important;
+    padding:1mm 0 1mm 0 !important;
     align-content:start !important;
   }
   /* ★ 6개/장 모드: 2열 */
   #pgBatchGrid[style*="repeat(2"] {
     grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-    column-gap:4mm !important;
-    row-gap:4mm !important;
-    padding:2mm 0 2mm 0 !important;
+    column-gap:3mm !important;
+    row-gap:3mm !important;
+    padding:1mm 0 1mm 0 !important;
     align-content:start !important;
   }
-  /* 6개/장 QR 크기 키움 */
+  /* 6개/장 QR 크기 */
   #pgBatchGrid[style*="repeat(2"] .pgCard-qr canvas {
-    width:52mm !important;
-    height:52mm !important;
+    width:46mm !important;
+    height:46mm !important;
   }
   .pgCard {
     border:1.5px solid #999 !important; border-radius:2mm !important;
