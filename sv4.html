@@ -2074,15 +2074,65 @@ function test_doPost() {
   };
 })();
 
-/* ── QR 생성 URL 강제 설정: sv4.html 대신 pasis4-send.html로 고정 ── */
+/* ── QR URL 고정 + 오버레이 닫기 버튼·스크롤 차단 ── */
 window.addEventListener('load', function(){
+
+  /* 1) qrUrl 고정 */
   setTimeout(function(){
     var el = document.getElementById('qrUrl');
     if(el) el.value = 'https://leejh50-dotcom.github.io/parkgolf-score/pasis4-send.html';
   }, 100);
+
+  /* 2) 오버레이 생성 감지 → 닫기 버튼 고정 + body 스크롤 차단 */
+  setTimeout(function(){
+    var closeOv = function(id){
+      var el = document.getElementById(id);
+      if(el){ el.remove(); document.body.style.overflow = ''; }
+      /* 떠있는 닫기 버튼 모두 제거 */
+      document.querySelectorAll('.__ov_close_btn').forEach(function(b){ b.remove(); });
+    };
+
+    var obs = new MutationObserver(function(muts){
+      muts.forEach(function(m){
+        m.addedNodes.forEach(function(n){
+          if(n.nodeType !== 1) return;
+          var isOv = (n.id === 'pgBatchOv' || n.id === 'batchQrOverlay');
+          if(!isOv) return;
+          document.body.style.overflow = 'hidden';
+          /* 기존 .btn-close 숨기기 */
+          var oldClose = n.querySelector('.btn-close');
+          if(oldClose) oldClose.style.display = 'none';
+          /* 고정 닫기 버튼 추가 */
+          var ovId = n.id;
+          var btn = document.createElement('button');
+          btn.className = '__ov_close_btn';
+          btn.textContent = '✕';
+          btn.setAttribute('style',
+            'position:fixed;top:12px;right:12px;z-index:999999;' +
+            'width:48px;height:48px;border-radius:50%;' +
+            'background:#fff;color:#7a4f00;border:3px solid #c8860a;' +
+            'font-size:22px;font-weight:900;cursor:pointer;' +
+            'box-shadow:0 3px 12px rgba(0,0,0,.35);'
+          );
+          btn.onclick = function(){ closeOv(ovId); };
+          document.body.appendChild(btn);
+          /* 오버레이 제거 감지 → 닫기 버튼도 제거 */
+          var rmObs = new MutationObserver(function(){
+            if(!document.getElementById(ovId)){
+              btn.remove();
+              document.body.style.overflow = '';
+              rmObs.disconnect();
+            }
+          });
+          rmObs.observe(document.body, { childList: true });
+        });
+      });
+    });
+    obs.observe(document.body, { childList: true });
+  }, 300);
 });
 </script>
-</body> */
+
 (function(){
   var _origSetItem = localStorage.setItem.bind(localStorage);
   localStorage.setItem = function(key, value){
@@ -2787,7 +2837,7 @@ window.addEventListener('load', function(){
       +'<button class="btn-layout" id="pgLayout6Btn" onclick="setPrintLayout(6)" title="6개/장" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.5);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer;">6개/장</button>'
       +'<button class="btn-layout" id="pgLayout9Btn" onclick="setPrintLayout(9)" title="9개/장" style="background:#fff;color:#7a4f00;border:none;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer;">9개/장 ✓</button>'
       +'<button class="btn-print" id="pgPrintBtn" onclick="window.print()" disabled style="opacity:.4;cursor:not-allowed;">🖨 인쇄하기</button>'
-      +'<button class="btn-close" onclick="document.getElementById(\'pgBatchOv\').remove()">닫기</button>'
+      +'<button class="btn-close" onclick="document.getElementById(\'pgBatchOv\').remove()" style="position:fixed;top:10px;right:10px;z-index:99999;width:44px;height:44px;border-radius:50%;background:#fff;color:#7a4f00;border:none;font-size:22px;font-weight:900;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3);">&#10005;</button>'
       +'</div></div>'
       /* ★ 진행률 바 */
       +'<div id="pgProgress" style="background:rgba(0,0,0,.15);height:4px;margin:0;">'
