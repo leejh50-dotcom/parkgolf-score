@@ -38,8 +38,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
   flex-direction:column;align-items:center;justify-content:center;
   padding:40px 24px 32px;position:relative;overflow:hidden;
 }
-#coverScreen::before{content:'';position:absolute;top:-80px;right:-80px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.06);}
-#coverScreen::after{content:'';position:absolute;bottom:-60px;left:-60px;width:220px;height:220px;border-radius:50%;background:rgba(0,0,0,.08);}
+#coverScreen::before{content:'';position:absolute;top:-80px;right:-80px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.06);pointer-events:none;}
+#coverScreen::after{content:'';position:absolute;bottom:-60px;left:-60px;width:220px;height:220px;border-radius:50%;background:rgba(0,0,0,.08);pointer-events:none;}
 .cv-logo{text-align:center;margin-bottom:28px;}
 .cv-icon{font-size:64px;display:block;margin-bottom:8px;animation:cvBounce 2.5s ease-in-out infinite;}
 @keyframes cvBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
@@ -77,8 +77,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
 .cv-guide-btn:active{background:rgba(255,255,255,.25);}
 .cv-copy-done{display:none;font-size:12px;color:#a7f3d0;font-weight:700;text-align:center;margin-top:-4px;}
 .cv-copy-done.show{display:block;}
-.cv-footer{margin-top:28px;display:flex;gap:16px;justify-content:center;}
-.cv-footer a,.cv-footer span{font-size:11px;color:#ffffff;text-decoration:none;font-weight:700;border-bottom:1px solid rgba(255,255,255,.5);padding-bottom:1px;}
+.cv-footer{margin-top:28px;display:flex;gap:16px;justify-content:center;position:relative;z-index:10;}
+.cv-footer a,.cv-footer span{font-size:13px;color:#ffffff;text-decoration:none;font-weight:800;border-bottom:2px solid rgba(255,255,255,.8);padding:8px 4px;cursor:pointer;-webkit-tap-highlight-color:rgba(255,255,255,.3);}
 
 /* ── 입력 화면 ── */
 #mainContent{display:none;}
