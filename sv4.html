@@ -2480,11 +2480,17 @@ window.addEventListener('load', function(){
     if (n === 6) {
       /* 6개/장: 2열, 세로 간격 더 넓게 */
       grid.style.setProperty('grid-template-columns', 'repeat(2,minmax(0,1fr))', 'important');
+      grid.style.setProperty('row-gap', '10mm', 'important');
+      grid.style.setProperty('column-gap', '6mm', 'important');
+      grid.style.setProperty('padding', '8mm 8mm 8mm 8mm', 'important');
       if (btn6) { btn6.style.background='#fff'; btn6.style.color='#7a4f00'; btn6.style.border='none'; btn6.textContent='6개/장 ✓'; }
       if (btn9) { btn9.style.background='rgba(255,255,255,.2)'; btn9.style.color='#fff'; btn9.style.border='1px solid rgba(255,255,255,.5)'; btn9.textContent='9개/장'; }
     } else {
       /* 9개/장: 3열, 기본 */
       grid.style.setProperty('grid-template-columns', 'repeat(3,minmax(0,1fr))', 'important');
+      grid.style.setProperty('row-gap', '8mm', 'important');
+      grid.style.setProperty('column-gap', '5mm', 'important');
+      grid.style.setProperty('padding', '8mm 6mm 8mm 6mm', 'important');
       if (btn9) { btn9.style.background='#fff'; btn9.style.color='#7a4f00'; btn9.style.border='none'; btn9.textContent='9개/장 ✓'; }
       if (btn6) { btn6.style.background='rgba(255,255,255,.2)'; btn6.style.color='#fff'; btn6.style.border='1px solid rgba(255,255,255,.5)'; btn6.textContent='6개/장'; }
     }
@@ -2531,7 +2537,7 @@ window.addEventListener('load', function(){
 
 /* ══ 인쇄 전용 ══ */
 @media print {
-  @page { size:A4 portrait; margin:8mm 6mm 8mm 6mm; }
+  @page { size:A4 portrait; margin:10mm 8mm 10mm 8mm; }
 
   /* 전체 숨기기 — batchQrOverlay(난독화JS 생성) 또는 pgBatchOv 표시 */
   body * { visibility:hidden !important; }
@@ -2563,9 +2569,9 @@ window.addEventListener('load', function(){
   #batchQrGrid {
     display:grid !important;
     grid-template-columns:repeat(3,minmax(0,1fr)) !important;
-    column-gap:4mm !important;
-    row-gap:6mm !important;
-    padding:6mm 6mm 6mm 6mm !important;
+    column-gap:5mm !important;
+    row-gap:8mm !important;
+    padding:8mm 6mm 8mm 6mm !important;
     max-width:none !important;
     margin:0 !important;
     align-content:start !important;
@@ -2594,17 +2600,17 @@ window.addEventListener('load', function(){
   #pgBatchGrid {
     display:grid !important;
     grid-template-columns:repeat(3,minmax(0,1fr)) !important;
-    column-gap:4mm !important;
-    row-gap:6mm !important;
-    padding:6mm 6mm 6mm 6mm !important;
+    column-gap:5mm !important;
+    row-gap:8mm !important;
+    padding:8mm 6mm 8mm 6mm !important;
     align-content:start !important;
   }
   /* ★ pgBatchGrid 6개/장: 2열 */
   #pgBatchGrid[style*="repeat(2"] {
     grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-    column-gap:5mm !important;
-    row-gap:7mm !important;
-    padding:6mm 6mm 6mm 6mm !important;
+    column-gap:6mm !important;
+    row-gap:10mm !important;
+    padding:8mm 8mm 8mm 8mm !important;
     align-content:start !important;
   }
   /* 6개/장 QR 크기 */
@@ -2614,7 +2620,7 @@ window.addEventListener('load', function(){
   }
   .pgCard {
     border:1.5px solid #999 !important; border-radius:2mm !important;
-    box-shadow:none !important; padding:0.5mm 1.5mm 0.5mm !important; background:#fff !important;
+    box-shadow:none !important; padding:2mm 2mm 2mm !important; background:#fff !important;
     break-inside:avoid !important; page-break-inside:avoid !important;
     display:flex !important; flex-direction:column !important; align-items:center !important;
     overflow:hidden !important;
@@ -2766,6 +2772,12 @@ window.addEventListener('load', function(){
     document.body.appendChild(ov);
 
     var grid=document.getElementById('pgBatchGrid');
+    /* ★ 초기(9개/장) 인쇄 gap 강제 설정 — iOS Safari/Chrome 호환 */
+    if (grid) {
+      grid.style.setProperty('row-gap', '8mm', 'important');
+      grid.style.setProperty('column-gap', '5mm', 'important');
+      grid.style.setProperty('padding', '8mm 6mm 8mm 6mm', 'important');
+    }
     var progressBar=document.getElementById('pgProgressBar');
     var progressTxt=document.getElementById('pgProgressTxt');
     var printBtn=document.getElementById('pgPrintBtn');
