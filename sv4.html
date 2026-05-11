@@ -2760,7 +2760,7 @@ window.addEventListener('load', function(){
       +'<div class="bt-btns">'
       +'<button class="btn-layout" id="pgLayout6Btn" onclick="setPrintLayout(6)" title="6개/장" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.5);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer;">6개/장</button>'
       +'<button class="btn-layout" id="pgLayout9Btn" onclick="setPrintLayout(9)" title="9개/장" style="background:#fff;color:#7a4f00;border:none;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer;">9개/장 ✓</button>'
-      +'<button class="btn-print" id="pgPrintBtn" onclick="window.print()" disabled style="opacity:.4;cursor:not-allowed;">🖨 인쇄하기</button>'
+      +'<button class="btn-print" id="pgPrintBtn" onclick="pgDoPrint()" disabled style="opacity:.4;cursor:not-allowed;">🖨 인쇄하기</button>'
       +'<button class="btn-close" onclick="document.getElementById(\'pgBatchOv\').remove()">✕</button>'
       +'</div></div>'
       /* ★ 진행률 바 */
@@ -2768,7 +2768,7 @@ window.addEventListener('load', function(){
       +'<div id="pgProgressBar" style="height:4px;background:#fff;width:0%;transition:width .2s;"></div>'
       +'</div>'
       +'<div id="pgProgressTxt" style="text-align:center;font-size:12px;padding:4px 0;color:#fff;opacity:.85;">QR 생성 중... 0 / '+total+'</div>'
-      +'<div id="pgBatchGrid"></div>';
+      +'<div id="pgBatchGrid" style="grid-template-columns:repeat(3,minmax(0,1fr));row-gap:8mm;column-gap:5mm;padding:8mm 6mm 8mm 6mm;"></div>';
     document.body.appendChild(ov);
 
     var grid=document.getElementById('pgBatchGrid');
@@ -2847,6 +2847,52 @@ window.addEventListener('load', function(){
     }
 
     nextBatch(); /* 첫 배치 시작 */
+
+  /* ★ 인쇄 함수: canvas display:none 해제 → print → 원복 */
+  function pgDoPrint() {
+    var ov = document.getElementById('pgBatchOv');
+    var canvases = ov ? ov.querySelectorAll('canvas') : [];
+    var imgs     = ov ? ov.querySelectorAll('.pgCard-qr img') : [];
+    var grid     = document.getElementById('pgBatchGrid');
+
+    /* canvas 강제 표시 / img 숨김 */
+    for (var i=0; i<canvases.length; i++) {
+      canvases[i].style.setProperty('display','block','important');
+      canvases[i].style.setProperty('width','48mm','important');
+      canvases[i].style.setProperty('height','48mm','important');
+    }
+    for (var j=0; j<imgs.length; j++) {
+      imgs[j].style.setProperty('display','none','important');
+    }
+    /* grid 간격 강제 (6/9개 현재 상태 반영) */
+    if (grid) {
+      var cols = grid.style.getPropertyValue('grid-template-columns') || '';
+      if (cols.indexOf('repeat(2') !== -1) {
+        grid.style.setProperty('row-gap','10mm','important');
+        grid.style.setProperty('column-gap','6mm','important');
+        grid.style.setProperty('padding','8mm','important');
+      } else {
+        grid.style.setProperty('row-gap','8mm','important');
+        grid.style.setProperty('column-gap','5mm','important');
+        grid.style.setProperty('padding','8mm 6mm','important');
+      }
+    }
+
+    /* afterprint: 인쇄 완료 후 원복 */
+    function restore() {
+      for (var i=0; i<canvases.length; i++) {
+        canvases[i].style.removeProperty('display');
+        canvases[i].style.removeProperty('width');
+        canvases[i].style.removeProperty('height');
+      }
+      for (var j=0; j<imgs.length; j++) {
+        imgs[j].style.removeProperty('display');
+      }
+      window.removeEventListener('afterprint', restore);
+    }
+    window.addEventListener('afterprint', restore);
+    window.print();
+  }
   }
 
   /* QR 스캔 자동 라우팅 */
