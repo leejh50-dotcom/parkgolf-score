@@ -2646,7 +2646,6 @@ window.addEventListener('load', function(){
     row-gap:5mm !important;
     padding:2mm 4mm 2mm 4mm !important;
     align-content:space-between !important;
-    min-height:255mm !important;
   }
   /* ★ 6개/장 모드: 2열 */
   #pgBatchGrid[style*="repeat(2"] {
@@ -2668,6 +2667,7 @@ window.addEventListener('load', function(){
     break-inside:avoid !important; page-break-inside:avoid !important;
     display:flex !important; flex-direction:column !important; align-items:center !important;
     overflow:hidden !important;
+    height:89mm !important; box-sizing:border-box !important;
   }
   /* QR 박스 */
   .pgCard-qr { position:static !important; padding-top:0 !important; height:auto !important; }
@@ -2676,8 +2676,8 @@ window.addEventListener('load', function(){
   /* ★ QR 크기 */
   .pgCard-qr canvas {
     display:block !important;
-    width:42mm !important;
-    height:42mm !important;
+    width:45mm !important;
+    height:45mm !important;
     margin:0 auto !important;
   }
   .pgCard-qr img { display:none !important; }
