@@ -2604,13 +2604,17 @@ window.addEventListener('load', function(){
 
   body * { visibility:hidden !important; }
   #pgBatchOv, #pgBatchOv * { visibility:visible !important; }
-  #pgBatchOv { position:absolute !important; left:0 !important; top:0 !important; width:100% !important; background:#fff !important; overflow:visible !important; }
+  #pgBatchOv {
+    position:absolute !important; left:0 !important; top:0 !important;
+    width:100% !important; background:#fff !important; overflow:visible !important;
+    padding:0 !important; margin:0 !important;
+  }
 
-  /* 헤더: 제목만 표시, 버튼 숨김 */
+  /* 헤더: 제목만 표시 */
   #pgBatchTop {
     display:block !important; visibility:visible !important;
     height:auto !important; overflow:visible !important;
-    padding:1.5mm 4mm 1.5mm 4mm !important; margin:0 !important;
+    padding:1.5mm 4mm 1mm 4mm !important; margin:0 !important;
     opacity:1 !important; position:static !important; background:#fff !important;
   }
   #pgBatchTop .btn-close,
@@ -2619,80 +2623,82 @@ window.addEventListener('load', function(){
   #pgBatchTop .bt-btns { display:none !important; }
 
   #pgProgress, #pgProgressTxt {
-    display:none !important; height:0 !important; overflow:hidden !important;
-    padding:0 !important; margin:0 !important;
+    display:none !important; height:0 !important;
+    overflow:hidden !important; padding:0 !important; margin:0 !important;
   }
-  #pgBatchOv { padding-top:0 !important; margin-top:0 !important; }
 
-  /* ★ 9개/장: 3열 — A4 정확히 맞춤
-     사용가능: 297-6-4=287mm, 헤더~6mm → 그리드 281mm
-     padding 상하 2mm씩=4mm, row-gap 2개×6mm=12mm
-     카드높이 = (281-4-12)÷3 = 88.3mm */
+  /* ★ 9개/장 그리드 */
   #pgBatchGrid {
     display:grid !important;
     grid-template-columns:repeat(3,minmax(0,1fr)) !important;
     column-gap:4mm !important;
-    row-gap:6mm !important;
-    padding:2mm 3mm 2mm 3mm !important;
+    row-gap:5mm !important;
+    padding:1mm 3mm 1mm 3mm !important;
     align-content:start !important;
-    height:275mm !important;
-    box-sizing:border-box !important;
   }
 
-  /* ★ 6개/장: 2열 */
+  /* ★ 6개/장 */
   #pgBatchGrid[style*="repeat(2"] {
     grid-template-columns:repeat(2,minmax(0,1fr)) !important;
     column-gap:5mm !important;
-    row-gap:8mm !important;
-    padding:2mm 5mm 2mm 5mm !important;
+    row-gap:7mm !important;
+    padding:1mm 5mm 1mm 5mm !important;
     align-content:start !important;
-    height:275mm !important;
-    box-sizing:border-box !important;
+  }
+  #pgBatchGrid[style*="repeat(2"] .pgCard {
+    height:125mm !important;
   }
   #pgBatchGrid[style*="repeat(2"] .pgCard-qr canvas {
-    width:50mm !important; height:50mm !important;
+    width:55mm !important; height:55mm !important;
   }
 
-  /* 카드 */
+  /* ★ 카드 높이 87mm 고정 → 9개/장 정확히 1페이지 */
   .pgCard {
     border:1.5px solid #999 !important; border-radius:2mm !important;
-    box-shadow:none !important; padding:1mm 1.5mm 1mm !important; background:#fff !important;
+    box-shadow:none !important; background:#fff !important;
     break-inside:avoid !important; page-break-inside:avoid !important;
     display:flex !important; flex-direction:column !important; align-items:center !important;
     overflow:hidden !important;
+    height:87mm !important; box-sizing:border-box !important;
+    padding:1mm 1.5mm 1mm !important;
   }
-  .pgCard-qr { position:static !important; padding-top:0 !important; height:auto !important; }
+
+  .pgCard-qr { position:static !important; padding-top:0 !important; height:auto !important; flex-shrink:0 !important; }
   .pgCard-qr::before { display:none !important; }
   .pgCard-qr > div { position:static !important; width:100% !important; display:block !important; }
 
-  /* ★ QR 크기: 9개/장 */
+  /* ★ QR 크기: 카드 87mm 기준, 텍스트 제외 → 55mm */
   .pgCard-qr canvas {
     display:block !important;
-    width:44mm !important; height:44mm !important;
+    width:55mm !important; height:55mm !important;
     margin:0 auto !important;
   }
   .pgCard-qr img { display:none !important; }
 
   .pgCard-title {
-    font-size:10.5pt !important; margin-bottom:0.5mm !important; color:#c8860a !important;
+    font-size:10pt !important; margin-bottom:0.5mm !important; color:#c8860a !important;
     white-space:nowrap !important; overflow:hidden !important; text-overflow:ellipsis !important;
     width:100% !important; text-align:center !important; line-height:1.2 !important;
+    flex-shrink:0 !important;
   }
   .pgCard-players {
     width:100% !important; margin-top:0.5mm !important;
     display:grid !important; grid-template-columns:1fr 1fr !important;
-    gap:0px 2px !important;
+    gap:0px 2px !important; flex-shrink:0 !important;
   }
   .pgCard-player { overflow:hidden !important; }
   .pgCard-pline {
-    font-size:8.5pt !important; white-space:nowrap !important;
+    font-size:8pt !important; white-space:nowrap !important;
     overflow:hidden !important; text-overflow:ellipsis !important;
-    display:block !important; max-width:100% !important; line-height:1.3 !important;
+    display:block !important; max-width:100% !important; line-height:1.25 !important;
   }
   .pgCard-pname { font-weight:800 !important; }
-  .pgCard-pgender { font-size:7.5pt !important; }
-  .pgCard-paffil { font-size:7.5pt !important; }
-  .pgCard-footer { font-size:6.5pt !important; margin-top:0.3mm !important; line-height:1.2 !important; }
+  .pgCard-pgender { font-size:7pt !important; }
+  .pgCard-paffil { font-size:7pt !important; }
+  .pgCard-footer {
+    font-size:6.5pt !important; margin-top:0.3mm !important;
+    line-height:1.2 !important; flex-shrink:0 !important;
+  }
   .pgCard-num { font-size:7.5pt !important; min-width:10px !important; background:none !important; color:#c8860a !important; }
 }
 
