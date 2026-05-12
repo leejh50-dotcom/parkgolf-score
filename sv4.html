@@ -2474,7 +2474,7 @@ window.addEventListener('load', function(){
       '</div>' +
 
       /* ★ 심판 안내문 복사 버튼 */
-      '<button id="pgCopyGuideBtn" onclick="copyGuideText()" ' +
+      '<button id="pgCopyGuideBtn" onclick="openPgGuideModal()" ' +
       'style="width:100%;padding:13px;background:linear-gradient(135deg,#1e3c72,#0d2247);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:900;cursor:pointer;margin-bottom:8px;">' +
       '📋 심판 안내문 복사</button>' +
       '<div id="pgCopyDone" style="display:none;font-size:12px;color:#2e7d32;font-weight:700;margin-bottom:8px;">✅ 복사됐습니다! 카톡에 붙여넣기 하세요.</div>' +
@@ -2493,7 +2493,55 @@ window.addEventListener('load', function(){
           if (d) { d.style.display = 'block'; setTimeout(function(){ d.style.display='none'; }, 3000); }
         }).catch(function() { fallbackCopy(txt); });
       } else { fallbackCopy(txt); }
+    }
+
+    /* ★ 안내문 모달 열기 */
+    window.openPgGuideModal = function() {
+      /* 기존 모달 제거 */
+      var old = document.getElementById('pgGuideModal');
+      if (old) old.remove();
+
+      var modal = document.createElement('div');
+      modal.id = 'pgGuideModal';
+      modal.style.cssText = 'position:fixed;inset:0;z-index:300000;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;justify-content:center;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;';
+      modal.innerHTML =
+        '<div style="background:#fff;border-radius:18px 18px 0 0;width:100%;max-width:480px;max-height:85vh;display:flex;flex-direction:column;">' +
+          '<div style="display:flex;align-items:center;justify-content:space-between;padding:16px 18px 12px;border-bottom:1px solid #eee;">' +
+            '<div style="font-size:16px;font-weight:900;color:#1e3c72;">📋 심판 안내문</div>' +
+            '<button onclick="document.getElementById('pgGuideModal').remove()" style="background:none;border:none;font-size:22px;cursor:pointer;color:#999;line-height:1;">✕</button>' +
+          '</div>' +
+          '<div style="flex:1;overflow-y:auto;padding:16px 18px;">' +
+            '<pre style="font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif;font-size:13px;line-height:1.7;white-space:pre-wrap;word-break:break-word;color:#333;margin:0;">' + guideText.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</pre>' +
+          '</div>' +
+          '<div style="padding:12px 18px 20px;border-top:1px solid #eee;">' +
+            '<div id="pgGuideModalCopyOk" style="display:none;text-align:center;color:#2e7d32;font-size:13px;font-weight:700;margin-bottom:8px;">✅ 복사됐습니다! 카톡에 붙여넣기 하세요.</div>' +
+            '<button onclick="copyPgGuideFromModal()" style="width:100%;padding:14px;background:linear-gradient(135deg,#1e3c72,#0d2247);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:900;cursor:pointer;">📋 카톡에 복사하기</button>' +
+          '</div>' +
+        '</div>';
+      document.body.appendChild(modal);
+      /* 배경 탭으로 닫기 */
+      modal.addEventListener('click', function(e){ if(e.target===modal) modal.remove(); });
     };
+
+    /* ★ 모달 내 복사 */
+    window.copyPgGuideFromModal = function() {
+      var ok = document.getElementById('pgGuideModalCopyOk');
+      var onOk = function() {
+        if (ok) { ok.style.display='block'; setTimeout(function(){ ok.style.display='none'; }, 3000); }
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(guideText).then(onOk).catch(function(){ fallbackCopyGuide(guideText, onOk); });
+      } else { fallbackCopyGuide(guideText, onOk); }
+    };
+
+    /* fallback */
+    window.fallbackCopyGuide = function(txt, cb) {
+      var ta = document.createElement('textarea');
+      ta.value = txt; ta.style.cssText='position:fixed;top:-9999px;';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); if(cb) cb(); } catch(e){}
+      document.body.removeChild(ta);
+    };;
     function fallbackCopy(txt) {
       var ta = document.createElement('textarea');
       ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0';
