@@ -2497,29 +2497,49 @@ window.addEventListener('load', function(){
 
     /* ★ 안내문 모달 열기 */
     window.openPgGuideModal = function() {
-      /* 기존 모달 제거 */
-      var old = document.getElementById('pgGuideModal');
-      if (old) old.remove();
-
+      var old2 = document.getElementById('pgGuideModal');
+      if (old2) old2.remove();
       var modal = document.createElement('div');
       modal.id = 'pgGuideModal';
       modal.style.cssText = 'position:fixed;inset:0;z-index:300000;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;justify-content:center;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;';
-      modal.innerHTML =
-        '<div style="background:#fff;border-radius:18px 18px 0 0;width:100%;max-width:480px;max-height:85vh;display:flex;flex-direction:column;">' +
-          '<div style="display:flex;align-items:center;justify-content:space-between;padding:16px 18px 12px;border-bottom:1px solid #eee;">' +
-            '<div style="font-size:16px;font-weight:900;color:#1e3c72;">📋 심판 안내문</div>' +
-            '<button onclick="document.getElementById('pgGuideModal').remove()" style="background:none;border:none;font-size:22px;cursor:pointer;color:#999;line-height:1;">✕</button>' +
-          '</div>' +
-          '<div style="flex:1;overflow-y:auto;padding:16px 18px;">' +
-            '<pre style="font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif;font-size:13px;line-height:1.7;white-space:pre-wrap;word-break:break-word;color:#333;margin:0;">' + guideText.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</pre>' +
-          '</div>' +
-          '<div style="padding:12px 18px 20px;border-top:1px solid #eee;">' +
-            '<div id="pgGuideModalCopyOk" style="display:none;text-align:center;color:#2e7d32;font-size:13px;font-weight:700;margin-bottom:8px;">✅ 복사됐습니다! 카톡에 붙여넣기 하세요.</div>' +
-            '<button onclick="copyPgGuideFromModal()" style="width:100%;padding:14px;background:linear-gradient(135deg,#1e3c72,#0d2247);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:900;cursor:pointer;">📋 카톡에 복사하기</button>' +
-          '</div>' +
-        '</div>';
+
+      var sheet = document.createElement('div');
+      sheet.style.cssText = 'background:#fff;border-radius:18px 18px 0 0;width:100%;max-width:480px;max-height:85vh;display:flex;flex-direction:column;';
+
+      var head = document.createElement('div');
+      head.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:16px 18px 12px;border-bottom:1px solid #eee;';
+      head.innerHTML = '<div style="font-size:16px;font-weight:900;color:#1e3c72;">📋 심판 안내문</div>';
+      var closeBtn = document.createElement('button');
+      closeBtn.textContent = '✕';
+      closeBtn.style.cssText = 'background:none;border:none;font-size:22px;cursor:pointer;color:#999;line-height:1;';
+      closeBtn.onclick = function(){ modal.remove(); };
+      head.appendChild(closeBtn);
+
+      var body = document.createElement('div');
+      body.style.cssText = 'flex:1;overflow-y:auto;padding:16px 18px;';
+      var pre = document.createElement('pre');
+      pre.style.cssText = 'font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;font-size:13px;line-height:1.7;white-space:pre-wrap;word-break:break-word;color:#333;margin:0;';
+      pre.textContent = guideText;
+      body.appendChild(pre);
+
+      var foot = document.createElement('div');
+      foot.style.cssText = 'padding:12px 18px 20px;border-top:1px solid #eee;';
+      var copyOk = document.createElement('div');
+      copyOk.id = 'pgGuideModalCopyOk';
+      copyOk.style.cssText = 'display:none;text-align:center;color:#2e7d32;font-size:13px;font-weight:700;margin-bottom:8px;';
+      copyOk.textContent = '✅ 복사됐습니다! 카톡에 붙여넣기 하세요.';
+      var copyBtn = document.createElement('button');
+      copyBtn.textContent = '📋 카톡에 복사하기';
+      copyBtn.style.cssText = 'width:100%;padding:14px;background:linear-gradient(135deg,#1e3c72,#0d2247);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:900;cursor:pointer;';
+      copyBtn.onclick = function(){ window.copyPgGuideFromModal(); };
+      foot.appendChild(copyOk);
+      foot.appendChild(copyBtn);
+
+      sheet.appendChild(head);
+      sheet.appendChild(body);
+      sheet.appendChild(foot);
+      modal.appendChild(sheet);
       document.body.appendChild(modal);
-      /* 배경 탭으로 닫기 */
       modal.addEventListener('click', function(e){ if(e.target===modal) modal.remove(); });
     };
 
