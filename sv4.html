@@ -16,7 +16,17 @@
 <meta name="theme-color" content="#c8860a">
 <meta name="apple-mobile-web-app-title" content="파시스 SV4.0">
 <script>
-var a0_0xaac033=a0_0x4120;(function(_0x234a33,_0x5867bc){var _0x12cf99=a0_0x4120,_0x57f61a=_0x234a33();while(!![]){try{var _0x185f1e=parseInt(_0x12cf99(0x120))/0x1*(-parseInt(_0x12cf99(0x123))/0x2)+parseInt(_0x12cf99(0x127))/0x3+-parseInt(_0x12cf99(0x129))/0x4*(-parseInt(_0x12cf99(0x11d))/0x5)+-parseInt(_0x12cf99(0x11e))/0x6*(parseInt(_0x12cf99(0x11a))/0x7)+-parseInt(_0x12cf99(0x11f))/0x8+parseInt(_0x12cf99(0x12a))/0x9*(-parseInt(_0x12cf99(0x128))/0xa)+parseInt(_0x12cf99(0x125))/0xb*(parseInt(_0x12cf99(0x12b))/0xc);if(_0x185f1e===_0x5867bc)break;else _0x57f61a['push'](_0x57f61a['shift']());}catch(_0x2b5c43){_0x57f61a['push'](_0x57f61a['shift']());}}}(a0_0x374c,0x667b0));function a0_0x374c(){var _0x2ba86a=['mtiXwM9YEuTR','z2v0uMvNAxn0CMf0Aw9UCW','mtq1mtuYmgz3t0fNwG','odm1mtbkB0T3rfe','mtyXmty2nefuAKnQtG','nde0t3Pfu1Lm','mteZmJC4oePYA21nqG','y2fJAgvZ','A2v5CW','mZi5rKDnqufU','C2vYDMLJzvDVCMTLCG','zM9YrwfJAa','mtbsBfrdEhq','mJK4ntbYBenIrLm','nJe3odi1nNPRCLPLzW','mtyXodLoA3bTDvC','zgvSzxrL','Dw5YzwDPC3rLCG','nJrhD2jlrKG','DgHLBG'];a0_0x374c=function(){return _0x2ba86a;};return a0_0x374c();}function a0_0x4120(_0x4487b7,_0x15244d){_0x4487b7=_0x4487b7-0x11a;var _0x374c98=a0_0x374c();var _0x412032=_0x374c98[_0x4487b7];if(a0_0x4120['buoGGm']===undefined){var _0x657f25=function(_0x277e13){var _0x1eaf59='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';var _0x4afc63='',_0x9ea1a4='';for(var _0x25f4b8=0x0,_0x2b6d9e,_0x21e39f,_0x124455=0x0;_0x21e39f=_0x277e13['charAt'](_0x124455++);~_0x21e39f&&(_0x2b6d9e=_0x25f4b8%0x4?_0x2b6d9e*0x40+_0x21e39f:_0x21e39f,_0x25f4b8++%0x4)?_0x4afc63+=String['fromCharCode'](0xff&_0x2b6d9e>>(-0x2*_0x25f4b8&0x6)):0x0){_0x21e39f=_0x1eaf59['indexOf'](_0x21e39f);}for(var _0x4b2ad1=0x0,_0x5d7443=_0x4afc63['length'];_0x4b2ad1<_0x5d7443;_0x4b2ad1++){_0x9ea1a4+='%'+('00'+_0x4afc63['charCodeAt'](_0x4b2ad1)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x9ea1a4);};a0_0x4120['OetnuK']=_0x657f25,a0_0x4120['ztwoNS']={},a0_0x4120['buoGGm']=!![];}var _0x45c582=_0x374c98[0x0],_0x172af0=_0x4487b7+_0x45c582,_0x1e1748=a0_0x4120['ztwoNS'][_0x172af0];return!_0x1e1748?(_0x412032=a0_0x4120['OetnuK'](_0x412032),a0_0x4120['ztwoNS'][_0x172af0]=_0x412032):_0x412032=_0x1e1748,_0x412032;}a0_0xaac033(0x11b)in navigator&&navigator[a0_0xaac033(0x11b)][a0_0xaac033(0x126)]()['then'](function(_0x4afc63){var _0x29b06b=a0_0xaac033;_0x4afc63[_0x29b06b(0x11c)](function(_0x9ea1a4){var _0x88ccad=_0x29b06b;_0x9ea1a4[_0x88ccad(0x122)]();});});a0_0xaac033(0x12c)in window&&caches[a0_0xaac033(0x12d)]()[a0_0xaac033(0x124)](function(_0x25f4b8){var _0x3d866b=a0_0xaac033;_0x25f4b8[_0x3d866b(0x11c)](function(_0x2b6d9e){var _0x599ad1=_0x3d866b;caches[_0x599ad1(0x121)](_0x2b6d9e);});});
+/* ★ 서비스워커 및 캐시 완전 제거 - 항상 최신 파일 사용 */
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.getRegistrations().then(function(regs){
+    regs.forEach(function(r){ r.unregister(); });
+  });
+}
+if('caches' in window){
+  caches.keys().then(function(keys){
+    keys.forEach(function(k){ caches.delete(k); });
+  });
+}
 </script>
 
 <style>
@@ -1451,7 +1461,68 @@ function test_doPost() {
 
 
 <script>
-(function(_0xd2775d,_0x1135b8){var _0x373433=a0_0x2dfe,_0x5b3974=_0xd2775d();while(!![]){try{var _0x40a5ec=parseInt(_0x373433(0x14b))/0x1+-parseInt(_0x373433(0x15c))/0x2*(-parseInt(_0x373433(0x147))/0x3)+-parseInt(_0x373433(0x14f))/0x4*(parseInt(_0x373433(0x14a))/0x5)+-parseInt(_0x373433(0x145))/0x6*(parseInt(_0x373433(0x148))/0x7)+parseInt(_0x373433(0x144))/0x8*(-parseInt(_0x373433(0x157))/0x9)+parseInt(_0x373433(0x143))/0xa+-parseInt(_0x373433(0x155))/0xb*(-parseInt(_0x373433(0x152))/0xc);if(_0x40a5ec===_0x1135b8)break;else _0x5b3974['push'](_0x5b3974['shift']());}catch(_0x36e23c){_0x5b3974['push'](_0x5b3974['shift']());}}}(a0_0x45a4,0x9ee9f),(function(){var _0x1e7f46=a0_0x2dfe;function _0x500852(_0x299e16){var _0x4560e4=a0_0x2dfe,_0x355747=document['getElementById'](_0x299e16);return _0x355747?(_0x355747[_0x4560e4(0x150)]||_0x355747['textContent']||'')[_0x4560e4(0x15a)]():'';}function _0x16854e(){var _0x521692=a0_0x2dfe;for(var _0x18be24=0x1;_0x18be24<=0x4;_0x18be24++){var _0x82da72=_0x500852(_0x521692(0x151)+_0x18be24),_0x2dec58=_0x500852(_0x521692(0x14e)+_0x18be24),_0x1e6caa=_0x500852(_0x521692(0x159)+_0x18be24),_0x5bb9b6=document[_0x521692(0x14d)]('nameHeader'+_0x18be24);if(!_0x5bb9b6)continue;if(_0x82da72){var _0x1cafb6=_0x82da72;(_0x2dec58||_0x1e6caa)&&(_0x1cafb6+='\u00a0\u00a0(\x20'+(_0x2dec58||'')+(_0x1e6caa?'\u00a0\u00a0'+_0x1e6caa:'')+'\x20)'),_0x5bb9b6[_0x521692(0x154)]=_0x1cafb6;}else _0x5bb9b6[_0x521692(0x154)]='경기자\x20'+_0x18be24;}}var _0xcd98d0=window['syncNameHeaders'];window[_0x1e7f46(0x146)]=function(){var _0x4f4ae3=_0x1e7f46;if(typeof _0xcd98d0===_0x4f4ae3(0x15b))_0xcd98d0();setTimeout(_0x16854e,0x32);};var _0x55a1d7=window[_0x1e7f46(0x14c)];typeof _0x55a1d7===_0x1e7f46(0x15b)&&(window[_0x1e7f46(0x14c)]=function(_0x21cd61){_0x55a1d7['call'](this,_0x21cd61),setTimeout(_0x16854e,0x190);});var _0x1efe58=window[_0x1e7f46(0x153)];typeof _0x1efe58===_0x1e7f46(0x15b)&&(window[_0x1e7f46(0x153)]=function(){var _0x1ec1be=_0x1e7f46;_0x1efe58[_0x1ec1be(0x149)](this),setTimeout(_0x16854e,0x12c);});var _0x2887e5=window[_0x1e7f46(0x158)];typeof _0x2887e5===_0x1e7f46(0x15b)&&(window['loadData']=function(){var _0x522a3a=_0x2887e5['call'](this);return setTimeout(_0x16854e,0xc8),_0x522a3a;});var _0x14a1be=0x0,_0x493bec=setInterval(function(){_0x16854e();if(++_0x14a1be>=0x5)clearInterval(_0x493bec);},0x3e8);document[_0x1e7f46(0x156)]('DOMContentLoaded',function(){setTimeout(_0x16854e,0x12c),setTimeout(_0x16854e,0x320),setTimeout(_0x16854e,0x7d0);});}()));function a0_0x2dfe(_0x558832,_0x40ef20){_0x558832=_0x558832-0x143;var _0x45a438=a0_0x45a4();var _0x2dfef2=_0x45a438[_0x558832];if(a0_0x2dfe['YjmkJx']===undefined){var _0x25c563=function(_0x32737d){var _0x92cb7d='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';var _0x500852='',_0x16854e='';for(var _0xcd98d0=0x0,_0x55a1d7,_0x1efe58,_0x2887e5=0x0;_0x1efe58=_0x32737d['charAt'](_0x2887e5++);~_0x1efe58&&(_0x55a1d7=_0xcd98d0%0x4?_0x55a1d7*0x40+_0x1efe58:_0x1efe58,_0xcd98d0++%0x4)?_0x500852+=String['fromCharCode'](0xff&_0x55a1d7>>(-0x2*_0xcd98d0&0x6)):0x0){_0x1efe58=_0x92cb7d['indexOf'](_0x1efe58);}for(var _0x14a1be=0x0,_0x493bec=_0x500852['length'];_0x14a1be<_0x493bec;_0x14a1be++){_0x16854e+='%'+('00'+_0x500852['charCodeAt'](_0x14a1be)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x16854e);};a0_0x2dfe['oJUfrm']=_0x25c563,a0_0x2dfe['BdflWz']={},a0_0x2dfe['YjmkJx']=!![];}var _0x1ebb6d=_0x45a438[0x0],_0x42092e=_0x558832+_0x1ebb6d,_0x3aca93=a0_0x2dfe['BdflWz'][_0x42092e];return!_0x3aca93?(_0x2dfef2=a0_0x2dfe['oJUfrm'](_0x2dfef2),a0_0x2dfe['BdflWz'][_0x42092e]=_0x2dfef2):_0x2dfef2=_0x3aca93,_0x2dfef2;}function a0_0x45a4(){var _0x2a01d9=['x2fWCgX5uvjbBMrpCgvUu2nVCMLUzW','z2v0rwXLBwvUDej5swq','z2vUzgvY','mZq1otm2BuH4tfHU','DMfSDwu','CgXHEwvY','mZi5mZa0CgnMEwf1','Aw5PDezYB21rDwvYEvbHCMfTCW','Dgv4DenVBNrLBNq','odi1vLP3wg5U','ywrKrxzLBNrmAxn0zw5LCG','mtHmqxbNte4','Bg9HzerHDge','ywzMAwXPyxrPB24','DhjPBq','zNvUy3rPB24','mLnKAMnvqq','ndaWndqWrerJsNnd','nda4mZi3mM5yvwLzra','nte2nLbms1LeyG','C3LUy05HBwvizwfKzxjZ','mJC2nJa2owj2uM1trG','odyZog9prNnPwG','y2fSBa','ndbgvgnPueq','nda1odu4Auv5BNzi'];a0_0x45a4=function(){return _0x2a01d9;};return a0_0x45a4();}
+// ── nameHeader 이름+성별+소속 표시 패치 ──
+(function(){
+  function getVal(id){ var el=document.getElementById(id); return el?(el.value||el.textContent||'').trim():''; }
+  function updateHeaders(){
+    for(var i=1;i<=4;i++){
+      var nm = getVal('player'+i);
+      var gn = getVal('gender'+i);
+      var af = getVal('affiliation'+i);
+      var el = document.getElementById('nameHeader'+i);
+      if(!el) continue;
+      if(nm){
+        var txt = nm;
+        if(gn||af){ txt += '  ( ' + (gn||'') + (af?'  '+af:'') + ' )'; }
+        el.textContent = txt;
+      } else {
+        el.textContent = '경기자 ' + i;
+      }
+    }
+  }
+  // syncNameHeaders 오버라이드
+  var _orig = window.syncNameHeaders;
+  window.syncNameHeaders = function(){
+    if(typeof _orig==='function') _orig();
+    setTimeout(updateHeaders, 50);
+  };
+  // _applyQRAndOpenScoring 오버라이드 (QR 스캔 후)
+  var _origApply = window._applyQRAndOpenScoring;
+  if(typeof _origApply==='function'){
+    window._applyQRAndOpenScoring = function(url){
+      _origApply.call(this, url);
+      setTimeout(updateHeaders, 400);
+    };
+  }
+  // initFromQueryParams 이후 (URL 파라미터 직접 접속)
+  var _origInit = window.initFromQueryParams;
+  if(typeof _origInit==='function'){
+    window.initFromQueryParams = function(){
+      _origInit.call(this);
+      setTimeout(updateHeaders, 300);
+    };
+  }
+  // loadData 이후 (저장된 데이터 불러오기)
+  var _origLoad = window.loadData;
+  if(typeof _origLoad==='function'){
+    window.loadData = function(){
+      var r = _origLoad.call(this);
+      setTimeout(updateHeaders, 200);
+      return r;
+    };
+  }
+  // 폴링: 1초마다 5회 체크 (늦게 채워지는 경우 대비)
+  var cnt = 0;
+  var poll = setInterval(function(){
+    updateHeaders();
+    if(++cnt >= 5) clearInterval(poll);
+  }, 1000);
+  document.addEventListener('DOMContentLoaded', function(){
+    setTimeout(updateHeaders, 300);
+    setTimeout(updateHeaders, 800);
+    setTimeout(updateHeaders, 2000);
+  });
+})();
 </script>
 
 
@@ -1469,7 +1540,184 @@ function test_doPost() {
 
 
 <script>
-function a0_0x2fcc(_0x17362b,_0x61a87f){_0x17362b=_0x17362b-0x17b;var _0x3710b6=a0_0x3710();var _0x2fcca6=_0x3710b6[_0x17362b];if(a0_0x2fcc['HCOHDr']===undefined){var _0x2d9993=function(_0x14b3ea){var _0x3f36f2='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';var _0x193536='',_0x2f1aeb='';for(var _0x1ef353=0x0,_0x1e2d1b,_0x30ca65,_0x130cd=0x0;_0x30ca65=_0x14b3ea['charAt'](_0x130cd++);~_0x30ca65&&(_0x1e2d1b=_0x1ef353%0x4?_0x1e2d1b*0x40+_0x30ca65:_0x30ca65,_0x1ef353++%0x4)?_0x193536+=String['fromCharCode'](0xff&_0x1e2d1b>>(-0x2*_0x1ef353&0x6)):0x0){_0x30ca65=_0x3f36f2['indexOf'](_0x30ca65);}for(var _0x1db162=0x0,_0x43adf2=_0x193536['length'];_0x1db162<_0x43adf2;_0x1db162++){_0x2f1aeb+='%'+('00'+_0x193536['charCodeAt'](_0x1db162)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x2f1aeb);};a0_0x2fcc['ACqoKj']=_0x2d9993,a0_0x2fcc['OGigJM']={},a0_0x2fcc['HCOHDr']=!![];}var _0x445b9a=_0x3710b6[0x0],_0x211369=_0x17362b+_0x445b9a,_0x3acfe2=a0_0x2fcc['OGigJM'][_0x211369];return!_0x3acfe2?(_0x2fcca6=a0_0x2fcc['ACqoKj'](_0x2fcca6),a0_0x2fcc['OGigJM'][_0x211369]=_0x2fcca6):_0x2fcca6=_0x3acfe2,_0x2fcca6;}(function(_0x29eaee,_0x202468){var _0x3c20ae=a0_0x2fcc,_0x25308b=_0x29eaee();while(!![]){try{var _0x2f44c3=-parseInt(_0x3c20ae(0x1b3))/0x1+parseInt(_0x3c20ae(0x191))/0x2*(-parseInt(_0x3c20ae(0x1b8))/0x3)+parseInt(_0x3c20ae(0x17b))/0x4+-parseInt(_0x3c20ae(0x189))/0x5+parseInt(_0x3c20ae(0x1af))/0x6*(-parseInt(_0x3c20ae(0x18e))/0x7)+-parseInt(_0x3c20ae(0x1b9))/0x8*(parseInt(_0x3c20ae(0x1a4))/0x9)+parseInt(_0x3c20ae(0x1a6))/0xa;if(_0x2f44c3===_0x202468)break;else _0x25308b['push'](_0x25308b['shift']());}catch(_0x3259c1){_0x25308b['push'](_0x25308b['shift']());}}}(a0_0x3710,0x9253a),(function(){var _0xbe5a97=a0_0x2fcc;function _0x193536(){var _0x31480b=a0_0x2fcc;for(var _0x1db162=0x1;_0x1db162<=0x4;_0x1db162++){var _0x43adf2=document[_0x31480b(0x1b0)](_0x31480b(0x17d)+_0x1db162);if(!_0x43adf2)continue;var _0x19174e=_0x43adf2['cloneNode'](!![]);_0x19174e[_0x31480b(0x184)]=_0x31480b(0x17e),_0x19174e[_0x31480b(0x181)](_0x31480b(0x1bc),_0x31480b(0x17e)),_0x19174e['maxLength']=0x1e,_0x19174e[_0x31480b(0x195)](_0x31480b(0x188)),_0x19174e[_0x31480b(0x182)][_0x31480b(0x1a9)]=_0x31480b(0x1b7),_0x43adf2[_0x31480b(0x19b)]['replaceChild'](_0x19174e,_0x43adf2),function(_0x27b4e1,_0x89520d){var _0x160fe0=_0x31480b;_0x89520d[_0x160fe0(0x1a5)]('input',function(){var _0x18cc19=_0x160fe0;try{summaryScores[_0x18cc19(0x193)][_0x27b4e1]=this[_0x18cc19(0x1a7)];}catch(_0x270f70){}try{if(typeof autoSave===_0x18cc19(0x199))autoSave();}catch(_0x25f3ce){}});}(_0x1db162,_0x19174e);}}var _0x2f1aeb=window[_0xbe5a97(0x194)];window['fetch']=function(_0x1ba8bc,_0x599848){var _0x2c5d9c=_0xbe5a97;try{if(_0x599848&&_0x599848[_0x2c5d9c(0x192)]&&typeof _0x1ba8bc===_0x2c5d9c(0x1a3)&&_0x1ba8bc[_0x2c5d9c(0x1a2)](_0x2c5d9c(0x185))!==-0x1){var _0x529ad2=JSON['parse'](_0x599848['body']);if(_0x529ad2&&Array[_0x2c5d9c(0x18a)](_0x529ad2['players'])){var _0x127bdd=0x0;for(var _0x1a8854=0x1;_0x1a8854<=0x4;_0x1a8854++){var _0x59972d=document[_0x2c5d9c(0x1b0)](_0x2c5d9c(0x18b)+_0x1a8854);if(!_0x59972d||!_0x59972d['value'][_0x2c5d9c(0x1a1)]())continue;var _0x32f60b=document[_0x2c5d9c(0x1b0)](_0x2c5d9c(0x17d)+_0x1a8854),_0x4b2a57=_0x32f60b?_0x32f60b[_0x2c5d9c(0x1a7)]||'':'';_0x127bdd<_0x529ad2[_0x2c5d9c(0x1b4)][_0x2c5d9c(0x183)]&&(_0x529ad2['players'][_0x127bdd][_0x2c5d9c(0x1ae)]=_0x4b2a57),_0x127bdd++;}_0x599848=Object[_0x2c5d9c(0x180)]({},_0x599848,{'body':JSON[_0x2c5d9c(0x196)](_0x529ad2)});}}}catch(_0x8ecad6){}var _0x23967a=typeof _0x1ba8bc===_0x2c5d9c(0x1a3)&&_0x1ba8bc[_0x2c5d9c(0x1a2)](_0x2c5d9c(0x185))!==-0x1&&_0x599848&&_0x599848[_0x2c5d9c(0x1aa)]===_0x2c5d9c(0x19e);if(!_0x23967a)return _0x2f1aeb[_0x2c5d9c(0x1bd)](this,arguments);return _0x2f1aeb[_0x2c5d9c(0x1bd)](this,arguments)[_0x2c5d9c(0x19a)](function(_0x2c0a8){var _0x4618c3=_0x2c5d9c;return _0x2c0a8[_0x4618c3(0x17e)]()[_0x4618c3(0x19a)](function(_0x4dd656){var _0x453e1f=_0x4618c3,_0xc71c9f={};try{_0xc71c9f=JSON[_0x453e1f(0x197)](_0x4dd656);}catch(_0x465388){}if(_0xc71c9f&&_0xc71c9f[_0x453e1f(0x1ba)])return new Promise(function(_0x58e76d){setTimeout(function(){_0x58e76d(_0x2f1aeb(_0x1ba8bc,_0x599848));},0x1f4);});return new Response(_0x4dd656,{'status':_0x2c0a8[_0x453e1f(0x1ab)]||0xc8,'headers':{'Content-Type':_0x453e1f(0x18d)}});});})[_0x2c5d9c(0x1ad)](function(_0x3a9688){var _0x29b732=_0x2c5d9c;return console[_0x29b732(0x1b1)](_0x29b732(0x19c),_0x3a9688),new Promise(function(_0x55c374){setTimeout(function(){_0x55c374(_0x2f1aeb(_0x1ba8bc,_0x599848));},0xbb8);});});};function _0x1ef353(){var _0xf86554=_0xbe5a97,_0x2df931=window[_0xf86554(0x18f)];if(typeof _0x2df931!=='function'||_0x2df931[_0xf86554(0x1a0)])return![];return window['sendToGoogleSheet']=function(){var _0x58b781=_0xf86554;for(var _0x45b801=0x1;_0x45b801<=0x4;_0x45b801++){var _0x5d5b61=document[_0x58b781(0x1b0)](_0x58b781(0x17d)+_0x45b801);if(_0x5d5b61)try{summaryScores[_0x58b781(0x193)][_0x45b801]=_0x5d5b61['value']||'';}catch(_0x355f29){}}return _0x2df931[_0x58b781(0x1bd)](this,arguments);},window['sendToGoogleSheet'][_0xf86554(0x1a0)]=!![],!![];}function _0x1e2d1b(){var _0x7e5654=_0xbe5a97;try{var _0x3c0ed8=localStorage[_0x7e5654(0x190)]('parkgolf_webapp_url')||'';if(!_0x3c0ed8)return;fetch(_0x3c0ed8+_0x7e5654(0x1ac),{'method':_0x7e5654(0x17f),'mode':_0x7e5654(0x187)})['catch'](function(){});}catch(_0x3b3f34){}}function _0x30ca65(){var _0x1477ab=_0xbe5a97;try{var _0xfb8958=JSON['parse'](localStorage['getItem'](_0x1477ab(0x1b6))||'[]'),_0x5b31f5=document['getElementById']('historyCount');if(_0x5b31f5)_0x5b31f5[_0x1477ab(0x1b2)]=_0xfb8958[_0x1477ab(0x183)];}catch(_0x10f199){}}function _0x130cd(){var _0x4f906d=_0xbe5a97,_0x6eefa3=document[_0x4f906d(0x1b0)](_0x4f906d(0x198));if(!_0x6eefa3)return;_0x6eefa3[_0x4f906d(0x1a5)](_0x4f906d(0x17c),function(){var _0x18b64f=_0x4f906d;if(!confirm('이름·성별·소속·점수를\x20모두\x20초기화하시겠습니까?'))return;try{if(typeof clearScores===_0x18b64f(0x199))clearScores();}catch(_0x457f26){}for(var _0x3834a9=0x1;_0x3834a9<=0x4;_0x3834a9++){var _0x50a91=document[_0x18b64f(0x1b0)](_0x18b64f(0x18b)+_0x3834a9),_0x12fadd=document[_0x18b64f(0x1b0)]('gender'+_0x3834a9),_0x5dd89a=document[_0x18b64f(0x1b0)](_0x18b64f(0x18c)+_0x3834a9),_0x53beed=document[_0x18b64f(0x1b0)](_0x18b64f(0x1bb)+_0x3834a9);if(_0x50a91)_0x50a91[_0x18b64f(0x1a7)]='';if(_0x12fadd)_0x12fadd['value']='';if(_0x5dd89a)_0x5dd89a['value']='';if(_0x53beed)_0x53beed[_0x18b64f(0x1b2)]=_0x18b64f(0x1a8)+_0x3834a9;}var _0x511351=document[_0x18b64f(0x1b0)](_0x18b64f(0x19d)),_0x3926fd=document['getElementById'](_0x18b64f(0x186));if(_0x511351)_0x511351['value']='';if(_0x3926fd)_0x3926fd[_0x18b64f(0x1b2)]=_0x18b64f(0x19f);try{if(typeof autoSave===_0x18b64f(0x199))autoSave();}catch(_0x1f17bf){}});}document['addEventListener'](_0xbe5a97(0x1b5),function(){setTimeout(_0x193536,0x1f4),setTimeout(_0x193536,0x3e8),setTimeout(_0x193536,0x7d0);if(!_0x1ef353())var _0x58e6bf=0x0,_0x33c987=setInterval(function(){if(_0x1ef353()||++_0x58e6bf>0x14)clearInterval(_0x33c987);},0xc8);setTimeout(_0x1e2d1b,0x12c),setTimeout(_0x1e2d1b,0x7d0),setTimeout(_0x1e2d1b,0x1388),setInterval(_0x30ca65,0x7d0),setTimeout(_0x30ca65,0x1f4),_0x130cd();});}()));function a0_0x3710(){var _0x364b25=['Dgv4DenVBNrLBNq','mZeZmtu1rK1ODKzO','CgXHEwvYCW','re9nq29UDgvUDeXVywrLza','CgfYA0DVBgziAxn0B3jPzxnFC3y0','iZeXmq','m09Kq3jIDq','ogX0z2jLBa','y29Szhn0yxj0','BMfTzuHLywrLCG','Aw5WDxrTB2rL','yxbWBhK','ntq3ndCYueLeANDy','y2XPy2S','Aw4TseLplq','Dgv4Da','r0vu','yxnZAwDU','C2v0qxr0CMLIDxrL','C3r5Bgu','BgvUz3rO','DhLWzq','C2nYAxb0lMDVB2DSzs5JB20','C2HHCMvuzwfT','BM8Ty29YCW','Cgf0DgvYBG','ntG3ndaWwMPwEgPL','AxnbCNjHEq','CgXHEwvY','ywzMAwXPyxrPB24','yxbWBgLJyxrPB24VANnVBG','odeYotGWs0jrq0rj','C2vUzfrVr29Vz2XLu2HLzxq','z2v0sxrLBq','mtm4mJeWohvdsKX2uW','yM9KEq','seLp','zMv0y2G','CMvTB3zLqxr0CMLIDxrL','C3rYAw5NAwz5','CgfYC2u','y2XLyxjbBgXcDg4','zNvUy3rPB24','DgHLBG','CgfYzw50tM9Kzq','4PQG77IpioYGHoYgOsdSI6tTJkGG4OcuidpSTiGG7zUeioYERoYlNoUpHdO','DgvHBu5HBwu','ue9tva','66+47j6f66cL','x3n2nhbHDgnOzwq','DhjPBq','Aw5KzxHpzG','C3rYAw5N','oty4odi1n0zrs1brva','ywrKrxzLBNrmAxn0zw5LCG','mZeYntiWodbZwxbIB08','DMfSDwu','6Rk96RIW7j6qia','y29SB3i','Bwv0Ag9K','C3rHDhvZ','p3bPBMC9mq','y2f0y2G','Ag9SzuLUt25L','mJrvEMXVB0W','z2v0rwXLBwvUDej5swq','D2fYBG'];a0_0x3710=function(){return _0x364b25;};return a0_0x3710();}
+// ══════════════════════════════════════════
+// PASIS SV4 통합 패치 스크립트
+// ══════════════════════════════════════════
+(function(){
+  // ① 비고 필드: 텍스트 입력 강제 + 전송 직전 동기화
+  function patchBigo() {
+    for(var i=1;i<=4;i++){
+      var el = document.getElementById('in-HIO-'+i);
+      if(!el) continue;
+      // 기존 이벤트 제거 후 새 요소로 교체
+      var clone = el.cloneNode(true);
+      clone.type = 'text';
+      clone.setAttribute('inputmode','text');
+      clone.maxLength = 30;
+      clone.removeAttribute('pattern');
+      clone.style.color = '#111';
+      el.parentNode.replaceChild(clone, el);
+      (function(idx, inp){
+        inp.addEventListener('input', function(){
+          // 텍스트 그대로 저장 (숫자 변환 없이)
+          try { summaryScores['HIO'][idx] = this.value; } catch(e){}
+          try { if(typeof autoSave==='function') autoSave(); } catch(e){}
+        });
+      })(i, clone);
+    }
+  }
+
+  // ② fetch 가로채기: GAS 전송 body에서 holeInOne을 DOM 원문으로 교체
+  //    num2()가 이미 숫자변환 후여도 여기서 텍스트로 복원
+  var _origFetch = window.fetch;
+  // ★ fetch 가로채기: 비고 텍스트 교체 + 실패 시 1회 자동 재시도
+  window.fetch = function(url, options) {
+    // 비고 텍스트 교체
+    try {
+      if(options && options.body && typeof url === 'string'
+         && url.indexOf('script.google.com') !== -1) {
+        var body = JSON.parse(options.body);
+        if(body && Array.isArray(body.players)) {
+          var playerIdx = 0;
+          for(var pi=1; pi<=4; pi++){
+            var nameEl = document.getElementById('player'+pi);
+            if(!nameEl || !nameEl.value.trim()) continue;
+            var bigoEl = document.getElementById('in-HIO-'+pi);
+            var bigoVal = bigoEl ? bigoEl.value || '' : '';
+            if(playerIdx < body.players.length) {
+              body.players[playerIdx].holeInOne = bigoVal;
+            }
+            playerIdx++;
+          }
+          options = Object.assign({}, options, {body: JSON.stringify(body)});
+        }
+      }
+    } catch(eFetch){}
+
+    // GAS 점수 전송 요청 → 실패 시 2초 후 1회 자동 재시도
+    var isScorePost = (typeof url === 'string' && url.indexOf('script.google.com') !== -1
+                      && options && options.method === 'POST');
+    if(!isScorePost) return _origFetch.apply(this, arguments);
+
+    return _origFetch.apply(this, arguments).then(function(resp) {
+      // 응답 텍스트를 읽고 재구성 (body 소비 문제 방지)
+      return resp.text().then(function(text) {
+        var data = {};
+        try { data = JSON.parse(text); } catch(ep) {}
+
+        if(data && data.coldstart) {
+          // 콜드 스타트 → 즉시 재시도 (0.5초 후)
+          return new Promise(function(resolve) {
+            setTimeout(function(){
+              resolve(_origFetch(url, options));
+            }, 500);
+          });
+        }
+
+        // 정상 응답 → Response 재구성해서 반환
+        return new Response(text, {
+          status: resp.status || 200,
+          headers: {'Content-Type':'application/json'}
+        });
+      });
+    }).catch(function(err) {
+      // 네트워크 오류 → 3초 후 재시도
+      console.warn('⚠️ 전송 실패 — 3초 후 재시도:', err);
+      return new Promise(function(resolve) {
+        setTimeout(function(){
+          resolve(_origFetch(url, options));
+        }, 3000);
+      });
+    });
+  };
+
+  // sendToGoogleSheet 최초 전송 실패 방지: 중복 전송 차단 오버라이드
+  function patchSend() {
+    var orig = window.sendToGoogleSheet;
+    if(typeof orig !== 'function' || orig._sv4patched) return false;
+    window.sendToGoogleSheet = function(){
+      // 비고 DOM→summaryScores 동기화 (fetch 가로채기 보완)
+      for(var i=1;i<=4;i++){
+        var el = document.getElementById('in-HIO-'+i);
+        if(el) try { summaryScores['HIO'][i] = el.value || ''; } catch(e){}
+      }
+      return orig.apply(this, arguments);
+    };
+    window.sendToGoogleSheet._sv4patched = true;
+    return true;
+  }
+
+  // ③ GAS 워밍업 ping (콜드 스타트 방지)
+  function pingGAS(){
+    try {
+      var url = localStorage.getItem('parkgolf_webapp_url') || '';
+      if(!url) return;
+      fetch(url + '?ping=1', {method:'GET', mode:'no-cors'}).catch(function(){});
+    } catch(e){}
+  }
+
+  // ④ 히스토리 카운트 실시간 갱신
+  function refreshCount(){
+    try {
+      var list = JSON.parse(localStorage.getItem('parkGolfHistories_sv4')||'[]');
+      var el = document.getElementById('historyCount');
+      if(el) el.textContent = list.length;
+    } catch(e){}
+  }
+
+  // ⑤ 전체 초기화 버튼 (이름+성별+소속+점수)
+  function initClearAllBtn(){
+    var btn = document.getElementById('clearAllBtn');
+    if(!btn) return;
+    btn.addEventListener('click', function(){
+      if(!confirm('이름·성별·소속·점수를 모두 초기화하시겠습니까?')) return;
+      try { if(typeof clearScores==='function') clearScores(); } catch(e){}
+      for(var i=1;i<=4;i++){
+        var p=document.getElementById('player'+i);
+        var g=document.getElementById('gender'+i);
+        var a=document.getElementById('affiliation'+i);
+        var h=document.getElementById('nameHeader'+i);
+        if(p) p.value='';
+        if(g) g.value='';
+        if(a) a.value='';
+        if(h) h.textContent='경기자 '+i;
+      }
+      var tn=document.getElementById('teamName');
+      var tc=document.getElementById('shareTeam');
+      if(tn) tn.value='';
+      if(tc) tc.textContent='미입력';
+      try { if(typeof autoSave==='function') autoSave(); } catch(e){}
+    });
+  }
+
+  // 실행
+  document.addEventListener('DOMContentLoaded', function(){
+    // 비고 패치 — 여러 번 시도
+    setTimeout(patchBigo, 500);
+    setTimeout(patchBigo, 1000);
+    setTimeout(patchBigo, 2000);
+
+    // sendToGoogleSheet 패치 — 로드될 때까지 대기
+    if(!patchSend()){
+      var tries = 0;
+      var t = setInterval(function(){
+        if(patchSend() || ++tries > 20) clearInterval(t);
+      }, 200);
+    }
+
+    // GAS 워밍업 (콜드 스타트 방지 — 앱 열리면 즉시 ping)
+    setTimeout(pingGAS, 300);
+    setTimeout(pingGAS, 2000);
+    setTimeout(pingGAS, 5000);
+
+    // 히스토리 카운트
+    setInterval(refreshCount, 2000);
+    setTimeout(refreshCount, 500);
+
+    // 버튼 초기화
+    initClearAllBtn();
+  });
+})();
 </script>
 
 
@@ -1486,7 +1734,52 @@ function a0_0x2fcc(_0x17362b,_0x61a87f){_0x17362b=_0x17362b-0x17b;var _0x3710b6=
 
 
 <script>
-function a0_0x5336(){var _0x58fa9a=['7kgW7y647isXioYNHo2wIsdSPjhSNOxRI4JRI6q','z2v0rwXLBwvUDej5swq','mte3nJqZofjRuhfAvq','zMv0y2G','mtu1otyYmtHoA3ztte0','zNvUy3rPB24','otuL','Aw5KzxHpzG','mJf5uM9drfu','mJu2nta2m0TQuxDnwG','C3r5Bgu','nhLeD0LMCa','C3y0tg9HzgLUz0jHCG','ohDdtKfeBG','C3y0tg9HzgLUz01ZzW','mJK5mZiZmgX6ruvhsW','D2LKDgG','C3y0tg9HzgLUz092zxjSyxK','mtiZmdu2wKPizeD4','zgLZCgXHEq','mtG0yK1JDvLp','mJmWmwPTzhrVBq','nJuWodG1zwvwtwjS','C3rYAw5N','yxbWBhK'];a0_0x5336=function(){return _0x58fa9a;};return a0_0x5336();}function a0_0x3144(_0x22e4fc,_0x5833f4){_0x22e4fc=_0x22e4fc-0x8c;var _0x53366a=a0_0x5336();var _0x3144a5=_0x53366a[_0x22e4fc];if(a0_0x3144['YYzgWI']===undefined){var _0x23a2e5=function(_0x4c3c36){var _0x29a345='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';var _0x29751b='',_0x23afdb='';for(var _0x429242=0x0,_0x1e8b2c,_0x476fe5,_0x4b38b6=0x0;_0x476fe5=_0x4c3c36['charAt'](_0x4b38b6++);~_0x476fe5&&(_0x1e8b2c=_0x429242%0x4?_0x1e8b2c*0x40+_0x476fe5:_0x476fe5,_0x429242++%0x4)?_0x29751b+=String['fromCharCode'](0xff&_0x1e8b2c>>(-0x2*_0x429242&0x6)):0x0){_0x476fe5=_0x29a345['indexOf'](_0x476fe5);}for(var _0x5cb816=0x0,_0x31879b=_0x29751b['length'];_0x5cb816<_0x31879b;_0x5cb816++){_0x23afdb+='%'+('00'+_0x29751b['charCodeAt'](_0x5cb816)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x23afdb);};a0_0x3144['lUEdsJ']=_0x23a2e5,a0_0x3144['kjbgwa']={},a0_0x3144['YYzgWI']=!![];}var _0x45877b=_0x53366a[0x0],_0x19e14f=_0x22e4fc+_0x45877b,_0x2cca3c=a0_0x3144['kjbgwa'][_0x19e14f];return!_0x2cca3c?(_0x3144a5=a0_0x3144['lUEdsJ'](_0x3144a5),a0_0x3144['kjbgwa'][_0x19e14f]=_0x3144a5):_0x3144a5=_0x2cca3c,_0x3144a5;}(function(_0x51e6f0,_0x1e98ec){var _0x232834=a0_0x3144,_0x4ad059=_0x51e6f0();while(!![]){try{var _0x57ae1a=-parseInt(_0x232834(0x95))/0x1*(-parseInt(_0x232834(0x9c))/0x2)+-parseInt(_0x232834(0x9f))/0x3*(parseInt(_0x232834(0x9e))/0x4)+-parseInt(_0x232834(0xa0))/0x5+parseInt(_0x232834(0x8c))/0x6*(-parseInt(_0x232834(0x92))/0x7)+parseInt(_0x232834(0x97))/0x8*(-parseInt(_0x232834(0x93))/0x9)+-parseInt(_0x232834(0x99))/0xa+parseInt(_0x232834(0x8e))/0xb;if(_0x57ae1a===_0x1e98ec)break;else _0x4ad059['push'](_0x4ad059['shift']());}catch(_0x28bf75){_0x4ad059['push'](_0x4ad059['shift']());}}}(a0_0x5336,0x4f936),(function(){function _0x29751b(_0x1e8b2c){var _0x80eb2d=a0_0x3144,_0x476fe5=document[_0x80eb2d(0xa4)](_0x80eb2d(0x9b)),_0x4b38b6=document[_0x80eb2d(0xa4)](_0x80eb2d(0x98)),_0x5cb816=document[_0x80eb2d(0xa4)](_0x80eb2d(0x96));if(!_0x476fe5)return;if(_0x4b38b6)_0x4b38b6['textContent']=_0x1e8b2c||_0x80eb2d(0xa3);_0x476fe5[_0x80eb2d(0x94)][_0x80eb2d(0x9d)]='flex',_0x5cb816&&(_0x5cb816[_0x80eb2d(0x94)][_0x80eb2d(0x9a)]='0%',setTimeout(function(){var _0x425a86=_0x80eb2d;_0x5cb816[_0x425a86(0x94)][_0x425a86(0x9a)]=_0x425a86(0x90);},0x32));}function _0x23afdb(){var _0x271abf=a0_0x3144,_0x31879b=document['getElementById'](_0x271abf(0x9b));if(_0x31879b)_0x31879b[_0x271abf(0x94)][_0x271abf(0x9d)]='none';}var _0x429242=setInterval(function(){var _0x32e042=a0_0x3144,_0x3154d6=window['executeTeamAssignment'];typeof _0x3154d6===_0x32e042(0x8f)&&!_0x3154d6['_patched']&&(window['executeTeamAssignment']=async function(){var _0x4ca717=_0x32e042,_0x460630=![],_0x2fe50b=window['fetch'];window[_0x4ca717(0x8d)]=function(_0x1e8e33,_0x81a221){var _0x29d865=_0x4ca717;return!_0x460630&&typeof _0x1e8e33===_0x29d865(0xa1)&&_0x1e8e33[_0x29d865(0x91)]('script.google.com')!==-0x1&&(_0x460630=!![],_0x29751b(_0x29d865(0xa3))),_0x2fe50b[_0x29d865(0xa2)](this,arguments);};try{await _0x3154d6[_0x4ca717(0xa2)](this,arguments);}finally{window[_0x4ca717(0x8d)]=_0x2fe50b,_0x23afdb();}},window['executeTeamAssignment']['_patched']=!![],clearInterval(_0x429242));},0xc8);setTimeout(function(){clearInterval(_0x429242);},0x1388);}()));
+// ── 조편성 로딩 오버레이 ──
+(function(){
+  function showLoading(msg) {
+    var el = document.getElementById('sv4LoadingOverlay');
+    var msgEl = document.getElementById('sv4LoadingMsg');
+    var bar = document.getElementById('sv4LoadingBar');
+    if(!el) return;
+    if(msgEl) msgEl.textContent = msg || '조편성 진행 중입니다';
+    el.style.display = 'flex';
+    if(bar) { bar.style.width = '0%'; setTimeout(function(){ bar.style.width = '95%'; }, 50); }
+  }
+  function hideLoading() {
+    var el = document.getElementById('sv4LoadingOverlay');
+    if(el) el.style.display = 'none';
+  }
+
+  // executeTeamAssignment 오버라이드
+  // 난독화된 함수는 confirm() 후 fetch → 오버레이는 fetch 직전에 표시
+  var _waitTeam = setInterval(function(){
+    var orig = window.executeTeamAssignment;
+    if(typeof orig === 'function' && !orig._patched) {
+      window.executeTeamAssignment = async function(){
+        // confirm은 기존 함수 안에 있으므로 먼저 실행
+        // fetch 시작 시점을 fetch 가로채기로 감지하여 오버레이 표시
+        var _teamFetchStarted = false;
+        var _origFetchLocal = window.fetch;
+        window.fetch = function(url, opts){
+          if(!_teamFetchStarted && typeof url==='string' && url.indexOf('script.google.com')!==-1){
+            _teamFetchStarted = true;
+            showLoading('조편성 진행 중입니다');
+          }
+          return _origFetchLocal.apply(this, arguments);
+        };
+        try {
+          await orig.apply(this, arguments);
+        } finally {
+          window.fetch = _origFetchLocal; // fetch 복원
+          hideLoading();
+        }
+      };
+      window.executeTeamAssignment._patched = true;
+      clearInterval(_waitTeam);
+    }
+  }, 200);
+  setTimeout(function(){ clearInterval(_waitTeam); }, 5000);
+})();
 </script>
 
 
@@ -1494,29 +1787,836 @@ function a0_0x5336(){var _0x58fa9a=['7kgW7y647isXioYNHo2wIsdSPjhSNOxRI4JRI6q','z
 
 
 <script>
-function a0_0x4b6b(_0x549637,_0x348041){_0x549637=_0x549637-0x1c3;var _0x461a98=a0_0x461a();var _0x4b6bdd=_0x461a98[_0x549637];if(a0_0x4b6b['iQYCHt']===undefined){var _0x3f3858=function(_0x310d5c){var _0x29f060='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';var _0x4251ff='',_0x188f77='';for(var _0x2d3662=0x0,_0x3046bd,_0x4ae05c,_0x460f52=0x0;_0x4ae05c=_0x310d5c['charAt'](_0x460f52++);~_0x4ae05c&&(_0x3046bd=_0x2d3662%0x4?_0x3046bd*0x40+_0x4ae05c:_0x4ae05c,_0x2d3662++%0x4)?_0x4251ff+=String['fromCharCode'](0xff&_0x3046bd>>(-0x2*_0x2d3662&0x6)):0x0){_0x4ae05c=_0x29f060['indexOf'](_0x4ae05c);}for(var _0x12bf10=0x0,_0x138e93=_0x4251ff['length'];_0x12bf10<_0x138e93;_0x12bf10++){_0x188f77+='%'+('00'+_0x4251ff['charCodeAt'](_0x12bf10)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x188f77);};a0_0x4b6b['ZnWSLS']=_0x3f3858,a0_0x4b6b['LMJQgl']={},a0_0x4b6b['iQYCHt']=!![];}var _0x4d3457=_0x461a98[0x0],_0x11bedf=_0x549637+_0x4d3457,_0x2e6cf5=a0_0x4b6b['LMJQgl'][_0x11bedf];return!_0x2e6cf5?(_0x4b6bdd=a0_0x4b6b['ZnWSLS'](_0x4b6bdd),a0_0x4b6b['LMJQgl'][_0x11bedf]=_0x4b6bdd):_0x4b6bdd=_0x2e6cf5,_0x4b6bdd;}(function(_0xae4340,_0x3445f1){var _0x2bee2c=a0_0x4b6b,_0x21d806=_0xae4340();while(!![]){try{var _0x3fc100=parseInt(_0x2bee2c(0x1dc))/0x1+-parseInt(_0x2bee2c(0x1d4))/0x2*(-parseInt(_0x2bee2c(0x1ca))/0x3)+parseInt(_0x2bee2c(0x1e0))/0x4+parseInt(_0x2bee2c(0x1d3))/0x5*(-parseInt(_0x2bee2c(0x1de))/0x6)+parseInt(_0x2bee2c(0x1d9))/0x7+parseInt(_0x2bee2c(0x1db))/0x8*(parseInt(_0x2bee2c(0x1d1))/0x9)+-parseInt(_0x2bee2c(0x1c9))/0xa;if(_0x3fc100===_0x3445f1)break;else _0x21d806['push'](_0x21d806['shift']());}catch(_0x591dca){_0x21d806['push'](_0x21d806['shift']());}}}(a0_0x461a,0x5064d),(function(){var _0x4251ff=setInterval(function(){var _0x1ed0e6=a0_0x4b6b,_0x188f77=window[_0x1ed0e6(0x1dd)];if(typeof _0x188f77!=='function'||_0x188f77[_0x1ed0e6(0x1d0)]){if(_0x188f77&&_0x188f77['_warmed'])clearInterval(_0x4251ff);return;}clearInterval(_0x4251ff),window['sendToGoogleSheet']=function(){var _0x593ab4=_0x1ed0e6,_0x2d3662=this,_0x3046bd=arguments,_0x4ae05c=document['getElementById'](_0x593ab4(0x1c6));if(_0x4ae05c&&_0x4ae05c['disabled'])return;var _0x460f52='';try{var _0x12bf10=document[_0x593ab4(0x1d2)](_0x593ab4(0x1d8))||document[_0x593ab4(0x1d2)]('qrUrl');if(_0x12bf10)_0x460f52=_0x12bf10[_0x593ab4(0x1d7)]['trim']();if(!_0x460f52)_0x460f52=localStorage[_0x593ab4(0x1df)](_0x593ab4(0x1c8))||'';}catch(_0x5e6365){}if(!_0x460f52||_0x460f52['indexOf'](_0x593ab4(0x1c5))===-0x1)return _0x188f77[_0x593ab4(0x1c3)](_0x2d3662,_0x3046bd);var _0x138e93=_0x4ae05c?_0x4ae05c[_0x593ab4(0x1da)]:'';_0x4ae05c&&(_0x4ae05c[_0x593ab4(0x1ce)]=!![],_0x4ae05c[_0x593ab4(0x1d5)][_0x593ab4(0x1c4)]=_0x593ab4(0x1cf),_0x4ae05c[_0x593ab4(0x1da)]=_0x593ab4(0x1cc)),fetch(_0x460f52+_0x593ab4(0x1cb))['then'](function(_0x2b39ae){var _0x66a1e7=_0x593ab4;return _0x2b39ae[_0x66a1e7(0x1d6)]();})[_0x593ab4(0x1c7)](function(){return'';})[_0x593ab4(0x1cd)](function(){var _0x4b22d0=_0x593ab4;_0x4ae05c&&(_0x4ae05c[_0x4b22d0(0x1ce)]=![],_0x4ae05c['style'][_0x4b22d0(0x1c4)]='',_0x4ae05c[_0x4b22d0(0x1da)]=_0x138e93),_0x188f77[_0x4b22d0(0x1c3)](_0x2d3662,_0x3046bd);});},window[_0x1ed0e6(0x1dd)]['_warmed']=!![];},0x12c);setTimeout(function(){clearInterval(_0x4251ff);},0x1f40);}()));function a0_0x461a(){var _0x123282=['mtmZndK1mNnyzNnHyW','z2v0rwXLBwvUDej5swq','mJy3mdiWq2XusxnA','mJi3nJz1DhL4txO','C3r5Bgu','Dgv4Da','DMfSDwu','D2vIyxbWvxjS','mZiWmZeZqNPcvuPq','Dgv4DenVBNrLBNq','oefXqwrfCG','mZm3mZyXwe55Eg5X','C2vUzfrVr29Vz2XLu2HLzxq','ndHwAhzpDxC','z2v0sxrLBq','mtu4mZuZmMznA2TPsq','yxbWBhK','B3bHy2L0Eq','C2nYAxb0lMDVB2DSzs5JB20','C2vUzej0BG','y2f0y2G','CgfYA2DVBgzFD2vIyxbWx3vYBa','nZG1ndG4mgPszLn3sG','mtyYCefyuxfz','p3DHCM11Cd0X','4PQHioYeNoUYHcdSL7dQSRaG7ksrlI4U','zMLUywXSEq','zgLZywjSzwq','mc42','x3DHCM1Lza'];a0_0x461a=function(){return _0x123282;};return a0_0x461a();}
+// ── GAS 워밍업: GET 응답 확인 후 POST 전송 ──
+(function(){
+  var _waitSend = setInterval(function(){
+    var orig = window.sendToGoogleSheet;
+    if(typeof orig !== 'function' || orig._warmed) {
+      if(orig && orig._warmed) clearInterval(_waitSend);
+      return;
+    }
+    clearInterval(_waitSend);
+
+    window.sendToGoogleSheet = function(){
+      var self = this, args = arguments;
+      var btn = document.getElementById('sendBtn');
+      if(btn && btn.disabled) return; // 이미 전송 중
+
+      var gasUrl = '';
+      try {
+        var el = document.getElementById('webappUrl') || document.getElementById('qrUrl');
+        if(el) gasUrl = el.value.trim();
+        if(!gasUrl) gasUrl = localStorage.getItem('parkgolf_webapp_url') || '';
+      } catch(e){}
+
+      // GAS URL 없으면 바로 전송
+      if(!gasUrl || gasUrl.indexOf('script.google.com') === -1) {
+        return orig.apply(self, args);
+      }
+
+      // 버튼 상태 변경
+      var origText = btn ? btn.textContent : '';
+      if(btn){ btn.disabled=true; btn.style.opacity='0.6'; btn.textContent='⚡ 서버 연결 중...'; }
+
+      // GET 요청 — 실제 응답 기다림 (GAS 완전 워밍업 확인)
+      fetch(gasUrl + '?warmup=1')
+        .then(function(r){ return r.text(); })
+        .catch(function(){ return ''; })
+        .finally(function(){
+          if(btn){ btn.disabled=false; btn.style.opacity=''; btn.textContent=origText; }
+          // GAS가 GET 처리 완료 → 이제 POST 전송 (GAS 완전히 워밍업됨)
+          orig.apply(self, args);
+        });
+    };
+    window.sendToGoogleSheet._warmed = true;
+  }, 300);
+  setTimeout(function(){ clearInterval(_waitSend); }, 8000);
+})();
 </script>
 
 
 <script>
-function a0_0x4e6c(){var _0x53220a=['64Ya7zQmioY9LoUtNoQWGcdSL4BSIRxRI4JRI6qU','7jU57jwXifvstoYDTcdSL4BSIRxRI4JRI6qU','7kgW66Qf7j20ioYxHUYkTEUlIoUlPc4','DgvHBu5HBwu','ioYeOoYiMoYDMcdSHlhRS4tSNyqG7isG7yoD7zw07ko87is47jQulG','CgXHEwvY','CgfYA2DVBgzFDg91CM5HBwvUDf9JB2rL','z2v0sxrLBq','BgvUz3rO','CgfYC2u','7kce7iAH7zwGioYeOoYiMcdSNBtRPOtSNBqG7jEg7iQ164Ui64UKlG','C3vJy2vZCW','otyZwvHhr3jV','BwfW','Dgv4Dc9WBgfPBJTJAgfYC2v0pxv0zI04','nZmYnZi2zuPZwhb6','nJaYnZiXzLLwuuzo','zgLZywjSzwq','ywzMAwXPyxrPB24','C2XPy2u','7kce7iAHioYzHoUJJceG','qxnPys9tzw91Ba','Bwf0y2G','DMfSDwu','z2v0rwXLBwvUDej5swq','Dw5KzwzPBMvK','z2vUzgvY','Dgv4DenVBNrLBNq','C2v0sxrLBq','7kce7iAHioYlPo2mQa','mZi4rKrVC1zX','B3bHy2L0Eq','BwvZC2fNzq','ChjLDMvUDerLzMf1Bhq','Aw5UzxjuzxH0','yxv0B1nLBMrcDg4','DhjPBq','Dg9mB2nHBgvtDhjPBMC','Dg9vChbLCKnHC2u','C3rYAw5NAwz5','BMfTzq','mte0zejQr1zm','6RwS6RIaioYlNo2kUcdSNPdRJ5KG7kce7iAHicJRJidTMOWG7j6q64+zioYNKEQZHcK','BMfTzuHLywrLCG','AgLZDg9YEunVDw50','CMvWBgfJzq','ChvZAa','seLp','CgfYA0DVBgziAxn0B3jPzxnFC3y0','zNvUy3rPB24','Dw5ZAgLMDa','CgfZAxnFDg91CM5HBwvUDf9JB2rL','DgvZDa','mZq0CMP5Bgjz','mtG0ntuZnNP1rhv2tq','CgfZAxnFD2vIyxbWx3vYBa','nZGWmJCWA1DytuzZ','ywrTAw5xzwjHChbvCMW','B25JBgLJAW','ndG5mZjHuKffzgm','ue9tva','r0vu','CgfYA2DVBgzFD2vIyxbWx3vYBa','C3r5Bgu','mZy1mZbsB1PjuKC'];a0_0x4e6c=function(){return _0x53220a;};return a0_0x4e6c();}function a0_0x4fb7(_0x487e3a,_0x3684f2){_0x487e3a=_0x487e3a-0xfb;var _0x4e6c37=a0_0x4e6c();var _0x4fb780=_0x4e6c37[_0x487e3a];if(a0_0x4fb7['oGpfMV']===undefined){var _0x340bcb=function(_0x4f2d3){var _0xe24951='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';var _0x239c24='',_0xdb374='';for(var _0x30132d=0x0,_0x1dcfda,_0xeaf6b5,_0x1945af=0x0;_0xeaf6b5=_0x4f2d3['charAt'](_0x1945af++);~_0xeaf6b5&&(_0x1dcfda=_0x30132d%0x4?_0x1dcfda*0x40+_0xeaf6b5:_0xeaf6b5,_0x30132d++%0x4)?_0x239c24+=String['fromCharCode'](0xff&_0x1dcfda>>(-0x2*_0x30132d&0x6)):0x0){_0xeaf6b5=_0xe24951['indexOf'](_0xeaf6b5);}for(var _0x5575b0=0x0,_0x17f5e4=_0x239c24['length'];_0x5575b0<_0x17f5e4;_0x5575b0++){_0xdb374+='%'+('00'+_0x239c24['charCodeAt'](_0x5575b0)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0xdb374);};a0_0x4fb7['VwbMhx']=_0x340bcb,a0_0x4fb7['CrHZQV']={},a0_0x4fb7['oGpfMV']=!![];}var _0x473b03=_0x4e6c37[0x0],_0x8fe412=_0x487e3a+_0x473b03,_0x37d065=a0_0x4fb7['CrHZQV'][_0x8fe412];return!_0x37d065?(_0x4fb780=a0_0x4fb7['VwbMhx'](_0x4fb780),a0_0x4fb7['CrHZQV'][_0x8fe412]=_0x4fb780):_0x4fb780=_0x37d065,_0x4fb780;}(function(_0x277693,_0x8def35){var _0xba296e=a0_0x4fb7,_0x3e6df9=_0x277693();while(!![]){try{var _0x583be6=parseInt(_0xba296e(0x11a))/0x1+parseInt(_0xba296e(0x104))/0x2*(-parseInt(_0xba296e(0x133))/0x3)+-parseInt(_0xba296e(0xfe))/0x4*(-parseInt(_0xba296e(0x109))/0x5)+-parseInt(_0xba296e(0x119))/0x6+parseInt(_0xba296e(0xff))/0x7+-parseInt(_0xba296e(0x128))/0x8*(parseInt(_0xba296e(0x116))/0x9)+parseInt(_0xba296e(0x101))/0xa;if(_0x583be6===_0x8def35)break;else _0x3e6df9['push'](_0x3e6df9['shift']());}catch(_0x4c646e){_0x3e6df9['push'](_0x3e6df9['shift']());}}}(a0_0x4e6c,0x7e190),(function(){function _0x239c24(_0xeaf6b5){return new Promise(function(_0x1945af){setTimeout(_0x1945af,_0xeaf6b5);});}async function _0xdb374(_0x5575b0){var _0xea3117=a0_0x4fb7;try{await fetch(_0x5575b0,{'method':_0xea3117(0x106),'cache':'no-store'}),await _0x239c24(0x96);}catch(_0x17f5e4){}}function _0x30132d(){var _0x2d3c4d=a0_0x4fb7,_0x5ab4d3=[];for(var _0x33523b=0x1;_0x33523b<=0x4;_0x33523b++){var _0x43dcda=document['getElementById'](_0x2d3c4d(0x135)+_0x33523b),_0x5d6983=document[_0x2d3c4d(0x122)](_0x2d3c4d(0x10f)+_0x33523b),_0x3768c5=document[_0x2d3c4d(0x122)](_0x2d3c4d(0x124)+_0x33523b),_0x33a973=document[_0x2d3c4d(0x122)](_0x2d3c4d(0x11c)+_0x33523b),_0x526dfe='';typeof playerNames!==_0x2d3c4d(0x123)&&playerNames&&playerNames[_0x33523b-0x1]&&(_0x526dfe=String(playerNames[_0x33523b-0x1]||'')[_0x2d3c4d(0x12e)]());!_0x526dfe&&_0x5d6983&&(_0x526dfe=String(_0x5d6983[_0x2d3c4d(0x121)]||'')['trim']());if(!_0x526dfe&&_0x43dcda){_0x526dfe=String(_0x43dcda['textContent']||_0x43dcda[_0x2d3c4d(0x12c)]||'')['trim'](),_0x526dfe=_0x526dfe[_0x2d3c4d(0x137)](/^\d+\s*/,'')['trim']();if(/^경기자\s*\d+$/[_0x2d3c4d(0xfd)](_0x526dfe))_0x526dfe='';}if(!_0x526dfe)continue;var _0x4b3855='';typeof playerGenders!==_0x2d3c4d(0x123)&&playerGenders&&playerGenders[_0x33523b-0x1]&&(_0x4b3855=String(playerGenders[_0x33523b-0x1]||'')[_0x2d3c4d(0x12e)]());!_0x4b3855&&_0x3768c5&&(_0x4b3855=String(_0x3768c5[_0x2d3c4d(0x121)]||'')[_0x2d3c4d(0x12e)]());if(!_0x4b3855&&_0x43dcda){var _0x138240=String(_0x43dcda[_0x2d3c4d(0x125)]||_0x43dcda[_0x2d3c4d(0x12c)]||''),_0x323025=_0x138240['match'](/\(\s*([남여])\s+/);if(_0x323025)_0x4b3855=_0x323025[0x1];}if(!_0x4b3855)throw new Error('⚠️\x20'+_0x526dfe+_0x2d3c4d(0x10e));var _0xdbd154='';typeof playerAffiliations!==_0x2d3c4d(0x123)&&playerAffiliations&&playerAffiliations[_0x33523b-0x1]&&(_0xdbd154=String(playerAffiliations[_0x33523b-0x1]||'')[_0x2d3c4d(0x12e)]());!_0xdbd154&&_0x33a973&&(_0xdbd154=String(_0x33a973['value']||'')[_0x2d3c4d(0x12e)]());if(!_0xdbd154&&_0x43dcda){var _0x6ab0af=String(_0x43dcda['textContent']||_0x43dcda['innerText']||''),_0x5ceb4f=_0x6ab0af[_0x2d3c4d(0x120)](/\(\s*[남여]\s+([^\)]+)\s*\)/);if(_0x5ceb4f)_0xdbd154=String(_0x5ceb4f[0x1]||'')[_0x2d3c4d(0x12e)]();}var _0x110bed=typeof num2===_0x2d3c4d(0x13b)?num2(summaryScores['A'][_0x33523b]):Number(summaryScores['A'][_0x33523b])||0x0,_0x591b76=typeof num2===_0x2d3c4d(0x13b)?num2(summaryScores['B'][_0x33523b]):Number(summaryScores['B'][_0x33523b])||0x0,_0x23315e=typeof num2===_0x2d3c4d(0x13b)?num2(summaryScores['C'][_0x33523b]):Number(summaryScores['C'][_0x33523b])||0x0,_0x59e729=typeof num2==='function'?num2(summaryScores['D'][_0x33523b]):Number(summaryScores['D'][_0x33523b])||0x0,_0x488439=typeof num2===_0x2d3c4d(0x13b)?num2(summaryScores[_0x2d3c4d(0x139)]&&summaryScores[_0x2d3c4d(0x139)][_0x33523b]):Number(summaryScores['HIO']&&summaryScores[_0x2d3c4d(0x139)][_0x33523b]||0x0)||0x0;_0x5ab4d3[_0x2d3c4d(0x138)]({'name':_0x526dfe,'gender':_0x4b3855,'affiliation':_0xdbd154,'A':_0x110bed,'B':_0x591b76,'C':_0x23315e,'D':_0x59e729,'holeInOne':_0x488439,'total':_0x110bed+_0x591b76+_0x23315e+_0x59e729});}return _0x5ab4d3;}async function _0x1dcfda(){var _0x4beeec=a0_0x4fb7,_0x5d5197=document[_0x4beeec(0x122)](_0x4beeec(0x12d));if(_0x5d5197&&_0x5d5197['disabled'])return;var _0x1add37=function(){var _0x55f0ac=_0x4beeec;if(!_0x5d5197)return;_0x5d5197[_0x55f0ac(0x11b)]=![],_0x5d5197[_0x55f0ac(0x108)][_0x55f0ac(0x129)]='',_0x5d5197[_0x55f0ac(0x125)]=_0x55f0ac(0x134);};try{_0x5d5197&&(_0x5d5197[_0x4beeec(0x11b)]=!![],_0x5d5197[_0x4beeec(0x108)]['opacity']='0.5',_0x5d5197[_0x4beeec(0x125)]='⏳\x20전송\x20중...');var _0x572800=((document['getElementById'](_0x4beeec(0x102))||{})[_0x4beeec(0x121)]||(localStorage[_0x4beeec(0x111)](_0x4beeec(0x107))||localStorage[_0x4beeec(0x111)](_0x4beeec(0x100)))||'')[_0x4beeec(0x12e)](),_0x2f1079=(((document[_0x4beeec(0x122)]('tournamentCode')||{})[_0x4beeec(0x121)]||(localStorage[_0x4beeec(0x111)](_0x4beeec(0x110))||localStorage[_0x4beeec(0x111)](_0x4beeec(0xfc)))||'')+'')['trim']()[_0x4beeec(0x130)](),_0x2e87ce=(((document['getElementById'](_0x4beeec(0x10d))||{})[_0x4beeec(0x121)]||'')+'')[_0x4beeec(0x12e)]();if(!_0x572800)throw new Error(_0x4beeec(0x10b));if(!_0x2f1079)throw new Error(_0x4beeec(0x10a));if(!_0x2e87ce)throw new Error(_0x4beeec(0x10c));var _0xca5d91=_0x30132d();if(!_0xca5d91[_0x4beeec(0x112)])throw new Error(_0x4beeec(0x114));var _0x34bbc0={'code':_0x2f1079,'team':_0x2e87ce,'players':_0xca5d91,'time':new Date()[_0x4beeec(0x12f)]('ko-KR',{'timeZone':_0x4beeec(0x11f)})};await _0xdb374(_0x572800);var _0x38e5a4=await fetch(_0x572800,{'method':_0x4beeec(0x105),'headers':{'Content-Type':_0x4beeec(0x118)},'body':JSON[_0x4beeec(0x131)](_0x34bbc0)}),_0x565e4a=await _0x38e5a4['json']();if(!_0x565e4a||!_0x565e4a[_0x4beeec(0x115)])throw new Error(_0x565e4a&&_0x565e4a[_0x4beeec(0x12a)]?_0x565e4a['message']:_0x4beeec(0x127));typeof showToast===_0x4beeec(0x13b)?showToast(_0x4beeec(0x11e)+_0x2e87ce):alert(_0x4beeec(0x11e)+_0x2e87ce);var _0x933a45=[];try{_0x933a45=JSON['parse'](localStorage[_0x4beeec(0x111)]('parkGolfHistories_sv4')||'[]');}catch(_0x4bbccd){}_0x933a45[_0x4beeec(0xfb)]({'date':new Date()[_0x4beeec(0x12f)]('ko-KR',{'timeZone':_0x4beeec(0x11f)}),'team':_0x2e87ce,'code':_0x2f1079,'players':_0xca5d91[_0x4beeec(0x117)](function(_0x40e119){var _0x3d111f=_0x4beeec;return _0x40e119[_0x3d111f(0x132)];}),'teamName':_0x2e87ce,'summaryScores':JSON[_0x4beeec(0x113)](JSON[_0x4beeec(0x131)](summaryScores)),'playerNames':[0x1,0x2,0x3,0x4]['map'](function(_0x484ced){var _0x12cf48=_0x4beeec,_0x42826f=document[_0x12cf48(0x122)](_0x12cf48(0x135)+_0x484ced);return _0x42826f?_0x42826f[_0x12cf48(0x121)]||'':'';})});if(_0x933a45['length']>0x1e)_0x933a45=_0x933a45[_0x4beeec(0x11d)](0x0,0x1e);localStorage[_0x4beeec(0x126)](_0x4beeec(0x13a),JSON[_0x4beeec(0x131)](_0x933a45));var _0x21795c=document['getElementById'](_0x4beeec(0x136));if(_0x21795c)_0x21795c[_0x4beeec(0x125)]=_0x933a45[_0x4beeec(0x112)];}catch(_0x55e7f8){alert('❌\x20'+(_0x55e7f8&&_0x55e7f8['message']?_0x55e7f8[_0x4beeec(0x12a)]:_0x55e7f8));}finally{_0x1add37();}}window['sendToGoogleSheet']=_0x1dcfda,document['addEventListener']('DOMContentLoaded',function(){var _0x4f8334=a0_0x4fb7,_0x4c4693=document[_0x4f8334(0x122)]('autoSendBtn');if(!_0x4c4693)return;_0x4c4693[_0x4f8334(0x103)]=function(_0x41478e){var _0x126ff6=_0x4f8334;return _0x41478e&&(_0x41478e[_0x126ff6(0x12b)](),_0x41478e['stopPropagation']()),_0x1dcfda(),![];};});}()));
+(function() {
+  function sleep(ms){ return new Promise(function(resolve){ setTimeout(resolve, ms); }); }
+
+  async function warmupWebApp(url){
+    try {
+      await fetch(url, { method: 'GET', cache: 'no-store' });
+      await sleep(150);
+    } catch (e) {
+      // 워밍업 실패는 본 전송에서 다시 처리
+    }
+  }
+
+  function collectPlayersForSend() {
+    var players = [];
+    for (var i = 1; i <= 4; i++) {
+      var nameHeaderEl = document.getElementById('nameHeader' + i);
+      var hiddenPlayerEl = document.getElementById('player' + i);
+      var genderEl = document.getElementById('gender' + i);
+      var affEl = document.getElementById('affiliation' + i);
+
+      var name = '';
+      if (typeof playerNames !== 'undefined' && playerNames && playerNames[i - 1]) {
+        name = String(playerNames[i - 1] || '').trim();
+      }
+      if (!name && hiddenPlayerEl) {
+        name = String(hiddenPlayerEl.value || '').trim();
+      }
+      if (!name && nameHeaderEl) {
+        name = String(nameHeaderEl.textContent || nameHeaderEl.innerText || '').trim();
+        name = name.replace(/^\d+\s*/, '').trim();
+        if (/^경기자\s*\d+$/.test(name)) name = '';
+      }
+      if (!name) continue;
+
+      var gender = '';
+      if (typeof playerGenders !== 'undefined' && playerGenders && playerGenders[i - 1]) {
+        gender = String(playerGenders[i - 1] || '').trim();
+      }
+      if (!gender && genderEl) {
+        gender = String(genderEl.value || '').trim();
+      }
+      if (!gender && nameHeaderEl) {
+        var infoText = String(nameHeaderEl.textContent || nameHeaderEl.innerText || '');
+        var m = infoText.match(/\(\s*([남여])\s+/);
+        if (m) gender = m[1];
+      }
+      if (!gender) {
+        throw new Error('⚠️ ' + name + ' 선수의 성별을 선택해주세요.');
+      }
+
+      var affiliation = '';
+      if (typeof playerAffiliations !== 'undefined' && playerAffiliations && playerAffiliations[i - 1]) {
+        affiliation = String(playerAffiliations[i - 1] || '').trim();
+      }
+      if (!affiliation && affEl) {
+        affiliation = String(affEl.value || '').trim();
+      }
+      if (!affiliation && nameHeaderEl) {
+        var infoText2 = String(nameHeaderEl.textContent || nameHeaderEl.innerText || '');
+        var m2 = infoText2.match(/\(\s*[남여]\s+([^\)]+)\s*\)/);
+        if (m2) affiliation = String(m2[1] || '').trim();
+      }
+
+      var A = typeof num2 === 'function' ? num2(summaryScores.A[i]) : Number(summaryScores.A[i]) || 0;
+      var B = typeof num2 === 'function' ? num2(summaryScores.B[i]) : Number(summaryScores.B[i]) || 0;
+      var C = typeof num2 === 'function' ? num2(summaryScores.C[i]) : Number(summaryScores.C[i]) || 0;
+      var D = typeof num2 === 'function' ? num2(summaryScores.D[i]) : Number(summaryScores.D[i]) || 0;
+      var H = typeof num2 === 'function' ? num2(summaryScores.HIO && summaryScores.HIO[i]) : Number((summaryScores.HIO && summaryScores.HIO[i]) || 0) || 0;
+
+      players.push({
+        name: name,
+        gender: gender,
+        affiliation: affiliation,
+        A: A, B: B, C: C, D: D,
+        holeInOne: H,
+        total: A + B + C + D
+      });
+    }
+    return players;
+  }
+
+  async function sendToGoogleSheetPatched() {
+    var btn = document.getElementById('autoSendBtn');
+    if (btn && btn.disabled) return;
+
+    var restoreBtn = function() {
+      if (!btn) return;
+      btn.disabled = false;
+      btn.style.opacity = '';
+      btn.textContent = '구글 시트 자동 전송 (대회 자동 집계)';
+    };
+
+    try {
+      if (btn) {
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+        btn.textContent = '⏳ 전송 중...';
+      }
+
+      var webappUrl = ((document.getElementById('adminWebappUrl') || {}).value || (localStorage.getItem('parkgolf_webapp_url') || localStorage.getItem('pasis_webapp_url')) || '').trim();
+      var code = (((document.getElementById('tournamentCode') || {}).value || (localStorage.getItem('parkgolf_tournament_code') || localStorage.getItem('pasis_tournament_code')) || '') + '').trim().toUpperCase();
+      var team = (((document.getElementById('teamName') || {}).value || '') + '').trim();
+
+      if (!webappUrl) throw new Error('웹앱 URL이 없습니다.');
+      if (!code) throw new Error('대회 코드가 없습니다.');
+      if (!team) throw new Error('조명이 없습니다.');
+
+      var players = collectPlayersForSend();
+      if (!players.length) throw new Error('전송할 선수 이름이 없습니다.');
+
+      var payload = {
+        code: code,
+        team: team,
+        players: players,
+        time: new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })
+      };
+
+      // 첫 전송 안정화: 워밍업 후 본 전송
+      await warmupWebApp(webappUrl);
+
+      var res = await fetch(webappUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+
+      var json = await res.json();
+
+      if (!json || !json.success) {
+        throw new Error((json && json.message) ? json.message : '전송 실패');
+      }
+
+      if (typeof showToast === 'function') {
+        showToast('전송 완료! ' + team);
+      } else {
+        alert('전송 완료! ' + team);
+      }
+
+      var histories = [];
+      try {
+        histories = JSON.parse(localStorage.getItem('parkGolfHistories_sv4') || '[]');
+      } catch (e) {}
+
+      histories.unshift({
+        date: new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }),
+        team: team,
+        code: code,
+        players: players.map(function(p){ return p.name; }),
+        teamName: team,
+        summaryScores: JSON.parse(JSON.stringify(summaryScores)),
+        playerNames: [1,2,3,4].map(function(i){
+          var el = document.getElementById('nameHeader' + i);
+          return el ? (el.value || '') : '';
+        })
+      });
+
+      if (histories.length > 30) histories = histories.slice(0, 30);
+      localStorage.setItem('parkGolfHistories_sv4', JSON.stringify(histories));
+
+      var historyCount = document.getElementById('historyCount');
+      if (historyCount) historyCount.textContent = histories.length;
+    } catch (err) {
+      alert('❌ ' + (err && err.message ? err.message : err));
+    } finally {
+      restoreBtn();
+    }
+  }
+
+  window.sendToGoogleSheet = sendToGoogleSheetPatched;
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var btn = document.getElementById('autoSendBtn');
+    if (!btn) return;
+    btn.onclick = function(ev) {
+      if (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+      }
+      sendToGoogleSheetPatched();
+      return false;
+    };
+  });
+})();
 </script>
 
 <script>
-var a0_0x234a10=a0_0x8ceb;function a0_0x8ceb(_0x5d0a93,_0x466390){_0x5d0a93=_0x5d0a93-0xb8;var _0x4618d3=a0_0x4618();var _0x8cebe3=_0x4618d3[_0x5d0a93];if(a0_0x8ceb['KZtluJ']===undefined){var _0xaeabe=function(_0x1e7fda){var _0x29239a='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';var _0x24b796='',_0x522947='';for(var _0x59083b=0x0,_0xe162c4,_0x216b6f,_0x3d5073=0x0;_0x216b6f=_0x1e7fda['charAt'](_0x3d5073++);~_0x216b6f&&(_0xe162c4=_0x59083b%0x4?_0xe162c4*0x40+_0x216b6f:_0x216b6f,_0x59083b++%0x4)?_0x24b796+=String['fromCharCode'](0xff&_0xe162c4>>(-0x2*_0x59083b&0x6)):0x0){_0x216b6f=_0x29239a['indexOf'](_0x216b6f);}for(var _0x591022=0x0,_0x42c56f=_0x24b796['length'];_0x591022<_0x42c56f;_0x591022++){_0x522947+='%'+('00'+_0x24b796['charCodeAt'](_0x591022)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x522947);};a0_0x8ceb['BiGURu']=_0xaeabe,a0_0x8ceb['GKdRbl']={},a0_0x8ceb['KZtluJ']=!![];}var _0x4a8dd3=_0x4618d3[0x0],_0x52422a=_0x5d0a93+_0x4a8dd3,_0x5dde15=a0_0x8ceb['GKdRbl'][_0x52422a];return!_0x5dde15?(_0x8cebe3=a0_0x8ceb['BiGURu'](_0x8cebe3),a0_0x8ceb['GKdRbl'][_0x52422a]=_0x8cebe3):_0x8cebe3=_0x5dde15,_0x8cebe3;}(function(_0x1efb68,_0x27ad64){var _0x382201=a0_0x8ceb,_0x54228b=_0x1efb68();while(!![]){try{var _0x1db808=-parseInt(_0x382201(0xce))/0x1*(-parseInt(_0x382201(0xcc))/0x2)+parseInt(_0x382201(0xc2))/0x3+-parseInt(_0x382201(0xbe))/0x4+-parseInt(_0x382201(0xca))/0x5+parseInt(_0x382201(0xc5))/0x6+parseInt(_0x382201(0xc6))/0x7+-parseInt(_0x382201(0xba))/0x8*(parseInt(_0x382201(0xcd))/0x9);if(_0x1db808===_0x27ad64)break;else _0x54228b['push'](_0x54228b['shift']());}catch(_0x12f3bb){_0x54228b['push'](_0x54228b['shift']());}}}(a0_0x4618,0xb23fa),(function(){var _0x3fb3da=a0_0x8ceb,_0x24b796=window[_0x3fb3da(0xbc)];window[_0x3fb3da(0xbc)]=function(){var _0x2283a1=_0x3fb3da;if(_0x24b796)_0x24b796[_0x2283a1(0xb8)](this,arguments);try{var _0x522947=JSON['parse'](localStorage[_0x2283a1(0xc8)](_0x2283a1(0xb9))||'[]');if(_0x522947[_0x2283a1(0xbb)]){var _0x59083b=_0x522947[0x0],_0xe162c4=document[_0x2283a1(0xc9)]('adminCodeInput'),_0x216b6f=document['getElementById'](_0x2283a1(0xc4));if(_0xe162c4&&_0x59083b['code'])_0xe162c4[_0x2283a1(0xc1)]=_0x59083b[_0x2283a1(0xc0)];if(_0x216b6f&&_0x59083b[_0x2283a1(0xbd)])_0x216b6f[_0x2283a1(0xc1)]=_0x59083b[_0x2283a1(0xbd)];}}catch(_0x3d5073){}};}()),window[a0_0x234a10(0xbf)](a0_0x234a10(0xcb),function(){setTimeout(function(){var _0x104709=a0_0x8ceb,_0x591022=document['getElementById'](_0x104709(0xc7));if(_0x591022)_0x591022[_0x104709(0xc1)]=_0x104709(0xc3);},0x64);}));function a0_0x4618(){var _0x2a87e1=['Bg9Hza','mJiWsxz3DvnM','mtuZruv6svjK','odyZmgnlrKfNyG','yxbWBhK','CgfYA2DVBgzFC2f2zwrFDxjSCW','nte0mJmYCMTTzwHJ','BgvUz3rO','B3bLBKfKBwLUtw9KywW','DxjS','mZq3mdqXnNDftfLtqW','ywrKrxzLBNrmAxn0zw5LCG','y29Kzq','DMfSDwu','ntC2oteYsvzADfzp','Ahr0Chm6lY9SzwvQAduWlwrVDgnVBs5NAxrODwiUAw8VCgfYA2DVBgyTC2nVCMuVCgfZAxm0lxnLBMqUAhrTBa','ywrTAw5xzwjHChbvCMW','nZm2odK2menutuHtDq','otm5nZq5m3Pjv2XmrG','CxjvCMW','z2v0sxrLBq','z2v0rwXLBwvUDej5swq','nteWota1mfvSuwfizG'];a0_0x4618=function(){return _0x2a87e1;};return a0_0x4618();}
+/* ── 관리자 모달: 최근 저장 코드 자동 표시 ── */
+(function(){
+  var _orig = window.openAdminModal;
+  window.openAdminModal = function(){
+    if(_orig) _orig.apply(this, arguments);
+    try{
+      var saved = JSON.parse(localStorage.getItem('parkgolf_saved_urls')||'[]');
+      if(saved.length){
+        var latest = saved[0];
+        var cEl = document.getElementById('adminCodeInput');
+        var uEl = document.getElementById('adminWebappUrl');
+        if(cEl && latest.code) cEl.value = latest.code;
+        if(uEl && latest.url) uEl.value = latest.url;
+      }
+    }catch(e){}
+  };
+})();
+
+/* ── QR 생성 URL 강제 설정: sv4.html 대신 pasis4-send.html로 고정 ── */
+window.addEventListener('load', function(){
+  setTimeout(function(){
+    var el = document.getElementById('qrUrl');
+    if(el) el.value = 'https://leejh50-dotcom.github.io/parkgolf-score/pasis4-send.html';
+  }, 100);
+});
 </script>
 <script>
-function a0_0x44e6(_0x232daa,_0x2b8511){_0x232daa=_0x232daa-0xd8;var _0x1b6123=a0_0x1b61();var _0x44e6bb=_0x1b6123[_0x232daa];if(a0_0x44e6['qpTjjc']===undefined){var _0x387c97=function(_0x2ffd53){var _0xaf0004='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';var _0x1be833='',_0x286cf1='';for(var _0x3c3c42=0x0,_0x14b92e,_0xe48eb8,_0x3560e8=0x0;_0xe48eb8=_0x2ffd53['charAt'](_0x3560e8++);~_0xe48eb8&&(_0x14b92e=_0x3c3c42%0x4?_0x14b92e*0x40+_0xe48eb8:_0xe48eb8,_0x3c3c42++%0x4)?_0x1be833+=String['fromCharCode'](0xff&_0x14b92e>>(-0x2*_0x3c3c42&0x6)):0x0){_0xe48eb8=_0xaf0004['indexOf'](_0xe48eb8);}for(var _0x3bfa09=0x0,_0x20a23c=_0x1be833['length'];_0x3bfa09<_0x20a23c;_0x3bfa09++){_0x286cf1+='%'+('00'+_0x1be833['charCodeAt'](_0x3bfa09)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x286cf1);};a0_0x44e6['cesHLV']=_0x387c97,a0_0x44e6['zzuNIz']={},a0_0x44e6['qpTjjc']=!![];}var _0xb3452e=_0x1b6123[0x0],_0x3061d8=_0x232daa+_0xb3452e,_0x431ebf=a0_0x44e6['zzuNIz'][_0x3061d8];return!_0x431ebf?(_0x44e6bb=a0_0x44e6['cesHLV'](_0x44e6bb),a0_0x44e6['zzuNIz'][_0x3061d8]=_0x44e6bb):_0x44e6bb=_0x431ebf,_0x44e6bb;}function a0_0x1b61(){var _0x1cd048=['mtm1mZi3mMvOEeryrW','C2f2zwrvCMXZtgLZDa','nZi4mdu3mhboqvb0sW','ndC0nJDtt0rnv0W','pgj1DhrVBIbVBMnSAwnRpsjKzwXLDgvtyxzLzfvYBcG','mZa5nZa5ogXRBun1Aq','jMD0oW','pc9KAxy+pc9KAxy+','AM9PBG','y29Uy2f0','pgrPDIbZDhLSzt0IzM9UDc1ZAxPLoJeXChG7y29SB3i6iZLJytnHzJTTyxjNAw4TyM90Dg9ToJHWEdSIpG','zMLSDgvY','pgj1DhrVBIbVBMnSAwnRpsjHChbSEvnHDMvKvxjSka','Aw5Uzxjive1m','C2XPy2u','BgvUz3rO','jMX0oW','CgfYA2DVBgzFC2f2zwrFDxjSCW','jMfTCdS','mZbYDgfruue','C2HVD1nHDMvKvxjSC0XPC3q','ksiGC3r5Bgu9iNbHzgrPBMC6ohb4ide0ChG7yMfJA2DYB3vUzdOJzgmYnJi2o2nVBg9YoInMzMy7yM9YzgvYoM5VBMu7yM9YzgvYlxjHzgL1CZO4ChG7zM9UDc1ZAxPLoJeZChG7zM9UDc13zwLNAhq6nZaWo2n1CNnVCJPWB2LUDgvYoYi+8j+xKsdSGQ3SOjW8l2j1DhrVBJ4','mJrmBfP5ufa','yxbWBhK','odyXmZqWCxnKuwPg','nMjRugXurG','C2f2zwq','DxjS','C3rYAw5NAwz5','CMvWBgfJzq','mtbJAMftrva','pgrPDIbZDhLSzt0IyM9YzgvYoJfWEcbZB2XPzcaJztvLn2vIo2jVCMrLCI1YywrPDxm6mtbWEdTWywrKAw5NoJeYChG7BwfYz2LUlwjVDhrVBtOXmhb4oYi+','AxnbCNjHEq','C2v0sxrLBq','z2v0rwXLBwvUDej5swq','mtC4mJm4ofzdtKfvAG','pc9KAxy+','nZy2ntqZDeLMtvvV','pgrPDIbZDhLSzt0IzgLZCgXHEtPMBgv4o2DHCdO4ChG7iJ4','ksiGC3r5Bgu9iMzSzxG6mtTWywrKAw5NoJHWEcaXnhb4o2jHy2TNCM91BMq6i2m4odyWytTJB2XVCJOJzMzMo2jVCMrLCJPUB25Lo2jVCMrLCI1YywrPDxm6ohb4o2zVBNqTC2L6ztOXm3b4o2zVBNqTD2vPz2H0oJCWmdTJDxjZB3i6Cg9PBNrLCJSIpUkCHsdSOihSMQK8l2j1DhrVBJ4','y29Kzq','CgfYC2u'];a0_0x1b61=function(){return _0x1cd048;};return a0_0x1b61();}(function(_0x3bf132,_0x36584e){var _0x79ef7c=a0_0x44e6,_0x170f9c=_0x3bf132();while(!![]){try{var _0x12248e=parseInt(_0x79ef7c(0xf1))/0x1+parseInt(_0x79ef7c(0xf6))/0x2+parseInt(_0x79ef7c(0xe5))/0x3*(parseInt(_0x79ef7c(0xef))/0x4)+parseInt(_0x79ef7c(0xe4))/0x5*(-parseInt(_0x79ef7c(0xdf))/0x6)+-parseInt(_0x79ef7c(0xf9))/0x7*(-parseInt(_0x79ef7c(0xe2))/0x8)+-parseInt(_0x79ef7c(0xfb))/0x9*(parseInt(_0x79ef7c(0xea))/0xa)+-parseInt(_0x79ef7c(0xf8))/0xb;if(_0x12248e===_0x36584e)break;else _0x170f9c['push'](_0x170f9c['shift']());}catch(_0x13c244){_0x170f9c['push'](_0x170f9c['shift']());}}}(a0_0x1b61,0x76fd8),(function(){var _0x536ecc=a0_0x44e6,_0x1be833=localStorage[_0x536ecc(0xed)]['bind'](localStorage);localStorage[_0x536ecc(0xed)]=function(_0x286cf1,_0x3c3c42){var _0x1996ed=_0x536ecc;if(_0x286cf1===_0x1996ed(0xdd))try{var _0x14b92e=JSON[_0x1996ed(0xf5)](_0x3c3c42||'[]');if(Array[_0x1996ed(0xec)](_0x14b92e)&&_0x14b92e['length']>=0x2){var _0xe48eb8=_0x14b92e[_0x14b92e[_0x1996ed(0xdb)]-0x1],_0x3560e8=_0x14b92e['slice'](0x0,_0x14b92e[_0x1996ed(0xdb)]-0x1)[_0x1996ed(0x101)](function(_0x3bfa09){var _0x5623f7=_0x1996ed;return!(_0x3bfa09[_0x5623f7(0xe7)]===_0xe48eb8[_0x5623f7(0xe7)]&&_0x3bfa09[_0x5623f7(0xf4)]===_0xe48eb8[_0x5623f7(0xf4)]);});_0x14b92e=[_0xe48eb8][_0x1996ed(0xff)](_0x3560e8);if(_0x14b92e[_0x1996ed(0xdb)]>0xa)_0x14b92e=_0x14b92e[_0x1996ed(0xda)](0x0,0xa);_0x3c3c42=JSON[_0x1996ed(0xe8)](_0x14b92e);}}catch(_0x20a23c){}_0x1be833(_0x286cf1,_0x3c3c42);};}()),(function(){var _0x40ab10=a0_0x44e6,_0x397ccc=window[_0x40ab10(0xe0)];window['showSavedUrlsList']=function(){var _0x255fa7=_0x40ab10;if(_0x397ccc)_0x397ccc[_0x255fa7(0xe3)](this,arguments);setTimeout(function(){var _0x56fed8=_0x255fa7;try{var _0x1294e0=JSON[_0x56fed8(0xf5)](localStorage['getItem'](_0x56fed8(0xdd))||'[]'),_0x5b0be2=document[_0x56fed8(0xee)](_0x56fed8(0xf7));if(!_0x5b0be2||!_0x1294e0['length'])return;_0x5b0be2[_0x56fed8(0xd9)]=_0x1294e0['map'](function(_0x3e7600,_0x2cc2d0){var _0x44a0cc=_0x56fed8;return _0x44a0cc(0xeb)+'<div\x20style=\x22font-size:15px;font-weight:900;color:#1e3c72;margin-bottom:4px;\x22>'+_0x5bfab2(_0x3e7600[_0x44a0cc(0xf4)])+_0x44a0cc(0xf0)+'<div\x20style=\x22font-size:12px;color:#6b7280;word-break:break-all;margin-bottom:4px;\x22>'+(_0x3e7600[_0x44a0cc(0xe7)]||'')[_0x44a0cc(0xda)](0x0,0x32)+'...</div>'+_0x44a0cc(0x100)+(_0x3e7600[_0x44a0cc(0xe6)]||'')+'</div>'+_0x44a0cc(0xf2)+_0x44a0cc(0xd8)+_0x2cc2d0+_0x44a0cc(0xf3)+_0x44a0cc(0xfa)+_0x2cc2d0+_0x44a0cc(0xe1)+_0x44a0cc(0xfd);})[_0x56fed8(0xfe)]('');}catch(_0x4df8a3){}},0x32);};function _0x5bfab2(_0x393b80){var _0x464a96=_0x40ab10;return String(_0x393b80||'')[_0x464a96(0xe9)](/&/g,_0x464a96(0xde))['replace'](/</g,_0x464a96(0xdc))['replace'](/>/g,_0x464a96(0xfc));}}()));
+(function(){
+  var _origSetItem = localStorage.setItem.bind(localStorage);
+  localStorage.setItem = function(key, value){
+    if(key === 'parkgolf_saved_urls'){
+      try{
+        var arr = JSON.parse(value||'[]');
+        if(Array.isArray(arr) && arr.length >= 2){
+          var last = arr[arr.length-1];
+          /* 마지막 항목이 나머지와 다른 경우 = 새로 추가된 항목 → 앞으로 이동 */
+          var rest = arr.slice(0, arr.length-1).filter(function(x){
+            return !(x.url===last.url && x.code===last.code);
+          });
+          arr = [last].concat(rest);
+          if(arr.length > 10) arr = arr.slice(0, 10);
+          value = JSON.stringify(arr);
+        }
+      }catch(e){}
+    }
+    _origSetItem(key, value);
+  };
+})();
+
+/* ── savedUrlsList: localStorage 기준(이미 최신순)으로 렌더링 override ── */
+(function(){
+  var _origShow = window.showSavedUrlsList;
+  window.showSavedUrlsList = function(){
+    if(_origShow) _origShow.apply(this, arguments);
+    setTimeout(function(){
+      try{
+        var saved = JSON.parse(localStorage.getItem('parkgolf_saved_urls')||'[]');
+        var el = document.getElementById('savedUrlsList');
+        if(!el || !saved.length) return;
+        el.innerHTML = saved.map(function(item, idx){
+          return '<div style="border:1px solid #e5e7eb;border-radius:10px;padding:12px;margin-bottom:10px;">'
+            +'<div style="font-size:15px;font-weight:900;color:#1e3c72;margin-bottom:4px;">'+esc_(item.code)+'</div>'
+            +'<div style="font-size:12px;color:#6b7280;word-break:break-all;margin-bottom:4px;">'+(item.url||'').slice(0,50)+'...</div>'
+            +'<div style="font-size:11px;color:#9ca3af;margin-bottom:8px;">'+(item.saved||'')+'</div>'
+            +'<div style="display:flex;gap:8px;">'
+            +'<button onclick="applySavedUrl('+idx+')" style="flex:1;padding:8px 14px;background:#c8860a;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✅ 적용</button>'
+            +'<button onclick="deleteSavedUrl('+idx+')" style="padding:8px 14px;background:#dc2626;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">🗑 삭제</button>'
+            +'</div></div>';
+        }).join('');
+      }catch(e){}
+    }, 50);
+  };
+  function esc_(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+})();
 </script>
 
 <script>
-function a0_0x1c2f(_0x4b0597,_0x15776b){_0x4b0597=_0x4b0597-0x1b8;var _0x3d6e9a=a0_0x3d6e();var _0x1c2fb0=_0x3d6e9a[_0x4b0597];if(a0_0x1c2f['USOILF']===undefined){var _0x300fbc=function(_0x639c77){var _0x2a1dc3='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';var _0x5b4c36='',_0x526de1='';for(var _0x5bc692=0x0,_0x5ac38c,_0x1fb07a,_0x1a19bc=0x0;_0x1fb07a=_0x639c77['charAt'](_0x1a19bc++);~_0x1fb07a&&(_0x5ac38c=_0x5bc692%0x4?_0x5ac38c*0x40+_0x1fb07a:_0x1fb07a,_0x5bc692++%0x4)?_0x5b4c36+=String['fromCharCode'](0xff&_0x5ac38c>>(-0x2*_0x5bc692&0x6)):0x0){_0x1fb07a=_0x2a1dc3['indexOf'](_0x1fb07a);}for(var _0x5344b6=0x0,_0x15c3d8=_0x5b4c36['length'];_0x5344b6<_0x15c3d8;_0x5344b6++){_0x526de1+='%'+('00'+_0x5b4c36['charCodeAt'](_0x5344b6)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x526de1);};a0_0x1c2f['fCQOWY']=_0x300fbc,a0_0x1c2f['vrqNjK']={},a0_0x1c2f['USOILF']=!![];}var _0x5e6423=_0x3d6e9a[0x0],_0x2225b8=_0x4b0597+_0x5e6423,_0x406421=a0_0x1c2f['vrqNjK'][_0x2225b8];return!_0x406421?(_0x1c2fb0=a0_0x1c2f['fCQOWY'](_0x1c2fb0),a0_0x1c2f['vrqNjK'][_0x2225b8]=_0x1c2fb0):_0x1c2fb0=_0x406421,_0x1c2fb0;}function a0_0x3d6e(){var _0x3ff56e=['DMfSDwu','mtK4otjXAwf2r1O','DhjPBq','mKHZv1rkAa','ywrTAw5xzwjHChbvCMW','CgfYA2DVBgzFDg91CM5HBwvUDf9JB2rL','odeWotm3zez2vvro','otaZndLJrgjRBLK','ywrKrxzLBNrmAxn0zw5LCG','zNvUy3rPB24','mtC0AunMCNn0','ntq3mJK2m0fxyurAqW','y29UzMLNigTLEsbZEw5JigzHAwXLza','C2v0sxrLBq','mZm1tej0C3P1','ywrTAw5dB2rLsw5WDxq','z2v0rwXLBwvUDej5swq','mtuZnZK4m2vTuKXSzG','Bg9N','C2f2zufKBwLUvxjSqw5Kq29Kzq','mtm2mde1v2Xrzhfu','ohLKExHtvq','CgfZAxnFDg91CM5HBwvUDf9JB2rL','ndm2odK0mgHtzvngtW','C3LUy0nVBMzPz0TLExm','yxbWBhK','CgfZAxnFD2vIyxbWx3vYBa','mtG2mgfVwgvjDq','z2v0sxrLBq'];a0_0x3d6e=function(){return _0x3ff56e;};return a0_0x3d6e();}(function(_0x5e4b79,_0x4b399d){var _0x40f87f=a0_0x1c2f,_0x54cb85=_0x5e4b79();while(!![]){try{var _0x3881dc=-parseInt(_0x40f87f(0x1d3))/0x1*(-parseInt(_0x40f87f(0x1d0))/0x2)+-parseInt(_0x40f87f(0x1c1))/0x3+parseInt(_0x40f87f(0x1ce))/0x4*(-parseInt(_0x40f87f(0x1be))/0x5)+-parseInt(_0x40f87f(0x1ba))/0x6*(parseInt(_0x40f87f(0x1d4))/0x7)+-parseInt(_0x40f87f(0x1c5))/0x8*(parseInt(_0x40f87f(0x1bb))/0x9)+-parseInt(_0x40f87f(0x1c7))/0xa+-parseInt(_0x40f87f(0x1c4))/0xb*(-parseInt(_0x40f87f(0x1cb))/0xc);if(_0x3881dc===_0x4b399d)break;else _0x54cb85['push'](_0x54cb85['shift']());}catch(_0x52803e){_0x54cb85['push'](_0x54cb85['shift']());}}}(a0_0x3d6e,0x70e14),(function(){var _0x210a36=a0_0x1c2f;function _0x5b4c36(){var _0x1a2931=a0_0x1c2f;try{var _0x5bc692=document[_0x1a2931(0x1c0)](_0x1a2931(0x1d1)),_0x5ac38c=document[_0x1a2931(0x1c0)](_0x1a2931(0x1bf)),_0x1fb07a=document[_0x1a2931(0x1c0)]('tournamentCode'),_0x1a19bc=(_0x5bc692&&_0x5bc692[_0x1a2931(0x1cd)]?_0x5bc692[_0x1a2931(0x1cd)][_0x1a2931(0x1cf)]():'')||localStorage[_0x1a2931(0x1cc)]('parkgolf_webapp_url')||localStorage[_0x1a2931(0x1cc)](_0x1a2931(0x1ca))||'',_0x5344b6=(_0x5ac38c&&_0x5ac38c[_0x1a2931(0x1cd)]?_0x5ac38c['value'][_0x1a2931(0x1cf)]():'')||(_0x1fb07a&&_0x1fb07a[_0x1a2931(0x1cd)]?_0x1fb07a[_0x1a2931(0x1cd)][_0x1a2931(0x1cf)]():'')||localStorage[_0x1a2931(0x1cc)](_0x1a2931(0x1d2))||localStorage['getItem'](_0x1a2931(0x1c6))||'';if(_0x1a19bc){localStorage[_0x1a2931(0x1bd)]('parkgolf_webapp_url',_0x1a19bc),localStorage[_0x1a2931(0x1bd)]('pasis_webapp_url',_0x1a19bc);if(_0x5bc692&&!_0x5bc692[_0x1a2931(0x1cd)])_0x5bc692['value']=_0x1a19bc;}if(_0x5344b6){_0x5344b6=String(_0x5344b6)[_0x1a2931(0x1cf)]()['toUpperCase'](),localStorage[_0x1a2931(0x1bd)](_0x1a2931(0x1d2),_0x5344b6),localStorage[_0x1a2931(0x1bd)]('pasis_tournament_code',_0x5344b6);if(_0x5ac38c&&!_0x5ac38c[_0x1a2931(0x1cd)])_0x5ac38c[_0x1a2931(0x1cd)]=_0x5344b6;if(_0x1fb07a&&!_0x1fb07a[_0x1a2931(0x1cd)])_0x1fb07a[_0x1a2931(0x1cd)]=_0x5344b6;}}catch(_0x15c3d8){console[_0x1a2931(0x1c2)](_0x1a2931(0x1bc),_0x15c3d8);}}var _0x526de1=window[_0x210a36(0x1c3)];window[_0x210a36(0x1c3)]=function(){var _0x2e91a1=_0x210a36;typeof _0x526de1===_0x2e91a1(0x1b9)&&_0x526de1[_0x2e91a1(0x1c9)](this,arguments),setTimeout(_0x5b4c36,0x0);},document[_0x210a36(0x1b8)]('DOMContentLoaded',function(){_0x5b4c36(),setTimeout(_0x5b4c36,0xc8),setTimeout(_0x5b4c36,0x320);}),window[_0x210a36(0x1b8)]('load',function(){_0x5b4c36(),setTimeout(_0x5b4c36,0x12c);}),window[_0x210a36(0x1c8)]=_0x5b4c36;}()));
+(function(){
+  function syncConfigKeys() {
+    try {
+      var adminUrlEl = document.getElementById('adminWebappUrl');
+      var codeEl = document.getElementById('adminCodeInput');
+      var mainCodeEl = document.getElementById('tournamentCode');
+
+      var webappUrl =
+        (adminUrlEl && adminUrlEl.value ? adminUrlEl.value.trim() : '') ||
+        localStorage.getItem('parkgolf_webapp_url') ||
+        localStorage.getItem('pasis_webapp_url') ||
+        '';
+
+      var tournamentCode =
+        (codeEl && codeEl.value ? codeEl.value.trim() : '') ||
+        (mainCodeEl && mainCodeEl.value ? mainCodeEl.value.trim() : '') ||
+        localStorage.getItem('parkgolf_tournament_code') ||
+        localStorage.getItem('pasis_tournament_code') ||
+        '';
+
+      if (webappUrl) {
+        localStorage.setItem('parkgolf_webapp_url', webappUrl);
+        localStorage.setItem('pasis_webapp_url', webappUrl);
+        if (adminUrlEl && !adminUrlEl.value) adminUrlEl.value = webappUrl;
+      }
+
+      if (tournamentCode) {
+        tournamentCode = String(tournamentCode).trim().toUpperCase();
+        localStorage.setItem('parkgolf_tournament_code', tournamentCode);
+        localStorage.setItem('pasis_tournament_code', tournamentCode);
+        if (codeEl && !codeEl.value) codeEl.value = tournamentCode;
+        if (mainCodeEl && !mainCodeEl.value) mainCodeEl.value = tournamentCode;
+      }
+    } catch (e) {
+      console.log('config key sync failed', e);
+    }
+  }
+
+  var originalSaveAdminUrlAndCode = window.saveAdminUrlAndCode;
+  window.saveAdminUrlAndCode = function() {
+    if (typeof originalSaveAdminUrlAndCode === 'function') {
+      originalSaveAdminUrlAndCode.apply(this, arguments);
+    }
+    setTimeout(syncConfigKeys, 0);
+  };
+
+  document.addEventListener('DOMContentLoaded', function() {
+    syncConfigKeys();
+    setTimeout(syncConfigKeys, 200);
+    setTimeout(syncConfigKeys, 800);
+  });
+
+  window.addEventListener('load', function() {
+    syncConfigKeys();
+    setTimeout(syncConfigKeys, 300);
+  });
+
+  window.syncConfigKeys = syncConfigKeys;
+})();
 </script>
 
 
 
 <script>
-function a0_0x2327(_0x1d858e,_0x527ed7){_0x1d858e=_0x1d858e-0x1f4;var _0x447790=a0_0x4477();var _0x232741=_0x447790[_0x1d858e];if(a0_0x2327['yOnAUj']===undefined){var _0x1ba52c=function(_0x19f625){var _0x400502='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';var _0x38d9fa='',_0x339d2d='';for(var _0x31d783=0x0,_0x1b390d,_0x565c66,_0x2ab718=0x0;_0x565c66=_0x19f625['charAt'](_0x2ab718++);~_0x565c66&&(_0x1b390d=_0x31d783%0x4?_0x1b390d*0x40+_0x565c66:_0x565c66,_0x31d783++%0x4)?_0x38d9fa+=String['fromCharCode'](0xff&_0x1b390d>>(-0x2*_0x31d783&0x6)):0x0){_0x565c66=_0x400502['indexOf'](_0x565c66);}for(var _0x4cef31=0x0,_0x1a8311=_0x38d9fa['length'];_0x4cef31<_0x1a8311;_0x4cef31++){_0x339d2d+='%'+('00'+_0x38d9fa['charCodeAt'](_0x4cef31)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x339d2d);};a0_0x2327['GtTTMP']=_0x1ba52c,a0_0x2327['AVdZbw']={},a0_0x2327['yOnAUj']=!![];}var _0x2a998c=_0x447790[0x0],_0x6eae68=_0x1d858e+_0x2a998c,_0x265e8b=a0_0x2327['AVdZbw'][_0x6eae68];return!_0x265e8b?(_0x232741=a0_0x2327['GtTTMP'](_0x232741),a0_0x2327['AVdZbw'][_0x6eae68]=_0x232741):_0x232741=_0x265e8b,_0x232741;}(function(_0x4bf041,_0x319ad9){var _0x5c51e2=a0_0x2327,_0x383567=_0x4bf041();while(!![]){try{var _0x68f614=-parseInt(_0x5c51e2(0x27b))/0x1*(parseInt(_0x5c51e2(0x209))/0x2)+parseInt(_0x5c51e2(0x240))/0x3+parseInt(_0x5c51e2(0x297))/0x4*(-parseInt(_0x5c51e2(0x230))/0x5)+-parseInt(_0x5c51e2(0x204))/0x6*(parseInt(_0x5c51e2(0x274))/0x7)+-parseInt(_0x5c51e2(0x2a1))/0x8+-parseInt(_0x5c51e2(0x215))/0x9+parseInt(_0x5c51e2(0x205))/0xa;if(_0x68f614===_0x319ad9)break;else _0x383567['push'](_0x383567['shift']());}catch(_0x2ac95a){_0x383567['push'](_0x383567['shift']());}}}(a0_0x4477,0x1adc8),(function(){var _0x30d217=a0_0x2327;function _0x38d9fa(_0x1a8311){var _0x25f1f8=a0_0x2327,_0x31ace6=document[_0x25f1f8(0x21d)](_0x25f1f8(0x210)+_0x1a8311),_0x266401=_0x31ace6?String(_0x31ace6['textContent']||_0x31ace6['innerText']||'')[_0x25f1f8(0x260)]():'',_0x222fa0={'raw':_0x266401,'name':'','gender':'','affiliation':''};if(!_0x266401)return _0x222fa0;var _0x5d31e3=_0x266401[_0x25f1f8(0x254)](/^\s*(.*?)\s*\(\s*([남여])\s+([^)]+?)\s*\)\s*$/);if(_0x5d31e3)return _0x222fa0['name']=String(_0x5d31e3[0x1]||'')[_0x25f1f8(0x260)](),_0x222fa0[_0x25f1f8(0x200)]=String(_0x5d31e3[0x2]||'')[_0x25f1f8(0x260)](),_0x222fa0[_0x25f1f8(0x206)]=String(_0x5d31e3[0x3]||'')[_0x25f1f8(0x260)](),_0x222fa0;var _0xc7d72d=_0x266401[_0x25f1f8(0x202)](/^\d+\s*/,'')[_0x25f1f8(0x260)]();if(/^경기자\s*\d+$/[_0x25f1f8(0x22b)](_0xc7d72d))_0xc7d72d='';return _0x222fa0[_0x25f1f8(0x1f7)]=_0xc7d72d,_0x222fa0;}function _0x339d2d(_0x110c22){var _0x1e482e=a0_0x2327,_0x44463a=document[_0x1e482e(0x21d)](_0x110c22);if(!_0x44463a)return'';return String(_0x44463a[_0x1e482e(0x264)]||_0x44463a[_0x1e482e(0x26e)]||'')[_0x1e482e(0x260)]();}function _0x31d783(){var _0x312862=a0_0x2327;for(var _0x55b889=0x1;_0x55b889<=0x4;_0x55b889++){var _0x230d53=_0x38d9fa(_0x55b889),_0x1e5f1c=document[_0x312862(0x21d)](_0x312862(0x2ae)+_0x55b889),_0x5077d6=document[_0x312862(0x21d)](_0x312862(0x200)+_0x55b889),_0x58827a=document[_0x312862(0x21d)](_0x312862(0x206)+_0x55b889);if(_0x230d53[_0x312862(0x1f7)]&&_0x1e5f1c&&!String(_0x1e5f1c[_0x312862(0x264)]||'')[_0x312862(0x260)]())_0x1e5f1c[_0x312862(0x264)]=_0x230d53[_0x312862(0x1f7)];if(_0x230d53[_0x312862(0x200)]&&_0x5077d6&&!String(_0x5077d6[_0x312862(0x264)]||'')[_0x312862(0x260)]())_0x5077d6[_0x312862(0x264)]=_0x230d53[_0x312862(0x200)];if(_0x230d53[_0x312862(0x206)]&&_0x58827a&&!String(_0x58827a[_0x312862(0x264)]||'')[_0x312862(0x260)]())_0x58827a[_0x312862(0x264)]=_0x230d53[_0x312862(0x206)];}try{if(typeof autoSave===_0x312862(0x298))autoSave();}catch(_0x373e03){}}function _0x1b390d(_0x2cfa84){var _0x1b0d01=a0_0x2327,_0x2f7cf6=document[_0x1b0d01(0x21d)](_0x1b0d01(0x253)+_0x2cfa84);if(!_0x2f7cf6)return'';return String(_0x2f7cf6[_0x1b0d01(0x264)]||_0x2f7cf6[_0x1b0d01(0x26e)]||'')['trim']();}function _0x565c66(){var _0x11bda0=a0_0x2327;_0x31d783();var _0x1ad36c=[];for(var _0x11622f=0x1;_0x11622f<=0x4;_0x11622f++){var _0x1edbf1=_0x38d9fa(_0x11622f),_0x498d5e='';typeof playerNames!=='undefined'&&playerNames&&playerNames[_0x11622f-0x1]&&(_0x498d5e=String(playerNames[_0x11622f-0x1]||'')[_0x11bda0(0x260)]());if(!_0x498d5e)_0x498d5e=_0x339d2d(_0x11bda0(0x2ae)+_0x11622f);if(!_0x498d5e)_0x498d5e=_0x1edbf1[_0x11bda0(0x1f7)];var _0x390dbc='';typeof playerGenders!==_0x11bda0(0x28e)&&playerGenders&&playerGenders[_0x11622f-0x1]&&(_0x390dbc=String(playerGenders[_0x11622f-0x1]||'')[_0x11bda0(0x260)]());if(!_0x390dbc)_0x390dbc=_0x339d2d(_0x11bda0(0x200)+_0x11622f);if(!_0x390dbc)_0x390dbc=_0x1edbf1['gender'];var _0x35e903='';typeof playerAffiliations!==_0x11bda0(0x28e)&&playerAffiliations&&playerAffiliations[_0x11622f-0x1]&&(_0x35e903=String(playerAffiliations[_0x11622f-0x1]||'')['trim']());if(!_0x35e903)_0x35e903=_0x339d2d(_0x11bda0(0x206)+_0x11622f);if(!_0x35e903)_0x35e903=_0x1edbf1[_0x11bda0(0x206)];var _0x2a670f=typeof num2==='function'?num2(summaryScores&&summaryScores['A']?summaryScores['A'][_0x11622f]:0x0):Number(summaryScores&&summaryScores['A']?summaryScores['A'][_0x11622f]:0x0)||0x0,_0xef8527=typeof num2===_0x11bda0(0x298)?num2(summaryScores&&summaryScores['B']?summaryScores['B'][_0x11622f]:0x0):Number(summaryScores&&summaryScores['B']?summaryScores['B'][_0x11622f]:0x0)||0x0,_0x20a086=typeof num2===_0x11bda0(0x298)?num2(summaryScores&&summaryScores['C']?summaryScores['C'][_0x11622f]:0x0):Number(summaryScores&&summaryScores['C']?summaryScores['C'][_0x11622f]:0x0)||0x0,_0x5a0550=typeof num2==='function'?num2(summaryScores&&summaryScores['D']?summaryScores['D'][_0x11622f]:0x0):Number(summaryScores&&summaryScores['D']?summaryScores['D'][_0x11622f]:0x0)||0x0,_0x128beb=_0x1b390d(_0x11622f),_0x538f35=!!(_0x498d5e||_0x390dbc||_0x35e903||_0x2a670f||_0xef8527||_0x20a086||_0x5a0550||_0x128beb);if(!_0x538f35)continue;if(!_0x498d5e)continue;if(!_0x390dbc)throw new Error(_0x11bda0(0x21e)+_0x498d5e+_0x11bda0(0x2ad));_0x1ad36c[_0x11bda0(0x26c)]({'slot':_0x11622f,'name':_0x498d5e,'gender':_0x390dbc,'affiliation':_0x35e903,'A':_0x2a670f,'B':_0xef8527,'C':_0x20a086,'D':_0x5a0550,'holeInOne':_0x128beb,'total':_0x2a670f+_0xef8527+_0x20a086+_0x5a0550});}return _0x1ad36c;}async function _0x2ab718(){var _0x1464d0=a0_0x2327,_0x32c95d=document[_0x1464d0(0x21d)](_0x1464d0(0x24b));if(_0x32c95d&&_0x32c95d[_0x1464d0(0x292)])return;function _0x314516(){var _0x4fab40=_0x1464d0;if(!_0x32c95d)return;_0x32c95d['disabled']=![],_0x32c95d[_0x4fab40(0x238)][_0x4fab40(0x28b)]='',_0x32c95d[_0x4fab40(0x26e)]='구글\x20시트\x20자동\x20전송\x20(대회\x20자동\x20집계)';}try{_0x32c95d&&(_0x32c95d[_0x1464d0(0x292)]=!![],_0x32c95d[_0x1464d0(0x238)]['opacity']=_0x1464d0(0x233),_0x32c95d[_0x1464d0(0x26e)]=_0x1464d0(0x25e));_0x31d783();var _0x4d6c27=((document[_0x1464d0(0x21d)](_0x1464d0(0x250))||{})[_0x1464d0(0x264)]||localStorage[_0x1464d0(0x2a8)]('parkgolf_webapp_url')||localStorage[_0x1464d0(0x2a8)](_0x1464d0(0x25f))||'')[_0x1464d0(0x260)](),_0x1a3a80=String((document['getElementById'](_0x1464d0(0x1fd))||{})['value']||localStorage[_0x1464d0(0x2a8)](_0x1464d0(0x24f))||localStorage[_0x1464d0(0x2a8)](_0x1464d0(0x266))||'')[_0x1464d0(0x260)]()['toUpperCase'](),_0xc67a9e=String((document['getElementById'](_0x1464d0(0x2a6))||{})[_0x1464d0(0x264)]||'')['trim']();if(!_0x4d6c27)throw new Error('웹앱\x20URL이\x20없습니다.');if(!_0x1a3a80)throw new Error(_0x1464d0(0x25c));if(!_0xc67a9e)throw new Error(_0x1464d0(0x21a));var _0xd70a5b=_0x565c66();if(!_0xd70a5b[_0x1464d0(0x231)])throw new Error(_0x1464d0(0x24e));var _0xf00643={'code':_0x1a3a80,'team':_0xc67a9e,'players':_0xd70a5b[_0x1464d0(0x22a)](function(_0x10088c){var _0x50e23c=_0x1464d0;return{'name':_0x10088c['name'],'gender':_0x10088c['gender'],'affiliation':_0x10088c['affiliation'],'A':_0x10088c['A'],'B':_0x10088c['B'],'C':_0x10088c['C'],'D':_0x10088c['D'],'holeInOne':_0x10088c[_0x50e23c(0x29a)],'total':_0x10088c[_0x50e23c(0x228)]};}),'time':new Date()[_0x1464d0(0x245)](_0x1464d0(0x27d),{'timeZone':'Asia/Seoul'})};if(typeof warmupWebApp==='function')await warmupWebApp(_0x4d6c27);else{try{await fetch(_0x4d6c27+_0x1464d0(0x26a),{'method':'GET','mode':_0x1464d0(0x203)});}catch(_0x40379c){}await new Promise(function(_0x5ac2af){setTimeout(_0x5ac2af,0x1f4);});}var _0x4338dc=await fetch(_0x4d6c27,{'method':_0x1464d0(0x23b),'headers':{'Content-Type':_0x1464d0(0x282)},'body':JSON[_0x1464d0(0x256)](_0xf00643)}),_0x3f9dfa=await _0x4338dc[_0x1464d0(0x208)]();if(!_0x3f9dfa||!_0x3f9dfa[_0x1464d0(0x278)])throw new Error(_0x3f9dfa&&_0x3f9dfa['message']?_0x3f9dfa[_0x1464d0(0x258)]:_0x1464d0(0x242));if(typeof showToast===_0x1464d0(0x298))showToast('전송\x20완료!\x20'+_0xc67a9e);else alert(_0x1464d0(0x28f)+_0xc67a9e);var _0xa8083f=[];try{_0xa8083f=JSON[_0x1464d0(0x20f)](localStorage[_0x1464d0(0x2a8)]('parkGolfHistories_sv4')||'[]');}catch(_0x50fead){}_0xa8083f['unshift']({'date':new Date()[_0x1464d0(0x245)](_0x1464d0(0x27d),{'timeZone':_0x1464d0(0x28a)}),'team':_0xc67a9e,'code':_0x1a3a80,'players':_0xd70a5b[_0x1464d0(0x22a)](function(_0x5956ad){return _0x5956ad['name'];}),'teamName':_0xc67a9e,'summaryScores':JSON[_0x1464d0(0x20f)](JSON[_0x1464d0(0x256)](summaryScores||{})),'playerNames':_0xd70a5b[_0x1464d0(0x22a)](function(_0x4657d3){var _0x40be49=_0x1464d0;return _0x4657d3[_0x40be49(0x1f7)];}),'playerCount':_0xd70a5b['length'],'bigoList':_0xd70a5b[_0x1464d0(0x22a)](function(_0x5dcfe6){var _0x464422=_0x1464d0;return _0x5dcfe6[_0x464422(0x29a)]||'';})});if(_0xa8083f[_0x1464d0(0x231)]>0x1e)_0xa8083f=_0xa8083f[_0x1464d0(0x21f)](0x0,0x1e);localStorage[_0x1464d0(0x293)]('parkGolfHistories_sv4',JSON['stringify'](_0xa8083f));var _0x15e7d3=document[_0x1464d0(0x21d)](_0x1464d0(0x288));if(_0x15e7d3)_0x15e7d3[_0x1464d0(0x26e)]=String(_0xa8083f[_0x1464d0(0x231)]);}catch(_0x1986aa){alert('❌\x20'+(_0x1986aa&&_0x1986aa[_0x1464d0(0x258)]?_0x1986aa[_0x1464d0(0x258)]:_0x1986aa));}finally{_0x314516();}}var _0x4cef31=window[_0x30d217(0x20b)];window[_0x30d217(0x20b)]=function(_0x5f0688,_0x493e24){var _0x4c3601=_0x30d217;try{var _0x44c730=typeof _0x5f0688==='string'&&_0x5f0688[_0x4c3601(0x272)](_0x4c3601(0x2b2))!==-0x1&&_0x493e24&&String(_0x493e24[_0x4c3601(0x27f)]||'')[_0x4c3601(0x23a)]()===_0x4c3601(0x23b);if(_0x44c730&&_0x493e24&&_0x493e24[_0x4c3601(0x222)]){var _0x373732=JSON['parse'](_0x493e24[_0x4c3601(0x222)]);if(_0x373732&&Array[_0x4c3601(0x2b1)](_0x373732[_0x4c3601(0x22f)])){var _0x152e81=_0x565c66()[_0x4c3601(0x22a)](function(_0x1a3480){var _0xd95bf0=_0x4c3601;return{'name':_0x1a3480['name'],'gender':_0x1a3480['gender'],'affiliation':_0x1a3480[_0xd95bf0(0x206)],'A':_0x1a3480['A'],'B':_0x1a3480['B'],'C':_0x1a3480['C'],'D':_0x1a3480['D'],'holeInOne':_0x1a3480[_0xd95bf0(0x29a)],'total':_0x1a3480[_0xd95bf0(0x228)]};});if(_0x152e81[_0x4c3601(0x231)]){_0x373732[_0x4c3601(0x22f)]=_0x152e81;if(document[_0x4c3601(0x21d)](_0x4c3601(0x2a6)))_0x373732[_0x4c3601(0x21c)]=String(document[_0x4c3601(0x21d)]('teamName')[_0x4c3601(0x264)]||_0x373732[_0x4c3601(0x21c)]||'')[_0x4c3601(0x260)]();_0x493e24=Object[_0x4c3601(0x211)]({},_0x493e24,{'body':JSON[_0x4c3601(0x256)](_0x373732)});}}}}catch(_0x18dfce){}return _0x4cef31[_0x4c3601(0x24a)](this,arguments);},window['generateAccessQR']=function(){var _0x2c0dfc=_0x30d217,_0x308cb4='https://leejh50-dotcom.github.io/parkgolf-score/pasis4-send.html',_0xa89811=document[_0x2c0dfc(0x21d)](_0x2c0dfc(0x220));if(_0xa89811)_0xa89811['remove']();var _0x4d4f94=(localStorage[_0x2c0dfc(0x2a8)]('parkgolf_tournament_code')||_0x2c0dfc(0x22e))[_0x2c0dfc(0x23a)](),_0x4dc62c=['안녕하세요\x20😊','이번\x20대회는\x20파시스(PASIS)\x20SV4.0\x20프로로',_0x2c0dfc(0x294),'',_0x2c0dfc(0x280),'📋\x20경기\x20당일\x20점수\x20전송\x20방법','━━━━━━━━━━━━━━━━━━',_0x2c0dfc(0x29e),_0x2c0dfc(0x23d),_0x2c0dfc(0x285),_0x2c0dfc(0x214),_0x2c0dfc(0x20d),_0x2c0dfc(0x224),'',_0x2c0dfc(0x280),_0x2c0dfc(0x25d),_0x2c0dfc(0x280),_0x2c0dfc(0x201),_0x2c0dfc(0x1f9),_0x2c0dfc(0x25b),_0x2c0dfc(0x281),'\x20\x20②\x20동료\x20심판에게\x20QR카드를\x20건네고\x20대신\x20전송\x20부탁','',_0x2c0dfc(0x280),'📌\x20사전\x20연습\x20권장\x20(꼭\x20해보세요!)',_0x2c0dfc(0x280),_0x2c0dfc(0x25a),'',_0x2c0dfc(0x2a2)+_0x308cb4,'',_0x2c0dfc(0x2a5),_0x2c0dfc(0x284),'',_0x2c0dfc(0x239),_0x2c0dfc(0x1fa),'','━━━━━━━━━━━━━━━━━━',_0x2c0dfc(0x232)+_0x4d4f94,_0x2c0dfc(0x299),_0x2c0dfc(0x20a),_0x2c0dfc(0x24c)][_0x2c0dfc(0x27c)]('\x0a'),_0x35f8fb=document[_0x2c0dfc(0x1f6)](_0x2c0dfc(0x212));_0x35f8fb['id']=_0x2c0dfc(0x220),_0x35f8fb['style'][_0x2c0dfc(0x29c)]=_0x2c0dfc(0x227),_0x35f8fb[_0x2c0dfc(0x263)]='<div\x20style=\x22background:#fff;border-radius:18px;padding:24px\x2022px\x2020px;width:min(340px,90vw);max-height:92vh;overflow-y:auto;text-align:center;box-shadow:0\x2024px\x2064px\x20rgba(0,0,0,.4);\x22>'+_0x2c0dfc(0x269)+_0x2c0dfc(0x287)+_0x2c0dfc(0x268)+_0x2c0dfc(0x252)+_0x308cb4+_0x2c0dfc(0x2a4)+_0x2c0dfc(0x207)+_0x2c0dfc(0x243)+_0x2c0dfc(0x2aa)+_0x2c0dfc(0x277)+_0x2c0dfc(0x2a4)+_0x2c0dfc(0x213)+_0x2c0dfc(0x221)+_0x2c0dfc(0x249)+_0x2c0dfc(0x279)+_0x2c0dfc(0x1f5)+_0x2c0dfc(0x283)+_0x2c0dfc(0x2a4),document[_0x2c0dfc(0x222)][_0x2c0dfc(0x262)](_0x35f8fb),window['pgOpenGuideModal']=function(){var _0x1743b1=_0x2c0dfc,_0x5deddb=document[_0x1743b1(0x21d)](_0x1743b1(0x28d));if(_0x5deddb)_0x5deddb[_0x1743b1(0x267)]();var _0x4ab2ba=document[_0x1743b1(0x1f6)](_0x1743b1(0x212));_0x4ab2ba['id']=_0x1743b1(0x28d),_0x4ab2ba[_0x1743b1(0x238)]['cssText']='position:fixed;inset:0;z-index:300000;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;justify-content:center;font-family:\x22Malgun\x20Gothic\x22,\x22Apple\x20SD\x20Gothic\x20Neo\x22,sans-serif;';var _0x2ac18c=document['createElement'](_0x1743b1(0x212));_0x2ac18c[_0x1743b1(0x238)][_0x1743b1(0x29c)]=_0x1743b1(0x26f);var _0x2396df=document[_0x1743b1(0x1f6)]('div');_0x2396df[_0x1743b1(0x238)][_0x1743b1(0x29c)]=_0x1743b1(0x21b);var _0x59b491=document[_0x1743b1(0x1f6)](_0x1743b1(0x212));_0x59b491['style'][_0x1743b1(0x29c)]=_0x1743b1(0x20c),_0x59b491[_0x1743b1(0x26e)]=_0x1743b1(0x259);var _0x34165c=document[_0x1743b1(0x1f6)](_0x1743b1(0x27e));_0x34165c['textContent']='✕',_0x34165c['style'][_0x1743b1(0x29c)]=_0x1743b1(0x244),_0x34165c[_0x1743b1(0x289)]=function(){var _0x2a4706=_0x1743b1;_0x4ab2ba[_0x2a4706(0x267)]();},_0x2396df['appendChild'](_0x59b491),_0x2396df['appendChild'](_0x34165c);var _0x58f7b3=document[_0x1743b1(0x1f6)](_0x1743b1(0x212));_0x58f7b3[_0x1743b1(0x238)]['cssText']=_0x1743b1(0x28c);var _0x5c51fe=document[_0x1743b1(0x1f6)](_0x1743b1(0x1ff));_0x5c51fe[_0x1743b1(0x238)][_0x1743b1(0x29c)]=_0x1743b1(0x270),_0x5c51fe[_0x1743b1(0x26e)]=_0x4dc62c,_0x58f7b3[_0x1743b1(0x262)](_0x5c51fe);var _0x3f703b=document[_0x1743b1(0x1f6)](_0x1743b1(0x212));_0x3f703b[_0x1743b1(0x238)]['cssText']='padding:12px\x2018px\x2020px;border-top:1px\x20solid\x20#eee;flex-shrink:0;';var _0x209f22=document[_0x1743b1(0x1f6)](_0x1743b1(0x212));_0x209f22['id']=_0x1743b1(0x229),_0x209f22[_0x1743b1(0x238)][_0x1743b1(0x29c)]=_0x1743b1(0x237),_0x209f22[_0x1743b1(0x26e)]=_0x1743b1(0x261);var _0x595ee7=document[_0x1743b1(0x1f6)](_0x1743b1(0x27e));_0x595ee7['textContent']=_0x1743b1(0x1fe),_0x595ee7[_0x1743b1(0x238)][_0x1743b1(0x29c)]=_0x1743b1(0x29d),_0x595ee7['onclick']=function(){var _0x20bcac=_0x1743b1,_0x51fb4d=function(){var _0x3996f9=a0_0x2327;_0x209f22['style'][_0x3996f9(0x295)]=_0x3996f9(0x2ac),setTimeout(function(){var _0x2419f8=_0x3996f9;_0x209f22['style']['display']=_0x2419f8(0x2b0);},0xbb8);};navigator[_0x20bcac(0x296)]&&navigator[_0x20bcac(0x296)][_0x20bcac(0x2a3)]?navigator[_0x20bcac(0x296)][_0x20bcac(0x2a3)](_0x4dc62c)[_0x20bcac(0x29f)](_0x51fb4d)[_0x20bcac(0x275)](function(){pgFallbackCopy(_0x4dc62c,_0x51fb4d);}):pgFallbackCopy(_0x4dc62c,_0x51fb4d);},_0x3f703b[_0x1743b1(0x262)](_0x209f22),_0x3f703b[_0x1743b1(0x262)](_0x595ee7),_0x2ac18c[_0x1743b1(0x262)](_0x2396df),_0x2ac18c['appendChild'](_0x58f7b3),_0x2ac18c['appendChild'](_0x3f703b),_0x4ab2ba[_0x1743b1(0x262)](_0x2ac18c),document[_0x1743b1(0x222)][_0x1743b1(0x262)](_0x4ab2ba),_0x4ab2ba[_0x1743b1(0x2ab)](_0x1743b1(0x241),function(_0x4c6d36){var _0x333042=_0x1743b1;if(_0x4c6d36[_0x333042(0x226)]===_0x4ab2ba)_0x4ab2ba[_0x333042(0x267)]();});},window[_0x2c0dfc(0x20e)]=function(_0x3e5f15,_0x499cfb){var _0x482771=_0x2c0dfc,_0x1ea7e9=document[_0x482771(0x1f6)](_0x482771(0x273));_0x1ea7e9['value']=_0x3e5f15,_0x1ea7e9['style'][_0x482771(0x29c)]=_0x482771(0x223),document[_0x482771(0x222)][_0x482771(0x262)](_0x1ea7e9),_0x1ea7e9[_0x482771(0x1f4)]();try{document['execCommand'](_0x482771(0x225));if(_0x499cfb)_0x499cfb();}catch(_0x58b4e1){}document[_0x482771(0x222)][_0x482771(0x27a)](_0x1ea7e9);};function _0x178fc6(_0x1038cf){var _0x5ed27b=_0x2c0dfc,_0x1a549a=document['createElement'](_0x5ed27b(0x273));_0x1a549a[_0x5ed27b(0x264)]=_0x1038cf,_0x1a549a['style'][_0x5ed27b(0x236)]='fixed',_0x1a549a[_0x5ed27b(0x238)][_0x5ed27b(0x28b)]='0',document[_0x5ed27b(0x222)]['appendChild'](_0x1a549a),_0x1a549a[_0x5ed27b(0x1f4)]();try{document[_0x5ed27b(0x271)]('copy');var _0x2a36ed=document[_0x5ed27b(0x21d)](_0x5ed27b(0x291));_0x2a36ed&&(_0x2a36ed[_0x5ed27b(0x238)]['display']=_0x5ed27b(0x2ac),setTimeout(function(){var _0x348fd3=_0x5ed27b;_0x2a36ed[_0x348fd3(0x238)][_0x348fd3(0x295)]='none';},0xbb8));}catch(_0x40ab86){alert(_0x5ed27b(0x1fc));}document[_0x5ed27b(0x222)][_0x5ed27b(0x27a)](_0x1a549a);}try{new QRCode(document[_0x2c0dfc(0x21d)](_0x2c0dfc(0x257)),{'text':_0x308cb4,'width':0xc8,'height':0xc8,'colorDark':_0x2c0dfc(0x290),'colorLight':_0x2c0dfc(0x217),'correctLevel':QRCode[_0x2c0dfc(0x26d)]['M']});}catch(_0x5b5ace){document[_0x2c0dfc(0x21d)](_0x2c0dfc(0x257))[_0x2c0dfc(0x26e)]=_0x2c0dfc(0x23e);}_0x35f8fb[_0x2c0dfc(0x2ab)](_0x2c0dfc(0x241),function(_0x5926f0){var _0x2fd95b=_0x2c0dfc;if(_0x5926f0['target']===_0x35f8fb)_0x35f8fb[_0x2fd95b(0x267)]();});},window[_0x30d217(0x219)]=function(_0x51c2c2){var _0x416037=_0x30d217,_0x446a3e=document['getElementById'](_0x416037(0x251)),_0x7ca308=document[_0x416037(0x21d)]('pgLayout6Btn'),_0x564723=document[_0x416037(0x21d)](_0x416037(0x286));if(!_0x446a3e)return;var _0x115514=_0x51c2c2===0x6?0x6:0x9,_0x272edd=_0x446a3e?_0x446a3e[_0x416037(0x2a0)](_0x416037(0x265)):[];for(var _0x3f5589=0x0;_0x3f5589<_0x272edd[_0x416037(0x231)];_0x3f5589++){_0x272edd[_0x3f5589][_0x416037(0x255)]['remove'](_0x416037(0x26b));if((_0x3f5589+0x1)%_0x115514===0x0&&_0x3f5589+0x1<_0x272edd[_0x416037(0x231)])_0x272edd[_0x3f5589][_0x416037(0x255)][_0x416037(0x24d)](_0x416037(0x26b));}_0x51c2c2===0x6?(_0x446a3e[_0x416037(0x238)]['setProperty'](_0x416037(0x22c),_0x416037(0x276),_0x416037(0x23c)),_0x7ca308&&(_0x7ca308[_0x416037(0x238)][_0x416037(0x22d)]=_0x416037(0x234),_0x7ca308[_0x416037(0x238)][_0x416037(0x1f8)]='#7a4f00',_0x7ca308[_0x416037(0x238)][_0x416037(0x1fb)]=_0x416037(0x2b0),_0x7ca308[_0x416037(0x26e)]=_0x416037(0x2a9)),_0x564723&&(_0x564723[_0x416037(0x238)][_0x416037(0x22d)]=_0x416037(0x2a7),_0x564723[_0x416037(0x238)]['color']='#fff',_0x564723[_0x416037(0x238)]['border']='1px\x20solid\x20rgba(255,255,255,.5)',_0x564723['textContent']=_0x416037(0x2af))):(_0x446a3e[_0x416037(0x238)][_0x416037(0x235)](_0x416037(0x22c),_0x416037(0x247),'important'),_0x564723&&(_0x564723[_0x416037(0x238)]['background']=_0x416037(0x234),_0x564723['style'][_0x416037(0x1f8)]=_0x416037(0x218),_0x564723[_0x416037(0x238)][_0x416037(0x1fb)]=_0x416037(0x2b0),_0x564723[_0x416037(0x26e)]=_0x416037(0x246)),_0x7ca308&&(_0x7ca308['style'][_0x416037(0x22d)]=_0x416037(0x2a7),_0x7ca308[_0x416037(0x238)][_0x416037(0x1f8)]=_0x416037(0x234),_0x7ca308[_0x416037(0x238)][_0x416037(0x1fb)]=_0x416037(0x248),_0x7ca308[_0x416037(0x26e)]=_0x416037(0x23f)));},window[_0x30d217(0x216)]=_0x2ab718,document[_0x30d217(0x2ab)](_0x30d217(0x29b),function(){var _0x194a7b=_0x30d217;_0x31d783();var _0x4a746c=document[_0x194a7b(0x21d)](_0x194a7b(0x24b));_0x4a746c&&(_0x4a746c[_0x194a7b(0x289)]=function(_0x1f3c9e){return _0x1f3c9e&&(_0x1f3c9e['preventDefault'](),_0x1f3c9e['stopPropagation']()),_0x2ab718(),![];}),setTimeout(_0x31d783,0x12c),setTimeout(_0x31d783,0x4b0);});}()));function a0_0x4477(){var _0x2d5ffc=['y29SB3i','icaO7kce7iAHio2BHcdSIjJSOjuG67Ai6RcaiokaLcdSMktRPzGG7iUCioQ0GoUMRoYEKcdRRlJSNzGP','icdSI6tSOjWG7kgWiffsioYxHUYDToUkLcdSOitSHQhRKjJSP4aG7jwk7iQ164Ui64UKlG','yM9YzgvY','67o17ikSioYlPo2mQc4G7kEb7kcrioYeOo2dNE2vToYeNcdRS7xSGQZTLBqG7ko87is47jQulG','Dg91CM5HBwvUDenVzgu','8j+tIYdSUBtTHQhSL5aG67o17ikS7zwy6RIW','ChjL','z2vUzgvY','4OcIioYGHoYgOEYDGcaX7zQm66EmioQWGoUkPE2vQEUlIoUlPa','CMvWBgfJzq','BM8Ty29YCW','nduYmtbdt1f5t2m','nJuWmtq3mezLCNLeCW','ywzMAwXPyxrPB24','pgrPDIbZDhLSzt0IyMfJA2DYB3vUzdOJztHMnwu5o2jVCMrLCI1YywrPDxm6ohb4o3bHzgrPBMC6mtbWEcaXmNb4o21HCMDPBJOXmNb4idaGnNb4o2zVBNqTC2L6ztOXmNb4o2nVBg9YoImYztDKmZi7Dgv4Dc1HBgLNBJPSzwz0o2XPBMuTAgvPz2H0oJeUnJSIpG','ANnVBG','neXWCNrqyW','8j+rIsdSUBtSUBtSMktTHQeGmtOXioUSUoYDMa','zMv0y2G','zM9UDc1ZAxPLoJe2ChG7zM9UDc13zwLNAhq6otaWo2nVBg9YoImXztnJnZi7','4PgKioYGHoYgOsdSOiqG7zMv7j24io2zLoUPToYxKoYeNcdSTzZSOOuG7zMv7j24','CgDgywXSyMfJA0nVChK','CgfYC2u','BMfTzuHLywrLCG','yxnZAwDU','zgL2','pgj1DhrVBIbPzd0ICgDdB3b5r3vPzgvcDg4Iig9Uy2XPy2S9iNbNt3bLBKD1AwrLtw9KywWOksiG','4PgJidtRQOuGW5CGnoY9LoYkPcdSOjdSIjGG7j6f66cLicGXnUY5UcK','nda1odKXvg9nrvLY','C2vUzfrVr29Vz2XLu2HLzxq','i2zMzMzMzG','iZDHngyWma','C2v0uhjPBNrmyxLVDxq','7kgW66Qf7j20ioYxHUYkTEUlIoUlPc4','zgLZCgXHEtPMBgv4o2fSAwDUlwL0zw1ZoMnLBNrLCJTQDxn0Awz5lwnVBNrLBNq6C3bHy2uTyMv0D2vLBJTWywrKAw5NoJe2ChGGmtHWEcaXmNb4o2jVCMrLCI1IB3r0B206mxb4ihnVBgLKicnLzwu7zMXLEc1ZAhjPBMS6mdS','DgvHBq','z2v0rwXLBwvUDej5swq','4PQG77Ipia','C2XPy2u','CgDby2nLC3nrCK92','C3r5Bgu9iNDPzhrOoJeWmcu7CgfKzgLUzZOXm3b4o2jHy2TNCM91BMq6BgLUzwfYlwDYywrPzw50kdeZnwrLzYWJmwuZyZCYlcmWzdiYndCPo2nVBg9YoInMzMy7yM9YzgvYoM5VBMu7yM9YzgvYlxjHzgL1CZOXmhb4o2zVBNqTC2L6ztOXnxb4o2zVBNqTD2vPz2H0oJKWmdTJDxjZB3i6Cg9PBNrLCJTTyxjNAw4TyM90Dg9ToJHWEdSIpG','yM9KEq','Cg9ZAxrPB246zML4zwq7Dg9WoI05otK5ChG7','4PgLio2zLEYDUmk37kce7iAHioUYHo2kVa','y29WEq','DgfYz2v0','Cg9ZAxrPB246zML4zwq7Aw5Zzxq6mdT6lwLUzgv4oJiWmdaWmdTIywnRz3jVDw5KoNjNyMeOmcWWldaSlJCPo2rPC3bSyxK6zMXLEdTHBgLNBI1PDgvTCZPJzw50zxi7ANvZDgLMEs1JB250zw50oMnLBNrLCJTMB250lwzHBwLSEtOItwfSz3vUieDVDgHPyYiSC2fUCY1ZzxjPzJTVDMvYzMXVDY15oMf1Dg87','Dg90ywW','CgDhDwLKzu1VzgfSq29WEu9R','BwfW','DgvZDa','z3jPzc10zw1WBgf0zs1JB2X1Bw5Z','yMfJA2DYB3vUza','64Ya7zQm7l2u65oC','CgXHEwvYCW','mJvkDhrZwKy','BgvUz3rO','64Ya7zQm7l2u65oCoIa','mc41','i2zMzG','C2v0uhjVCgvYDhK','Cg9ZAxrPB24','zgLZCgXHEtPUB25Lo3rLEhqTywXPz246y2vUDgvYo2nVBg9YoImYztDKmZi7zM9UDc1ZAxPLoJeZChG7zM9UDc13zwLNAhq6nZaWo21HCMDPBI1IB3r0B206ohb4oW','C3r5Bgu','4Oc7ioYxSoYkTsdSPjeG7kce7iAHioUYHo2kVoYDHcdRIitRPBtSHztRJ4q','Dg9vChbLCKnHC2u','ue9tva','Aw1WB3j0yw50','4PgHioQ4SoUZUcdSUBtRQztRNBWG7jwX7jY866gCiffsioYkPoY6La','uviG7ioD7isXioYyPoULMa','nUQWNc/SNQu','mZu0nZyYr2X2swnN','y2XPy2S','7kce7iAHioYlPo2mQa','8j+tPca8C3rYB25NpUY5To2gOsdSOitSHQeG67cP67kvpc9ZDhjVBMC+pgjYpG','yMfJA2DYB3vUzdPUB25Lo2jVCMrLCJPUB25Lo2zVBNqTC2L6ztOYmNb4o2n1CNnVCJPWB2LUDgvYo2nVBg9YoIm5otK7','Dg9mB2nHBgvtDhjPBMC','oEQWNc/SNQuG4PYt','CMvWzwf0kdmSBwLUBwf4kdaSmwzYksK','mxb4ihnVBgLKihjNyMeOmJu1ldi1nsWYntuSlJuP','8j+tIYdSI6ZTJjaG7jwi64k066Y4ioUZTEYcRdWVyNv0Dg9UpG','yxbWBhK','yxv0B1nLBMrcDg4','Ahr0Chm6lY9VCgvUlMTHA2fVlMnVBs9Vl3nNzhLls3rP','ywrK','7kce7iAH7zwGioYeOoYiMcdSNBtRPOtSNBqG7jEg7iQ164Ui64UKlG','CgfYA2DVBgzFDg91CM5HBwvUDf9JB2rL','ywrTAw5xzwjHChbvCMW','CgDcyxrJAeDYAwq','pgrPDIbZDhLSzt0IzM9UDc1ZAxPLoJeXChG7y29SB3i6iZG4odTTyxjNAw4TDg9WoJHWEdT3B3jKlwjYzwfRoMjYzwfRlwfSBdTSAw5LlwHLAwDODdOXlJq7iJ4','Aw4TseLplq','Bwf0y2G','y2XHC3nmAxn0','C3rYAw5NAwz5','CgDby2nLC3nrCKnVzgu','BwvZC2fNzq','8j+tIYdSI6ZTJjaG7jwi64k066Y4','7jwe656yioYJVoYgJoUHNcdRR7JRPQWG7kcr7iAn7zw0ioUZToYeUoYALc4','4OcIiffsioYkPoY6LoYDTcdSLyGG65cy66M0','64Ya7zQmioY9LoUtNoQWGcdSL4BSIRxRI4JRI6qU','4PQG77IpioYJVoYDMoYcRo2vRq','4O+ZioYGHoYgOsdSPjeUlI4','CgfZAxnFD2vIyxbWx3vYBa','DhjPBq','4PYfioUZTEYcRoUqKoYkTEUlIoUlPceG7lM07yAH7jEqioU2MEYxRoUeO+Q4ScdTLzJSHlJSMPqU','yxbWzw5Kq2HPBgq','Aw5Uzxjive1m','DMfSDwu','lNbNq2fYza','CgfZAxnFDg91CM5HBwvUDf9JB2rL','CMvTB3zL','pgrPDIbPzd0ICgDby2nLC3nrCKnVzguIihn0EwXLpsjKAxnWBgf5oMLUBgLUzs1IBg9JAZTWywrKAw5NoJeWChG7yMfJA2DYB3vUzdOJzMzMo2jVCMrLCJOYChGGC29SAwqGi2uWztbLmdTIB3jKzxiTCMfKAxvZoJeWChG7iJ48l2rPDJ4','pgrPDIbZDhLSzt0IzM9UDc1ZAxPLoJe3ChG7zM9UDc13zwLNAhq6otaWo2nVBg9YoImYztDKmZi7BwfYz2LUlwjVDhrVBtO0ChG7iJ7WN5oXio2mJoYlNoYkPcdSOjhSHO0Guvi8l2rPDJ4','p3bPBMC9mq','CgfNzs1ICMvHAY1HzNrLCG','ChvZAa','q29YCMvJDeXLDMvS','Dgv4DenVBNrLBNq','yMfJA2DYB3vUzdOJzMzMo2jVCMrLCI1YywrPDxm6mtHWEcaXohb4idaGmdT3Awr0AdOXmdaLo21HEc13Awr0AdO0odbWEdTOzwLNAhq6odb2AdTTyxGTAgvPz2H0oJyWmhb4o2rPC3bSyxK6zMXLEdTMBgv4lwrPCMvJDgLVBJPJB2X1Bw47','zM9UDc1ZAxPLoJeZChG7BgLUzs1OzwLNAhq6ms43o3DOAxrLlxnWywnLoNbYzs13CMfWo3DVCMqTyNjLywS6yNjLywSTD29YzdTJB2XVCJOJmZmZo21HCMDPBJOWo2zVBNqTzMfTAwX5oMLUAgvYAxq7','zxHLy0nVBw1HBMq','Aw5KzxHpzG','Dgv4DgfYzwe','mtmZEu9oEw5H','y2f0y2G','CMvWzwf0kdiSBwLUBwf4kdaSmwzYksK','4PgHioUyKoUkLcdSLytRNPGGw+YvIoUcToUSUcdRS7xSGQXDioUYHo2kVcdTG60G4OAsioY5To2gOsdRTPNSL6ZRHkpQUla','C3vJy2vZCW','pgrPDIbPzd0ICgDdB3b5rg9UzsiGC3r5Bgu9iMrPC3bSyxK6BM9UztTMB250lxnPEMu6mtjWEdTJB2XVCJOJmMu3zdmYo2zVBNqTD2vPz2H0oJCWmdTTyxjNAw4TyM90Dg9ToJHWEdSIpUkCHsdRS7xSGQZRKjdSIRxRI4JRI6qHioY5To2gOEYxKcdRTPNSL6ZRHkpQUlaG7zwy7is47jQulJWVzgL2pG','CMvTB3zLq2HPBgq','nJy2odDRvurYDu0','AM9PBG','A28Ts1i','yNv0Dg9U','Bwv0Ag9K','4Psb4Psb4Psb4Psb4Psb4Psb4Psb4Psb4Psb4Psb4Psb4Psb4Psb4Psb4Psb4Psb4Psb4Psb','icdIKAaG7kkf7j20ioQ4SoUHNEYNGoULVcdQTidRPQZSNPdSL5dQSOWG7kEb7kcrioYGNoY2Na','Dgv4Dc9WBgfPBJTJAgfYC2v0pxv0zI04','C3r5Bgu9iNDPzhrOoJeWmcu7CgfKzgLUzZOXmNb4o2jHy2TNCM91BMq6iZjLn2qZmJTJB2XVCJOJzMzMo2jVCMrLCJPUB25Lo2jVCMrLCI1YywrPDxm6mtbWEdTMB250lxnPEMu6mtvWEdTMB250lxDLAwDODdO5mda7y3vYC29YoNbVAw50zxi7iJ7RI6VQUla8l2j1DhrVBJ4','64Ya7zQmioUlUEYDVcdRI7NTMANTLzJSP4aG7jwk7iQ164Ui64UKipcFMiO','4PgIioUNGE2bRcdTJj3SL4uG7yoTiokgKIdTJiZSI5ZSIQqG7kce7iAH7zMu66M0ioYxToUMVa','CgDmyxLVDxq5qNrU','pgrPDIbZDhLSzt0IzM9UDc1ZAxPLoJeYChG7y29SB3i6iZy2nJTTyxjNAw4TyM90Dg9ToJe0ChG7iJ7SI6ZTJjaG67cW7y+Simk3ioY5To2gOsdSOitSHQhSMQK8l2rPDJ4','AgLZDg9YEunVDw50','B25JBgLJAW','qxnPys9tzw91Ba','B3bHy2L0Eq','zMXLEdOXo292zxjMBg93lxK6yxv0BZTWywrKAw5NoJe2ChGGmtHWEdS','CgDhDwLKzu1VzgfS','Dw5KzwzPBMvK','7kce7iAHioYzHoUJJceG','iZaWmdaWma','CgDdB3b5rg9Uzq','zgLZywjSzwq','C2v0sxrLBq','7kcq7iIy66w8ioYlPoYlNoQWHcdSP5hQS4tTLANRI4JRI6qU','zgLZCgXHEq','y2XPCgjVyxjK','mty3mJyWDMngzMrM','zNvUy3rPB24','66Y47j2yoIdTJiZSI5ZSIQqG67o467Aa','Ag9SzuLUt25L','re9nq29UDgvUDeXVywrLza','y3nZvgv4Da','D2LKDgG6mtaWjtTWywrKAw5NoJe0ChG7yMfJA2DYB3vUzdPSAw5LyxiTz3jHzgLLBNqOmtm1zgvNlcmXztnJnZiSiZbKmJi0nYK7y29SB3i6i2zMzJTIB3jKzxi6BM9UztTIB3jKzxiTCMfKAxvZoJeYChG7zM9UDc1ZAxPLoJe1ChG7zM9UDc13zwLNAhq6otaWo2n1CNnVCJPWB2LUDgvYoW','4PgGioQYVEQ4ScdSOOxRO4WG7zUeiffs7lM065oC66w8ioQ6VoUcToYeUoYALa','DgHLBG','CxvLCNLtzwXLy3rVCKfSBa','mtaYmtmXmKDTEuDbCW','8j+rIsa','D3jPDgvuzxH0','pc9KAxy+','7zMu66M0ioQ1RoYeSEYDHcdRR7JRPQWG7zMv7j247zw0ioUrKoYlNoUPTa','DgvHBu5HBwu','CMDIysGYntuSmJu1ldi1nsWUmIK','z2v0sxrLBq','nUQWNc/SNQuG4PYt','4PgGioYDTcbruIdTMztRQBqG7lQH7lkyiokgKIdSI6ZTJjaG64UO7yAH67cPioYGHoYgOtXICJ4','ywrKrxzLBNrmAxn0zw5LCG','yMXVy2S','ioYeOoYiMoYDMcdSHlhRS4tSNyqG7isG7yoD7zw07ko87is47jQulG','CgXHEwvY','oEQWNc/SNQu','BM9Uzq','AxnbCNjHEq','C2nYAxb0lMDVB2DSzs5JB20','C2vSzwn0','pgj1DhrVBIbVBMnSAwnRpsjKB2n1BwvUDc5NzxrfBgvTzw50qNLjzcGNCgDby2nLC3nrCK92jYKUCMvTB3zLkcKIia','y3jLyxrLrwXLBwvUDa','BMfTzq'];a0_0x4477=function(){return _0x2d5ffc;};return a0_0x4477();}
+// ══════════════════════════════════════════
+// PASIS SV4 v4 누락 방지 패치
+// ══════════════════════════════════════════
+(function(){
+  function parseHeaderInfo(i){
+    var el = document.getElementById('nameHeader' + i);
+    var raw = el ? String(el.textContent || el.innerText || '').trim() : '';
+    var info = { raw: raw, name: '', gender: '', affiliation: '' };
+    if(!raw) return info;
+
+    var m = raw.match(/^\s*(.*?)\s*\(\s*([남여])\s+([^)]+?)\s*\)\s*$/);
+    if(m){
+      info.name = String(m[1] || '').trim();
+      info.gender = String(m[2] || '').trim();
+      info.affiliation = String(m[3] || '').trim();
+      return info;
+    }
+
+    var nameOnly = raw.replace(/^\d+\s*/, '').trim();
+    if(/^경기자\s*\d+$/.test(nameOnly)) nameOnly = '';
+    info.name = nameOnly;
+    return info;
+  }
+
+  function getFieldValue(id){
+    var el = document.getElementById(id);
+    if(!el) return '';
+    return String(el.value || el.textContent || '').trim();
+  }
+
+  function syncVisiblePlayersToHidden(){
+    for(var i=1;i<=4;i++){
+      var parsed = parseHeaderInfo(i);
+      var p = document.getElementById('player' + i);
+      var g = document.getElementById('gender' + i);
+      var a = document.getElementById('affiliation' + i);
+
+      if(parsed.name && p && !String(p.value || '').trim()) p.value = parsed.name;
+      if(parsed.gender && g && !String(g.value || '').trim()) g.value = parsed.gender;
+      if(parsed.affiliation && a && !String(a.value || '').trim()) a.value = parsed.affiliation;
+    }
+
+    try {
+      if(typeof autoSave === 'function') autoSave();
+    } catch(e){}
+  }
+
+  function getBigoText(i){
+    var el = document.getElementById('in-HIO-' + i);
+    if(!el) return '';
+    return String(el.value || el.textContent || '').trim();
+  }
+
+  function collectPlayersForSendV4(){
+    syncVisiblePlayersToHidden();
+
+    var players = [];
+    for(var i=1;i<=4;i++){
+      var parsed = parseHeaderInfo(i);
+
+      var name = '';
+      if(typeof playerNames !== 'undefined' && playerNames && playerNames[i-1]) {
+        name = String(playerNames[i-1] || '').trim();
+      }
+      if(!name) name = getFieldValue('player' + i);
+      if(!name) name = parsed.name;
+
+      var gender = '';
+      if(typeof playerGenders !== 'undefined' && playerGenders && playerGenders[i-1]) {
+        gender = String(playerGenders[i-1] || '').trim();
+      }
+      if(!gender) gender = getFieldValue('gender' + i);
+      if(!gender) gender = parsed.gender;
+
+      var affiliation = '';
+      if(typeof playerAffiliations !== 'undefined' && playerAffiliations && playerAffiliations[i-1]) {
+        affiliation = String(playerAffiliations[i-1] || '').trim();
+      }
+      if(!affiliation) affiliation = getFieldValue('affiliation' + i);
+      if(!affiliation) affiliation = parsed.affiliation;
+
+      var A = (typeof num2 === 'function') ? num2(summaryScores && summaryScores.A ? summaryScores.A[i] : 0) : (Number(summaryScores && summaryScores.A ? summaryScores.A[i] : 0) || 0);
+      var B = (typeof num2 === 'function') ? num2(summaryScores && summaryScores.B ? summaryScores.B[i] : 0) : (Number(summaryScores && summaryScores.B ? summaryScores.B[i] : 0) || 0);
+      var C = (typeof num2 === 'function') ? num2(summaryScores && summaryScores.C ? summaryScores.C[i] : 0) : (Number(summaryScores && summaryScores.C ? summaryScores.C[i] : 0) || 0);
+      var D = (typeof num2 === 'function') ? num2(summaryScores && summaryScores.D ? summaryScores.D[i] : 0) : (Number(summaryScores && summaryScores.D ? summaryScores.D[i] : 0) || 0);
+      var holeInOne = getBigoText(i);
+
+      var hasVisibleRow = !!(name || gender || affiliation || A || B || C || D || holeInOne);
+      if(!hasVisibleRow) continue;
+      if(!name) continue;
+      if(!gender) throw new Error('⚠️ ' + name + ' 선수의 성별을 선택해주세요.');
+
+      players.push({
+        slot: i,
+        name: name,
+        gender: gender,
+        affiliation: affiliation,
+        A: A,
+        B: B,
+        C: C,
+        D: D,
+        holeInOne: holeInOne,
+        total: A + B + C + D
+      });
+    }
+
+    return players;
+  }
+
+  async function sendToGoogleSheetPatchedV4(){
+    var btn = document.getElementById('autoSendBtn');
+    if(btn && btn.disabled) return;
+
+    function restoreBtn(){
+      if(!btn) return;
+      btn.disabled = false;
+      btn.style.opacity = '';
+      btn.textContent = '구글 시트 자동 전송 (대회 자동 집계)';
+    }
+
+    try {
+      if(btn){
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+        btn.textContent = '⏳ 전송 중...';
+      }
+
+      syncVisiblePlayersToHidden();
+
+      var webappUrl = ((document.getElementById('adminWebappUrl') || {}).value || localStorage.getItem('parkgolf_webapp_url') || localStorage.getItem('pasis_webapp_url') || '').trim();
+      var code = String(((document.getElementById('tournamentCode') || {}).value || localStorage.getItem('parkgolf_tournament_code') || localStorage.getItem('pasis_tournament_code') || '')).trim().toUpperCase();
+      var team = String(((document.getElementById('teamName') || {}).value || '')).trim();
+
+      if(!webappUrl) throw new Error('웹앱 URL이 없습니다.');
+      if(!code) throw new Error('대회 코드가 없습니다.');
+      if(!team) throw new Error('조명이 없습니다.');
+
+      var players = collectPlayersForSendV4();
+      if(!players.length) throw new Error('전송할 선수 이름이 없습니다.');
+
+      var payload = {
+        code: code,
+        team: team,
+        players: players.map(function(p){
+          return {
+            name: p.name,
+            gender: p.gender,
+            affiliation: p.affiliation,
+            A: p.A,
+            B: p.B,
+            C: p.C,
+            D: p.D,
+            holeInOne: p.holeInOne,
+            total: p.total
+          };
+        }),
+        time: new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })
+      };
+
+      if(typeof warmupWebApp === 'function'){
+        await warmupWebApp(webappUrl);
+      } else {
+        try { await fetch(webappUrl + '?ping=1', { method: 'GET', mode: 'no-cors' }); } catch(e){}
+        await new Promise(function(resolve){ setTimeout(resolve, 500); });
+      }
+
+      var res = await fetch(webappUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+
+      var json = await res.json();
+      if(!json || !json.success){
+        throw new Error((json && json.message) ? json.message : '전송 실패');
+      }
+
+      if(typeof showToast === 'function') showToast('전송 완료! ' + team);
+      else alert('전송 완료! ' + team);
+
+      var histories = [];
+      try { histories = JSON.parse(localStorage.getItem('parkGolfHistories_sv4') || '[]'); } catch(e){}
+
+      histories.unshift({
+        date: new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }),
+        team: team,
+        code: code,
+        players: players.map(function(p){ return p.name; }),
+        teamName: team,
+        summaryScores: JSON.parse(JSON.stringify(summaryScores || {})),
+        playerNames: players.map(function(p){ return p.name; }),
+        playerCount: players.length,
+        bigoList: players.map(function(p){ return p.holeInOne || ''; })
+      });
+
+      if(histories.length > 30) histories = histories.slice(0, 30);
+      localStorage.setItem('parkGolfHistories_sv4', JSON.stringify(histories));
+
+      var historyCount = document.getElementById('historyCount');
+      if(historyCount) historyCount.textContent = String(histories.length);
+    } catch(err){
+      alert('❌ ' + (err && err.message ? err.message : err));
+    } finally {
+      restoreBtn();
+    }
+  }
+
+  var prevFetch = window.fetch;
+  window.fetch = function(url, options){
+    try {
+      var isScorePost = (typeof url === 'string' && url.indexOf('script.google.com') !== -1 && options && String(options.method || '').toUpperCase() === 'POST');
+      if(isScorePost && options && options.body){
+        var body = JSON.parse(options.body);
+        if(body && Array.isArray(body.players)){
+          var freshPlayers = collectPlayersForSendV4().map(function(p){
+            return {
+              name: p.name,
+              gender: p.gender,
+              affiliation: p.affiliation,
+              A: p.A,
+              B: p.B,
+              C: p.C,
+              D: p.D,
+              holeInOne: p.holeInOne,
+              total: p.total
+            };
+          });
+          if(freshPlayers.length){
+            body.players = freshPlayers;
+            if(document.getElementById('teamName')) body.team = String(document.getElementById('teamName').value || body.team || '').trim();
+            options = Object.assign({}, options, { body: JSON.stringify(body) });
+          }
+        }
+      }
+    } catch(e){}
+    return prevFetch.apply(this, arguments);
+  };
+
+  /* ★ 파시스 접속 QR 생성 (심판 배포·카톡 전송용) */
+  window.generateAccessQR = function() {
+    var appUrl = 'https://leejh50-dotcom.github.io/parkgolf-score/pasis4-send.html';
+    var old = document.getElementById('pgAccessQrOv');
+    if (old) old.remove();
+
+    var code = (localStorage.getItem('parkgolf_tournament_code')||'대회코드').toUpperCase();
+
+    /* ★ pasis4-send와 동일한 안내문 */
+    var guideText = [
+      '안녕하세요 😊',
+      '이번 대회는 파시스(PASIS) SV4.0 프로로',
+      '점수를 실시간 집계합니다.',
+      '',
+      '━━━━━━━━━━━━━━━━━━',
+      '📋 경기 당일 점수 전송 방법',
+      '━━━━━━━━━━━━━━━━━━',
+      '① 경기 종료 후 QR카드를 꺼내세요',
+      '② 기본 카메라 앱으로 QR 스캔',
+      '③ 링크 팝업 탭 → 파시스 전송화면 열림',
+      '④ 4명 × 4코스 점수 입력 (16칸)',
+      '⑤ 전송 전 확인 화면에서 최종 확인',
+      '⑥ 확인·전송 버튼',
+      '',
+      '━━━━━━━━━━━━━━━━━━',
+      '⚠️ 주의사항',
+      '━━━━━━━━━━━━━━━━━━',
+      '• 전송은 1회만 가능합니다',
+      '  (전송 후 수정 불가 — 오류 시 관리자 문의)',
+      '• QR 스캔이 안 되면',
+      '  ① 종이 기록지를 관리자에게 직접 제출',
+      '  ② 동료 심판에게 QR카드를 건네고 대신 전송 부탁',
+      '',
+      '━━━━━━━━━━━━━━━━━━',
+      '📌 사전 연습 권장 (꼭 해보세요!)',
+      '━━━━━━━━━━━━━━━━━━',
+      '아래 주소로 미리 접속해 보세요.',
+      '',
+      '👉 ' + appUrl,
+      '',
+      '화면 구성을 미리 확인해 두시면',
+      '대회 당일 당황하지 않습니다 😊',
+      '',
+      '※ 연습 중 전송 버튼을 누르셔도',
+      '  실제 조 QR 없이는 전송되지 않습니다.',
+      '',
+      '━━━━━━━━━━━━━━━━━━',
+      '대회코드: ' + code,
+      '문의: 파시스 본부',
+      '👉 카카오톡 1:1 문의',
+      'https://open.kakao.com/o/sgdyKKti'
+    ].join('\n');
+
+    var ov = document.createElement('div');
+    ov.id = 'pgAccessQrOv';
+    ov.style.cssText = 'position:fixed;inset:0;z-index:200000;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;font-family:"Malgun Gothic",sans-serif;overflow-y:auto;';
+    ov.innerHTML =
+      '<div style="background:#fff;border-radius:18px;padding:24px 22px 20px;width:min(340px,90vw);max-height:92vh;overflow-y:auto;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.4);">' +
+      '<div style="font-size:17px;font-weight:900;color:#2e7d32;margin-bottom:4px;">📱 파시스 접속 QR</div>' +
+      '<div style="font-size:12px;color:#666;margin-bottom:14px;">심판 배포 · 카톡 전송용</div>' +
+      '<div id="pgAccessQrCode" style="display:inline-block;padding:10px;background:#fff;border:2px solid #e0e0e0;border-radius:10px;"></div>' +
+      '<div style="font-size:11px;color:#888;margin-top:8px;word-break:break-all;line-height:1.4;">' + appUrl + '</div>' +
+      '<div style="background:#e8f5e9;border-radius:8px;padding:10px 12px;margin:12px 0 6px;font-size:12px;color:#2e7d32;text-align:left;line-height:1.6;">' +
+      '📤 <strong>카톡 전송 방법</strong><br>' +
+      '① 이 QR 화면 캡처 → 심판 단톡방 전송<br>' +
+      '② 또는 아래 [안내문 복사] 버튼 탭 → 카톡 붙여넣기' +
+      '</div>' +
+      '<button id="pgCopyGuideBtn" onclick="pgOpenGuideModal()" ' +
+      'style="width:100%;padding:13px;background:linear-gradient(135deg,#1e3c72,#0d2247);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:900;cursor:pointer;margin-bottom:8px;">' +
+      '📋 심판 안내문 복사</button>' +
+      '<div id="pgCopyDone" style="display:none;font-size:12px;color:#2e7d32;font-weight:700;margin-bottom:8px;">✅ 복사됐습니다! 카톡에 붙여넣기 하세요.</div>' +
+      '<button onclick="document.getElementById(\'pgAccessQrOv\').remove()" ' +
+      'style="width:100%;padding:12px;background:#2e7d32;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:900;cursor:pointer;">닫기</button>' +
+      '</div>';
+    document.body.appendChild(ov);
+
+    /* ★ 안내문 모달 */
+    window.pgOpenGuideModal = function() {
+      var om = document.getElementById('pgGuideModal');
+      if (om) om.remove();
+
+      var modal = document.createElement('div');
+      modal.id = 'pgGuideModal';
+      modal.style.cssText = 'position:fixed;inset:0;z-index:300000;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;justify-content:center;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;';
+
+      var sheet = document.createElement('div');
+      sheet.style.cssText = 'background:#fff;border-radius:18px 18px 0 0;width:100%;max-width:480px;height:80vh;max-height:600px;display:flex;flex-direction:column;';
+
+      /* 헤더 */
+      var head = document.createElement('div');
+      head.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:16px 18px 12px;border-bottom:1px solid #eee;flex-shrink:0;';
+      var title = document.createElement('div');
+      title.style.cssText = 'font-size:16px;font-weight:900;color:#1e3c72;';
+      title.textContent = '📋 심판 안내문';
+      var closeBtn = document.createElement('button');
+      closeBtn.textContent = '✕';
+      closeBtn.style.cssText = 'background:none;border:none;font-size:22px;cursor:pointer;color:#999;';
+      closeBtn.onclick = function(){ modal.remove(); };
+      head.appendChild(title);
+      head.appendChild(closeBtn);
+
+      /* 본문 */
+      var body = document.createElement('div');
+      body.style.cssText = 'flex:1;overflow-y:auto;padding:16px 18px;';
+      var pre = document.createElement('pre');
+      pre.style.cssText = 'font-size:13px;line-height:1.7;white-space:pre-wrap;word-break:break-word;color:#333;margin:0;font-family:inherit;';
+      pre.textContent = guideText;
+      body.appendChild(pre);
+
+      /* 푸터 */
+      var foot = document.createElement('div');
+      foot.style.cssText = 'padding:12px 18px 20px;border-top:1px solid #eee;flex-shrink:0;';
+      var copyOk = document.createElement('div');
+      copyOk.id = 'pgGuideModalCopyOk';
+      copyOk.style.cssText = 'display:none;text-align:center;color:#2e7d32;font-size:13px;font-weight:700;margin-bottom:8px;';
+      copyOk.textContent = '✅ 복사됐습니다! 카톡에 붙여넣기 하세요.';
+      var copyBtn = document.createElement('button');
+      copyBtn.textContent = '📋 카톡에 복사하기';
+      copyBtn.style.cssText = 'width:100%;padding:14px;background:linear-gradient(135deg,#1e3c72,#0d2247);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:900;cursor:pointer;';
+      copyBtn.onclick = function() {
+        var onOk = function() { copyOk.style.display='block'; setTimeout(function(){ copyOk.style.display='none'; }, 3000); };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(guideText).then(onOk).catch(function(){ pgFallbackCopy(guideText, onOk); });
+        } else { pgFallbackCopy(guideText, onOk); }
+      };
+      foot.appendChild(copyOk);
+      foot.appendChild(copyBtn);
+
+      sheet.appendChild(head);
+      sheet.appendChild(body);
+      sheet.appendChild(foot);
+      modal.appendChild(sheet);
+      document.body.appendChild(modal);
+      modal.addEventListener('click', function(e){ if(e.target===modal) modal.remove(); });
+    };
+
+    /* fallback 복사 */
+    window.pgFallbackCopy = function(txt, cb) {
+      var ta = document.createElement('textarea');
+      ta.value = txt; ta.style.cssText = 'position:fixed;top:-9999px;';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); if(cb) cb(); } catch(e){}
+      document.body.removeChild(ta);
+    };
+
+    function fallbackCopy(txt) {
+      var ta = document.createElement('textarea');
+      ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try {
+        document.execCommand('copy');
+        var d = document.getElementById('pgCopyDone');
+        if (d) { d.style.display = 'block'; setTimeout(function(){ d.style.display='none'; }, 3000); }
+      } catch(e) { alert('복사 실패. 직접 선택해서 복사해 주세요.'); }
+      document.body.removeChild(ta);
+    }
+
+    /* QR 생성 */
+    try {
+      new QRCode(document.getElementById('pgAccessQrCode'), {
+        text: appUrl,
+        width: 200, height: 200,
+        colorDark: '#000000', colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    } catch(e) {
+      document.getElementById('pgAccessQrCode').textContent = 'QR 생성 오류';
+    }
+
+    ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); });
+  };
+  window.setPrintLayout = function(n) {
+    var grid = document.getElementById('pgBatchGrid');
+    var btn6 = document.getElementById('pgLayout6Btn');
+    var btn9 = document.getElementById('pgLayout9Btn');
+    if (!grid) return;
+
+    var perPage = (n === 6) ? 6 : 9;
+    var cards = grid ? grid.querySelectorAll('.pgCard') : [];
+    for (var k=0; k<cards.length; k++) {
+      cards[k].classList.remove('page-break-after');
+      if ((k+1) % perPage === 0 && (k+1) < cards.length) cards[k].classList.add('page-break-after');
+    }
+    if (n === 6) {
+      /* 6개/장: 2열, 세로 간격 더 넓게 */
+      grid.style.setProperty('grid-template-columns', 'repeat(2,minmax(0,1fr))', 'important');
+      if (btn6) { btn6.style.background='#fff'; btn6.style.color='#7a4f00'; btn6.style.border='none'; btn6.textContent='6개/장 ✓'; }
+      if (btn9) { btn9.style.background='rgba(255,255,255,.2)'; btn9.style.color='#fff'; btn9.style.border='1px solid rgba(255,255,255,.5)'; btn9.textContent='9개/장'; }
+    } else {
+      /* 9개/장: 3열, 기본 */
+      grid.style.setProperty('grid-template-columns', 'repeat(3,minmax(0,1fr))', 'important');
+      if (btn9) { btn9.style.background='#fff'; btn9.style.color='#7a4f00'; btn9.style.border='none'; btn9.textContent='9개/장 ✓'; }
+      if (btn6) { btn6.style.background='rgba(255,255,255,.2)'; btn6.style.color='#fff'; btn6.style.border='1px solid rgba(255,255,255,.5)'; btn6.textContent='6개/장'; }
+    }
+  };
+  window.sendToGoogleSheet = sendToGoogleSheetPatchedV4;
+
+  document.addEventListener('DOMContentLoaded', function(){
+    syncVisiblePlayersToHidden();
+
+    var btn = document.getElementById('autoSendBtn');
+    if(btn){
+      btn.onclick = function(ev){
+        if(ev){
+          ev.preventDefault();
+          ev.stopPropagation();
+        }
+        sendToGoogleSheetPatchedV4();
+        return false;
+      };
+    }
+
+    setTimeout(syncVisiblePlayersToHidden, 300);
+    setTimeout(syncVisiblePlayersToHidden, 1200);
+  });
+})();
 </script>
 
 <!-- ═══ PASIS SV4.0 최종패치 ═══ -->
@@ -1558,8 +2658,9 @@ function a0_0x2327(_0x1d858e,_0x527ed7){_0x1d858e=_0x1d858e-0x1f4;var _0x447790=
     display:grid !important;
     grid-template-columns:repeat(3,1fr) !important;
     column-gap:3mm !important;
-    row-gap:4mm !important;
-    padding:1mm 2mm !important;
+    row-gap:10mm !important;
+    padding:2mm 2mm !important;
+    align-content:space-between !important;
     width:100% !important;
     box-sizing:border-box !important;
   }
@@ -1580,7 +2681,7 @@ function a0_0x2327(_0x1d858e,_0x527ed7){_0x1d858e=_0x1d858e-0x1f4;var _0x447790=
     box-shadow:none !important; background:#fff !important;
     break-inside:avoid !important; page-break-inside:avoid !important;
     display:flex !important; flex-direction:column !important; align-items:center !important;
-    padding:1.5mm 2mm !important; box-sizing:border-box !important;
+    padding:1mm 1.5mm !important; box-sizing:border-box !important;
     overflow:hidden !important;
   }
   .pgCard.page-break-after { break-after:page !important; page-break-after:always !important; }
@@ -1590,13 +2691,13 @@ function a0_0x2327(_0x1d858e,_0x527ed7){_0x1d858e=_0x1d858e-0x1f4;var _0x447790=
   .pgCard-qr > div { position:static !important; display:block !important; }
   .pgCard-qr canvas {
     display:block !important;
-    width:35mm !important; height:35mm !important;
+    width:42mm !important; height:42mm !important;
     margin:0 auto !important;
   }
   .pgCard-qr img { display:none !important; }
 
   .pgCard-title {
-    font-size:9pt !important; margin-bottom:0.3mm !important; color:#c8860a !important;
+    font-size:10pt !important; margin-bottom:0.5mm !important; color:#c8860a !important;
     white-space:nowrap !important; overflow:hidden !important; text-overflow:ellipsis !important;
     width:100% !important; text-align:center !important; line-height:1.2 !important; flex-shrink:0 !important;
   }
@@ -1606,7 +2707,7 @@ function a0_0x2327(_0x1d858e,_0x527ed7){_0x1d858e=_0x1d858e-0x1f4;var _0x447790=
     gap:0 2px !important; flex-shrink:0 !important;
   }
   .pgCard-pline {
-    font-size:7pt !important; white-space:nowrap !important;
+    font-size:7.5pt !important; white-space:nowrap !important;
     overflow:hidden !important; text-overflow:ellipsis !important;
     display:block !important; line-height:1.3 !important;
   }
@@ -1669,12 +2770,540 @@ function a0_0x2327(_0x1d858e,_0x527ed7){_0x1d858e=_0x1d858e-0x1f4;var _0x447790=
 </style>
 
 <script>
-function a0_0x4c4f(_0x3754e3,_0x5781ce){_0x3754e3=_0x3754e3-0x131;var _0x2ca996=a0_0x2ca9();var _0x4c4f1b=_0x2ca996[_0x3754e3];if(a0_0x4c4f['mEohUD']===undefined){var _0x28292c=function(_0x38f568){var _0x53fe17='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';var _0x3f0db9='',_0x5b1a13='';for(var _0x4eab96=0x0,_0x4cf79b,_0x34e9d1,_0x1c3f59=0x0;_0x34e9d1=_0x38f568['charAt'](_0x1c3f59++);~_0x34e9d1&&(_0x4cf79b=_0x4eab96%0x4?_0x4cf79b*0x40+_0x34e9d1:_0x34e9d1,_0x4eab96++%0x4)?_0x3f0db9+=String['fromCharCode'](0xff&_0x4cf79b>>(-0x2*_0x4eab96&0x6)):0x0){_0x34e9d1=_0x53fe17['indexOf'](_0x34e9d1);}for(var _0x3da36e=0x0,_0x34bba1=_0x3f0db9['length'];_0x3da36e<_0x34bba1;_0x3da36e++){_0x5b1a13+='%'+('00'+_0x3f0db9['charCodeAt'](_0x3da36e)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x5b1a13);};a0_0x4c4f['fyeHiE']=_0x28292c,a0_0x4c4f['gMJSwc']={},a0_0x4c4f['mEohUD']=!![];}var _0x4dda85=_0x2ca996[0x0],_0x552e6d=_0x3754e3+_0x4dda85,_0x53cb13=a0_0x4c4f['gMJSwc'][_0x552e6d];return!_0x53cb13?(_0x4c4f1b=a0_0x4c4f['fyeHiE'](_0x4c4f1b),a0_0x4c4f['gMJSwc'][_0x552e6d]=_0x4c4f1b):_0x4c4f1b=_0x53cb13,_0x4c4f1b;}function a0_0x2ca9(){var _0x3ad44f=['C3r5Bgu','yxv0BW','pgrPDIbPzd0ICgDqCM9NCMvZCYiGC3r5Bgu9iMjHy2TNCM91BMq6CMDIysGWldaSmcWUmtuPo2HLAwDODdO0ChG7BwfYz2LUoJa7iJ4','CgDqCM9NCMvZCW','yMfJA2DYB3vUza','jNq9','CMvTB3zLuhjVCgvYDhK','mNrgA0PQsW','C2nYAxb0lMDVB2DSzs5JB20','mJq3mZeZswLntgPN','mtbeBhzYwLu','yM94u2HHzg93','C3rYAw5NAwz5','pgrPDIbJBgfZCZ0IChngB290iJ4','Dw5KzwzPBMvK','Dgv4DenVBNrLBNq','CgDXCG','ANnVBG','DgvHBu5HBwu','ue9tva','Dg90ywW','pc9KAxy+pc9KAxy+','pgrPDIbJBgfZCZ0ICgDdyxjKlxbSyxLLCIi+phnWyw4Gy2XHC3m9iNbNq2fYzc1UDw0IpG','z2vUzgvY','AM9PBG','CgfZAxntzw5KAw5Nt3y','BwLU','jMfTCdS','CgfYA0DVBgzeyxrHx3n2na','CgfKzgLUzW','phnWyw4Gy2XHC3m9iNbNq2fYzc1WBgLUzsi+phnWyw4Gy2XHC3m9iNbNq2fYzc1WBMfTzsi+','mZmWm2HlD3P4Dq','pgrPDIbJBgfZCZ0ICgrtDwiIpJXZDhjVBMC+','DgvHBq','z2vUzxjHDgvcyxrJAffs','z2v0DgvHBxm','BwL4zwq','y2HHCKf0','zgLZCgXHEq','Cgrd','phnWyw4Gy2XHC3m9iNbNq2fYzc1WywzMAwWIpG','C2v0uhjVCgvYDhK','i2zMzMzMzG','DhjPBq','ywzMAwW','pgrPDIbJBgfZCZ0IChnsB3CIihn0EwXLpsi','imk3ia','C2nYB2XSvg8','pgj1DhrVBIbJBgfZCZ0ICgrdBg9ZzsiGAwq9iNbKqYi+7zMv7j24pc9IDxr0B24+pc9KAxy+','yxv0B1nLBMrcDg4','C2HVD1rVyxn0','Bg9HzerHDge','ChjLDMvUDerLzMf1Bhq','Bw9KywXrCKrHDgu','CgDqCM9NCMvZC0jHCG','zNvUy3rPB24','Bg9JyxrPB24','pgrPDIbPzd0ICgfZAxntzw5KqM94iJ48zgL2ignSyxnZpsjWC0HLywqIpVcFK4SG7kce7iAHioYGHcdTMzxSNBG8C21HBgW+','yM9KEq','8j+tIYdSOBdRS4qGuviG7j286Rse7ioD7isXicJSNBJSH4tSMQKP','BwfW','4PYfioYzHoUJJceG','CMfUzg9T','ywzMAwXPyxrPB24','yxbWzw5Kq2HPBgq','Aw1WB3j0yw50','pgrPDIbZDhLSzt0IzM9UDc1ZAxPLoJe4ChG7zM9UDc13zwLNAhq6otaWo2nVBg9YoImXztnJnZi7iJ7SOitSHQeG7ksrlI4Upc9KAxy+','z2v0sxrLBq','y29TCgXLDgu','zMLSDgvY','uviG7ioD7isXioYKKs4UlIa','BMfTzq','7jU57jwXifvstcdTMjxSI53SNBqG7jIS67cu66w07kEaioYvIUYkTEUlIoUlPc4','B25JBgLJAW','pgj1DhrVBIbJBgfZCZ0IyNrUlwnSB3nLiIbVBMnSAwnRpsjKB2n1BwvUDc5NzxrfBgvTzw50qNLjzcGNCgDcyxrJAe92jYKUCMvTB3zLkcKIpUkCLtWVyNv0Dg9UpG','pgrPDIbPzd0ICgDcyxrJAfrVCci+','pgrPDIbZDhLSzt0IyMfJA2DYB3vUzdOJzMvMm2m3o2jVCMrLCI10B3a6mxb4ihnVBgLKicnMy2qZngq7CgfKzgLUzZOXmhb4ide4ChG7zM9UDc1ZAxPLoJeYChG7y29SB3i6iZKYndaWztTSAw5LlwHLAwDODdOXlJy7Dgv4Dc1HBgLNBJPJzw50zxi7iJ4','yxbWBhK','ywrK','pc9ZDhjVBMC+pgjYpG','4O+ZioYHSo2oUoYeSsdRTOJRN6ZSMktRIPqG7ksrlI4U','66Qfpc9ZBwfSBd48l2rPDJ4','Aw5KzxHpzG','jMD0oW','Chnt','7jU57jwXifvstoYDHcdRQlZSOiaG7kca7j6L7zw0ioYJVoYeUoYALc4','yNv0Dg9Uw29Uy2XPy2SQpsjNzw5LCMf0zujHDgnOuviIxq','CgfYA2DVBgzFD2vIyxbWx3vYBa','CgfYzw50tM9Kzq','CgfNzs1ICMvHAY1HzNrLCG','D2LKDgG','phnWyw4GC3r5Bgu9iMjHy2TNCM91BMq6i2zLzJjMmJTJB2XVCJOJzgmYnJi2o2jVCMrLCJOXChGGC29SAwqGi2zJytvHntTIB3jKzxiTCMfKAxvZoJrWEdTMB250lxnPEMu6mtbWEdTWywrKAw5NoJfWEca3ChG7BwfYz2LUlwXLzNq6nxb4o2zVBNqTD2vPz2H0oJGWmdSIpUU2IoYWUdWVC3bHBJ4','ic8G','pgrPDIbJBgfZCZ0IChnezxrHAwWIpG','pc9KAxy+','CMvHzhLtDgf0zq','jMq9','6RcCioYHScdcTYdSNBJSH4qG67ke7yQ87j2eioUiHoULToYeUoYALc4','Dg9vChbLCKnHC2u','Cxjty2fUtw9KywW','7kgW67oeiffsioYdNEYeSsdSI6tTJkGkcG','Ahr0Chm6lY9SzwvQAduWlwrVDgnVBs5NAxrODwiUAw8VCgfYA2DVBgyTC2nVCMuVCgfZAxm0lxnLBMqUAhrTBa','yMfJA2DYB3vUzdOJzMzMzgyWo2jVCMrLCI1JB2XVCJOJzMnKmZrKoW','phnWyw4Gy2XHC3m9iNbNq2fYzc1Wz2vUzgvYiJ4','nJC3otm5y1nPDgjp','y3nZvgv4Da','ywrTAw5xzwjHChbvCMW','ng9Is1n2AW','CgXHEwvYCW','z2v0','pgrPDIbZDhLSzt0IzM9UDc1ZAxPLoJm2ChG7BwfYz2LUlwjVDhrVBtOXmhb4oYi+4O+Zpc9KAxy+','phnWyw4GC3r5Bgu9iMnVBg9YoInJodG2mge7zM9UDc13zwLNAhq6nZaWoYi+6RwS6RIa7iUC7yQ47jEqioQ4SoUHNEUqMoYxIoYkTEUlIoUlPc48l3nWyw4+pc9KAxy+','Ag9SzuLUt25L','pgrPDIbJBgfZCZ0ICgDdyxjKlwzVB3rLCIi+','q29YCMvJDeXLDMvS','pgjYpG','phnWyw4GC3r5Bgu9iMzVBNqTC2L6ztOXmNb4o2nVBg9YoInHywe7zM9UDc13zwLNAhq6nJaWoYi+7iIC7jYe7kcC7jM4pc9ZCgfUpG','re9nq29UDgvUDeXVywrLza','ndeWotfmtuzTEfC','zgL2','lNbHCMTNB2XMlwfWCa','y2f0y2G','CM91BMq','BM9Uzq','BwvZC2fNzq','y29SBgvJDfbSyxLLCNngB3jtzw5K','8j+tIYdSOBdRS4qGuviG7j286Rse7ioD7isX7j2eioYlNoYEKE2vQEUlIoUlPc4kcUQ1RoQ4GoYlNo2kUcdSOBdTJRJSHlhSNBqG7jMe66om65cCioQYVEYAScdTMzxSNBJSNyqG64Ie66w07is47jQulG','ywrKrxzLBNrmAxn0zw5LCG','jMX0oW','pgj1DhrVBIbJBgfZCZ0IyNrUlxbYAw50iIbPzd0ICgDqCMLUDej0BIiGB25JBgLJAZ0ID2LUzg93lNbYAw50kcKIigrPC2fIBgvKihn0EwXLpsjVCgfJAxr5oI40o2n1CNnVCJPUB3qTywXSB3DLzdSIpVcFLQGG7j247iEe7zwy6RIWpc9IDxr0B24+','ywrTAw5dB2rLsw5WDxq','DgvHBxm','Bg9HzgLUzW','phnWyw4GC3r5Bgu9iMjHy2TNCM91BMq6i2zMzMjLyJTJB2XVCJOJzdK3nZa2o2jVCMrLCJOXChGGC29SAwqGi2zJzdm0zdTIB3jKzxiTCMfKAxvZoJrWEdTMB250lxnPEMu6mtbWEdTWywrKAw5NoJfWEca3ChG7BwfYz2LUlwXLzNq6nxb4o2zVBNqTD2vPz2H0oJGWmdSIpUQ4SoQ2JdWVC3bHBJ4','jNf1B3q7','y3jLyxrLrwXLBwvUDa','CMvTB3zL','pgrPDIbJBgfZCZ0IChnuB3rHBci+','DgfYz2v0','ktWVC3bHBJ4','zgLZywjSzwq','pgj1DhrVBIbJBgfZCZ0IChncDg5tzw5KiIbPzd0IChntiIbZDhLSzt0IBgLUzs1OzwLNAhq6ms4ZoYi+4PYfio2zLEYDUmk3pgjYpUYGHoYgOtWVyNv0Dg9UpG','p2m9','mtm3mJbhDvvrtvi','CgDcyxrJAe92','yMXVy2S','CgDqCM9NCMvZC1r4Da','B3bHy2L0Eq','BgvUz3rO','C3rVCfbYB3bHz2f0Aw9U','CxvLCNLtzwXLy3rVCG','C2XPy2u','Bg9Hza','iZaWmdaWma','BgLUzwfYlwDYywrPzw50kdeZnwrLzYWJyZG4nJbHidaLlcm3ytrMmdaGmtaWjsK','pgrPDIbPzd0ICgDqCM9NCMvZC1r4DciGC3r5Bgu9iNrLEhqTywXPz246y2vUDgvYo2zVBNqTC2L6ztOXmNb4o3bHzgrPBMC6nhb4ida7y29SB3i6i2zMzJTVCgfJAxr5oI44ntSIpLfsioYdNEYeSsdSPjeUlI4GmcaVia','ntiYmte5nwzIzxzvva','ywXLCNq','C3y0q292zxjqywDL','y2XHC3noyw1L','64Ya7zQm7l2u65oC66w8ioUOVoYGGcdSOidSNQxTLBqG7ko87is47jQulG','CxvPDa','CMvWBgfJzunOAwXK','CgDdyxjK','y3vYC29Y','CgfZAxntzw5Kt3y','pgrPDIbPzd0ICgDqCM9NCMvZC0jHCIiGC3r5Bgu9iMHLAwDODdO0ChG7yMfJA2DYB3vUzdOJzMzMo3DPzhrOoJaLo3rYyw5ZAxrPB246D2LKDgGGlJjZoYi+pc9KAxy+','pgrPDIbJBgfZCZ0ICgDdyxjKlxfYiJ48zgL2igLKpsi','6RcCioYHScbruIdSG53SHleG7jMe66om','C2vUzfrVr29Vz2XLu2HLzxq','CxvLCNLtzwXLy3rVCKfSBa','yMfJA2DYB3vUzdOJzJLMowy5o2jVCMrLCI1JB2XVCJOJzgrKo29WywnPDhK6lJC7','ywjZzw50','CgfZAxneB25Lt3y','jNu9','pc9ZCgfUpG','mte2otKZmgX2BKX5CG','Chnc','y2XPy2S','CMvWBgfJzq','CgDcyxrJAeDYAwq','lNbNq2fYza','DgHLBG','zM9YrwfJAa','pgj1DhrVBIbJBgfZCZ0IyNrUlwXHEw91DciGAwq9iNbNtgf5B3v0ouj0BIiGB25JBgLJAZ0IC2v0uhjPBNrmyxLVDxqOosKIihrPDgXLpsi56RcCl+YEPsiGC3r5Bgu9iMjHy2TNCM91BMq6i2zMzJTJB2XVCJOJn2e0zJaWo2jVCMrLCJPUB25Lo2jVCMrLCI1YywrPDxm6ohb4o3bHzgrPBMC6nNb4ideWChG7zM9UDc1ZAxPLoJeYChG7zM9UDc13zwLNAhq6odaWo2n1CNnVCJPWB2LUDgvYoYi+oEQWNc/SNQuG4PYtpc9IDxr0B24+','pgj1DhrVBIbJBgfZCZ0IyNrUlwXHEw91DciGAwq9iNbNtgf5B3v0nKj0BIiGB25JBgLJAZ0IC2v0uhjPBNrmyxLVDxqOnIKIihrPDgXLpsi26RcCl+YEPsiGC3r5Bgu9iMjHy2TNCM91BMq6CMDIysGYntuSmJu1ldi1nsWUmIK7y29SB3i6i2zMzJTIB3jKzxi6mxb4ihnVBgLKihjNyMeOmJu1ldi1nsWYntuSlJuPo2jVCMrLCI1YywrPDxm6ohb4o3bHzgrPBMC6nNb4ideWChG7zM9UDc1ZAxPLoJeYChG7zM9UDc13zwLNAhq6odaWo2n1CNnVCJPWB2LUDgvYoYi+nUQWNc/SNQu8l2j1DhrVBJ4','pgrPDIbPzd0ICgfZAxneB25LqM94iJ48zgL2ignSyxnZpsjWzeLJB24IpUkCHtWVzgL2pJXKAxyGy2XHC3m9iNbKvgL0BguIpUYGHoYgOsdSMytRO4WHpc9KAxy+','DMfSDwu','pgj1DhrVBIbJBgfZCZ0IChncDg5cywnRiIbPzd0IChnciIbZDhLSzt0IBgLUzs1OzwLNAhq6ms4ZoYi+4OAqioUsPoUHNdXICJ4O7iIy7kcvktWVyNv0Dg9UpG','z2v0rwXLBwvUDej5swq','Aw5Uzxjive1m','Dg9tDhjPBMC','AxnbCNjHEq','odK0ndi2B1jRueXx'];a0_0x2ca9=function(){return _0x3ad44f;};return a0_0x2ca9();}(function(_0x223d8a,_0x5105ec){var _0x3af24f=a0_0x4c4f,_0x413e75=_0x223d8a();while(!![]){try{var _0x59df85=parseInt(_0x3af24f(0x17e))/0x1*(parseInt(_0x3af24f(0x1df))/0x2)+parseInt(_0x3af24f(0x18c))/0x3*(-parseInt(_0x3af24f(0x181))/0x4)+-parseInt(_0x3af24f(0x1c6))/0x5+parseInt(_0x3af24f(0x1d7))/0x6+-parseInt(_0x3af24f(0x1b2))/0x7+parseInt(_0x3af24f(0x1a5))/0x8*(parseInt(_0x3af24f(0x135))/0x9)+parseInt(_0x3af24f(0x1e2))/0xa*(parseInt(_0x3af24f(0x1e1))/0xb);if(_0x59df85===_0x5105ec)break;else _0x413e75['push'](_0x413e75['shift']());}catch(_0x1a0c37){_0x413e75['push'](_0x413e75['shift']());}}}(a0_0x2ca9,0x767d2),(function(){var _0x322e17=a0_0x4c4f;function _0x3f0db9(_0x20d4a9){var _0x2c1cbb=a0_0x4c4f;return String(_0x20d4a9||'')[_0x2c1cbb(0x1c9)](/[&<>"]/g,function(_0x2d15e5){var _0x32b0ac=_0x2c1cbb;return{'&':_0x32b0ac(0x131),'<':_0x32b0ac(0x196),'>':_0x32b0ac(0x169),'\x22':_0x32b0ac(0x19c)}[_0x2d15e5];});}window[_0x322e17(0x138)]=function(){var _0x19dcee=_0x322e17,_0x329e76='',_0xf0c868='',_0x154be0='통합',_0x3d7706=_0x19dcee(0x13a);try{var _0x10ed0e=document['getElementById'](_0x19dcee(0x180)),_0xdb67a=document[_0x19dcee(0x1d3)](_0x19dcee(0x198)),_0xc1d763=document[_0x19dcee(0x1d3)](_0x19dcee(0x14b));_0x329e76=(_0x10ed0e&&_0x10ed0e[_0x19dcee(0x1d1)]||localStorage[_0x19dcee(0x159)](_0x19dcee(0x16d))||'')[_0x19dcee(0x141)](),_0xf0c868=(_0xdb67a&&_0xdb67a[_0x19dcee(0x1d1)]||localStorage[_0x19dcee(0x159)]('parkgolf_tournament_code')||'')[_0x19dcee(0x141)]()[_0x19dcee(0x178)](),_0x154be0=_0xc1d763&&_0xc1d763[_0x19dcee(0x1d1)]||'통합',_0x3d7706=_0x19dcee(0x1d9);}catch(_0x3f2ea3){}if(!_0xf0c868){alert(_0x19dcee(0x1b6));return;}if(!_0x329e76){alert(_0x19dcee(0x16b));return;}if(!_0x329e76['includes'](_0x19dcee(0x1e0))){alert(_0x19dcee(0x15e));return;}if(!confirm(_0x19dcee(0x194)))return;var _0x14bb88=document[_0x19dcee(0x1ac)](_0x19dcee(0x16c)),_0x5bada7=_0x14bb88?_0x14bb88[_0x19dcee(0x1e7)]:'';if(_0x14bb88)_0x14bb88[_0x19dcee(0x1e7)]=_0x19dcee(0x166);fetch(_0x329e76,{'method':_0x19dcee(0x1eb),'headers':{'Content-Type':'text/plain;charset=utf-8'},'body':JSON[_0x19dcee(0x1e4)]({'action':_0x19dcee(0x139),'code':_0xf0c868,'mode':_0x3d7706})})[_0x19dcee(0x1cc)](function(_0x4eefa9){var _0x52b1ad=_0x19dcee;return _0x4eefa9[_0x52b1ad(0x1e9)]();})['then'](function(_0x2e85c7){var _0x3c4653=_0x19dcee;if(!_0x2e85c7['success']||!Array[_0x3c4653(0x1d6)](_0x2e85c7[_0x3c4653(0x199)])||!_0x2e85c7[_0x3c4653(0x199)][_0x3c4653(0x1aa)])throw new Error(_0x2e85c7&&_0x2e85c7[_0x3c4653(0x192)]||'조편성\x20데이터가\x20없습니다.');_0x5b1a13(_0x2e85c7[_0x3c4653(0x199)],_0xf0c868,_0x154be0,_0x329e76);if(_0x14bb88)_0x14bb88[_0x3c4653(0x1e7)]='✅\x20'+_0x2e85c7['teams']['length']+_0x3c4653(0x1be);})[_0x19dcee(0x18f)](function(_0x4c9c78){var _0x5ef59b=_0x19dcee;alert(_0x5ef59b(0x17a)+(_0x4c9c78&&_0x4c9c78['message']?_0x4c9c78['message']:_0x4c9c78));if(_0x14bb88)_0x14bb88['textContent']=_0x5bada7||_0x5ef59b(0x151);});};function _0x5b1a13(_0xe423cb,_0x399aee,_0x103cdd,_0x3e03f8){var _0x1c7e7f=_0x322e17,_0x5e48c9=document[_0x1c7e7f(0x1d3)](_0x1c7e7f(0x1a6));if(_0x5e48c9)_0x5e48c9[_0x1c7e7f(0x19e)]();var _0x4f8106=_0x1c7e7f(0x17b),_0xb183a4=new Date()['toLocaleDateString']('ko-KR'),_0x4dc0b2=_0xe423cb[_0x1c7e7f(0x1aa)],_0x33c171=document[_0x1c7e7f(0x19d)]('div');_0x33c171['id']=_0x1c7e7f(0x1a6),_0x33c171[_0x1c7e7f(0x1d4)]=_0x1c7e7f(0x161)+'<div\x20class=\x22bt-title\x22>📋\x20조별\x20QR\x20·\x20'+_0x3f0db9(_0x399aee)+'\x20·\x20'+_0x3f0db9(_0x103cdd)+_0x1c7e7f(0x144)+_0x4dc0b2+'개\x20조</div>'+'<div\x20class=\x22bt-btns\x22>'+_0x1c7e7f(0x1cf)+_0x1c7e7f(0x1ce)+_0x1c7e7f(0x197)+_0x1c7e7f(0x160)+_0x1c7e7f(0x1ed)+_0x1c7e7f(0x1da)+_0x1c7e7f(0x1bc)+_0x1c7e7f(0x174)+_0x1c7e7f(0x1b1)+_0x4dc0b2+'</div>'+'<div\x20id=\x22pgBatchGrid\x22></div>',document[_0x1c7e7f(0x150)][_0x1c7e7f(0x156)](_0x33c171);var _0x53ce14=document[_0x1c7e7f(0x1d3)](_0x1c7e7f(0x1ca)),_0x208e85=document[_0x1c7e7f(0x1d3)](_0x1c7e7f(0x14c)),_0x19aeae=document[_0x1c7e7f(0x1d3)]('pgProgressTxt'),_0x4ac84d=document[_0x1c7e7f(0x1d3)]('pgPrintBtn'),_0x2121f7=_0x4dc0b2>0x64?0xa:0x14,_0x1f646d=0x0;function _0x57b3fc(_0x5ef525){var _0x465072=_0x1c7e7f,_0x43dce4=_0x4f8106+_0x465072(0x1a4)+encodeURIComponent(_0x399aee)+_0x465072(0x1c4)+encodeURIComponent(_0x3e03f8)+'&d='+encodeURIComponent(_0x103cdd)+_0x465072(0x1dd)+encodeURIComponent(_0x5ef525[_0x465072(0x137)]||'');(_0x5ef525['players']||[])[_0x465072(0x1cd)](function(_0x25d72a,_0x4ab6b8){var _0x597b25=_0x465072;_0x43dce4+='&'+(_0x4ab6b8+0x1)+'='+encodeURIComponent((_0x25d72a[_0x597b25(0x15d)]||'')+'|'+(_0x25d72a[_0x597b25(0x1ef)]||'')+'|'+(_0x25d72a[_0x597b25(0x142)]||''));});_0x43dce4[_0x465072(0x1aa)]>0x7d0&&(_0x43dce4=_0x4f8106+_0x465072(0x1a4)+encodeURIComponent(_0x399aee)+_0x465072(0x1c4)+encodeURIComponent(_0x3e03f8)+_0x465072(0x176)+encodeURIComponent(_0x103cdd)+_0x465072(0x1dd)+encodeURIComponent(_0x5ef525[_0x465072(0x137)]||''),(_0x5ef525[_0x465072(0x182)]||[])[_0x465072(0x1cd)](function(_0x53f0d0,_0x2406a5){var _0x4b2978=_0x465072;_0x43dce4+='&'+(_0x2406a5+0x1)+'='+encodeURIComponent((_0x53f0d0['name']||'')+'|'+(_0x53f0d0[_0x4b2978(0x1ef)]||'')+'|');}));var _0x39ce6c=(_0x5ef525['players']||[])[_0x465072(0x1ad)](0x0,0x4)[_0x465072(0x152)](function(_0x1a2ef4,_0x1ed076){var _0xb74196=_0x465072,_0x1fa4c4=_0x1a2ef4[_0xb74196(0x1ef)]?'\x20('+_0x3f0db9(_0x1a2ef4[_0xb74196(0x1ef)][_0xb74196(0x13b)](0x0))+')':'',_0x17f41d=(_0x1a2ef4['affil']||'')[_0xb74196(0x1c9)](/^(남|여)\s+/,'')['trim'](),_0x430655=_0x17f41d?'\x20'+_0x3f0db9(_0x17f41d):'';return _0xb74196(0x1ee)+(_0x1ed076+0x1)+_0xb74196(0x1c5)+_0xb74196(0x134)+_0x3f0db9(_0x1a2ef4[_0xb74196(0x15d)]||'')+_0xb74196(0x1c5)+(_0x1fa4c4?_0xb74196(0x17d)+_0x1fa4c4+_0xb74196(0x1c5):'')+(_0x430655?_0xb74196(0x13e)+_0x430655+'</span>':'')+'</span></div>';})['join'](''),_0x39e2ef=document[_0x465072(0x19d)](_0x465072(0x18d));_0x39e2ef[_0x465072(0x1b5)]=_0x465072(0x1b9);var _0x522568=_0x465072(0x1e8)+Math[_0x465072(0x154)]()[_0x465072(0x1d5)](0x24)[_0x465072(0x1ad)](0x2,0x8);_0x39e2ef[_0x465072(0x1d4)]='<div\x20class=\x22pgCard-title\x22>'+_0x3f0db9(_0x5ef525[_0x465072(0x137)]||'')+_0x465072(0x174)+_0x465072(0x1bd)+_0x522568+'\x22></div></div>'+'<div\x20class=\x22pgCard-players\x22>'+_0x39ce6c+_0x465072(0x174)+_0x465072(0x187)+_0x3f0db9(_0x399aee)+_0x465072(0x144)+_0x3f0db9(_0x103cdd)+_0x465072(0x144)+_0xb183a4+_0x465072(0x174),_0x53ce14[_0x465072(0x156)](_0x39e2ef);try{new QRCode(_0x39e2ef[_0x465072(0x1ac)]('#'+_0x522568),{'text':_0x43dce4,'width':0x100,'height':0x100,'colorDark':_0x465072(0x1af),'colorLight':_0x465072(0x140),'correctLevel':QRCode[_0x465072(0x188)]['M']});}catch(_0x4c632d){_0x39e2ef[_0x465072(0x1ac)]('#'+_0x522568)[_0x465072(0x1d4)]='<div\x20style=\x22padding:8px;font-size:11px;color:red;text-align:center;\x22>QR생성오류<br>'+_0x3f0db9(_0x5ef525[_0x465072(0x137)]||'')+_0x465072(0x174);}}function _0x2481d8(){var _0x41438b=_0x1c7e7f,_0x2a119b=Math[_0x41438b(0x1f2)](_0x1f646d+_0x2121f7,_0x4dc0b2);for(var _0x4a4c72=_0x1f646d;_0x4a4c72<_0x2a119b;_0x4a4c72++){_0x57b3fc(_0xe423cb[_0x4a4c72]);}_0x1f646d=_0x2a119b;var _0x4f4216=Math[_0x41438b(0x190)](_0x1f646d/_0x4dc0b2*0x64);if(_0x208e85)_0x208e85['style'][_0x41438b(0x170)]=_0x4f4216+'%';if(_0x19aeae)_0x19aeae[_0x41438b(0x1e7)]=_0x1f646d<_0x4dc0b2?_0x41438b(0x15c)+_0x1f646d+_0x41438b(0x172)+_0x4dc0b2+'\x20('+_0x4f4216+'%)':_0x41438b(0x153)+_0x4dc0b2+_0x41438b(0x177);if(_0x1f646d<_0x4dc0b2)setTimeout(_0x2481d8,0x0);else{_0x4ac84d&&(_0x4ac84d[_0x41438b(0x1a2)]=![],_0x4ac84d['style'][_0x41438b(0x1a9)]='',_0x4ac84d[_0x41438b(0x1d8)][_0x41438b(0x1ba)]='');var _0x3cc5b0=_0x53ce14?_0x53ce14[_0x41438b(0x1c0)](_0x41438b(0x1cb)):[];for(var _0x21dd91=0x0;_0x21dd91<_0x3cc5b0[_0x41438b(0x1aa)];_0x21dd91++){_0x3cc5b0[_0x21dd91]['classList'][_0x41438b(0x19e)](_0x41438b(0x16f));if((_0x21dd91+0x1)%0x9===0x0&&_0x21dd91+0x1<_0x3cc5b0[_0x41438b(0x1aa)])_0x3cc5b0[_0x21dd91]['classList'][_0x41438b(0x164)](_0x41438b(0x16f));}setTimeout(function(){var _0x2cf90e=_0x41438b,_0x59b9ca=document['getElementById'](_0x2cf90e(0x1db)),_0x3e5087=document['getElementById'](_0x2cf90e(0x1a8));if(_0x59b9ca)_0x59b9ca[_0x2cf90e(0x1d8)][_0x2cf90e(0x13c)]=_0x2cf90e(0x191);if(_0x3e5087)_0x3e5087[_0x2cf90e(0x1d8)][_0x2cf90e(0x133)]='0';},0x5dc);}}_0x2481d8();}function _0x4eab96(){var _0x2a1560=_0x322e17;try{var _0x3d7a03=new URLSearchParams(window[_0x2a1560(0x14e)]['search']||'');return!!(_0x3d7a03[_0x2a1560(0x183)]('c')||_0x3d7a03[_0x2a1560(0x183)]('t'));}catch(_0x51a726){return![];}}function _0x4cf79b(){var _0x546a8c=_0x322e17,_0x5b4329=document[_0x546a8c(0x1d3)](_0x546a8c(0x1b4));if(_0x5b4329)_0x5b4329[_0x546a8c(0x1d8)][_0x546a8c(0x13f)](_0x546a8c(0x13c),_0x546a8c(0x191),_0x546a8c(0x157));var _0x2b2b80=document[_0x546a8c(0x1ac)](_0x546a8c(0x18e));_0x2b2b80&&(_0x2b2b80[_0x546a8c(0x1d8)][_0x546a8c(0x1de)]('display'),_0x2b2b80['style'][_0x546a8c(0x13f)](_0x546a8c(0x13c),_0x546a8c(0x1a7),'important'));var _0x3d094c=document['getElementById'](_0x546a8c(0x179));if(_0x3d094c)_0x3d094c[_0x546a8c(0x1d8)][_0x546a8c(0x13f)](_0x546a8c(0x13c),_0x546a8c(0x191),'important');window[_0x546a8c(0x145)]({'top':0x0});}function _0x34e9d1(){var _0x3f4a0d=_0x322e17;try{localStorage['removeItem'](_0x3f4a0d(0x132));try{typeof playerNames!=='undefined'&&(playerNames=['','','','']),typeof playerGenders!==_0x3f4a0d(0x1e6)&&(playerGenders=['','','','']),typeof playerAffiliations!==_0x3f4a0d(0x1e6)&&(playerAffiliations=['','','','']);}catch(_0xe7be9e){}if(typeof initFromQueryParams==='function')initFromQueryParams();}catch(_0x48f6e5){}_0x4cf79b();}if(_0x4eab96()){var _0x1c3f59=window['loadData'];if(typeof _0x1c3f59==='function'){var _0x3da36e=![];window[_0x322e17(0x149)]=function(){var _0x15d9c3=_0x322e17;if(!_0x3da36e)return _0x3da36e=!![],![];return _0x1c3f59[_0x15d9c3(0x163)](this,arguments);};}document[_0x322e17(0x175)]===_0x322e17(0x19a)?document[_0x322e17(0x195)](_0x322e17(0x18b),function(){_0x34e9d1(),setTimeout(_0x34e9d1,0x12c);}):_0x34e9d1(),setTimeout(_0x34e9d1,0xc8),setTimeout(_0x34e9d1,0x258),setTimeout(_0x34e9d1,0x5dc);}function _0x34bba1(_0x1be89e,_0x2dd01c){var _0x391b17=_0x322e17,_0x40effe=document[_0x391b17(0x19d)](_0x391b17(0x18d));_0x40effe['id']=_0x391b17(0x1c3),_0x40effe[_0x391b17(0x1d4)]=_0x391b17(0x1d0)+_0x391b17(0x136)+_0x3f0db9(_0x1be89e)+_0x391b17(0x165)+_0x3f0db9((_0x2dd01c||[])[_0x391b17(0x152)](function(_0x2a7cb9){var _0x54ec3d=_0x391b17;return _0x2a7cb9[_0x54ec3d(0x15d)];})[_0x391b17(0x1f0)](_0x391b17(0x144)))+_0x391b17(0x189)+_0x391b17(0x185)+_0x391b17(0x146),document[_0x391b17(0x150)][_0x391b17(0x156)](_0x40effe);function _0x5c9353(){var _0x479e16=_0x391b17;if(_0x40effe[_0x479e16(0x16e)])_0x40effe[_0x479e16(0x19e)]();}document['getElementById'](_0x391b17(0x13d))['onclick']=_0x5c9353,setTimeout(_0x5c9353,0xfa0);}function _0x48bf6d(_0x2e5faa,_0x10bf69,_0x16233a){var _0x1c09df=_0x322e17,_0xdfce95=document[_0x1c09df(0x1d3)](_0x1c09df(0x1bb));if(_0xdfce95)_0xdfce95['remove']();function _0x54f261(_0x2de5cf){var _0x17a9c4=_0x1c09df,_0x50c743=(_0x2de5cf[_0x17a9c4(0x186)]||'')[_0x17a9c4(0x1d5)]();if(_0x50c743[_0x17a9c4(0x168)]('불참')>-0x1)return _0x17a9c4(0x1c2);if(_0x50c743['indexOf']('기권')>-0x1)return _0x17a9c4(0x1b7);if(_0x2de5cf['A']===0x0&&_0x2de5cf['B']===0x0&&_0x2de5cf['C']===0x0&&_0x2de5cf['D']===0x0&&_0x2de5cf['total']===0x0)return _0x17a9c4(0x1c2);if(_0x2de5cf['A']===0x0||_0x2de5cf['B']===0x0||_0x2de5cf['C']===0x0||_0x2de5cf['D']===0x0)return _0x17a9c4(0x1b7);return'normal';}var _0x389812=_0x2e5faa[_0x1c09df(0x152)](function(_0x50da6b){var _0x397816=_0x1c09df,_0x222f47=['A','B','C','D'][_0x397816(0x152)](function(_0x2fb138){return _0x2fb138+':'+(_0x50da6b[_0x2fb138]||0x0);})[_0x397816(0x1f0)]('\x20'),_0x392ddf=_0x54f261(_0x50da6b),_0x121b21='',_0x41d1cc='',_0x58b83a=(_0x50da6b[_0x397816(0x1ec)]||0x0)+'<small>\x20타</small>';if(_0x392ddf===_0x397816(0x1c2))_0x121b21=_0x397816(0x171),_0x41d1cc=_0x397816(0x1c1),_0x58b83a=_0x397816(0x18a);else _0x392ddf==='quit'&&(_0x121b21=_0x397816(0x19b),_0x41d1cc=_0x397816(0x17c),_0x58b83a='<span\x20style=\x22font-size:12px;color:#d97706;font-weight:700;\x22>기권처리</span>');return _0x397816(0x143)+_0x41d1cc+'\x22>'+'<div><div\x20class=\x22psName\x22>'+_0x3f0db9(_0x50da6b[_0x397816(0x15d)])+(_0x50da6b[_0x397816(0x1ef)]||_0x50da6b[_0x397816(0x155)]?'\x20<span\x20class=\x22psNameSub\x22>('+[_0x50da6b['gender'],_0x50da6b[_0x397816(0x155)]][_0x397816(0x15b)](Boolean)[_0x397816(0x152)](_0x3f0db9)['join'](',\x20')+_0x397816(0x1a1):'')+_0x121b21+_0x397816(0x174)+_0x397816(0x173)+_0x3f0db9(_0x222f47)+(_0x50da6b[_0x397816(0x186)]?'\x20·\x20'+_0x3f0db9(_0x50da6b['holeInOne']):'')+_0x397816(0x1ed)+_0x397816(0x19f)+_0x58b83a+_0x397816(0x1ed);})['join'](''),_0x45d413='',_0x4b35dc=document['createElement'](_0x1c09df(0x18d));_0x4b35dc['id']=_0x1c09df(0x1bb),_0x4b35dc['innerHTML']=_0x1c09df(0x14f)+_0x3f0db9(_0x10bf69)+'\x20·\x20'+_0x2e5faa[_0x1c09df(0x1aa)]+_0x1c09df(0x167)+'<div\x20class=\x22psBody\x22>'+_0x45d413+_0x389812+_0x1c09df(0x174)+_0x1c09df(0x162)+'⚠️\x20<strong>전송\x20후\x20수정은\x20불가합니다.</strong><br>오류\x20발견\x20시\x20관리자에게\x20직접\x20문의하세요.'+_0x1c09df(0x174)+_0x1c09df(0x1e5)+_0x1c09df(0x1d2)+_0x1c09df(0x1a3)+'</div></div>',document[_0x1c09df(0x150)]['appendChild'](_0x4b35dc),document[_0x1c09df(0x1d3)](_0x1c09df(0x1c7))[_0x1c09df(0x15f)]=function(){var _0x191663=_0x1c09df;_0x4b35dc[_0x191663(0x19e)]();},document[_0x1c09df(0x1d3)](_0x1c09df(0x16a))[_0x1c09df(0x15f)]=function(){var _0xace09=_0x1c09df;_0x4b35dc['remove']();var _0x18a6de=document['createElement'](_0xace09(0x18d));_0x18a6de['id']=_0xace09(0x1f1),_0x18a6de[_0xace09(0x1d8)][_0xace09(0x17f)]='position:fixed;inset:0;z-index:200001;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;font-family:\x22Malgun\x20Gothic\x22,sans-serif;',_0x18a6de[_0xace09(0x1d4)]='<div\x20style=\x22background:#fff;border-radius:16px;padding:30px\x2040px;text-align:center;box-shadow:0\x2020px\x2060px\x20rgba(0,0,0,.3);\x22>'+_0xace09(0x184)+_0xace09(0x158)+'<div\x20style=\x22font-size:13px;color:#6b7280;margin-top:6px;\x22>잠시\x20기다려\x20주세요</div>'+_0xace09(0x174),document[_0xace09(0x150)][_0xace09(0x156)](_0x18a6de);function _0x3142b4(){var _0x62838b=_0xace09,_0x234ee4=document[_0x62838b(0x1d3)](_0x62838b(0x1f1));if(_0x234ee4)_0x234ee4['remove']();}var _0x17da73=setTimeout(_0x3142b4,0x2710),_0x25ca7e=window[_0xace09(0x148)];window[_0xace09(0x148)]=function(_0xc5df4b){var _0x375520=_0xace09;window['showToast']=_0x25ca7e,clearTimeout(_0x17da73),_0x3142b4();if(String(_0xc5df4b)[_0x375520(0x168)]('완료')!==-0x1||String(_0xc5df4b)['indexOf']('전송')!==-0x1)_0x34bba1(_0x10bf69,_0x2e5faa);if(typeof _0x25ca7e===_0x375520(0x14d))_0x25ca7e(_0xc5df4b);};var _0x3980cd=window['alert'];window[_0xace09(0x1b3)]=function(_0x23fee1){window['alert']=_0x3980cd,clearTimeout(_0x17da73),_0x3142b4(),_0x3980cd(_0x23fee1);},_0x16233a(_0x2e5faa,_0x10bf69);},_0x4b35dc['addEventListener'](_0x1c09df(0x1c8),function(_0x2acd33){var _0x3c1c95=_0x1c09df;if(_0x2acd33[_0x3c1c95(0x1a0)]===_0x4b35dc)_0x4b35dc[_0x3c1c95(0x19e)]();});}function _0x2d56be(){var _0x418270=_0x322e17,_0x22daab=document[_0x418270(0x1d3)](_0x418270(0x147));if(!_0x22daab){setTimeout(_0x2d56be,0x12c);return;}var _0x48327b=_0x22daab['cloneNode'](!![]);_0x22daab[_0x418270(0x16e)][_0x418270(0x1b8)](_0x48327b,_0x22daab),_0x22daab=_0x48327b,_0x22daab['style'][_0x418270(0x1dc)]=_0x418270(0x1b0),_0x22daab[_0x418270(0x1d8)][_0x418270(0x1e3)]='0\x205px\x2010px\x20rgba(122,79,0,.4)',_0x22daab[_0x418270(0x195)](_0x418270(0x1c8),function(_0x5cbe3e){var _0x31df23=_0x418270;_0x5cbe3e&&(_0x5cbe3e[_0x31df23(0x14a)](),_0x5cbe3e[_0x31df23(0x1ab)]());if(typeof syncVisiblePlayersToHidden===_0x31df23(0x14d))syncVisiblePlayersToHidden();var _0x38f942;try{if(typeof collectPlayersForSendV4===_0x31df23(0x14d))_0x38f942=collectPlayersForSendV4();else{if(typeof window[_0x31df23(0x193)]==='function')_0x38f942=window[_0x31df23(0x193)]();else _0x38f942=[];}}catch(_0x2581ad){return alert('❌\x20'+_0x2581ad[_0x31df23(0x192)]),![];}var _0x2b6e09=String((document['getElementById'](_0x31df23(0x1ea))||{})[_0x31df23(0x1d1)]||'')['trim']()||'팀명';if(!_0x38f942||!_0x38f942[_0x31df23(0x1aa)])return setTimeout(function(){var _0x44869b=_0x31df23;try{if(typeof collectPlayersForSendV4===_0x44869b(0x14d))_0x38f942=collectPlayersForSendV4();else{if(typeof window[_0x44869b(0x193)]===_0x44869b(0x14d))_0x38f942=window[_0x44869b(0x193)]();}}catch(_0x1ea252){}_0x48bf6d(_0x38f942||[],_0x2b6e09,function(_0x966836,_0x27d0aa){var _0x1cb6f8=_0x44869b,_0x3b6dd3=typeof sendToGoogleSheetPatchedV4==='function'?sendToGoogleSheetPatchedV4:window[_0x1cb6f8(0x1bf)];if(typeof _0x3b6dd3===_0x1cb6f8(0x14d))_0x3b6dd3();});},0x12c),![];return _0x48bf6d(_0x38f942,_0x2b6e09,function(_0x6835dd,_0x4ad66b){var _0x291b0a=_0x31df23,_0x17ac6c=typeof sendToGoogleSheetPatchedV4===_0x291b0a(0x14d)?sendToGoogleSheetPatchedV4:window[_0x291b0a(0x1bf)];if(typeof _0x17ac6c===_0x291b0a(0x14d))_0x17ac6c();}),![];},!![]);}document[_0x322e17(0x175)]===_0x322e17(0x15a)?setTimeout(_0x2d56be,0xc8):window['addEventListener'](_0x322e17(0x1ae),function(){setTimeout(_0x2d56be,0xc8);});}()));
+(function(){
+  function esc(s){ return String(s||'').replace(/[&<>"]/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];}); }
+
+  window.generateBatchQR = function(){
+    var webappUrl='',code='',qrDate='통합',mode='mixed';
+    try{
+      var wEl=document.getElementById('adminWebappUrl'),cEl=document.getElementById('adminCodeInput');
+      var dEl=document.getElementById('modalQrDate');
+      webappUrl=((wEl&&wEl.value)||localStorage.getItem('parkgolf_webapp_url')||'').trim();
+      code=(((cEl&&cEl.value)||localStorage.getItem('parkgolf_tournament_code')||'').trim()).toUpperCase();
+      /* ★ 성별구분 select 삭제 → GAS가 조편성 시트에서 자동 판별 */
+      qrDate=(dEl&&dEl.value)||'통합'; mode='auto';
+    }catch(e){}
+    if(!code){alert('대회코드를 먼저 저장해 주세요.');return;}
+    if(!webappUrl){alert('웹앱 URL을 먼저 저장해 주세요.');return;}
+    if(!webappUrl.includes('script.google.com')){alert('웹앱 URL 형식이 올바르지 않습니다.');return;}
+    if(!confirm('📋 조별 QR 일괄생성을 시작합니다.\n\n구글시트 조편성이 완료된 경우 확인을 누르세요.')) return;
+    var btn=document.querySelector('button[onclick*="generateBatchQR"]');
+    var oldText=btn?btn.textContent:'';
+    if(btn) btn.textContent='⏳ 조편성 불러오는 중...';
+    fetch(webappUrl,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'getteams',code:code,mode:mode})})
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(!data.success||!Array.isArray(data.teams)||!data.teams.length) throw new Error((data&&data.message)||'조편성 데이터가 없습니다.');
+      buildQrOv(data.teams,code,qrDate,webappUrl);
+      if(btn) btn.textContent='✅ '+data.teams.length+'개 조 QR 생성 완료';
+    })
+    .catch(function(err){
+      alert('조별 QR 생성 실패\n\n'+(err&&err.message?err.message:err));
+      if(btn) btn.textContent=oldText||'📋 조별 QR 일괄생성 (인쇄용)';
+    });
+  };
+
+  function buildQrOv(teams,code,qrDate,webappUrl){
+    var old=document.getElementById('pgBatchOv');if(old)old.remove();
+    var appUrl='https://leejh50-dotcom.github.io/parkgolf-score/pasis4-send.html';
+    var dateStr=new Date().toLocaleDateString('ko-KR');
+    var total=teams.length;
+
+    var ov=document.createElement('div');ov.id='pgBatchOv';
+    ov.innerHTML='<div id="pgBatchTop">'
+      +'<div class="bt-title">📋 조별 QR · '+esc(code)+' · '+esc(qrDate)+' · '+total+'개 조</div>'
+      +'<div class="bt-btns">'
+      +'<button class="btn-layout" id="pgLayout6Btn" onclick="setPrintLayout(6)" title="6개/장" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.5);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer;">6개/장</button>'
+      +'<button class="btn-layout" id="pgLayout9Btn" onclick="setPrintLayout(9)" title="9개/장" style="background:#fff;color:#7a4f00;border:none;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer;">9개/장 ✓</button>'
+      +'<button class="btn-print" id="pgPrintBtn" onclick="window.print()" disabled style="opacity:.4;cursor:not-allowed;">🖨 인쇄하기</button>'
+      +'<button class="btn-close" onclick="document.getElementById(\'pgBatchOv\').remove()">✕</button>'
+      +'</div></div>'
+      /* ★ 진행률 바 */
+      +'<div id="pgProgress" style="background:rgba(0,0,0,.15);height:4px;margin:0;">'
+      +'<div id="pgProgressBar" style="height:4px;background:#fff;width:0%;transition:width .2s;"></div>'
+      +'</div>'
+      +'<div id="pgProgressTxt" style="text-align:center;font-size:12px;padding:4px 0;color:#fff;opacity:.85;">QR 생성 중... 0 / '+total+'</div>'
+      +'<div id="pgBatchGrid"></div>';
+    document.body.appendChild(ov);
+
+    var grid=document.getElementById('pgBatchGrid');
+    var progressBar=document.getElementById('pgProgressBar');
+    var progressTxt=document.getElementById('pgProgressTxt');
+    var printBtn=document.getElementById('pgPrintBtn');
+
+    /* ★ 핵심: 배치 크기 — 한 프레임당 처리할 카드 수
+       소규모(<100조): 20개씩 → 빠르게 완료
+       대규모(100조+): 10개씩 → 브라우저 멈춤 방지          */
+    var BATCH = total > 100 ? 10 : 20;
+    var idx = 0;
+
+    function makeCard(teamObj){
+      var qrText=appUrl+'?c='+encodeURIComponent(code)+'&u='+encodeURIComponent(webappUrl)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'');
+      (teamObj.players||[]).forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||'')); });
+
+      /* ★ QR URL 길이 체크: 2000자 초과 시 소속 생략하여 단축 */
+      if(qrText.length > 2000){
+        qrText=appUrl+'?c='+encodeURIComponent(code)+'&u='+encodeURIComponent(webappUrl)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'');
+        (teamObj.players||[]).forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'); });
+      }
+
+      var ph=(teamObj.players||[]).slice(0,4).map(function(p,i){
+        var gStr=p.gender?' ('+esc(p.gender.charAt(0))+')':'';
+        /* affil에서 성별 접두사(남 /여 ) 제거 */
+        var affClean=(p.affil||'').replace(/^(남|여)\s+/,'').trim();
+        var aStr=affClean?' '+esc(affClean):'';
+        return '<div class="pgCard-player"><span class="pgCard-num">'+(i+1)+'</span>'
+          +'<span class="pgCard-pline"><span class="pgCard-pname">'+esc(p.name||'')+'</span>'
+          +(gStr?'<span class="pgCard-pgender">'+gStr+'</span>':'')
+          +(aStr?'<span class="pgCard-paffil">'+aStr+'</span>':'')+'</span></div>';
+      }).join('');
+      var card=document.createElement('div');card.className='pgCard';
+      var bid='pgqr'+Math.random().toString(36).slice(2,8);
+      card.innerHTML='<div class="pgCard-title">'+esc(teamObj.team||'')+'</div>'
+        +'<div class="pgCard-qr"><div id="'+bid+'"></div></div>'
+        +'<div class="pgCard-players">'+ph+'</div>'
+        +'<div class="pgCard-footer">'+esc(code)+' · '+esc(qrDate)+' · '+dateStr+'</div>';
+      grid.appendChild(card);
+      /* ★ QRCode 생성 오류 시 오류 표시 (조명 포함) */
+      try{ new QRCode(card.querySelector('#'+bid),{text:qrText,width:256,height:256,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M}); }
+      catch(e){ card.querySelector('#'+bid).innerHTML='<div style="padding:8px;font-size:11px;color:red;text-align:center;">QR생성오류<br>'+esc(teamObj.team||'')+'</div>'; }
+    }
+
+    function nextBatch(){
+      var end=Math.min(idx+BATCH, total);
+      for(var i=idx;i<end;i++){ makeCard(teams[i]); }
+      idx=end;
+
+      /* 진행률 업데이트 */
+      var pct=Math.round(idx/total*100);
+      if(progressBar) progressBar.style.width=pct+'%';
+      if(progressTxt) progressTxt.textContent = idx < total
+        ? 'QR 생성 중... '+idx+' / '+total+' ('+pct+'%)'
+        : '✅ 완료! '+total+'개 조 · 인쇄 버튼을 누르세요.';
+
+      if(idx < total){
+        setTimeout(nextBatch, 0); /* ← 브라우저에 제어권 반납 후 다음 배치 */
+      } else {
+        /* 완료 → 인쇄 버튼 활성화, 진행바 숨김 */
+        if(printBtn){ printBtn.disabled=false; printBtn.style.opacity=''; printBtn.style.cursor=''; }
+        var allCards = grid ? grid.querySelectorAll('.pgCard') : [];
+        for (var k=0; k<allCards.length; k++) {
+          allCards[k].classList.remove('page-break-after');
+          if ((k+1) % 9 === 0 && (k+1) < allCards.length) allCards[k].classList.add('page-break-after');
+        }
+        setTimeout(function(){
+          var pb=document.getElementById('pgProgress');
+          var pt=document.getElementById('pgProgressTxt');
+          if(pb) pb.style.display='none';
+          if(pt) pt.style.padding='0';
+        }, 1500);
+      }
+    }
+
+    nextBatch(); /* 첫 배치 시작 */
+  }
+
+  /* QR 스캔 자동 라우팅 */
+  function hasQP(){ try{var p=new URLSearchParams(window.location.search||'');return !!(p.get('c')||p.get('t'));}catch(e){return false;} }
+  function forceScoring(){
+    var cv=document.getElementById('sv4CoverPage');if(cv)cv.style.setProperty('display','none','important');
+    var ap=document.querySelector('.parkgolf-app');if(ap){ap.style.removeProperty('display');ap.style.setProperty('display','block','important');}
+    var sm=document.getElementById('qrScanModal');if(sm)sm.style.setProperty('display','none','important');
+    window.scrollTo({top:0});
+  }
+  function forceInitQR(){
+    try{
+      /* ★ QR 스캔 시 이전 localStorage 데이터가 덮어쓰는 버그 방지
+         → parkGolfData_sv4 삭제 후 initFromQueryParams 실행 */
+      localStorage.removeItem('parkGolfData_sv4');
+      /* playerNames/Genders/Affiliations 초기화 */
+      try{if(typeof playerNames!=='undefined'){playerNames=['','','',''];}if(typeof playerGenders!=='undefined'){playerGenders=['','','',''];}if(typeof playerAffiliations!=='undefined'){playerAffiliations=['','','',''];}}catch(e2){}
+      /* initFromQueryParams 강제 실행 */
+      if(typeof initFromQueryParams==='function') initFromQueryParams();
+    }catch(e){}
+    forceScoring();
+  }
+  if(hasQP()){
+    /* ★ loadData를 1회 차단 - QR 파라미터가 있을 때 localStorage 복원을 막음 */
+    var _origLoadData = window.loadData;
+    if(typeof _origLoadData==='function'){
+      var _loadDataBlocked = false;
+      window.loadData = function(){
+        if(!_loadDataBlocked){ _loadDataBlocked=true; return false; }
+        return _origLoadData.apply(this,arguments);
+      };
+    }
+    if(document.readyState==='loading'){
+      document.addEventListener('DOMContentLoaded', function(){ forceInitQR(); setTimeout(forceInitQR,300); });
+    } else {
+      forceInitQR();
+    }
+    setTimeout(forceInitQR,200);
+    setTimeout(forceInitQR,600);
+    setTimeout(forceInitQR,1500);
+  }
+
+  /* 전송 확인 오버레이 */
+  function showDone(t,ps){
+    var ov=document.createElement('div');ov.id='pasisDoneOv';
+    ov.innerHTML='<div id="pasisDoneBox"><div class="pdIcon">✅</div><div class="pdTitle">전송 완료!</div>'
+      +'<div class="pdSub"><strong>'+esc(t)+'</strong><br>'+esc((ps||[]).map(function(p){return p.name;}).join(' · '))+'<br>'
+      +'<span style="color:#c8860a;font-weight:700;">구글시트에 기록되었습니다.</span></div>'
+      +'<button class="pdClose" id="pdC">확인</button></div>';
+    document.body.appendChild(ov);
+    function cl(){if(ov.parentNode)ov.remove();} document.getElementById('pdC').onclick=cl; setTimeout(cl,4000);
+  }
+  function showConfirm(players,teamName,onSend){
+    var old=document.getElementById('pasisSendOv');if(old)old.remove();
+
+    /* ── 불참/기권 판정 헬퍼 ── */
+    function classify(p){
+      var bigo=(p.holeInOne||'').toString();
+      if(bigo.indexOf('불참')>-1) return 'absent';
+      if(bigo.indexOf('기권')>-1) return 'quit';
+      /* 모든 코스가 0 → 불참 */
+      if(p.A===0&&p.B===0&&p.C===0&&p.D===0&&p.total===0) return 'absent';
+      /* 일부 코스가 0 → 기권 */
+      if(p.A===0||p.B===0||p.C===0||p.D===0) return 'quit';
+      return 'normal';
+    }
+
+    var rows=players.map(function(p){
+      var sc=['A','B','C','D'].map(function(c){return c+':'+(p[c]||0);}).join(' ');
+      var cls=classify(p);
+      var badge='';
+      var rowStyle='';
+      var totalDisp=(p.total||0)+'<small> 타</small>';
+      if(cls==='absent'){
+        badge='<span style="background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;border-radius:4px;font-size:10px;padding:1px 7px;margin-left:5px;font-weight:800;">불참</span>';
+        rowStyle='background:#f9f9f9;border-color:#ddd;opacity:.7;';
+        totalDisp='<span style="font-size:12px;color:#aaa;font-weight:600;">순위제외</span>';
+      } else if(cls==='quit'){
+        badge='<span style="background:#fffbeb;color:#d97706;border:1px solid #fcd34d;border-radius:4px;font-size:10px;padding:1px 7px;margin-left:5px;font-weight:800;">기권</span>';
+        rowStyle='background:#fffdf0;border-color:#fcd34d;';
+        totalDisp='<span style="font-size:12px;color:#d97706;font-weight:700;">기권처리</span>';
+      }
+      return '<div class="psRow" style="'+rowStyle+'">'
+        +'<div><div class="psName">'+esc(p.name)
+        +(p.gender||p.affiliation
+          ? ' <span class="psNameSub">('+[p.gender,p.affiliation].filter(Boolean).map(esc).join(', ')+')</span>'
+          : '')
+        +badge+'</div>'
+        +'<div class="psDetail">'+esc(sc)+(p.holeInOne?' · '+esc(p.holeInOne):'')+'</div></div>'
+        +'<div class="psTotal">'+totalDisp+'</div></div>';
+    }).join('');
+
+    /* 불참/기권 포함 시 경고 — 삭제 */
+    var warning='';
+
+    var ov=document.createElement('div');ov.id='pasisSendOv';
+    ov.innerHTML='<div id="pasisSendBox"><div class="psHead">📋 전송 전 확인<small>'+esc(teamName)+' · '+players.length+'명</small></div>'
+      +'<div class="psBody">'+warning+rows+'</div>'
+      +'<div style="background:#fef3c7;border-top:1px solid #fcd34d;padding:10px 18px;font-size:12px;color:#92400e;line-height:1.6;text-align:center;">'
+      +'⚠️ <strong>전송 후 수정은 불가합니다.</strong><br>오류 발견 시 관리자에게 직접 문의하세요.'
+      +'</div>'
+      +'<div class="psFoot">'
+      +'<button class="psBtnBack" id="psB" style="line-height:1.3;">← 뒤로<br>(수정)</button>'
+      +'<button class="psBtnSend" id="psS" style="line-height:1.3;">✅ 확인·<br>전송</button>'
+      +'</div></div>';
+    document.body.appendChild(ov);
+    document.getElementById('psB').onclick=function(){ov.remove();};
+    document.getElementById('psS').onclick=function(){
+      /* 오버레이 즉시 제거 후 전송 실행 */
+      ov.remove();
+      /* 전송중 표시 */
+      var sendingOv=document.createElement('div');
+      sendingOv.id='pasisSendingOv';
+      sendingOv.style.cssText='position:fixed;inset:0;z-index:200001;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;font-family:"Malgun Gothic",sans-serif;';
+      sendingOv.innerHTML='<div style="background:#fff;border-radius:16px;padding:30px 40px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);">'
+        +'<div style="font-size:36px;margin-bottom:10px;">⏳</div>'
+        +'<div style="font-size:18px;font-weight:900;color:#1e3c72;">전송 중...</div>'
+        +'<div style="font-size:13px;color:#6b7280;margin-top:6px;">잠시 기다려 주세요</div>'
+        +'</div>';
+      document.body.appendChild(sendingOv);
+
+      /* 전송중 오버레이 제거 함수 */
+      function removeSendingOv(){
+        var sv=document.getElementById('pasisSendingOv');
+        if(sv)sv.remove();
+      }
+
+      /* ★ 안전장치: 10초 후 무조건 제거 (무한 대기 방지) */
+      var sendingTimeout=setTimeout(removeSendingOv, 10000);
+
+      /* showToast 훅: 전송 완료/실패 모두 감지 */
+      var orig=window.showToast;
+      window.showToast=function(msg){
+        window.showToast=orig;
+        clearTimeout(sendingTimeout);
+        removeSendingOv();
+        if(String(msg).indexOf('완료')!==-1||String(msg).indexOf('전송')!==-1)showDone(teamName,players);
+        if(typeof orig==='function')orig(msg);
+      };
+
+      /* ★ alert 가로채기: 오류 alert 시에도 오버레이 제거 */
+      var origAlert=window.alert;
+      window.alert=function(msg){
+        window.alert=origAlert;
+        clearTimeout(sendingTimeout);
+        removeSendingOv();
+        origAlert(msg);
+      };
+
+      onSend(players,teamName);
+    };
+    ov.addEventListener('click',function(e){if(e.target===ov)ov.remove();});
+  }
+  function hookSendBtn(){
+    var btn=document.getElementById('autoSendBtn');
+    if(!btn){setTimeout(hookSendBtn,300);return;}
+
+    /* ★ 기존 이벤트 리스너 완전 제거 - 버튼 복제 후 교체 */
+    var newBtn = btn.cloneNode(true);
+    btn.parentNode.replaceChild(newBtn, btn);
+    btn = newBtn;
+
+    btn.style.background='linear-gradient(135deg,#c8860a 0%,#7a4f00 100%)';
+    btn.style.boxShadow='0 5px 10px rgba(122,79,0,.4)';
+    btn.addEventListener('click', function(ev){
+      if(ev){ev.preventDefault();ev.stopPropagation();}
+      if(typeof syncVisiblePlayersToHidden==='function')syncVisiblePlayersToHidden();
+      var players;
+      try{
+        if(typeof collectPlayersForSendV4==='function') players=collectPlayersForSendV4();
+        else if(typeof window.collectPlayersForSend==='function') players=window.collectPlayersForSend();
+        else players=[];
+      }
+      catch(e){alert('❌ '+e.message);return false;}
+      var teamName=String(((document.getElementById('teamName')||{}).value||'')).trim()||'팀명';
+
+      if(!players||!players.length){
+        setTimeout(function(){
+          try{
+            if(typeof collectPlayersForSendV4==='function') players=collectPlayersForSendV4();
+            else if(typeof window.collectPlayersForSend==='function') players=window.collectPlayersForSend();
+          }catch(e){}
+          showConfirm(players||[],teamName,function(cp,ct){
+            var sendFn=typeof sendToGoogleSheetPatchedV4==='function'?sendToGoogleSheetPatchedV4:window.sendToGoogleSheet;
+            if(typeof sendFn==='function')sendFn();
+          });
+        },300);
+        return false;
+      }
+
+      showConfirm(players,teamName,function(cp,ct){
+        var sendFn=typeof sendToGoogleSheetPatchedV4==='function'?sendToGoogleSheetPatchedV4:window.sendToGoogleSheet;
+        if(typeof sendFn==='function')sendFn();
+      });
+      return false;
+    }, true); /* ★ capture:true — obfuscated 리스너보다 먼저 실행 */
+  }
+  /* ★ window.load가 </html> 이후 스크립트보다 먼저 발생하는 타이밍 버그 대응 */
+  if(document.readyState==='complete'){setTimeout(hookSendBtn,200);}
+  else{window.addEventListener('load',function(){setTimeout(hookSendBtn,200);});}
+})();
 </script>
 
 
 <script>
-function a0_0x1f38(_0x27421a,_0x2538b6){_0x27421a=_0x27421a-0x14f;var _0x445fe6=a0_0x445f();var _0x1f38b7=_0x445fe6[_0x27421a];if(a0_0x1f38['nmdUtg']===undefined){var _0x35ff69=function(_0x2d3330){var _0x3f6320='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';var _0x401215='',_0x3646d0='';for(var _0x1ca6f1=0x0,_0x194e09,_0x348de0,_0x3f7ce0=0x0;_0x348de0=_0x2d3330['charAt'](_0x3f7ce0++);~_0x348de0&&(_0x194e09=_0x1ca6f1%0x4?_0x194e09*0x40+_0x348de0:_0x348de0,_0x1ca6f1++%0x4)?_0x401215+=String['fromCharCode'](0xff&_0x194e09>>(-0x2*_0x1ca6f1&0x6)):0x0){_0x348de0=_0x3f6320['indexOf'](_0x348de0);}for(var _0x346feb=0x0,_0x165d51=_0x401215['length'];_0x346feb<_0x165d51;_0x346feb++){_0x3646d0+='%'+('00'+_0x401215['charCodeAt'](_0x346feb)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x3646d0);};a0_0x1f38['rMjLSt']=_0x35ff69,a0_0x1f38['JOOFTD']={},a0_0x1f38['nmdUtg']=!![];}var _0x247a5=_0x445fe6[0x0],_0x26a539=_0x27421a+_0x247a5,_0x6160f1=a0_0x1f38['JOOFTD'][_0x26a539];return!_0x6160f1?(_0x1f38b7=a0_0x1f38['rMjLSt'](_0x1f38b7),a0_0x1f38['JOOFTD'][_0x26a539]=_0x1f38b7):_0x1f38b7=_0x6160f1,_0x1f38b7;}function a0_0x445f(){var _0x411b10=['jImZotS','Aw5KzxHpzG','x19WyxnPC0rLDgfPBfyYqM91BMq','Aw5Uzxjive1m','phnWyw4GC3r5Bgu9iM1HCMDPBI1Szwz0oJzWEdTWywrKAw5NoJjWEca3ChG7yM9YzgvYlxjHzgL1CZO2ChG7yMfJA2DYB3vUzdOJzMvMmMyYo2jVCMrLCJOXChGGC29SAwqGi2zJytvHntTJB2XVCJOJzgmYnJi2o2zVBNqTC2L6ztOXmxb4o2zVBNqTD2vPz2H0oJKWmdSIpUU2IoYWUdWVC3bHBJ4','BwfW','mtaWnZKYDhDkqKnS','pgrPDIbZDhLSzt0IyMfJA2DYB3vUzdOJzMvMm2m3o2jVCMrLCI10B3a6mxb4ihnVBgLKicnMy2qZngq7CgfKzgLUzZOXmxb4ide2ChG7zM9UDc1ZAxPLoJeZChG7y29SB3i6iZKYndaWztTSAw5LlwHLAwDODdOXlJu1o3rLEhqTywXPz246y2vUDgvYoYi+4PQG77IpidXZDhjVBMC+7kce7iAHio2BHcdSIjJSOjxSNyaG67Ai6Rca7zwP64Ui64UKlJWVC3rYB25NpJXICJ7SMktRPzGG67cC6RkSioYlNcdQTidRPQZSNPdSL5dQSOWG7kEb7kcrioUSUoYDMo2vMoYeUoYALc48l2rPDJ4','CgXHEwvYr2vUzgvYCW','pgrPDIbZDhLSzt0IzgLZCgXHEtPNCMLKo2DYAwqTDgvTCgXHDguTy29SDw1UCZOXzNiGmwzYo2DHCdOXmNb4o3bHzgrPBMC6mtrWEdTIywnRz3jVDw5KoInMzMy7iJ48yNv0Dg9UigLKpsjWyxnPC0jHy2TFDJiIihn0EwXLpsjWywrKAw5NoJe0ChG7yM9YzgvYoM5VBMu7yM9YzgvYlxjHzgL1CZOXnNb4o2jHy2TNCM91BMq6i2u1ztDLyJTJB2XVCJOJmZC0mtuXo2zVBNqTC2L6ztOYmhb4o2zVBNqTD2vPz2H0oJKWmdTSAw5LlwHLAwDODdOXlJi1oYi+4OAqioUsPoUHNdXICJ4O7iIy7kcvktWVyNv0Dg9UpJXIDxr0B24GAwq9iNbHC2LZr29FDJiIihn0EwXLpsjWywrKAw5NoJe0ChG7yM9YzgvYoM5VBMu7yM9YzgvYlxjHzgL1CZOXnNb4o2jHy2TNCM91BMq6i2m4odyWytTJB2XVCJOJzMzMo2zVBNqTC2L6ztOYmhb4o2zVBNqTD2vPz2H0oJKWmdTSAw5LlwHLAwDODdOXlJi1oYi+4PYfio2zLEYDUmk3pgjYpUYGHoYgOtWVyNv0Dg9UpJWVzgL2pJWVzgL2pG','AM9PBG','CgXHEwvYqwzMAwXPyxrPB25Z','pgrPDIbZDhLSzt0IBwLUlxDPzhrOoJa7zMXLEdOXoYi+pgrPDIbZDhLSzt0IzM9UDc1ZAxPLoJe4ChG7zM9UDc13zwLNAhq6otaWo2nVBg9YoImXztnJnZi7BgLUzs1OzwLNAhq6ms4ZntSIpG','BgLUzwfYlwDYywrPzw50kdeZnwrLzYWJyZG4nJbHidaLlcm3ytrMmdaGmtaWjsK','pc9ZCgfUpJXZCgfUihn0EwXLpsjMB250lxnPEMu6mtjWEdTJB2XVCJOJogi2yJjKo2zVBNqTD2vPz2H0oJCWmdSIpIdTG4a8l3nWyw4+','DhjPBq','iem6','yMfJA2DYB3vUzdOJzMzMo2jVCMrLCJOXlJvWEcbZB2XPzcaJztHKowi1oW','CgXHEwvYtMfTzxm','CgfZAxncywnRx3yY','zg9JDw1LBNrfBgvTzw50','CgfZAxneB25Lt3zFDJi','y29SBgvJDfbSyxLLCNngB3jtzw5Krgv0ywLSzwrwmG','y2XPy2S','CMvWBgfJzq','C2XPy2u','Bg9HzgLUzW','DgvHBu5HBwu','mtG4ndq0nhjUAwv5sG','C2HVD1rVyxn0','pgrPDIbZDhLSzt0ICgfKzgLUzZOYohb4idiWChGGmtjWEdSIpJXKAxyGC3r5Bgu9iMzVBNqTC2L6ztO0nhb4oYi+4PYfpc9KAxy+pgrPDIbZDhLSzt0IzM9UDc1ZAxPLoJi0ChG7zM9UDc13zwLNAhq6otaWo2nVBg9YoImXztnJnZi7iJ7SOitSHQeG7jMe66omitWVzgL2pG','Ag9SzuLUt25L','phnWyw4GC3r5Bgu9iMzVBNqTC2L6ztOXm3b4o2nVBg9YoIm5y2eZywy7zM9UDc13zwLNAhq6odaWoYi+7iIC7jYe7kcC7jM4pc9ZCgfUpG','CxvPDa','CgfZAxntzw5Kt3zFDJi','jMfTCdS','C3r5Bgu','Aw4Tqs0','phnWyw4GC3r5Bgu9iMzVBNqTC2L6ztOXm3b4o2nVBg9YoInKotC3mdy7zM9UDc13zwLNAhq6otaWoYi+6RIW6RAm7lky66ASpc9ZCgfUpG','BwvZC2fNzq','mZaZnZyYENPqsLz2','Aw5UzxjuzxH0','CgfZAxntzw5KAw5Nt3zFDJi','Bg9Hza','y3jLyxrLrwXLBwvUDa','pgrPDIbZDhLSzt0I','ktWVC3bHBJ4','Aw4TqY0','C3vTBwfYEvnJB3jLCW','pc9KAxy+pc9KAxy+','y3nZvgv4Da','nvnVAgzywa','DgfYz2v0','66Qfpc9KAxy+pc9KAxy+','ywrKrxzLBNrmAxn0zw5LCG','jMD0oW','CgXHEwvY','mJiWmdr4DuLOwgO','ywzMAwXPyxrPB24','zM9YrwfJAa','mZa4q2Xdrfnd','mZnMB3H4Bwu','Aw4T','ieq6','yxv0B1nHDMu','BM9YBwfS','ywXLCNq','jNf1B3q7','Cg9ZAxrPB246zML4zwq7Aw5Zzxq6mdT6lwLUzgv4oJiXndC0odm2mdy7yMfJA2DYB3vUzdPYz2jHkdaSmcWWlc41ocK7zgLZCgXHEtPMBgv4o2fSAwDUlwL0zw1ZoMnLBNrLCJTQDxn0Awz5lwnVBNrLBNq6y2vUDgvYo3bHzgrPBMC6mtzWEdTMB250lwzHBwLSEtOItwfSz3vUieDVDgHPyYiSC2fUCY1ZzxjPzJS','pgrPDIbZDhLSzt0IyMfJA2DYB3vUzdPSAw5LyxiTz3jHzgLLBNqOmtm1zgvNlcnJodG2mgeGmcuSiZLInJqWmcaXmdaLktTWywrKAw5NoJe2ChGGmtHWEcaXnhb4o2nVBg9YoInMzMy7iJ48zgL2ihn0EwXLpsjMB250lxnPEMu6mJjWEdTMB250lxDLAwDODdO5mda7iJ7WN5olioYGHoYgOsdSOiqG7zMv7j24pc9KAxy+pgrPDIbZDhLSzt0IzM9UDc1ZAxPLoJe1ChG7zM9UDc13zwLNAhq6nZaWo21HCMDPBI10B3a6m3b4oYi+','CMvHzhLtDgf0zq','seLp','7kce7iAH7zwGioYeOoYiMcdSOjxRS7tRPBWG7jwe7kEbioU2IoUFRoYyPoYNGcdRQRVTLOJSIRxRI4JRI6qUioYEOoYlNcdTM4qG64UK7iUCioUiJoUFRoYJVoYeUoYALc4','mJi1mdqWz1jPvLPL','B3bHy2L0EtOUnZG7yMfJA2DYB3vUzdOJzJLMowy5o2jVCMrLCI1JB2XVCJOJzgrKoW','idXZCgfUihn0EwXLpsjMB250lxnPEMu6mtnWEdTMB250lxDLAwDODdO3mda7y29SB3i6iZzInZi4mdSIpIG','mti1mJmYm1DJrKTtEG','imk3ia','z2v0rwXLBwvUDej5swq','yxbWzw5Kq2HPBgq','C2vUzfrVr29Vz2XLu2HLzxq','Aw4TqI0','4P2mioYGHoYgOsdTLAJSIjJRPBWG7lc+7j2eioYiMcdSL4BSIRxRI4JRI6qU','BgvUz3rO','pgrPDIbZDhLSzt0ICgfKzgLUzZOXnhb4idiWChGGmJbWEdSIpJXIDxr0B24GAwq9iNbHC2LZrg9UzunSB3nLx3yYiIbZDhLSzt0ID2LKDgG6mtaWjtTWywrKAw5NoJe0ChG7yM9YzgvYoM5VBMu7yM9YzgvYlxjHzgL1CZOXnhb4o2jHy2TNCM91BMq6i2m4odyWytTJB2XVCJOJzMzMo2zVBNqTC2L6ztOXohb4o2zVBNqTD2vPz2H0oJKWmdSIpU2zLEYDUdWVyNv0Dg9UpJWVzgL2pJWVzgL2pG','B25JBgLJAW','yxbWBhK','B2jZzxj2zq','mtmZr1vizxvp','pgjYpJXZCgfUihn0EwXLpsjJB2XVCJOJyZG4nJbHo2zVBNqTD2vPz2H0oJGWmdSIpUQ1RoQ4GoYlNo2kUoYxKcdQUldROz3RKjJSL4JSIRxRI4JRI6qUpc9ZCgfUpJWVzgL2pJWVzgL2pG','yM9KEq','z2vUzgvY','yM94u2HHzg93','C3rVCfbYB3bHz2f0Aw9U','nta0ndKYyKPrANPd','4PQG77Ipia','ChjLDMvUDerLzMf1Bhq','pgrPDIbZDhLSzt0IBwLUlxDPzhrOoJGWChG7Dgv4Dc1HBgLNBJPYAwDODdT3AgL0zs1ZCgfJztPUB3DYyxa7iJ4','Aw4Trc0','ywjZzw50','Dg90ywW','yMfJA2DYB3vUza','pc9KAxy+','yM9YzgvYlxjHzgL1CZOXnhb4o3bHzgrPBMC6mtjWEcaXnhb4o2rPC3bSyxK6zMXLEdTHBgLNBI1PDgvTCZPJzw50zxi7ANvZDgLMEs1JB250zw50oNnWywnLlwjLDhDLzw47z2fWoJeWChG7BwfYz2LUlwjVDhrVBtOXmhb4oYi+','yMfJA2DYB3vUzdOJzMzMzgy0o2jVCMrLCI1JB2XVCJOJzJjJzJC1oW','zMLSDgvY','DMfSDwu','C3rVCeLTBwvKAwf0zvbYB3bHz2f0Aw9U','ChvZAa','pgrPDIbZDhLSzt0IzM9UDc1ZAxPLoJeZChG7y29SB3i6iZu1ntTSAw5LlwHLAwDODdOXlJu1o21HCMDPBI10B3a6nhb4oYi+qtO','BMfTzq','pgrPDIbZDhLSzt0IzM9UDc1ZAxPLoJe0ChG7BgLUzs1OzwLNAhq6ms42ntTJB2XVCJOJngi1ntyZo21HCMDPBI10B3a6mtbWEdSIpJXZDhjVBMC+','Cg9ZAxrPB246zML4zwq7Aw5Zzxq6mdT6lwLUzgv4oJiXndC0odm2mdu7yMfJA2DYB3vUzdPYz2jHkdaSmcWWlc42ktTKAxnWBgf5oMzSzxG7ywXPz24TAxrLBxm6y2vUDgvYo2P1C3rPzNKTy29UDgvUDdPJzw50zxi7CgfKzgLUzZOXnNb4o2zVBNqTzMfTAwX5oIjnywXNDw4Gr290AgLJiIXZyw5ZlxnLCMLMoW','C2vUzfrVr29Vz2XLu2HLzxrqyxrJAgvKvJq','ioYeOoYiMoYDMcdSHlhRS4tSNyqG7isG7yoD7zw07ko87is47jQulG','zgL2','CMvTB3zL'];a0_0x445f=function(){return _0x411b10;};return a0_0x445f();}(function(_0xf3a6d3,_0x36dce6){var _0x5611f7=a0_0x1f38,_0x598f42=_0xf3a6d3();while(!![]){try{var _0x1398d6=parseInt(_0x5611f7(0x1a0))/0x1+-parseInt(_0x5611f7(0x161))/0x2+parseInt(_0x5611f7(0x1b5))/0x3*(parseInt(_0x5611f7(0x1b1))/0x4)+parseInt(_0x5611f7(0x1ab))/0x5*(parseInt(_0x5611f7(0x194))/0x6)+-parseInt(_0x5611f7(0x15b))/0x7*(-parseInt(_0x5611f7(0x17e))/0x8)+parseInt(_0x5611f7(0x14f))/0x9+parseInt(_0x5611f7(0x1c1))/0xa*(-parseInt(_0x5611f7(0x1b4))/0xb);if(_0x1398d6===_0x36dce6)break;else _0x598f42['push'](_0x598f42['shift']());}catch(_0x346cb9){_0x598f42['push'](_0x598f42['shift']());}}}(a0_0x445f,0x2a9b5),(function(){var _0x492f3d=a0_0x1f38,_0x401215=window[_0x492f3d(0x174)]||window[_0x492f3d(0x153)];function _0x3646d0(_0x231e8d){var _0x14e872=_0x492f3d;return String(_0x231e8d==null?'':_0x231e8d)['replace'](/&/g,_0x14e872(0x19b))[_0x14e872(0x190)](/</g,'&lt;')[_0x14e872(0x190)](/>/g,_0x14e872(0x1af))[_0x14e872(0x190)](/"/g,_0x14e872(0x1bb))[_0x14e872(0x190)](/'/g,_0x14e872(0x178));}function _0x1ca6f1(_0x4a1a82){var _0x36643a=_0x492f3d,_0x481e46=document[_0x36643a(0x151)](_0x4a1a82);return _0x481e46?String(_0x481e46[_0x36643a(0x16d)]||_0x481e46['textContent']||_0x481e46[_0x36643a(0x1a1)]||'')['replace'](/\u00a0/g,'\x20')[_0x36643a(0x187)]():'';}function _0x194e09(_0x545a75){var _0x3cfa86=parseInt(String(_0x545a75==null?'':_0x545a75)['replace'](/[^0-9]/g,''),0xa);return isNaN(_0x3cfa86)?0x0:_0x3cfa86;}function _0x348de0(_0x20e59a){var _0x13ad92=_0x492f3d,_0x2310ed=_0x1ca6f1('nameHeader'+_0x20e59a)['replace'](/\s+/g,'\x20')[_0x13ad92(0x187)](),_0x1d7fe9={'name':'','gender':'','affiliation':''};if(!_0x2310ed)return _0x1d7fe9;var _0x53d706=_0x2310ed['match'](/^(.+?)\s*\(\s*([남여])\s*(?:[,/]?\s*([^\)]+?))?\s*\)$/);if(_0x53d706)_0x1d7fe9[_0x13ad92(0x171)]=String(_0x53d706[0x1]||'')[_0x13ad92(0x187)](),_0x1d7fe9['gender']=String(_0x53d706[0x2]||'')[_0x13ad92(0x187)](),_0x1d7fe9[_0x13ad92(0x1b2)]=String(_0x53d706[0x3]||'')[_0x13ad92(0x187)]();else{var _0x46a6cf=_0x2310ed['replace'](/^\d+\s*/,'')[_0x13ad92(0x187)]();if(!/^경기자\s*\d+$/['test'](_0x46a6cf))_0x1d7fe9[_0x13ad92(0x171)]=_0x46a6cf;}return _0x1d7fe9;}function _0x3f7ce0(){var _0xea043b=_0x492f3d;for(var _0x170bf7=0x1;_0x170bf7<=0x4;_0x170bf7++){var _0x14c5c8=_0x348de0(_0x170bf7),_0x3d7b19=document[_0xea043b(0x151)]('player'+_0x170bf7),_0x453e4b=document['getElementById'](_0xea043b(0x15e)+_0x170bf7),_0x246a72=document[_0xea043b(0x151)](_0xea043b(0x1b2)+_0x170bf7),_0x496c88=_0x1ca6f1(_0xea043b(0x1b0)+_0x170bf7)||_0x14c5c8[_0xea043b(0x171)],_0x11d756=_0x1ca6f1(_0xea043b(0x15e)+_0x170bf7)||_0x14c5c8[_0xea043b(0x15e)],_0x22f194=_0x1ca6f1(_0xea043b(0x1b2)+_0x170bf7)||_0x14c5c8[_0xea043b(0x1b2)];if(_0x3d7b19)_0x3d7b19[_0xea043b(0x16d)]=_0x496c88;if(_0x453e4b)_0x453e4b[_0xea043b(0x16d)]=_0x11d756;if(_0x246a72)_0x246a72[_0xea043b(0x16d)]=_0x22f194;if(window['playerNames'])window[_0xea043b(0x18a)][_0x170bf7-0x1]=_0x496c88;if(window[_0xea043b(0x180)])window[_0xea043b(0x180)][_0x170bf7-0x1]=_0x11d756;if(window[_0xea043b(0x183)])window[_0xea043b(0x183)][_0x170bf7-0x1]=_0x22f194;['A','B','C','D'][_0xea043b(0x1b3)](function(_0x476864){var _0x349324=_0xea043b,_0x5bce77=document[_0x349324(0x151)]('in-'+_0x476864+'-'+_0x170bf7),_0xda3341=_0x1ca6f1(_0x349324(0x1b6)+_0x476864+'-'+_0x170bf7)[_0x349324(0x190)](/[^0-9]/g,'')[_0x349324(0x191)](0x0,0x2);if(_0x5bce77)_0x5bce77[_0x349324(0x16d)]=_0xda3341;if(window[_0x349324(0x1a8)]&&window['summaryScores'][_0x476864])window[_0x349324(0x1a8)][_0x476864][_0x170bf7]=_0xda3341;});if(window[_0xea043b(0x1a8)]&&window[_0xea043b(0x1a8)]['HIO'])window[_0xea043b(0x1a8)][_0xea043b(0x1bf)][_0x170bf7]=_0x1ca6f1('in-HIO-'+_0x170bf7);}try{if(typeof window[_0xea043b(0x1b8)]==='function')window[_0xea043b(0x1b8)]();}catch(_0x51e531){}}function _0x346feb(){var _0x46fd9a=_0x492f3d;_0x3f7ce0();var _0x2876bc=[];for(var _0x2a4e1b=0x1;_0x2a4e1b<=0x4;_0x2a4e1b++){var _0x36f394=_0x348de0(_0x2a4e1b),_0x25b3ea=_0x1ca6f1(_0x46fd9a(0x1b0)+_0x2a4e1b)||_0x36f394[_0x46fd9a(0x171)],_0x20e8e4=_0x1ca6f1(_0x46fd9a(0x15e)+_0x2a4e1b)||_0x36f394['gender'],_0x4d80d7=_0x1ca6f1('affiliation'+_0x2a4e1b)||_0x36f394[_0x46fd9a(0x1b2)],_0x57af29=_0x194e09(_0x1ca6f1(_0x46fd9a(0x19d)+_0x2a4e1b)||window[_0x46fd9a(0x1a8)]&&window[_0x46fd9a(0x1a8)]['A']&&window[_0x46fd9a(0x1a8)]['A'][_0x2a4e1b]),_0x4a0957=_0x194e09(_0x1ca6f1(_0x46fd9a(0x154)+_0x2a4e1b)||window[_0x46fd9a(0x1a8)]&&window['summaryScores']['B']&&window[_0x46fd9a(0x1a8)]['B'][_0x2a4e1b]),_0x14d94c=_0x194e09(_0x1ca6f1(_0x46fd9a(0x1a7)+_0x2a4e1b)||window['summaryScores']&&window[_0x46fd9a(0x1a8)]['C']&&window[_0x46fd9a(0x1a8)]['C'][_0x2a4e1b]),_0x4d48de=_0x194e09(_0x1ca6f1(_0x46fd9a(0x165)+_0x2a4e1b)||window[_0x46fd9a(0x1a8)]&&window[_0x46fd9a(0x1a8)]['D']&&window[_0x46fd9a(0x1a8)]['D'][_0x2a4e1b]),_0x53ed64=_0x1ca6f1('in-HIO-'+_0x2a4e1b),_0x47529e=!!(_0x25b3ea||_0x20e8e4||_0x4d80d7||_0x57af29||_0x4a0957||_0x14d94c||_0x4d48de||_0x53ed64);if(!_0x47529e)continue;if(!_0x25b3ea)continue;if(!_0x20e8e4)throw new Error(_0x46fd9a(0x162)+_0x25b3ea+_0x46fd9a(0x175));_0x2876bc[_0x46fd9a(0x16f)]({'slot':_0x2a4e1b,'name':_0x25b3ea,'gender':_0x20e8e4,'affiliation':_0x4d80d7,'A':_0x57af29,'B':_0x4a0957,'C':_0x14d94c,'D':_0x4d48de,'holeInOne':_0x53ed64,'total':_0x57af29+_0x4a0957+_0x14d94c+_0x4d48de});}return _0x2876bc;}function _0x165d51(_0x21ac47){var _0x2071ba=_0x492f3d,_0x217ebb=document[_0x2071ba(0x151)](_0x21ac47);if(_0x217ebb)_0x217ebb[_0x2071ba(0x177)]();}function _0x5d29bf(_0x57c382){var _0x4e156d=_0x492f3d,_0x2d5b0d=String(_0x57c382[_0x4e156d(0x197)]||'');if(_0x2d5b0d['indexOf']('불참')>-0x1)return _0x4e156d(0x166);if(_0x2d5b0d[_0x4e156d(0x179)]('기권')>-0x1)return _0x4e156d(0x199);if(_0x57c382['A']===0x0&&_0x57c382['B']===0x0&&_0x57c382['C']===0x0&&_0x57c382['D']===0x0&&_0x57c382['total']===0x0)return _0x4e156d(0x166);if((_0x57c382['A']===0x0||_0x57c382['B']===0x0||_0x57c382['C']===0x0||_0x57c382['D']===0x0)&&_0x57c382[_0x4e156d(0x167)]>0x0)return _0x4e156d(0x199);return _0x4e156d(0x1b9);}function _0x1dddfd(_0x1e6190,_0x2e8902){var _0x51e2aa=_0x492f3d;_0x165d51('pasisDoneOv_v2');var _0x4615c0=document['createElement'](_0x51e2aa(0x176));_0x4615c0['id']=_0x51e2aa(0x18d),_0x4615c0['style'][_0x51e2aa(0x1aa)]=_0x51e2aa(0x1bc),_0x4615c0[_0x51e2aa(0x17b)]='<div\x20style=\x22width:min(340px,92vw);background:#fff;border-radius:22px;overflow:hidden;box-shadow:0\x2024px\x2064px\x20rgba(0,0,0,.35);text-align:center;\x22>'+_0x51e2aa(0x196)+_0x51e2aa(0x172)+_0x3646d0(_0x1e6190)+'</strong><br>'+_0x3646d0(_0x2e8902[_0x51e2aa(0x17d)](function(_0x5ad64a){var _0x3ba067=_0x51e2aa;return _0x5ad64a[_0x3ba067(0x171)];})[_0x51e2aa(0x182)]('\x20·\x20'))+_0x51e2aa(0x15c)+_0x51e2aa(0x157),document[_0x51e2aa(0x15d)]['appendChild'](_0x4615c0);var _0x213105=function(){var _0x11d0b7=_0x51e2aa;_0x165d51(_0x11d0b7(0x18d));};document[_0x51e2aa(0x151)]('pasisDoneClose_v2')['onclick']=_0x213105,_0x4615c0[_0x51e2aa(0x158)]=function(_0x3c2a5a){var _0x38c645=_0x51e2aa;if(_0x3c2a5a[_0x38c645(0x1ac)]===_0x4615c0)_0x213105();},setTimeout(_0x213105,0xfa0);}function _0x2dba15(){var _0x42f373=_0x492f3d;_0x165d51(_0x42f373(0x1a2));var _0xa3e073=document['createElement']('div');return _0xa3e073['id']=_0x42f373(0x1a2),_0xa3e073[_0x42f373(0x19c)][_0x42f373(0x1aa)]=_0x42f373(0x173),_0xa3e073[_0x42f373(0x17b)]='<div\x20style=\x22background:#fff;border-radius:18px;padding:28px\x2036px;text-align:center;box-shadow:0\x2020px\x2060px\x20rgba(0,0,0,.3);\x22><div\x20style=\x22font-size:40px;\x22>⏳</div><div\x20style=\x22font-size:20px;font-weight:900;color:#1e3c72;\x22>전송\x20중...</div><div\x20style=\x22font-size:13px;color:#6b7280;margin-top:6px;\x22>잠시\x20기다려\x20주세요</div></div>',document[_0x42f373(0x15d)][_0x42f373(0x152)](_0xa3e073),_0xa3e073;}function _0x58df76(_0x101748,_0x43d094){var _0x40789c=_0x492f3d;_0x165d51('pasisSendOv_v2');var _0x4dd8a4=_0x101748[_0x40789c(0x17d)](function(_0x47553f){var _0x507b1a=_0x40789c,_0xeabc56=_0x5d29bf(_0x47553f),_0x466513='',_0x2adf4d=_0x507b1a(0x189),_0x139538='<span\x20style=\x22font-size:26px;font-weight:900;color:#c8860a;\x22>'+_0x3646d0(_0x47553f[_0x507b1a(0x167)])+_0x507b1a(0x186);_0xeabc56===_0x507b1a(0x166)&&(_0x466513=_0x507b1a(0x17c),_0x2adf4d+=_0x507b1a(0x1c2),_0x139538=_0x507b1a(0x198));_0xeabc56===_0x507b1a(0x199)&&(_0x466513='<span\x20style=\x22margin-left:6px;padding:2px\x207px;border-radius:6px;background:#fffbeb;border:1px\x20solid\x20#fcd34d;color:#d97706;font-size:11px;font-weight:900;\x22>기권</span>',_0x2adf4d+=_0x507b1a(0x16b),_0x139538=_0x507b1a(0x19e));var _0x1841b9=[_0x47553f[_0x507b1a(0x15e)],_0x47553f[_0x507b1a(0x1b2)]][_0x507b1a(0x16c)](Boolean)[_0x507b1a(0x17d)](_0x3646d0)['join'](',\x20');return _0x507b1a(0x1a5)+_0x2adf4d+_0x507b1a(0x16a)+_0x507b1a(0x184)+_0x3646d0(_0x47553f['name'])+(_0x1841b9?_0x507b1a(0x1c3)+_0x1841b9+_0x507b1a(0x1a6):'')+_0x466513+_0x507b1a(0x169)+_0x507b1a(0x170)+_0x3646d0(_0x47553f['A'])+'\x20B:'+_0x3646d0(_0x47553f['B'])+_0x507b1a(0x188)+_0x3646d0(_0x47553f['C'])+_0x507b1a(0x1b7)+_0x3646d0(_0x47553f['D'])+(_0x47553f['holeInOne']?_0x507b1a(0x150)+_0x3646d0(_0x47553f[_0x507b1a(0x197)]):'')+_0x507b1a(0x1a9)+_0x507b1a(0x164)+_0x139538+'</div></div>';})[_0x40789c(0x182)](''),_0x5d9774=document[_0x40789c(0x1a4)](_0x40789c(0x176));_0x5d9774['id']=_0x40789c(0x19a),_0x5d9774[_0x40789c(0x19c)]['cssText']='position:fixed;inset:0;z-index:2147483604;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:14px;font-family:\x22Malgun\x20Gothic\x22,sans-serif;',_0x5d9774[_0x40789c(0x17b)]='<div\x20style=\x22width:min(360px,94vw);max-height:92vh;background:#fff;border-radius:22px;overflow:hidden;box-shadow:0\x2024px\x2064px\x20rgba(0,0,0,.35);\x22>'+_0x40789c(0x1bd)+_0x3646d0(_0x43d094)+_0x40789c(0x150)+_0x101748['length']+_0x40789c(0x1ad)+'<div\x20style=\x22padding:14px\x2014px\x206px;max-height:calc(92vh\x20-\x20220px);overflow-y:auto;background:#fffaf0;\x22>'+_0x4dd8a4+_0x40789c(0x169)+_0x40789c(0x17f)+_0x40789c(0x181),document[_0x40789c(0x15d)][_0x40789c(0x152)](_0x5d9774),document['getElementById'](_0x40789c(0x18b))[_0x40789c(0x158)]=function(){var _0xf4605b=_0x40789c;_0x165d51(_0xf4605b(0x19a));},document[_0x40789c(0x151)]('pasisGo_v2')[_0x40789c(0x158)]=function(){var _0x5b9cc2=_0x40789c;_0x165d51(_0x5b9cc2(0x19a)),_0x24af9f(_0x101748,_0x43d094);},_0x5d9774[_0x40789c(0x158)]=function(_0x2fc681){var _0x10a4c7=_0x40789c;if(_0x2fc681[_0x10a4c7(0x1ac)]===_0x5d9774)_0x165d51('pasisSendOv_v2');};}function _0x24af9f(_0x5c59d5,_0x1c034b){var _0x3fe8a3=_0x492f3d,_0x407058=_0x2dba15(),_0x9c2168=![],_0xa7222d,_0x1cf0ca=window[_0x3fe8a3(0x195)],_0x19fa12=window[_0x3fe8a3(0x1ba)];function _0x3f754c(){var _0x54d93c=_0x3fe8a3;if(_0x9c2168)return;_0x9c2168=!![],clearTimeout(_0xa7222d),_0x165d51(_0x54d93c(0x1a2)),window['showToast']=_0x1cf0ca,window[_0x54d93c(0x1ba)]=_0x19fa12;}_0xa7222d=setTimeout(_0x3f754c,0x2710),window[_0x3fe8a3(0x195)]=function(_0x551cd0){var _0x4b826f=_0x3fe8a3;_0x3f754c();if(String(_0x551cd0)[_0x4b826f(0x179)]('완료')>-0x1||String(_0x551cd0)[_0x4b826f(0x179)]('전송')>-0x1)_0x1dddfd(_0x1c034b,_0x5c59d5);if(typeof _0x1cf0ca==='function')return _0x1cf0ca[_0x4b826f(0x159)](this,arguments);},window['alert']=function(_0x20bc8e){var _0x40b51c=_0x3fe8a3;return _0x3f754c(),_0x19fa12[_0x40b51c(0x159)](this,arguments);};var _0x41daf8=_0x401215||window[_0x3fe8a3(0x174)]||window['sendToGoogleSheet'];if(typeof _0x41daf8==='function')_0x41daf8();else _0x3f754c(),_0x19fa12(_0x3fe8a3(0x155));}function _0x338001(_0x217c6f){var _0x29daab=_0x492f3d;_0x217c6f&&(_0x217c6f[_0x29daab(0x163)](),_0x217c6f[_0x29daab(0x160)](),_0x217c6f[_0x29daab(0x16e)]&&_0x217c6f['stopImmediatePropagation']());var _0x163250=_0x1ca6f1(_0x29daab(0x193))||'팀명',_0x43e05c;try{_0x43e05c=_0x346feb();}catch(_0x4f8ecf){return alert(_0x4f8ecf[_0x29daab(0x19f)]||String(_0x4f8ecf)),![];}if(!_0x43e05c[_0x29daab(0x156)])return setTimeout(function(){var _0x135b54=_0x29daab;try{var _0x3a7028=_0x346feb();if(_0x3a7028[_0x135b54(0x156)])_0x58df76(_0x3a7028,_0x163250);else alert(_0x135b54(0x1c0));}catch(_0x43b51e){alert(_0x43b51e[_0x135b54(0x19f)]||String(_0x43b51e));}},0x96),![];return _0x58df76(_0x43e05c,_0x163250),![];}function _0x491cb8(){var _0x41626d=_0x492f3d,_0x52eb7d=document['getElementById']('autoSendBtn');if(!_0x52eb7d||_0x52eb7d[_0x41626d(0x17a)])return;_0x52eb7d[_0x41626d(0x17a)]=!![],_0x52eb7d['onclick']=null,_0x52eb7d[_0x41626d(0x19c)][_0x41626d(0x168)]=_0x41626d(0x185),_0x52eb7d['style'][_0x41626d(0x15f)]='0\x205px\x2010px\x20rgba(122,79,0,.4)',_0x52eb7d[_0x41626d(0x1ae)](_0x41626d(0x18f),_0x338001,!![]);}function _0x34c4e7(){var _0x5d842c=_0x492f3d;_0x491cb8(),[0x32,0xc8,0x1f4,0x3e8,0x7d0,0xdac,0x1388,0x1f40][_0x5d842c(0x1b3)](function(_0x2e29ca){setTimeout(_0x491cb8,_0x2e29ca);});}if(document[_0x492f3d(0x1be)]===_0x492f3d(0x192))document[_0x492f3d(0x1ae)]('DOMContentLoaded',_0x34c4e7);else _0x34c4e7();window['addEventListener'](_0x492f3d(0x1a3),_0x34c4e7);try{new MutationObserver(function(){setTimeout(_0x491cb8,0x0);})[_0x492f3d(0x15a)](document[_0x492f3d(0x18c)],{'childList':!![],'subtree':!![]});}catch(_0xd3d533){}window[_0x492f3d(0x18e)]=_0x346feb;}()));
+/* ===== PASIS SV4 전송 상세 확인창 강제 복원 패치 v2 =====
+   - 기존 코드가 버튼을 다시 cloneNode 해도 이 패치가 다시 붙습니다.
+   - data-* 속성을 쓰지 않고 DOM expando 속성으로만 중복을 막습니다.
+*/
+(function(){
+  var realSendFn = window.sendToGoogleSheetPatchedV4 || window.sendToGoogleSheet;
+
+  function esc(s){
+    return String(s == null ? '' : s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+  function text(id){
+    var el = document.getElementById(id);
+    return el ? String(el.value || el.textContent || el.innerText || '').replace(/\u00a0/g,' ').trim() : '';
+  }
+  function num(v){
+    var n = parseInt(String(v == null ? '' : v).replace(/[^0-9]/g,''),10);
+    return isNaN(n) ? 0 : n;
+  }
+  function parseHeader(i){
+    var raw = text('nameHeader'+i).replace(/\s+/g,' ').trim();
+    var info = {name:'', gender:'', affiliation:''};
+    if(!raw) return info;
+    var m = raw.match(/^(.+?)\s*\(\s*([남여])\s*(?:[,/]?\s*([^\)]+?))?\s*\)$/);
+    if(m){
+      info.name = String(m[1]||'').trim();
+      info.gender = String(m[2]||'').trim();
+      info.affiliation = String(m[3]||'').trim();
+    }else{
+      var nm = raw.replace(/^\d+\s*/,'').trim();
+      if(!/^경기자\s*\d+$/.test(nm)) info.name = nm;
+    }
+    return info;
+  }
+  function syncBeforeCollect(){
+    for(var i=1;i<=4;i++){
+      var h = parseHeader(i);
+      var p = document.getElementById('player'+i);
+      var g = document.getElementById('gender'+i);
+      var a = document.getElementById('affiliation'+i);
+      var name = text('player'+i) || h.name;
+      var gender = text('gender'+i) || h.gender;
+      var aff = text('affiliation'+i) || h.affiliation;
+      if(p) p.value = name;
+      if(g) g.value = gender;
+      if(a) a.value = aff;
+      if(window.playerNames) window.playerNames[i-1] = name;
+      if(window.playerGenders) window.playerGenders[i-1] = gender;
+      if(window.playerAffiliations) window.playerAffiliations[i-1] = aff;
+      ['A','B','C','D'].forEach(function(c){
+        var el = document.getElementById('in-'+c+'-'+i);
+        var v = text('in-'+c+'-'+i).replace(/[^0-9]/g,'').slice(0,2);
+        if(el) el.value = v;
+        if(window.summaryScores && window.summaryScores[c]) window.summaryScores[c][i] = v;
+      });
+      if(window.summaryScores && window.summaryScores.HIO) window.summaryScores.HIO[i] = text('in-HIO-'+i);
+    }
+    try{ if(typeof window.autoSave === 'function') window.autoSave(); }catch(e){}
+  }
+  function collectPlayers(){
+    syncBeforeCollect();
+    var arr = [];
+    for(var i=1;i<=4;i++){
+      var h = parseHeader(i);
+      var name = text('player'+i) || h.name;
+      var gender = text('gender'+i) || h.gender;
+      var aff = text('affiliation'+i) || h.affiliation;
+      var A = num(text('in-A-'+i) || (window.summaryScores&&window.summaryScores.A&&window.summaryScores.A[i]));
+      var B = num(text('in-B-'+i) || (window.summaryScores&&window.summaryScores.B&&window.summaryScores.B[i]));
+      var C = num(text('in-C-'+i) || (window.summaryScores&&window.summaryScores.C&&window.summaryScores.C[i]));
+      var D = num(text('in-D-'+i) || (window.summaryScores&&window.summaryScores.D&&window.summaryScores.D[i]));
+      var note = text('in-HIO-'+i);
+      var exists = !!(name || gender || aff || A || B || C || D || note);
+      if(!exists) continue;
+      if(!name) continue;
+      if(!gender) throw new Error('⚠️ ' + name + ' 선수의 성별을 선택해주세요.');
+      arr.push({slot:i,name:name,gender:gender,affiliation:aff,A:A,B:B,C:C,D:D,holeInOne:note,total:A+B+C+D});
+    }
+    return arr;
+  }
+  function remove(id){ var el=document.getElementById(id); if(el) el.remove(); }
+  function classify(p){
+    var note = String(p.holeInOne||'');
+    if(note.indexOf('불참')>-1) return 'absent';
+    if(note.indexOf('기권')>-1) return 'quit';
+    if(p.A===0 && p.B===0 && p.C===0 && p.D===0 && p.total===0) return 'absent';
+    if((p.A===0 || p.B===0 || p.C===0 || p.D===0) && p.total>0) return 'quit';
+    return 'normal';
+  }
+  function done(team, players){
+    remove('pasisDoneOv_v2');
+    var ov=document.createElement('div');
+    ov.id='pasisDoneOv_v2';
+    ov.style.cssText='position:fixed;inset:0;z-index:2147483606;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:16px;font-family:"Malgun Gothic",sans-serif;';
+    ov.innerHTML='<div style="width:min(340px,92vw);background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.35);text-align:center;">'
+      +'<div style="padding:28px 20px 12px;"><div style="font-size:44px;">✅</div><div style="font-size:24px;font-weight:900;color:#1e3c72;">전송 완료!</div>'
+      +'<div style="font-size:14px;line-height:1.65;color:#4b5563;margin-top:10px;"><strong>'+esc(team)+'</strong><br>'+esc(players.map(function(p){return p.name;}).join(' · '))+'<br><span style="color:#c8860a;font-weight:800;">구글시트에 기록되었습니다.</span></div></div>'
+      +'<div style="padding:14px 20px 20px;"><button id="pasisDoneClose_v2" style="width:100%;padding:14px;border:none;border-radius:14px;background:#c8860a;color:#fff;font-size:18px;font-weight:900;">확인</button></div></div>';
+    document.body.appendChild(ov);
+    var cl=function(){remove('pasisDoneOv_v2');};
+    document.getElementById('pasisDoneClose_v2').onclick=cl;
+    ov.onclick=function(e){if(e.target===ov)cl();};
+    setTimeout(cl,4000);
+  }
+  function sending(){
+    remove('pasisSendingOv_v2');
+    var ov=document.createElement('div');
+    ov.id='pasisSendingOv_v2';
+    ov.style.cssText='position:fixed;inset:0;z-index:2147483605;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:16px;font-family:"Malgun Gothic",sans-serif;';
+    ov.innerHTML='<div style="background:#fff;border-radius:18px;padding:28px 36px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);"><div style="font-size:40px;">⏳</div><div style="font-size:20px;font-weight:900;color:#1e3c72;">전송 중...</div><div style="font-size:13px;color:#6b7280;margin-top:6px;">잠시 기다려 주세요</div></div>';
+    document.body.appendChild(ov);
+    return ov;
+  }
+  function showConfirm(players, team){
+    remove('pasisSendOv_v2');
+    var rows = players.map(function(p){
+      var st=classify(p), badge='', row='background:#fff;border:1.5px solid #e8d9b5;';
+      var total='<span style="font-size:26px;font-weight:900;color:#c8860a;">'+esc(p.total)+'</span><span style="font-size:12px;color:#8b6b2d;font-weight:700;"> 타</span>';
+      if(st==='absent'){ badge='<span style="margin-left:6px;padding:2px 7px;border-radius:6px;background:#fef2f2;border:1px solid #fca5a5;color:#dc2626;font-size:11px;font-weight:900;">불참</span>'; row+='opacity:.78;background:#f9f9f9;border-color:#ddd;'; total='<span style="font-size:13px;color:#9ca3af;font-weight:800;">순위제외</span>'; }
+      if(st==='quit'){ badge='<span style="margin-left:6px;padding:2px 7px;border-radius:6px;background:#fffbeb;border:1px solid #fcd34d;color:#d97706;font-size:11px;font-weight:900;">기권</span>'; row+='background:#fffdf4;border-color:#f2cf75;'; total='<span style="font-size:13px;color:#d97706;font-weight:900;">기권처리</span>'; }
+      var meta=[p.gender,p.affiliation].filter(Boolean).map(esc).join(', ');
+      return '<div style="'+row+'border-radius:14px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;">'
+        +'<div style="min-width:0;flex:1;"><div style="font-size:18px;font-weight:900;color:#1e3c72;line-height:1.35;">'+esc(p.name)+(meta?' <span style="font-size:13px;font-weight:700;color:#6b7280;">('+meta+')</span>':'')+badge+'</div>'
+        +'<div style="font-size:13px;color:#555;line-height:1.55;margin-top:4px;">A:'+esc(p.A)+' B:'+esc(p.B)+' C:'+esc(p.C)+' D:'+esc(p.D)+(p.holeInOne?' · '+esc(p.holeInOne):'')+'</div></div>'
+        +'<div style="min-width:80px;text-align:right;white-space:nowrap;">'+total+'</div></div>';
+    }).join('');
+    var ov=document.createElement('div');
+    ov.id='pasisSendOv_v2';
+    ov.style.cssText='position:fixed;inset:0;z-index:2147483604;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:14px;font-family:"Malgun Gothic",sans-serif;';
+    ov.innerHTML='<div style="width:min(360px,94vw);max-height:92vh;background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.35);">'
+      +'<div style="background:linear-gradient(135deg,#c8860a 0%,#9b6400 100%);padding:16px 18px 14px;color:#fff;"><div style="font-size:22px;font-weight:900;">📋 전송 전 확인</div><div style="font-size:15px;font-weight:700;margin-top:3px;">'+esc(team)+' · '+players.length+'명</div></div>'
+      +'<div style="padding:14px 14px 6px;max-height:calc(92vh - 220px);overflow-y:auto;background:#fffaf0;">'+rows+'</div>'
+      +'<div style="background:#fef3c7;border-top:1px solid #fcd34d;padding:11px 16px;font-size:13px;color:#92400e;line-height:1.55;text-align:center;">⚠️ <strong>전송 후 수정은 불가합니다.</strong><br>오류 발견 시 관리자에게 직접 문의하세요.</div>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px;background:#fff;"><button id="pasisBack_v2" style="padding:14px;border:none;border-radius:16px;background:#e5e7eb;color:#374151;font-size:20px;font-weight:900;line-height:1.25;">← 뒤로<br>(수정)</button><button id="pasisGo_v2" style="padding:14px;border:none;border-radius:16px;background:#c8860a;color:#fff;font-size:20px;font-weight:900;line-height:1.25;">✅ 확인·<br>전송</button></div></div>';
+    document.body.appendChild(ov);
+    document.getElementById('pasisBack_v2').onclick=function(){remove('pasisSendOv_v2');};
+    document.getElementById('pasisGo_v2').onclick=function(){
+      remove('pasisSendOv_v2');
+      doRealSend(players, team);
+    };
+    ov.onclick=function(e){if(e.target===ov)remove('pasisSendOv_v2');};
+  }
+  function doRealSend(players, team){
+    var ov=sending(), cleaned=false, timer;
+    var oldToast=window.showToast, oldAlert=window.alert;
+    function cleanup(){
+      if(cleaned) return;
+      cleaned=true; clearTimeout(timer); remove('pasisSendingOv_v2');
+      window.showToast=oldToast; window.alert=oldAlert;
+    }
+    timer=setTimeout(cleanup,10000);
+    window.showToast=function(msg){
+      cleanup();
+      if(String(msg).indexOf('완료')>-1 || String(msg).indexOf('전송')>-1) done(team,players);
+      if(typeof oldToast==='function') return oldToast.apply(this,arguments);
+    };
+    window.alert=function(msg){ cleanup(); return oldAlert.apply(this,arguments); };
+    var fn = realSendFn || window.sendToGoogleSheetPatchedV4 || window.sendToGoogleSheet;
+    if(typeof fn==='function') fn();
+    else { cleanup(); oldAlert('❌ 전송 함수를 찾을 수 없습니다.'); }
+  }
+  function onClick(ev){
+    if(ev){ ev.preventDefault(); ev.stopPropagation(); ev.stopImmediatePropagation && ev.stopImmediatePropagation(); }
+    var team=text('teamName') || '팀명', players;
+    try{ players=collectPlayers(); }
+    catch(e){ alert(e.message||String(e)); return false; }
+    if(!players.length){
+      setTimeout(function(){
+        try{ var ps=collectPlayers(); if(ps.length) showConfirm(ps,team); else alert('전송할 선수 정보를 아직 불러오지 못했습니다. 잠시 후 다시 눌러주세요.'); }
+        catch(e){ alert(e.message||String(e)); }
+      },150);
+      return false;
+    }
+    showConfirm(players,team);
+    return false;
+  }
+  function bind(){
+    var btn=document.getElementById('autoSendBtn');
+    if(!btn || btn.__pasisDetailV2Bound) return;
+    btn.__pasisDetailV2Bound=true;
+    btn.onclick=null;
+    btn.style.background='linear-gradient(135deg,#c8860a 0%,#7a4f00 100%)';
+    btn.style.boxShadow='0 5px 10px rgba(122,79,0,.4)';
+    btn.addEventListener('click',onClick,true);
+  }
+  function repeat(){
+    bind();
+    [50,200,500,1000,2000,3500,5000,8000].forEach(function(ms){setTimeout(bind,ms);});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',repeat);
+  else repeat();
+  window.addEventListener('load',repeat);
+  try{
+    new MutationObserver(function(){ setTimeout(bind,0); }).observe(document.documentElement,{childList:true,subtree:true});
+  }catch(e){}
+  window.collectPlayersForSendDetailedV2=collectPlayers;
+})();
 </script>
 
 
