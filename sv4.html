@@ -2632,10 +2632,12 @@ window.addEventListener('load', function(){
   #pgBatchGrid {
     display:grid !important;
     grid-template-columns:repeat(3,1fr) !important;
+    grid-template-rows:repeat(3,1fr) !important;
     column-gap:2% !important;
     row-gap:3% !important;
     padding:1% 1% !important;
     width:100% !important;
+    height:96% !important;
     box-sizing:border-box !important;
   }
   #pgBatchGrid[style*="repeat(2"] {
@@ -2653,7 +2655,7 @@ window.addEventListener('load', function(){
     break-inside:avoid !important; page-break-inside:avoid !important;
     display:flex !important; flex-direction:column !important; align-items:center !important;
     padding:0.8mm 1.5mm 0.8mm !important; box-sizing:border-box !important;
-    overflow:hidden !important;
+    overflow:hidden !important; height:100% !important;
   }
   .pgCard.page-break-after {
     break-after:page !important; page-break-after:always !important;
