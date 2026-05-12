@@ -2423,38 +2423,50 @@ window.addEventListener('load', function(){
 
     var code = (localStorage.getItem('parkgolf_tournament_code')||'대회코드').toUpperCase();
 
-    /* 안내문 템플릿 (대회코드·URL 자동 삽입) */
-    var guideText =
-      '안녕하세요 😊\n' +
-      '이번 대회는 파시스 SV4.0 프로로 점수를 실시간 집계합니다.\n\n' +
-      '━━━━━━━━━━━━━━━━━━\n' +
-      '📋 경기 당일 점수 전송 방법\n' +
-      '━━━━━━━━━━━━━━━━━━\n' +
-      '① 경기 종료 후 QR카드를 꺼내세요\n' +
-      '② 기본 카메라 앱으로 QR 스캔\n' +
-      '③ 링크 팝업 탭 → 파시스 앱 열림\n' +
-      '④ 4명 × 4코스 점수 입력 (16칸)\n' +
-      '⑤ 전송 전 확인 화면에서 최종 확인\n' +
-      '⑥ 확인·전송 버튼\n\n' +
-      '━━━━━━━━━━━━━━━━━━\n' +
-      '⚠️ 주의사항\n' +
-      '━━━━━━━━━━━━━━━━━━\n' +
-      '• 전송은 1회만 가능합니다\n' +
-      '  (전송 후 수정 불가 — 오류 시 관리자 문의)\n' +
-      '• QR 스캔이 안 되면 아래 링크를 탭하세요 👇\n' +
-      appUrl + '\n\n' +
-      '━━━━━━━━━━━━━━━━━━\n' +
-      '📌 사전 연습 권장 (꼭 해보세요!)\n' +
-      '━━━━━━━━━━━━━━━━━━\n' +
-      '아래 주소로 들어가시면\n' +
-      '파시스 SV4.0 프로 화면이 열립니다.\n\n' +
-      '👉 ' + appUrl + '\n\n' +
-      '미리 접속해서 화면 구성을 확인해 두시면\n' +
-      '대회 당일 당황하지 않습니다 😊\n' +
-      '(연습 중 전송 버튼을 누르셔도\n' +
-      ' 실제 조 QR 없이는 전송되지 않습니다)\n\n' +
-      '대회코드: ' + code + '\n' +
-      '문의: 파시스 본부';
+    /* ★ pasis4-send와 동일한 안내문 */
+    var guideText = [
+      '안녕하세요 😊',
+      '이번 대회는 파시스(PASIS) SV4.0 프로로',
+      '점수를 실시간 집계합니다.',
+      '',
+      '━━━━━━━━━━━━━━━━━━',
+      '📋 경기 당일 점수 전송 방법',
+      '━━━━━━━━━━━━━━━━━━',
+      '① 경기 종료 후 QR카드를 꺼내세요',
+      '② 기본 카메라 앱으로 QR 스캔',
+      '③ 링크 팝업 탭 → 파시스 전송화면 열림',
+      '④ 4명 × 4코스 점수 입력 (16칸)',
+      '⑤ 전송 전 확인 화면에서 최종 확인',
+      '⑥ 확인·전송 버튼',
+      '',
+      '━━━━━━━━━━━━━━━━━━',
+      '⚠️ 주의사항',
+      '━━━━━━━━━━━━━━━━━━',
+      '• 전송은 1회만 가능합니다',
+      '  (전송 후 수정 불가 — 오류 시 관리자 문의)',
+      '• QR 스캔이 안 되면',
+      '  ① 종이 기록지를 관리자에게 직접 제출',
+      '  ② 동료 심판에게 QR카드를 건네고 대신 전송 부탁',
+      '',
+      '━━━━━━━━━━━━━━━━━━',
+      '📌 사전 연습 권장 (꼭 해보세요!)',
+      '━━━━━━━━━━━━━━━━━━',
+      '아래 주소로 미리 접속해 보세요.',
+      '',
+      '👉 ' + appUrl,
+      '',
+      '화면 구성을 미리 확인해 두시면',
+      '대회 당일 당황하지 않습니다 😊',
+      '',
+      '※ 연습 중 전송 버튼을 누르셔도',
+      '  실제 조 QR 없이는 전송되지 않습니다.',
+      '',
+      '━━━━━━━━━━━━━━━━━━',
+      '대회코드: ' + code,
+      '문의: 파시스 본부',
+      '👉 카카오톡 1:1 문의',
+      'https://open.kakao.com/o/sgdyKKti'
+    ].join('\n');
 
     var ov = document.createElement('div');
     ov.id = 'pgAccessQrOv';
@@ -2465,40 +2477,25 @@ window.addEventListener('load', function(){
       '<div style="font-size:12px;color:#666;margin-bottom:14px;">심판 배포 · 카톡 전송용</div>' +
       '<div id="pgAccessQrCode" style="display:inline-block;padding:10px;background:#fff;border:2px solid #e0e0e0;border-radius:10px;"></div>' +
       '<div style="font-size:11px;color:#888;margin-top:8px;word-break:break-all;line-height:1.4;">' + appUrl + '</div>' +
-
-      /* 카톡 전송 방법 */
       '<div style="background:#e8f5e9;border-radius:8px;padding:10px 12px;margin:12px 0 6px;font-size:12px;color:#2e7d32;text-align:left;line-height:1.6;">' +
       '📤 <strong>카톡 전송 방법</strong><br>' +
       '① 이 QR 화면 캡처 → 심판 단톡방 전송<br>' +
       '② 또는 아래 [안내문 복사] 버튼 탭 → 카톡 붙여넣기' +
       '</div>' +
-
-      /* ★ 심판 안내문 복사 버튼 */
-      '<button id="pgCopyGuideBtn" onclick="openPgGuideModal()" ' +
+      '<button id="pgCopyGuideBtn" onclick="pgOpenGuideModal()" ' +
       'style="width:100%;padding:13px;background:linear-gradient(135deg,#1e3c72,#0d2247);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:900;cursor:pointer;margin-bottom:8px;">' +
       '📋 심판 안내문 복사</button>' +
       '<div id="pgCopyDone" style="display:none;font-size:12px;color:#2e7d32;font-weight:700;margin-bottom:8px;">✅ 복사됐습니다! 카톡에 붙여넣기 하세요.</div>' +
-
       '<button onclick="document.getElementById(\'pgAccessQrOv\').remove()" ' +
       'style="width:100%;padding:12px;background:#2e7d32;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:900;cursor:pointer;">닫기</button>' +
       '</div>';
     document.body.appendChild(ov);
 
-    /* 안내문 복사 함수 */
-    window.copyGuideText = function() {
-      var txt = guideText;
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(txt).then(function() {
-          var d = document.getElementById('pgCopyDone');
-          if (d) { d.style.display = 'block'; setTimeout(function(){ d.style.display='none'; }, 3000); }
-        }).catch(function() { fallbackCopy(txt); });
-      } else { fallbackCopy(txt); }
-    }
+    /* ★ 안내문 모달 */
+    window.pgOpenGuideModal = function() {
+      var om = document.getElementById('pgGuideModal');
+      if (om) om.remove();
 
-    /* ★ 안내문 모달 열기 */
-    window.openPgGuideModal = function() {
-      var old2 = document.getElementById('pgGuideModal');
-      if (old2) old2.remove();
       var modal = document.createElement('div');
       modal.id = 'pgGuideModal';
       modal.style.cssText = 'position:fixed;inset:0;z-index:300000;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;justify-content:center;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;';
@@ -2506,24 +2503,30 @@ window.addEventListener('load', function(){
       var sheet = document.createElement('div');
       sheet.style.cssText = 'background:#fff;border-radius:18px 18px 0 0;width:100%;max-width:480px;max-height:85vh;display:flex;flex-direction:column;';
 
+      /* 헤더 */
       var head = document.createElement('div');
-      head.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:16px 18px 12px;border-bottom:1px solid #eee;';
-      head.innerHTML = '<div style="font-size:16px;font-weight:900;color:#1e3c72;">📋 심판 안내문</div>';
+      head.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:16px 18px 12px;border-bottom:1px solid #eee;flex-shrink:0;';
+      var title = document.createElement('div');
+      title.style.cssText = 'font-size:16px;font-weight:900;color:#1e3c72;';
+      title.textContent = '📋 심판 안내문';
       var closeBtn = document.createElement('button');
       closeBtn.textContent = '✕';
-      closeBtn.style.cssText = 'background:none;border:none;font-size:22px;cursor:pointer;color:#999;line-height:1;';
+      closeBtn.style.cssText = 'background:none;border:none;font-size:22px;cursor:pointer;color:#999;';
       closeBtn.onclick = function(){ modal.remove(); };
+      head.appendChild(title);
       head.appendChild(closeBtn);
 
+      /* 본문 */
       var body = document.createElement('div');
       body.style.cssText = 'flex:1;overflow-y:auto;padding:16px 18px;';
       var pre = document.createElement('pre');
-      pre.style.cssText = 'font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;font-size:13px;line-height:1.7;white-space:pre-wrap;word-break:break-word;color:#333;margin:0;';
+      pre.style.cssText = 'font-size:13px;line-height:1.7;white-space:pre-wrap;word-break:break-word;color:#333;margin:0;font-family:inherit;';
       pre.textContent = guideText;
       body.appendChild(pre);
 
+      /* 푸터 */
       var foot = document.createElement('div');
-      foot.style.cssText = 'padding:12px 18px 20px;border-top:1px solid #eee;';
+      foot.style.cssText = 'padding:12px 18px 20px;border-top:1px solid #eee;flex-shrink:0;';
       var copyOk = document.createElement('div');
       copyOk.id = 'pgGuideModalCopyOk';
       copyOk.style.cssText = 'display:none;text-align:center;color:#2e7d32;font-size:13px;font-weight:700;margin-bottom:8px;';
@@ -2531,7 +2534,12 @@ window.addEventListener('load', function(){
       var copyBtn = document.createElement('button');
       copyBtn.textContent = '📋 카톡에 복사하기';
       copyBtn.style.cssText = 'width:100%;padding:14px;background:linear-gradient(135deg,#1e3c72,#0d2247);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:900;cursor:pointer;';
-      copyBtn.onclick = function(){ window.copyPgGuideFromModal(); };
+      copyBtn.onclick = function() {
+        var onOk = function() { copyOk.style.display='block'; setTimeout(function(){ copyOk.style.display='none'; }, 3000); };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(guideText).then(onOk).catch(function(){ pgFallbackCopy(guideText, onOk); });
+        } else { pgFallbackCopy(guideText, onOk); }
+      };
       foot.appendChild(copyOk);
       foot.appendChild(copyBtn);
 
@@ -2543,25 +2551,15 @@ window.addEventListener('load', function(){
       modal.addEventListener('click', function(e){ if(e.target===modal) modal.remove(); });
     };
 
-    /* ★ 모달 내 복사 */
-    window.copyPgGuideFromModal = function() {
-      var ok = document.getElementById('pgGuideModalCopyOk');
-      var onOk = function() {
-        if (ok) { ok.style.display='block'; setTimeout(function(){ ok.style.display='none'; }, 3000); }
-      };
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(guideText).then(onOk).catch(function(){ fallbackCopyGuide(guideText, onOk); });
-      } else { fallbackCopyGuide(guideText, onOk); }
-    };
-
-    /* fallback */
-    window.fallbackCopyGuide = function(txt, cb) {
+    /* fallback 복사 */
+    window.pgFallbackCopy = function(txt, cb) {
       var ta = document.createElement('textarea');
-      ta.value = txt; ta.style.cssText='position:fixed;top:-9999px;';
+      ta.value = txt; ta.style.cssText = 'position:fixed;top:-9999px;';
       document.body.appendChild(ta); ta.select();
       try { document.execCommand('copy'); if(cb) cb(); } catch(e){}
       document.body.removeChild(ta);
-    };;
+    };
+
     function fallbackCopy(txt) {
       var ta = document.createElement('textarea');
       ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0';
