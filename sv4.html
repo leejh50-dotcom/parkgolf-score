@@ -2620,7 +2620,7 @@ window.addEventListener('load', function(){
   }
   #pgBatchTop {
     display:block !important; visibility:visible !important;
-    padding:2mm 4mm 1mm !important; margin:0 !important;
+    padding:1mm 4mm 1mm !important; margin:0 !important;
     position:static !important; background:#fff !important;
   }
   #pgBatchTop .btn-close,
@@ -2629,66 +2629,68 @@ window.addEventListener('load', function(){
   #pgBatchTop .bt-btns { display:none !important; }
   #pgProgress, #pgProgressTxt { display:none !important; }
 
-  /* 그리드: 3열, 간격만 지정 — 높이는 카드에 맡김 */
   #pgBatchGrid {
     display:grid !important;
     grid-template-columns:repeat(3,1fr) !important;
     gap:3mm !important;
-    padding:1mm 2mm !important;
+    padding:1mm 1mm !important;
     width:100% !important;
     box-sizing:border-box !important;
   }
   #pgBatchGrid[style*="repeat(2"] {
     grid-template-columns:repeat(2,1fr) !important;
-    gap:6mm !important;
-    padding:2mm 4mm !important;
+    gap:5mm !important;
+    padding:1mm 3mm !important;
   }
   #pgBatchGrid[style*="repeat(2"] .pgCard-qr canvas {
-    width:52mm !important; height:52mm !important;
+    width:54mm !important; height:54mm !important;
   }
 
-  /* 카드: 높이 고정 없음, page-break로 페이지 나눔 */
   .pgCard {
     border:1.5px solid #999 !important; border-radius:2mm !important;
     box-shadow:none !important; background:#fff !important;
     break-inside:avoid !important; page-break-inside:avoid !important;
     display:flex !important; flex-direction:column !important; align-items:center !important;
-    padding:1mm 1.5mm !important; box-sizing:border-box !important;
+    padding:0.8mm 1.5mm 0.8mm !important; box-sizing:border-box !important;
     overflow:hidden !important;
   }
-
-  /* 9번째 카드마다 다음 카드에서 페이지 나눔 */
   .pgCard.page-break-after {
-    break-after:page !important;
-    page-break-after:always !important;
+    break-after:page !important; page-break-after:always !important;
   }
 
-  .pgCard-qr { position:static !important; padding-top:0 !important; }
+  .pgCard-qr { position:static !important; padding-top:0 !important; flex-shrink:0 !important; }
   .pgCard-qr::before { display:none !important; }
   .pgCard-qr > div { position:static !important; display:block !important; }
   .pgCard-qr canvas {
     display:block !important;
-    width:52mm !important; height:52mm !important;
+    width:44mm !important; height:44mm !important;
     margin:0 auto !important;
   }
   .pgCard-qr img { display:none !important; }
+
   .pgCard-title {
-    font-size:10pt !important; margin-bottom:0.5mm !important; color:#c8860a !important;
+    font-size:9.5pt !important; margin-bottom:0.3mm !important; color:#c8860a !important;
     white-space:nowrap !important; overflow:hidden !important; text-overflow:ellipsis !important;
-    width:100% !important; text-align:center !important;
+    width:100% !important; text-align:center !important; line-height:1.2 !important;
+    flex-shrink:0 !important;
   }
   .pgCard-players {
-    width:100% !important; margin-top:0.5mm !important;
-    display:grid !important; grid-template-columns:1fr 1fr !important; gap:0 2px !important;
+    width:100% !important; margin-top:0.3mm !important;
+    display:grid !important; grid-template-columns:1fr 1fr !important;
+    gap:0 1px !important; flex-shrink:0 !important;
   }
   .pgCard-pline {
-    font-size:7.5pt !important; white-space:nowrap !important;
-    overflow:hidden !important; text-overflow:clip !important; display:block !important;
+    font-size:7pt !important; white-space:nowrap !important;
+    overflow:hidden !important; text-overflow:ellipsis !important;
+    display:block !important; line-height:1.3 !important;
   }
   .pgCard-pname { font-weight:800 !important; }
-  .pgCard-pgender, .pgCard-paffil { font-size:7pt !important; }
-  .pgCard-footer { font-size:6.5pt !important; margin-top:0.3mm !important; }
-  .pgCard-num { font-size:7.5pt !important; background:none !important; color:#c8860a !important; }
+  .pgCard-pgender, .pgCard-paffil { font-size:6.5pt !important; }
+  .pgCard-footer {
+    font-size:6pt !important; margin-top:0.2mm !important;
+    line-height:1.2 !important; flex-shrink:0 !important;
+  }
+  .pgCard-num { font-size:7pt !important; background:none !important; color:#c8860a !important; }
 }
 
 /* ══ 공통 카드 ══ */
