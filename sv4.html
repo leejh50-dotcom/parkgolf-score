@@ -1494,34 +1494,50 @@ function test_doPost() {
       setTimeout(updateHeaders, 400);
     };
   }
-  // ★ 패치: QR 스캔 후 t= 파라미터(조명)를 localStorage와 teamName에 저장
-  var _origApplyQR = window._applyQRAndOpenScoring;
-  if (typeof _origApplyQR === 'function') {
-    window._applyQRAndOpenScoring = function(qrText) {
-      try {
-        var qs = qrText.indexOf('?') !== -1 ? '?' + qrText.split('?')[1] : qrText;
-        var params = new URLSearchParams(qs);
-        var teamVal = params.get('t') || params.get('team') || '';
-        if (teamVal) {
-          var decoded = decodeURIComponent(teamVal);
-          localStorage.setItem('pasis_current_team', decoded);
-          var tn = document.getElementById('teamName');
-          if (tn) tn.value = decoded;
-        }
-      } catch(e) {}
-      _origApplyQR.call(this, qrText);
-      // 원본 함수 실행 후 다시 덮어쓰기 (타이밍 문제 방어)
-      setTimeout(function() {
+  // ★ 패치v3: QR 스캔 후 조명 저장 — 조건 없이 무조건 실행
+  (function patchTeamName() {
+    // _applyQRAndOpenScoring 래핑
+    function wrapApply() {
+      var orig = window._applyQRAndOpenScoring;
+      if (typeof orig !== 'function') return false;
+      if (orig.__teamPatched) return true;
+      window._applyQRAndOpenScoring = function(qrText) {
         try {
-          var saved = localStorage.getItem('pasis_current_team') || '';
-          if (saved) {
-            var tn2 = document.getElementById('teamName');
-            if (tn2) tn2.value = saved;
+          var qs = qrText.indexOf('?') !== -1 ? '?' + qrText.split('?')[1] : qrText;
+          var params = new URLSearchParams(qs);
+          var tv = params.get('t') || params.get('team') || '';
+          if (tv) {
+            var d = decodeURIComponent(tv);
+            localStorage.setItem('pasis_current_team', d);
+            var el = document.getElementById('teamName');
+            if (el) el.value = d;
           }
         } catch(e) {}
-      }, 300);
-    };
-  }
+        orig.apply(this, arguments);
+        setTimeout(function() {
+          try {
+            var s = localStorage.getItem('pasis_current_team') || '';
+            if (s) { var el2 = document.getElementById('teamName'); if (el2) el2.value = s; }
+          } catch(e) {}
+        }, 200);
+        setTimeout(function() {
+          try {
+            var s = localStorage.getItem('pasis_current_team') || '';
+            if (s) { var el3 = document.getElementById('teamName'); if (el3) el3.value = s; }
+          } catch(e) {}
+        }, 600);
+      };
+      window._applyQRAndOpenScoring.__teamPatched = true;
+      return true;
+    }
+    // 즉시 시도, 안 되면 폴링
+    if (!wrapApply()) {
+      var tries = 0;
+      var iv = setInterval(function() {
+        if (wrapApply() || ++tries > 30) clearInterval(iv);
+      }, 100);
+    }
+  })();
 
   // ★ 패치: initFromQueryParams에서도 조명 저장
   var _origInit = window.initFromQueryParams;
