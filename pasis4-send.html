@@ -35,37 +35,38 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
 #coverScreen{
   display:none;min-height:100vh;
   background:linear-gradient(160deg,#5a3200 0%,#7a4f00 35%,#c8860a 70%,#e8a820 100%);
-  flex-direction:column;align-items:center;justify-content:center;
-  padding:40px 24px 32px;position:relative;overflow:hidden;
+  flex-direction:column;align-items:center;justify-content:flex-start;
+  padding:18px 24px 24px;position:relative;overflow:hidden;
 }
 #coverScreen::before{content:'';position:absolute;top:-80px;right:-80px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.06);pointer-events:none;}
 #coverScreen::after{content:'';position:absolute;bottom:-60px;left:-60px;width:220px;height:220px;border-radius:50%;background:rgba(0,0,0,.08);pointer-events:none;}
-.cv-logo{text-align:center;margin-bottom:28px;}
-.cv-icon{font-size:64px;display:block;margin-bottom:8px;animation:cvBounce 2.5s ease-in-out infinite;}
+.cv-logo{text-align:center;margin-bottom:14px;}
+.cv-icon{font-size:44px;display:block;margin-bottom:4px;animation:cvBounce 2.5s ease-in-out infinite;}
 @keyframes cvBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-.cv-brand{font-size:13px;font-weight:800;letter-spacing:3px;color:rgba(255,255,255,.7);margin-bottom:4px;}
-.cv-title{font-size:28px;font-weight:900;color:#fff;line-height:1.2;text-shadow:0 2px 8px rgba(0,0,0,.3);}
-.cv-sub{font-size:13px;color:rgba(255,255,255,.75);margin-top:5px;font-weight:600;}
+.cv-brand{font-size:12px;font-weight:800;letter-spacing:3px;color:rgba(255,255,255,.7);margin-bottom:2px;}
+.cv-title{font-size:24px;font-weight:900;color:#fff;line-height:1.2;text-shadow:0 2px 8px rgba(0,0,0,.3);}
+.cv-sub{font-size:12px;color:rgba(255,255,255,.75);margin-top:3px;font-weight:600;}
 .cv-team-card{
   background:rgba(255,255,255,.15);backdrop-filter:blur(8px);
-  border:1.5px solid rgba(255,255,255,.25);border-radius:16px;
-  padding:14px 20px;margin-bottom:24px;width:100%;max-width:320px;text-align:center;
+  border:1.5px solid rgba(255,255,255,.25);border-radius:14px;
+  padding:8px 18px;margin-bottom:16px;width:100%;max-width:320px;text-align:center;
 }
-.cv-team-label{font-size:11px;color:rgba(255,255,255,.65);font-weight:700;letter-spacing:1px;margin-bottom:4px;}
-.cv-team-name{font-size:24px;font-weight:900;color:#fff;}
-.cv-team-code{font-size:12px;color:rgba(255,255,255,.7);margin-top:3px;font-weight:600;}
+.cv-team-label{font-size:11px;color:rgba(255,255,255,.65);font-weight:700;letter-spacing:1px;margin-bottom:2px;}
+.cv-team-name{font-size:20px;font-weight:900;color:#fff;}
+.cv-team-code{font-size:11px;color:rgba(255,255,255,.7);margin-top:2px;font-weight:600;}
 .cv-no-param{
   background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.2);
-  border-radius:14px;padding:10px 18px;margin-bottom:24px;
+  border-radius:14px;padding:8px 18px;margin-bottom:16px;
   width:100%;max-width:320px;text-align:center;
 }
-.cv-no-param-txt{font-size:13px;color:rgba(255,255,255,.85);line-height:1.9;font-weight:600;word-break:keep-all;}
+.cv-no-param-txt{font-size:13px;color:rgba(255,255,255,.85);line-height:1.8;font-weight:600;word-break:keep-all;}
 .cv-btns{width:100%;max-width:320px;display:flex;flex-direction:column;gap:10px;}
 .cv-start-btn{
-  width:100%;padding:18px;background:#fff;color:var(--gold-dk);
-  border:none;border-radius:16px;font-size:18px;font-weight:900;
-  cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.25);
+  width:100%;padding:22px 18px;background:#fff;color:var(--gold-dk);
+  border:none;border-radius:18px;font-size:26px;font-weight:900;
+  cursor:pointer;box-shadow:0 8px 28px rgba(0,0,0,.3);
   font-family:'Noto Sans KR',sans-serif;transition:transform .12s;
+  line-height:1.25;
 }
 .cv-start-btn:active{transform:scale(0.97);}
 .cv-guide-btn{
@@ -77,7 +78,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
 .cv-guide-btn:active{background:rgba(255,255,255,.25);}
 .cv-copy-done{display:none;font-size:12px;color:#a7f3d0;font-weight:700;text-align:center;margin-top:-4px;}
 .cv-copy-done.show{display:block;}
-.cv-footer{margin-top:28px;display:flex;gap:16px;justify-content:center;position:relative;z-index:10;}
+.cv-footer{margin-top:20px;display:flex;gap:16px;justify-content:center;position:relative;z-index:10;}
 .cv-footer a,.cv-footer span{font-size:13px;color:#ffffff;text-decoration:none;font-weight:800;border-bottom:2px solid rgba(255,255,255,.8);padding:8px 4px;cursor:pointer;-webkit-tap-highlight-color:rgba(255,255,255,.3);text-align:center;line-height:1.5;}
 
 /* ── 입력 화면 ── */
@@ -381,7 +382,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
     </div>
   </div>
   <div class="cv-btns">
-    <button class="cv-start-btn" id="cvStartBtn" onclick="startInput()">▶ 점수 입력 시작</button>
+    <button class="cv-start-btn" id="cvStartBtn" onclick="startInput()">점수입력</button>
     <button class="cv-guide-btn" onclick="openGuideModal()">심판 안내문</button>
   </div>
   <div class="cv-footer">
@@ -473,7 +474,389 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
 </div><!-- /wrap -->
 
 <script>
-var a0_0xc4b317=a0_0x491f;(function(_0x4d649b,_0x2d1960){var _0x48bbab=a0_0x491f,_0x4b8c20=_0x4d649b();while(!![]){try{var _0x354715=-parseInt(_0x48bbab(0x112))/0x1+-parseInt(_0x48bbab(0xd1))/0x2*(-parseInt(_0x48bbab(0xdb))/0x3)+-parseInt(_0x48bbab(0xb7))/0x4*(parseInt(_0x48bbab(0xab))/0x5)+-parseInt(_0x48bbab(0xd5))/0x6*(parseInt(_0x48bbab(0x7c))/0x7)+parseInt(_0x48bbab(0xed))/0x8*(parseInt(_0x48bbab(0xec))/0x9)+parseInt(_0x48bbab(0x84))/0xa+parseInt(_0x48bbab(0xd3))/0xb;if(_0x354715===_0x2d1960)break;else _0x4b8c20['push'](_0x4b8c20['shift']());}catch(_0x173485){_0x4b8c20['push'](_0x4b8c20['shift']());}}}(a0_0x5c30,0x5f593));var PASIS_SECRET=a0_0xc4b317(0xb5),APP={'code':'','url':'','team':'','date':'','players':[],'hasParam':![]},COURSES=['A','B','C','D'];function show(_0x4ea8ee,_0x4a2745){var _0x129a1d=a0_0xc4b317;document[_0x129a1d(0x88)](_0x4ea8ee)[_0x129a1d(0x87)][_0x129a1d(0x90)]=_0x4a2745?'flex':_0x129a1d(0x10b);}function hide(_0x32025a){var _0x1f20ea=a0_0xc4b317;document[_0x1f20ea(0x88)](_0x32025a)['style']['display']=_0x1f20ea(0xf9);}function init(){var _0x5c1914=a0_0xc4b317;try{var _0x313140=new URLSearchParams(window['location']['search']||'');APP['code']=(_0x313140['get']('c')||'')[_0x5c1914(0xe9)]()[_0x5c1914(0x113)](),APP[_0x5c1914(0xf6)]=decodeURIComponent(_0x313140[_0x5c1914(0xdc)]('u')||''),APP[_0x5c1914(0x91)]=decodeURIComponent(_0x313140['get']('t')||''),APP['date']=decodeURIComponent(_0x313140[_0x5c1914(0xdc)]('d')||''),APP[_0x5c1914(0x103)]=!!(APP[_0x5c1914(0xc2)]&&APP[_0x5c1914(0xf6)]&&APP['team']);if(APP[_0x5c1914(0x103)]){APP['players']=[];for(var _0x578c2e=0x1;_0x578c2e<=0x4;_0x578c2e++){var _0x497a26=_0x313140[_0x5c1914(0xdc)](String(_0x578c2e))||'';if(!_0x497a26)continue;var _0x1a7091=decodeURIComponent(_0x497a26)[_0x5c1914(0xbc)]('|');APP[_0x5c1914(0x77)]['push']({'slot':_0x578c2e,'name':(_0x1a7091[0x0]||'')[_0x5c1914(0xe9)](),'gender':(_0x1a7091[0x1]||'')[_0x5c1914(0xe9)](),'affil':(_0x1a7091[0x2]||'')['trim'](),'A':'','B':'','C':'','D':'','total':0x0,'bigo':''});}}}catch(_0x216265){}hide(_0x5c1914(0xf8)),showCover();}function showCover(){var _0xd33fe4=a0_0xc4b317;show('coverScreen',!![]),hide(_0xd33fe4(0x6b));var _0x3bb4fc=APP[_0xd33fe4(0x103)];document[_0xd33fe4(0x88)](_0xd33fe4(0x9f))[_0xd33fe4(0x87)][_0xd33fe4(0x90)]=_0x3bb4fc?_0xd33fe4(0x10b):_0xd33fe4(0xf9),document['getElementById'](_0xd33fe4(0xb8))[_0xd33fe4(0x87)][_0xd33fe4(0x90)]=_0x3bb4fc?_0xd33fe4(0xf9):_0xd33fe4(0x10b),_0x3bb4fc?(document[_0xd33fe4(0x88)](_0xd33fe4(0xc6))[_0xd33fe4(0xfb)]=APP[_0xd33fe4(0x91)],document[_0xd33fe4(0x88)](_0xd33fe4(0x73))['textContent']=APP['code']+(APP[_0xd33fe4(0x6e)]?_0xd33fe4(0xc7)+APP[_0xd33fe4(0x6e)]:''),document[_0xd33fe4(0x88)](_0xd33fe4(0xd6))['textContent']=_0xd33fe4(0xa6)):document[_0xd33fe4(0x88)](_0xd33fe4(0xd6))[_0xd33fe4(0xfb)]=_0xd33fe4(0x70);}function startInput(){var _0x3b1e2b=a0_0xc4b317;hide(_0x3b1e2b(0xe6)),show('mainContent',![]),renderUI(),window['scrollTo']({'top':0x0});}function goBack(){var _0x94c019=a0_0xc4b317;hide(_0x94c019(0x6b)),showCover(),window[_0x94c019(0xfd)]({'top':0x0});}function getGuideTxt(){var _0x48d7ef=a0_0xc4b317,_0x577834='https://leejh50-dotcom.github.io/parkgolf-score/pasis4-send.html',_0x1ba81b=APP['code']||'대회코드';return[_0x48d7ef(0x94),'이번\x20대회는\x20파시스(PASIS)\x20SV4.0\x20프로로',_0x48d7ef(0x89),'',_0x48d7ef(0x7b),_0x48d7ef(0xa8),_0x48d7ef(0x7b),_0x48d7ef(0xac),'②\x20기본\x20카메라\x20앱으로\x20QR\x20스캔',_0x48d7ef(0xc3),'④\x204명\x20×\x204코스\x20점수\x20입력\x20(16칸)',_0x48d7ef(0xc8),'⑥\x20확인·전송\x20버튼','',_0x48d7ef(0x7b),_0x48d7ef(0xa9),_0x48d7ef(0x7b),_0x48d7ef(0x92),_0x48d7ef(0xda),'•\x20QR\x20스캔이\x20안\x20되면',_0x48d7ef(0xee),'\x20\x20②\x20동료\x20심판에게\x20QR카드를\x20건네고\x20대신\x20전송\x20부탁','','━━━━━━━━━━━━━━━━━━',_0x48d7ef(0xf5),_0x48d7ef(0x7b),_0x48d7ef(0x69),'',_0x48d7ef(0xf3)+_0x577834,'',_0x48d7ef(0x10e),_0x48d7ef(0xb4),'','※\x20연습\x20중\x20전송\x20버튼을\x20누르셔도','\x20\x20실제\x20조\x20QR\x20없이는\x20전송되지\x20않습니다.','',_0x48d7ef(0x7b),_0x48d7ef(0xe0)+_0x1ba81b,_0x48d7ef(0xc1),_0x48d7ef(0x74),'https://open.kakao.com/o/sgdyKKti'][_0x48d7ef(0xaf)]('\x0a');}function openGuideModal(){var _0x157b4e=a0_0xc4b317;document[_0x157b4e(0x88)]('guideText')['textContent']=getGuideTxt(),document[_0x157b4e(0x88)](_0x157b4e(0x9e))['classList'][_0x157b4e(0x8a)](_0x157b4e(0xad)),document[_0x157b4e(0x88)](_0x157b4e(0x108))[_0x157b4e(0xa0)]['add'](_0x157b4e(0xad));}function closeGuideModal(){var _0x50ddaf=a0_0xc4b317;document[_0x50ddaf(0x88)](_0x50ddaf(0x108))['classList']['remove'](_0x50ddaf(0xad));}function a0_0x491f(_0x334738,_0x83e209){_0x334738=_0x334738-0x66;var _0x5c30df=a0_0x5c30();var _0x491fc3=_0x5c30df[_0x334738];if(a0_0x491f['RiUQzr']===undefined){var _0x420185=function(_0x1f2d27){var _0x15a144='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';var _0x4ea8ee='',_0x4a2745='';for(var _0x32025a=0x0,_0x313140,_0x578c2e,_0x497a26=0x0;_0x578c2e=_0x1f2d27['charAt'](_0x497a26++);~_0x578c2e&&(_0x313140=_0x32025a%0x4?_0x313140*0x40+_0x578c2e:_0x578c2e,_0x32025a++%0x4)?_0x4ea8ee+=String['fromCharCode'](0xff&_0x313140>>(-0x2*_0x32025a&0x6)):0x0){_0x578c2e=_0x15a144['indexOf'](_0x578c2e);}for(var _0x1a7091=0x0,_0x216265=_0x4ea8ee['length'];_0x1a7091<_0x216265;_0x1a7091++){_0x4a2745+='%'+('00'+_0x4ea8ee['charCodeAt'](_0x1a7091)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x4a2745);};a0_0x491f['LNDOUY']=_0x420185,a0_0x491f['smCiNp']={},a0_0x491f['RiUQzr']=!![];}var _0x4b3879=_0x5c30df[0x0],_0x3adb3b=_0x334738+_0x4b3879,_0x1bf8d3=a0_0x491f['smCiNp'][_0x3adb3b];return!_0x1bf8d3?(_0x491fc3=a0_0x491f['LNDOUY'](_0x491fc3),a0_0x491f['smCiNp'][_0x3adb3b]=_0x491fc3):_0x491fc3=_0x1bf8d3,_0x491fc3;}function copyGuideFromModal(){var _0x4675c5=a0_0xc4b317,_0x7eff1d=getGuideTxt(),_0x363fe8=document[_0x4675c5(0x88)](_0x4675c5(0x9e)),_0x3b2ff0=function(){var _0x2d7826=_0x4675c5;_0x363fe8[_0x2d7826(0xa0)][_0x2d7826(0x107)]('show'),setTimeout(function(){var _0x5e0913=_0x2d7826;_0x363fe8['classList'][_0x5e0913(0x8a)](_0x5e0913(0xad));},0xbb8);};navigator['clipboard']&&navigator['clipboard']['writeText']?navigator[_0x4675c5(0x10d)][_0x4675c5(0x10f)](_0x7eff1d)['then'](_0x3b2ff0)[_0x4675c5(0x6a)](function(){fallbackCopy(_0x7eff1d,_0x3b2ff0);}):fallbackCopy(_0x7eff1d,_0x3b2ff0);}function fallbackCopy(_0x3e52b1,_0xedf79b){var _0x639486=a0_0xc4b317,_0x39894e=document[_0x639486(0x7e)](_0x639486(0xe4));_0x39894e['value']=_0x3e52b1,_0x39894e[_0x639486(0x87)]['cssText']='position:fixed;opacity:0;',document[_0x639486(0x104)]['appendChild'](_0x39894e),_0x39894e['select']();try{document[_0x639486(0xa7)](_0x639486(0xe1)),_0xedf79b();}catch(_0x150e6a){alert(_0x639486(0x97));}document[_0x639486(0x104)][_0x639486(0xd4)](_0x39894e);}function renderUI(){var _0x2d31e8=a0_0xc4b317;APP['hasParam']?(document[_0x2d31e8(0x88)](_0x2d31e8(0xef))[_0x2d31e8(0xfb)]=APP['team'],document[_0x2d31e8(0x88)](_0x2d31e8(0xd7))['textContent']=APP[_0x2d31e8(0xc2)]+(APP[_0x2d31e8(0x6e)]?_0x2d31e8(0xc7)+APP[_0x2d31e8(0x6e)]:'')):(document['getElementById'](_0x2d31e8(0xef))[_0x2d31e8(0xfb)]=_0x2d31e8(0xca),document['getElementById']('teamCodeDisp')['textContent']=_0x2d31e8(0xba),APP[_0x2d31e8(0x77)]=[{'slot':0x1,'name':_0x2d31e8(0xe5),'gender':'남','affil':'소속','A':'','B':'','C':'','D':'','total':0x0,'bigo':''},{'slot':0x2,'name':_0x2d31e8(0x9b),'gender':'여','affil':'소속','A':'','B':'','C':'','D':'','total':0x0,'bigo':''},{'slot':0x3,'name':_0x2d31e8(0xa4),'gender':'남','affil':'소속','A':'','B':'','C':'','D':'','total':0x0,'bigo':''},{'slot':0x4,'name':_0x2d31e8(0x68),'gender':'여','affil':'소속','A':'','B':'','C':'','D':'','total':0x0,'bigo':''}]);var _0x42f391=document['getElementById']('playerList');_0x42f391[_0x2d31e8(0xc0)]='',APP[_0x2d31e8(0x77)][_0x2d31e8(0xbb)](function(_0x7be60,_0x10d1d7){var _0x44d209=_0x2d31e8,_0x4fa51b=document[_0x44d209(0x7e)]('div');_0x4fa51b[_0x44d209(0x110)]=_0x44d209(0x79),_0x4fa51b['id']=_0x44d209(0xa1)+_0x10d1d7;var _0xeade86=_0x7be60['gender']==='남'?_0x44d209(0xf7):_0x7be60['gender']==='여'?'<span\x20class=\x22gender-badge\x20gender-f\x22>여</span>':'',_0x459866=COURSES[_0x44d209(0x8c)](function(_0x1b4ed8){var _0x1c922d=_0x44d209;return _0x1c922d(0x66)+_0x1c922d(0xeb)+_0x1c922d(0x95)+_0x10d1d7+_0x1b4ed8+'\x22\x20'+_0x1c922d(0x7f)+_0x10d1d7+')\x22'+_0x1c922d(0x78);})[_0x44d209(0xaf)]('');_0x4fa51b[_0x44d209(0xc0)]=_0x44d209(0x10c)+_0x44d209(0x8e)+_0x7be60['slot']+_0x44d209(0x8d)+'<div\x20style=\x22flex:1;display:flex;align-items:center;flex-wrap:wrap;\x22>'+_0x44d209(0x111)+esc(_0x7be60[_0x44d209(0xb3)])+'</span>'+(_0x7be60[_0x44d209(0xe8)]?_0x44d209(0x82)+esc(_0x7be60['affil'])+'</span>':'')+_0xeade86+_0x44d209(0x8d)+_0x44d209(0x8d)+'<div\x20class=\x22score-tbl-wrap\x22>'+_0x44d209(0x8f)+_0x44d209(0xc4)+_0x44d209(0x96)+_0x459866+'<td\x20class=\x22td-total\x22><span\x20class=\x22total-disp\x22\x20id=\x22tot'+_0x10d1d7+_0x44d209(0xa5)+'</tr></tbody>'+_0x44d209(0x101)+_0x44d209(0x8d)+'<div\x20class=\x22bigo-row\x22>'+_0x44d209(0xf2)+_0x44d209(0xf1)+_0x44d209(0x72)+_0x10d1d7+'\x22>'+'</div>',_0x42f391[_0x44d209(0xe7)](_0x4fa51b),COURSES[_0x44d209(0xbb)](function(_0x287cc3){var _0x56c108=_0x44d209,_0x57798b=document[_0x56c108(0x88)]('sc'+_0x10d1d7+_0x287cc3);_0x57798b['addEventListener'](_0x56c108(0x7d),function(){onScore(this,_0x10d1d7,_0x287cc3);}),_0x57798b[_0x56c108(0xdd)](_0x56c108(0x75),function(){onFocus(_0x10d1d7);});});var _0x2b89c0=document[_0x44d209(0x88)](_0x44d209(0x6d)+_0x10d1d7);_0x2b89c0[_0x44d209(0xdd)](_0x44d209(0x7d),function(){var _0x45ad45=_0x44d209;APP[_0x45ad45(0x77)][_0x10d1d7][_0x45ad45(0x6d)]=this[_0x45ad45(0xfe)][_0x45ad45(0xe9)]();}),_0x2b89c0[_0x44d209(0xdd)]('focus',function(){onFocus(_0x10d1d7);});});}function sfBlur(_0x3f5c25){setTimeout(function(){var _0x3cbd22=a0_0x491f,_0x201fa1=document['getElementById']('card-'+_0x3f5c25);if(_0x201fa1&&!_0x201fa1[_0x3cbd22(0xcf)](document[_0x3cbd22(0x6c)]))_0x201fa1[_0x3cbd22(0xa0)][_0x3cbd22(0x8a)](_0x3cbd22(0xbf));},0x64);}function a0_0x5c30(){var _0x219bf8=['Aw5ZDgfUDa','ue9tva','icaO7kce7iAHio2BHcdSIjJSOjuG67Ai6RcaiokaLcdSMktRPzGG7iUCioQ0GoUMRoYEKcdRRlJSNzGP','m1n2r1HbzG','z2v0','ywrKrxzLBNrmAxn0zw5LCG','pgrPDIbJBgfZCZ0Iy2yTCM93ia','CMvWBgfJzq','64Ya7zQm7l2u65oCoIa','y29WEq','C3rYAw5NAwz5','pc9KAxy+pc9KAxy+','Dgv4DgfYzwe','6Rk96RIW7j6qmq','y292zxjty3jLzw4','yxbWzw5Kq2HPBgq','ywzMAwW','DhjPBq','phnTywXSihn0EwXLpsjMB250lxnPEMu6mtbWEdTJB2XVCJOJotK5iJ4G7yoapc9ZBwfSBd48l3nWyw4+','BwLUpsiWiIbTyxG9iJK5iIbWBgfJzwHVBgrLCJ0I4OcuiIa','mtHuBgXQs1m','mtq3nZaYnhDfExfhzG','icdIKAaG7kkf7j20ioQ4SoUHNEYNGoULVcdQTidRPQZSNPdSL5dQSOWG7kEb7kcrioYGNoY2Na','DgvHBu5HBwveAxnW','Dg90','pgLUChv0ignSyxnZpsjIAwDVlwLUChv0iIb0ExbLpsj0zxH0iIbWBgfJzwHVBgrLCJ0I7jIioIbboE2zGoYDUoYBKciGBwf4BgvUz3rOpsiXmIiG','phnWyw4Gy2XHC3m9iMjPz28TBgfIzwWIpUU5HoQZOdWVC3bHBJ4','8j+rIsa','jMfTCdS','8j+tJcdSGQZSOiqG7jEW7iQ1ioQ2JoYEPsaO6RYTio2vToUZToYeUoYALceP','DxjS','phnWyw4Gy2XHC3m9iMDLBMrLCI1IywrNzsbNzw5KzxiTBsi+64kOpc9ZCgfUpG','Bg9HzgLUz1nJCMvLBG','BM9Uzq','CxvPDa','Dgv4DenVBNrLBNq','Dg9Nz2XL','C2nYB2XSvg8','DMfSDwu','re9nq29UDgvUDeXVywrLza','C2vUzej0BG','pc90ywjSzt4','y2ztDwi','AgfZugfYyw0','yM9KEq','BgvUz3rO','7jEW7iQ1ioUQQoUtNoYEHEUlIoUlPc4k7iUK7kcCioUmGo2AJcdRI7NSNBWGuvlSNyqG7iQK7lQu7zwy7iUGio2BHcdSOitSHQhTLBqG7ko87is47jQulG','ywrK','z3vPzgvnB2rHBa','Dgv4Dc9WBgfPBG','zMLSDgvY','yMXVy2S','pgrPDIbJBgfZCZ0ICgXHEwvYlwHLywqIpG','y2XPCgjVyxjK','7zMu66M0ioQ1RoYeSEYDHcdRR7JRPQWG7zMv7j247zw0ioUrKoYlNoUPTa','D3jPDgvuzxH0','y2XHC3noyw1L','phnWyw4Gy2XHC3m9iNbSyxLLCI1Uyw1LiJ4','mtKWndG1wxvOEuHI','Dg9vChbLCKnHC2u','phrKpJXPBNb1DcbJBgfZCZ0IC2nVCMuTAw5WDxqIihr5Cgu9iM51BwjLCIiGAw5WDxrTB2rLpsjUDw1LCMLJiIbWyxr0zxjUpsjBmc05xsOIia','C29Tzq','6Rk96RIW7j6qna','7jwe656yioYJVoYgJoUHNcdRR7JRPQWG7kcr7iAn7zw0ioUZToYeUoYALc4','y2f0y2G','BwfPBKnVBNrLBNq','ywn0AxzLrwXLBwvUDa','yMLNBW','zgf0zq','pc9ZCgfUpJXZCgfUignSyxnZpsjKB25LlxnJB3jLiJ4','7jEW7iQ1io2zLoUPTcdSL7tQUla','C2vUzgLUz092','Awq9iMjPz28','y3zuzwfTq29Kzq','8j+rIsdSUBtSUBtSMktTHQeGmtOXioUSUoYDMa','zM9JDxm','ywjZzw50','CgXHEwvYCW','pJWVDgq+','CgXHEwvYlwnHCMq','C2XPy2u','4Psb4Psb4Psb4Psb4Psb4Psb4Psb4Psb4Psb4Psb4Psb4Psb4Psb4Psb4Psb4Psb4Psb4Psb','ndK0ndyXmvbwB1vUvW','Aw5WDxq','y3jLyxrLrwXLBwvUDa','B25IBhvYpsjZzKjSDxiO','C3vJy2vZCW','AgLKzgvU','phnWyw4Gy2XHC3m9iNbSyxLLCI1HzMzPBci+','BwvZC2fNzq','nZm3otC4mfvctuLtEG','zg9UzvbSyxLLCNm','y29UzMLYBu92','C3r5Bgu','z2v0rwXLBwvUDej5swq','7kcq7iIy66w8ioYlPoYlNoQWHcdSP5hQS4tTLANRI4JRI6qU','CMvTB3zL','phnWyw4Gy2XHC3m9iMnMlwjPz28Gy2yTyMLNBY1HyNnLBNqIpUU2IoYWUdWVC3bHBJ4','BwfW','pc9KAxy+','pgrPDIbJBgfZCZ0ICgXHEwvYlw51Bsi+','phrHyMXLignSyxnZpsjZy29Yzs10yMWIpG','zgLZCgXHEq','DgvHBq','4OcIioYGHoYgOEYDGcaX7zQm66EmioQWGoUkPE2vQEUlIoUlPa','zg9UzvrLyw1oyw1L','7jwi64wv7zwy7is47jQuipcFMiO','Awq9iNnJ','phrIB2r5pJX0CJ4','67o17ikSioYlPo2mQc4G7kEb7kcrioYeOo2dNE2vToYeNcdRS7xSGQZTLBqG7ko87is47jQulG','pc9ZCgfUpJWVzgL2pG','z2vUzgvY','zxjYlwjHBM5LCG','6Rk96RIW7j6qmG','pc9KAxy+pgrPDIbJBgfZCZ0Iy2yTzgv0ywLSiJ4','Dg90ywW','z3vPzgvdB3b5t2S','y3zuzwfTq2fYza','y2XHC3nmAxn0','y2fYzc0','ANnVBG','4Os577IpioYGKoYiMoQWGcdSL4BRIPqG7lM47j2aidXZDhjVBMC+67Ai7lc4ioUyKoUkLcdQUldQTOW8l3n0CM9UzZ7SNlZROzWG7j6q64+zioYYMoUMRoUqQEUlIoUlPc4','6Rk96RIW7j6qmW','iJ7IGjq8l3nWyw4+pc90zd4','4PA2ioYGKoYiMcdSNOxROkuG7iUC7j6r','zxHLy0nVBw1HBMq','8j+tIYdQSR3QUlaG64U57j28ioYGKoYiMcdSOitSHQeG67cP67kv','4PQG77IpioYJVoYDMoYcRo2vRq','Dg9mB2nHBgvtDhjPBMC','mtCWmJiZnw5Rq2vxuW','4PgGioQYVEQ4ScdSOOxRO4WG7zUeiffs7lM065oC66w8ioQ6VoUcToYeUoYALa','C2HVDW','pgjYpG','AM9PBG','A28Ts1i','DgHLBG','zg9UzvnJCMvLBG','BMfTzq','64Ya7zQmioUlUEYDVcdRI7NTMANTLzJSP4aG7jwk7iQ164Ui64UKipcFMiO','ueftsvmYmdi2u1y0','zg9UzvbYB21V','nfDnDxfTvW','y3zoB1bHCMfT','zxjYlwjHBM5LCIbZAg93','7iUK7kcCiffsioYkPoY6LcdSI5WG7isG7iIyioYGLEUZTcdSNPdRJ5KG7j6f66cL','zM9YrwfJAa','C3bSAxq','phnWyw4Gy2XHC3m9iMnMlwjPz28Gy2yTyMLNBY1XDwL0iJ7QUldQTOW8l3nWyw4+','zxjYlwjHBM5LCIbZAg93igLUzM8','ywn0AxzL','Aw5Uzxjive1m','66Y47j2yoIdTJiZSI5ZSIQqG67o467Aa','y29Kzq','4PgIioUNGE2bRcdTJj3SL4uG7yoTiokgKIdTJiZSI5ZSIQqG7kce7iAH7zMu66M0ioYxToUMVa','phrOzwfKpJX0CJ48DgG+qtWVDgG+phrOpKi8l3rOpJX0Ad5dpc90Ad48DgG+rdWVDgG+phrOignSyxnZpsj0Ac10B3rHBci+7zwP6Roepc90Ad48l3rYpJWVDgHLywq+','y2zcB2r5','y3zuzwfTtMfTzq','imk3ia','4PgKioYGHoYgOsdSOiqG7zMv7j24io2zLoUPToYxKoYeNcdSTzZSOOuG7zMv7j24','phnWyw4Gy2XHC3m9iMnMlxrVDgfSiJ4','7jEW7iQ1ioUQQoUtNa','zgLZywjSzwq','phnWyw4GC3r5Bgu9iMzVBNqTC2L6ztOXmxb4o2nVBg9YoInHywe7zM9UDc13zwLNAhq6nZaWiJ7SIjZSNitSOjZSMBG8l3nWyw4+','ChjLC2vUDa','zxjYqMfUBMvY','y29UDgfPBNm','phnWyw4GC3r5Bgu9iMzVBNqTC2L6ztOXmxb4o2nVBg9YoInKotC3mdy7zM9UDc13zwLNAhq6nZaWiJ7QUldQTOZSSPJRPQW8l3nWyw4+','mtaYmtGZne1uquLMEG','4P2mioUePo2kUoYBJo2bRcdSMktRPzG6ia','mta2nZeXqNPZsxPb','CMvTB3zLq2HPBgq','nNzjzNPMCW','y3ztDgfYDej0BG','DgvHBunVzgveAxnW'];a0_0x5c30=function(){return _0x219bf8;};return a0_0x5c30();}function onScore(_0x125dd4,_0x11809e,_0xec5312){var _0x53e5bb=a0_0xc4b317,_0x486f2a=_0x125dd4['value'][_0x53e5bb(0xdf)](/[^0-9]/g,'')[_0x53e5bb(0x7a)](0x0,0x2);_0x125dd4[_0x53e5bb(0xfe)]=_0x486f2a,APP[_0x53e5bb(0x77)][_0x11809e][_0xec5312]=_0x486f2a===''?'':Number(_0x486f2a),_0x125dd4[_0x53e5bb(0xa0)][_0x53e5bb(0xfc)]('has-val',_0x486f2a!==''),calcTotal(_0x11809e);}function calcTotal(_0x43ba82){var _0x529727=a0_0xc4b317,_0x5541f3=APP['players'][_0x43ba82],_0x496fdb=0x0,_0xf1afe=![];COURSES['forEach'](function(_0x4c2e6c){_0x5541f3[_0x4c2e6c]!==''&&(_0x496fdb+=Number(_0x5541f3[_0x4c2e6c]),_0xf1afe=!![]);}),_0x5541f3[_0x529727(0x9d)]=_0xf1afe?_0x496fdb:0x0;var _0x2a2f92=document[_0x529727(0x88)](_0x529727(0xf0)+_0x43ba82);if(_0x2a2f92)_0x2a2f92['textContent']=_0xf1afe?_0x496fdb:'—';}function onFocus(_0x249a46){var _0x257789=a0_0xc4b317;document[_0x257789(0x88)](_0x257789(0xa1)+_0x249a46)[_0x257789(0xa0)][_0x257789(0x107)]('active');}function getStatus(_0x108755){var _0x11e052=a0_0xc4b317,_0x32e71f=COURSES[_0x11e052(0x10a)](function(_0x4234aa){return _0x108755[_0x4234aa]!=='';})[_0x11e052(0x105)];return _0x32e71f===0x0?_0x11e052(0x76):_0x32e71f<0x4?_0x11e052(0xfa):_0x11e052(0xcd);}function openConfirm(){var _0xa9fc38=a0_0xc4b317;if(!APP[_0xa9fc38(0x103)]){alert(_0xa9fc38(0x106));return;}var _0x49cca7=APP[_0xa9fc38(0x77)][_0xa9fc38(0x67)](function(_0x2e089f){var _0x1795d8=_0xa9fc38;return getStatus(_0x2e089f)===_0x1795d8(0xfa);}),_0x4c4a74=document[_0xa9fc38(0x88)]('errBanner');_0x49cca7?(_0x4c4a74['innerHTML']=_0xa9fc38(0xa3),_0x4c4a74['className']=_0xa9fc38(0xbe),setTimeout(function(){var _0x196233=_0xa9fc38;_0x4c4a74[_0x196233(0x110)]=_0x196233(0x9a);},0xfa0)):_0x4c4a74[_0xa9fc38(0x110)]=_0xa9fc38(0x9a);document[_0xa9fc38(0x88)](_0xa9fc38(0x102))['textContent']=APP[_0xa9fc38(0x91)]+_0xa9fc38(0xc7)+APP[_0xa9fc38(0x77)][_0xa9fc38(0x105)]+'명';var _0x2bb81e=APP[_0xa9fc38(0x77)][_0xa9fc38(0x8c)](function(_0x3b68d9){var _0x370f2b=_0xa9fc38,_0x5b20e8=getStatus(_0x3b68d9),_0x16fab2=_0x3b68d9[_0x370f2b(0x6d)]||(_0x5b20e8==='absent'?'불참':_0x5b20e8===_0x370f2b(0xfa)?'기권':''),_0x3e7658=_0x16fab2==='불참'?_0x370f2b(0x8b):_0x16fab2==='기권'?_0x370f2b(0xbd):_0x16fab2?'<span\x20class=\x22cf-bigo\x20cf-bigo-note\x22>'+esc(_0x16fab2)+'</span>':'',_0x1453f3=_0x5b20e8===_0x370f2b(0x76)?_0x370f2b(0xcc):_0x5b20e8==='quit'?_0x370f2b(0xd0):_0x370f2b(0xc9)+_0x3b68d9[_0x370f2b(0x9d)]+_0x370f2b(0xea),_0x553423=COURSES['map'](function(_0x555f01){return _0x555f01+':'+(_0x3b68d9[_0x555f01]===''?'미입력':_0x3b68d9[_0x555f01]);})[_0x370f2b(0xaf)]('\x20');return _0x370f2b(0xde)+(_0x5b20e8!=='present'?_0x5b20e8:'')+'\x22>'+'<div><div\x20class=\x22cf-name\x22>'+esc(_0x3b68d9[_0x370f2b(0xb3)])+_0x370f2b(0x9c)+_0x553423+_0x370f2b(0xe3)+'<div\x20class=\x22cf-right\x22>'+_0x1453f3+(_0x3e7658?_0x370f2b(0xae)+_0x3e7658:'')+_0x370f2b(0x8d)+_0x370f2b(0x8d);})[_0xa9fc38(0xaf)]('');document[_0xa9fc38(0x88)](_0xa9fc38(0xc5))[_0xa9fc38(0xc0)]=_0x2bb81e,document[_0xa9fc38(0x88)](_0xa9fc38(0x86))['classList'][_0xa9fc38(0x8a)](_0xa9fc38(0x81));}function closeConfirm(){var _0x3a6d1c=a0_0xc4b317;document[_0x3a6d1c(0x88)](_0x3a6d1c(0x86))['classList'][_0x3a6d1c(0x107)](_0x3a6d1c(0x81));}function doSend(){var _0x5b164c=a0_0xc4b317;closeConfirm(),document[_0x5b164c(0x88)](_0x5b164c(0x71))[_0x5b164c(0xa0)][_0x5b164c(0x8a)](_0x5b164c(0x81)),document[_0x5b164c(0x88)]('sendBtn')[_0x5b164c(0xcb)]=!![];var _0x6d7de8=APP[_0x5b164c(0x77)][_0x5b164c(0x8c)](function(_0x33218f){var _0x524349=_0x5b164c,_0x5dc972=getStatus(_0x33218f),_0x1cd9d4=_0x33218f[_0x524349(0x6d)]||(_0x5dc972===_0x524349(0x76)?'불참':_0x5dc972===_0x524349(0xfa)?'기권':''),_0x1445de={};return COURSES['forEach'](function(_0x45eb47){_0x1445de[_0x45eb47]=_0x33218f[_0x45eb47]===''?0x0:Number(_0x33218f[_0x45eb47]);}),{'name':_0x33218f[_0x524349(0xb3)],'gender':_0x33218f[_0x524349(0x99)],'affiliation':_0x33218f[_0x524349(0xe8)],'A':_0x1445de['A'],'B':_0x1445de['B'],'C':_0x1445de['C'],'D':_0x1445de['D'],'total':_0x33218f[_0x524349(0x9d)],'holeInOne':_0x1cd9d4};});fetch(APP[_0x5b164c(0xf6)],{'method':_0x5b164c(0xd9),'headers':{'Content-Type':_0x5b164c(0x109)},'body':JSON[_0x5b164c(0xe2)]({'code':APP[_0x5b164c(0xc2)],'team':APP['team'],'players':_0x6d7de8,'secret':PASIS_SECRET,'time':new Date()[_0x5b164c(0xaa)](_0x5b164c(0xb0),{'timeZone':'Asia/Seoul'})})})[_0x5b164c(0xb1)](function(_0x233797){var _0x39bd84=_0x5b164c;return _0x233797[_0x39bd84(0xa2)]();})[_0x5b164c(0xb1)](function(_0x3acbd3){var _0x1d917f=_0x5b164c;document['getElementById']('sendingOv')[_0x1d917f(0xa0)][_0x1d917f(0x107)]('hidden'),_0x3acbd3[_0x1d917f(0x80)]?showDone():(document[_0x1d917f(0x88)](_0x1d917f(0x100))[_0x1d917f(0xcb)]=![],showErr('❌\x20'+(_0x3acbd3[_0x1d917f(0x83)]||'전송에\x20실패했습니다.')));})['catch'](function(_0x358212){var _0x43c19b=_0x5b164c;document[_0x43c19b(0x88)]('sendingOv')['classList'][_0x43c19b(0x107)](_0x43c19b(0x81)),document[_0x43c19b(0x88)](_0x43c19b(0x100))['disabled']=![],showErr(_0x43c19b(0xd2)+_0x358212[_0x43c19b(0x83)]);});}function showErr(_0x173fa5){var _0x535582=a0_0xc4b317,_0x567840=document[_0x535582(0x88)](_0x535582(0xce));_0x567840['textContent']=_0x173fa5,_0x567840[_0x535582(0x110)]=_0x535582(0xb9),window[_0x535582(0xfd)]({'top':0x0,'behavior':'smooth'});}function showDone(){var _0xa5b6e4=a0_0xc4b317;hide(_0xa5b6e4(0x6b)),hide(_0xa5b6e4(0xe6)),document['getElementById'](_0xa5b6e4(0xb2))[_0xa5b6e4(0xa0)][_0xa5b6e4(0x107)](_0xa5b6e4(0xad)),document[_0xa5b6e4(0x88)](_0xa5b6e4(0xb6))[_0xa5b6e4(0xa0)][_0xa5b6e4(0x107)](_0xa5b6e4(0xad)),window[_0xa5b6e4(0xfd)]({'top':0x0,'behavior':_0xa5b6e4(0xd8)}),document[_0xa5b6e4(0x88)](_0xa5b6e4(0x93))[_0xa5b6e4(0xfb)]=APP[_0xa5b6e4(0x91)],document[_0xa5b6e4(0x88)](_0xa5b6e4(0x85))[_0xa5b6e4(0xc0)]=APP[_0xa5b6e4(0x77)]['map'](function(_0x18707c){var _0x2f5cd2=_0xa5b6e4,_0x5ec8c9=getStatus(_0x18707c),_0x2867d8=_0x5ec8c9===_0x2f5cd2(0x76)?'불참':_0x5ec8c9===_0x2f5cd2(0xfa)?'기권':_0x18707c[_0x2f5cd2(0x9d)]+'\x20타';return'<div\x20class=\x22done-row\x22><span\x20class=\x22done-name\x22>'+esc(_0x18707c['name'])+_0x2f5cd2(0x6f)+_0x2867d8+_0x2f5cd2(0x98);})[_0xa5b6e4(0xaf)]('');}function esc(_0x1b6a0b){var _0x240285=a0_0xc4b317;return String(_0x1b6a0b||'')[_0x240285(0xdf)](/&/g,_0x240285(0xf4))[_0x240285(0xdf)](/</g,'&lt;')[_0x240285(0xdf)](/>/g,'&gt;');}window['addEventListener'](a0_0xc4b317(0xff),init),document['addEventListener']('click',function(_0x102682){var _0x4b173e=a0_0xc4b317;if(_0x102682['target']['id']===_0x4b173e(0x108))closeGuideModal();});
+var PASIS_SECRET = 'PASIS2026SV4'; // GAS SECRET_KEY 와 반드시 일치
+var APP = { code:'', url:'', team:'', date:'', players:[], hasParam:false };
+var COURSES = ['A','B','C','D'];
+
+// ── 화면 전환 헬퍼 ──
+function show(id, flex) {
+  document.getElementById(id).style.display = flex ? 'flex' : 'block';
+}
+function hide(id) {
+  document.getElementById(id).style.display = 'none';
+}
+
+// ── 초기화 ──
+function init() {
+  try {
+    var p = new URLSearchParams(window.location.search || '');
+    APP.code = (p.get('c') || '').trim().toUpperCase();
+    APP.url  = decodeURIComponent(p.get('u') || '');
+    APP.team = decodeURIComponent(p.get('t') || '');
+    APP.date = decodeURIComponent(p.get('d') || '');
+    APP.hasParam = !!(APP.code && APP.url && APP.team);
+
+    if (APP.hasParam) {
+      APP.players = [];
+      for (var i = 1; i <= 4; i++) {
+        var raw = p.get(String(i)) || '';
+        if (!raw) continue;
+        var pts = decodeURIComponent(raw).split('|');
+        APP.players.push({
+          slot: i,
+          name:   (pts[0] || '').trim(),
+          gender: (pts[1] || '').trim(),
+          affil:  (pts[2] || '').trim(),
+          A:'', B:'', C:'', D:'', total:0, bigo:''
+        });
+      }
+    }
+  } catch(e) {}
+
+  hide('loadingScreen');
+  showCover();
+}
+
+// ── 표지 ──
+function showCover() {
+  show('coverScreen', true);
+  hide('mainContent');
+
+  var hasParam = APP.hasParam;
+  document.getElementById('cvTeamCard').style.display = hasParam ? 'block' : 'none';
+  document.getElementById('cvNoParam').style.display  = hasParam ? 'none'  : 'block';
+
+  if (hasParam) {
+    document.getElementById('cvTeamName').textContent = APP.team;
+    document.getElementById('cvTeamCode').textContent = APP.code + (APP.date ? ' · ' + APP.date : '');
+    document.getElementById('cvStartBtn').textContent = '▶ 점수 입력 시작';
+  } else {
+    document.getElementById('cvStartBtn').innerHTML = '점수입력<br><span style="font-size:18px;font-weight:700;opacity:.75">(연습용)</span>';
+  }
+}
+
+// ── 입력 화면 ──
+function startInput() {
+  hide('coverScreen');
+  show('mainContent', false);
+  renderUI();
+  window.scrollTo({ top: 0 });
+}
+
+function goBack() {
+  hide('mainContent');
+  showCover();
+  window.scrollTo({ top: 0 });
+}
+
+// ── 심판 안내문 모달 ──
+function getGuideTxt() {
+  var url = 'https://leejh50-dotcom.github.io/parkgolf-score/pasis4-send.html';
+  var code = APP.code || '대회코드';
+  return [
+    '안녕하세요 😊',
+    '이번 대회는 파시스(PASIS) SV4.0 프로로',
+    '점수를 실시간 집계합니다.',
+    '',
+    '━━━━━━━━━━━━━━━━━━',
+    '📋 경기 당일 점수 전송 방법',
+    '━━━━━━━━━━━━━━━━━━',
+    '① 경기 종료 후 QR카드를 꺼내세요',
+    '② 기본 카메라 앱으로 QR 스캔',
+    '③ 링크 팝업 탭 → 파시스 전송화면 열림',
+    '④ 4명 × 4코스 점수 입력 (16칸)',
+    '⑤ 전송 전 확인 화면에서 최종 확인',
+    '⑥ 확인·전송 버튼',
+    '',
+    '━━━━━━━━━━━━━━━━━━',
+    '⚠️ 주의사항',
+    '━━━━━━━━━━━━━━━━━━',
+    '• 전송은 1회만 가능합니다',
+    '  (전송 후 수정 불가 — 오류 시 관리자 문의)',
+    '• QR 스캔이 안 되면',
+    '  ① 종이 기록지를 관리자에게 직접 제출',
+    '  ② 동료 심판에게 QR카드를 건네고 대신 전송 부탁',
+    '',
+    '━━━━━━━━━━━━━━━━━━',
+    '📌 사전 연습 권장 (꼭 해보세요!)',
+    '━━━━━━━━━━━━━━━━━━',
+    '아래 주소로 미리 접속해 보세요.',
+    '',
+    '👉 ' + url,
+    '',
+    '화면 구성을 미리 확인해 두시면',
+    '대회 당일 당황하지 않습니다 😊',
+    '',
+    '※ 연습 중 전송 버튼을 누르셔도',
+    '  실제 조 QR 없이는 전송되지 않습니다.',
+    '',
+    '━━━━━━━━━━━━━━━━━━',
+    '대회코드: ' + code,
+    '문의: 파시스 본부',
+    '👉 카카오톡 1:1 문의',
+    'https://open.kakao.com/o/sgdyKKti'
+  ].join('\n');
+}
+
+function openGuideModal() {
+  document.getElementById('guideText').textContent = getGuideTxt();
+  document.getElementById('guideCopyOk').classList.remove('show');
+  document.getElementById('guideModal').classList.add('show');
+}
+
+function closeGuideModal() {
+  document.getElementById('guideModal').classList.remove('show');
+}
+
+function copyGuideFromModal() {
+  var txt = getGuideTxt();
+  var ok = document.getElementById('guideCopyOk');
+  var onOk = function() {
+    ok.classList.add('show');
+    setTimeout(function() { ok.classList.remove('show'); }, 3000);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).then(onOk).catch(function() { fallbackCopy(txt, onOk); });
+  } else {
+    fallbackCopy(txt, onOk);
+  }
+}
+
+function fallbackCopy(txt, onOk) {
+  var ta = document.createElement('textarea');
+  ta.value = txt;
+  ta.style.cssText = 'position:fixed;opacity:0;';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); onOk(); }
+  catch(e) { alert('복사 실패. 직접 선택해서 복사해 주세요.'); }
+  document.body.removeChild(ta);
+}
+
+// ── UI 렌더링 ──
+function renderUI() {
+  if (APP.hasParam) {
+    document.getElementById('teamNameDisp').textContent = APP.team;
+    document.getElementById('teamCodeDisp').textContent = APP.code + (APP.date ? ' · ' + APP.date : '');
+  } else {
+    document.getElementById('teamNameDisp').textContent = '연습 모드';
+    document.getElementById('teamCodeDisp').textContent = '실제 QR 스캔 시 선수 정보 자동 입력';
+    APP.players = [
+      { slot:1, name:'경기자1', gender:'남', affil:'소속', A:'',B:'',C:'',D:'', total:0, bigo:'' },
+      { slot:2, name:'경기자2', gender:'여', affil:'소속', A:'',B:'',C:'',D:'', total:0, bigo:'' },
+      { slot:3, name:'경기자3', gender:'남', affil:'소속', A:'',B:'',C:'',D:'', total:0, bigo:'' },
+      { slot:4, name:'경기자4', gender:'여', affil:'소속', A:'',B:'',C:'',D:'', total:0, bigo:'' }
+    ];
+  }
+
+  var list = document.getElementById('playerList');
+  list.innerHTML = '';
+
+  APP.players.forEach(function(p, idx) {
+    var card = document.createElement('div');
+    card.className = 'player-card';
+    card.id = 'card-' + idx;
+
+    var gBadge = p.gender === '남' ? '<span class="gender-badge gender-m">남</span>'
+               : p.gender === '여' ? '<span class="gender-badge gender-f">여</span>' : '';
+
+    var tds = COURSES.map(function(c) {
+      return '<td><input class="score-input" type="number" inputmode="numeric" pattern="[0-9]*" '
+           + 'min="0" max="99" placeholder="—" '
+           + 'id="sc' + idx + c + '" '
+           + 'onblur="sfBlur(' + idx + ')"'
+           + '></td>';
+    }).join('');
+
+    card.innerHTML =
+      '<div class="player-head">'
+      + '<div class="player-num">' + p.slot + '</div>'
+      + '<div style="flex:1;display:flex;align-items:center;flex-wrap:wrap;">'
+        + '<span class="player-name">' + esc(p.name) + '</span>'
+        + (p.affil ? '<span class="player-affil">' + esc(p.affil) + '</span>' : '')
+        + gBadge
+      + '</div>'
+      + '</div>'
+      + '<div class="score-tbl-wrap">'
+        + '<table class="score-tbl">'
+          + '<thead><tr><th>A</th><th>B</th><th>C</th><th>D</th><th class="th-total">합계</th></tr></thead>'
+          + '<tbody><tr>'
+            + tds
+            + '<td class="td-total"><span class="total-disp" id="tot' + idx + '">—</span></td>'
+          + '</tr></tbody>'
+        + '</table>'
+      + '</div>'
+      + '<div class="bigo-row">'
+        + '<span class="bigo-label">비고</span>'
+        + '<input class="bigo-input" type="text" placeholder="예: A9홀인원" maxlength="12" '
+          + 'id="bigo' + idx + '">'
+      + '</div>';
+
+    list.appendChild(card);
+
+    COURSES.forEach(function(c) {
+      var el = document.getElementById('sc' + idx + c);
+      el.addEventListener('input', function() { onScore(this, idx, c); });
+      el.addEventListener('focus', function() { onFocus(idx); });
+    });
+
+    var bigoEl = document.getElementById('bigo' + idx);
+    bigoEl.addEventListener('input', function() { APP.players[idx].bigo = this.value.trim(); });
+    bigoEl.addEventListener('focus', function() { onFocus(idx); });
+  });
+}
+
+function sfBlur(idx) {
+  setTimeout(function() {
+    var c = document.getElementById('card-' + idx);
+    if (c && !c.contains(document.activeElement)) c.classList.remove('active');
+  }, 100);
+}
+
+function onScore(el, idx, c) {
+  var v = el.value.replace(/[^0-9]/g, '').slice(0, 2);
+  el.value = v;
+  APP.players[idx][c] = v === '' ? '' : Number(v);
+  el.classList.toggle('has-val', v !== '');
+  calcTotal(idx);
+}
+
+function calcTotal(idx) {
+  var p = APP.players[idx], sum = 0, has = false;
+  COURSES.forEach(function(c) {
+    if (p[c] !== '') { sum += Number(p[c]); has = true; }
+  });
+  p.total = has ? sum : 0;
+  var el = document.getElementById('tot' + idx);
+  if (el) el.textContent = has ? sum : '—';
+}
+
+function onFocus(idx) {
+  document.getElementById('card-' + idx).classList.add('active');
+}
+
+// ── 참가 상태 판별 (공통 유틸) ──
+function getStatus(p) {
+  var filled = COURSES.filter(function(c) { return p[c] !== ''; }).length;
+  return filled === 0 ? 'absent' : filled < 4 ? 'quit' : 'present';
+}
+
+// ── 확인 오버레이 ──
+function openConfirm() {
+  if (!APP.hasParam) {
+    alert('연습 모드입니다.\n실제 대회 당일 QR을 스캔하신 후 전송해 주세요.');
+    return;
+  }
+
+  var hasPartial = APP.players.some(function(p) { return getStatus(p) === 'quit'; });
+  var b = document.getElementById('errBanner');
+  if (hasPartial) {
+    b.innerHTML = 'ℹ️ 점수가 없는 칸은 <strong>불참 또는 기권</strong>으로 자동 처리됩니다.';
+    b.className = 'err-banner show info';
+    setTimeout(function() { b.className = 'err-banner'; }, 4000);
+  } else {
+    b.className = 'err-banner';
+  }
+
+  document.getElementById('cfSub').textContent = APP.team + ' · ' + APP.players.length + '명';
+
+  var rows = APP.players.map(function(p) {
+    var st = getStatus(p);
+    var note = p.bigo || (st === 'absent' ? '불참' : st === 'quit' ? '기권' : '');
+    var badge = note === '불참' ? '<span class="cf-bigo cf-bigo-absent">불참</span>'
+              : note === '기권' ? '<span class="cf-bigo cf-bigo-quit">기권</span>'
+              : note ? '<span class="cf-bigo cf-bigo-note">' + esc(note) + '</span>' : '';
+    var totHtml = st === 'absent' ? '<span style="font-size:11px;color:#aaa;font-weight:700">순위제외</span>'
+                : st === 'quit'   ? '<span style="font-size:11px;color:#d97706;font-weight:700">기권처리</span>'
+                : '<span class="cf-total">' + p.total + '<small style="font-size:10px;color:#999"> 타</small></span>';
+    var det = COURSES.map(function(c) { return c + ':' + (p[c] === '' ? '미입력' : p[c]); }).join(' ');
+
+    return '<div class="cf-row ' + (st !== 'present' ? st : '') + '">'
+      + '<div><div class="cf-name">' + esc(p.name) + '</div><div class="cf-detail">' + det + '</div></div>'
+      + '<div class="cf-right">' + totHtml + (badge ? '<br>' + badge : '') + '</div>'
+      + '</div>';
+  }).join('');
+
+  document.getElementById('cfBody').innerHTML = rows;
+  document.getElementById('confirmOv').classList.remove('hidden');
+}
+
+function closeConfirm() {
+  document.getElementById('confirmOv').classList.add('hidden');
+}
+
+// ── 전송 ──
+function doSend() {
+  closeConfirm();
+  document.getElementById('sendingOv').classList.remove('hidden');
+  document.getElementById('sendBtn').disabled = true;
+
+  var playersData = APP.players.map(function(p) {
+    var st = getStatus(p);
+    var note = p.bigo || (st === 'absent' ? '불참' : st === 'quit' ? '기권' : '');
+    var scores = {};
+    COURSES.forEach(function(c) { scores[c] = p[c] === '' ? 0 : Number(p[c]); });
+    return {
+      name: p.name, gender: p.gender, affiliation: p.affil,
+      A: scores.A, B: scores.B, C: scores.C, D: scores.D,
+      total: p.total, holeInOne: note
+    };
+  });
+
+  fetch(APP.url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify({
+      code: APP.code, team: APP.team, players: playersData,
+      secret: PASIS_SECRET,
+      time: new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(res) {
+    document.getElementById('sendingOv').classList.add('hidden');
+    if (res.success) { showDone(); }
+    else {
+      document.getElementById('sendBtn').disabled = false;
+      showErr('❌ ' + (res.message || '전송에 실패했습니다.'));
+    }
+  })
+  .catch(function(e) {
+    document.getElementById('sendingOv').classList.add('hidden');
+    document.getElementById('sendBtn').disabled = false;
+    showErr('❌ 네트워크 오류: ' + e.message);
+  });
+}
+
+function showErr(msg) {
+  var b = document.getElementById('errBanner');
+  b.textContent = msg; b.className = 'err-banner show';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── 완료 화면 ──
+function showDone() {
+  hide('mainContent');
+  hide('coverScreen');
+  document.getElementById('doneScreen').classList.add('show');
+  document.getElementById('donePromo').classList.add('show');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+  document.getElementById('doneTeamName').textContent = APP.team;
+  document.getElementById('donePlayers').innerHTML = APP.players.map(function(p) {
+    var st = getStatus(p);
+    var s = st === 'absent' ? '불참' : st === 'quit' ? '기권' : p.total + ' 타';
+    return '<div class="done-row"><span class="done-name">' + esc(p.name) + '</span><span class="done-score">' + s + '</span></div>';
+  }).join('');
+}
+
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+window.addEventListener('DOMContentLoaded', init);
+document.addEventListener('click', function(e) {
+  if (e.target.id === 'guideModal') closeGuideModal();
+});
 </script>
 </body>
 </html>
