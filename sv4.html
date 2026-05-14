@@ -1494,74 +1494,12 @@ function test_doPost() {
       setTimeout(updateHeaders, 400);
     };
   }
-  // ★ 패치v3: QR 스캔 후 조명 저장 — 조건 없이 무조건 실행
-  (function patchTeamName() {
-    // _applyQRAndOpenScoring 래핑
-    function wrapApply() {
-      var orig = window._applyQRAndOpenScoring;
-      if (typeof orig !== 'function') return false;
-      if (orig.__teamPatched) return true;
-      window._applyQRAndOpenScoring = function(qrText) {
-        try {
-          var qs = qrText.indexOf('?') !== -1 ? '?' + qrText.split('?')[1] : qrText;
-          var params = new URLSearchParams(qs);
-          var tv = params.get('t') || params.get('team') || '';
-          if (tv) {
-            var d = decodeURIComponent(tv);
-            localStorage.setItem('pasis_current_team', d);
-            var el = document.getElementById('teamName');
-            if (el) el.value = d;
-          }
-        } catch(e) {}
-        orig.apply(this, arguments);
-        setTimeout(function() {
-          try {
-            var s = localStorage.getItem('pasis_current_team') || '';
-            if (s) { var el2 = document.getElementById('teamName'); if (el2) el2.value = s; }
-          } catch(e) {}
-        }, 200);
-        setTimeout(function() {
-          try {
-            var s = localStorage.getItem('pasis_current_team') || '';
-            if (s) { var el3 = document.getElementById('teamName'); if (el3) el3.value = s; }
-          } catch(e) {}
-        }, 600);
-      };
-      window._applyQRAndOpenScoring.__teamPatched = true;
-      return true;
-    }
-    // 즉시 시도, 안 되면 폴링
-    if (!wrapApply()) {
-      var tries = 0;
-      var iv = setInterval(function() {
-        if (wrapApply() || ++tries > 30) clearInterval(iv);
-      }, 100);
-    }
-  })();
-
-  // ★ 패치: initFromQueryParams에서도 조명 저장
+  // initFromQueryParams 이후 (URL 파라미터 직접 접속)
   var _origInit = window.initFromQueryParams;
-  if (typeof _origInit === 'function') {
-    window.initFromQueryParams = function() {
-      try {
-        var params = new URLSearchParams(window.location.search || '');
-        var teamVal = params.get('t') || params.get('team') || '';
-        if (teamVal) {
-          var decoded = decodeURIComponent(teamVal);
-          localStorage.setItem('pasis_current_team', decoded);
-        }
-      } catch(e) {}
+  if(typeof _origInit==='function'){
+    window.initFromQueryParams = function(){
       _origInit.call(this);
-      setTimeout(function() {
-        try {
-          var saved = localStorage.getItem('pasis_current_team') || '';
-          if (saved) {
-            var tn = document.getElementById('teamName');
-            if (tn) tn.value = saved;
-          }
-          if (typeof updateHeaders === 'function') updateHeaders();
-        } catch(e) {}
-      }, 400);
+      setTimeout(updateHeaders, 300);
     };
   }
   // loadData 이후 (저장된 데이터 불러오기)
@@ -1999,7 +1937,7 @@ function test_doPost() {
 
       var webappUrl = ((document.getElementById('adminWebappUrl') || {}).value || (localStorage.getItem('parkgolf_webapp_url') || localStorage.getItem('pasis_webapp_url')) || '').trim();
       var code = (((document.getElementById('tournamentCode') || {}).value || (localStorage.getItem('parkgolf_tournament_code') || localStorage.getItem('pasis_tournament_code')) || '') + '').trim().toUpperCase();
-      var team = (((document.getElementById('teamName') || {}).value || '') + '').trim();
+      var team = (function(){ try{ var p=new URLSearchParams(window.location.search||''); var t=p.get('t')||p.get('team')||''; if(t) return decodeURIComponent(t); }catch(e){} return (((document.getElementById('teamName')||{}).value||'')+'').trim(); })();
 
       if (!webappUrl) throw new Error('웹앱 URL이 없습니다.');
       if (!code) throw new Error('대회 코드가 없습니다.');
@@ -2356,21 +2294,7 @@ window.addEventListener('load', function(){
 
       var webappUrl = ((document.getElementById('adminWebappUrl') || {}).value || localStorage.getItem('parkgolf_webapp_url') || localStorage.getItem('pasis_webapp_url') || '').trim();
       var code = String(((document.getElementById('tournamentCode') || {}).value || localStorage.getItem('parkgolf_tournament_code') || localStorage.getItem('pasis_tournament_code') || '')).trim().toUpperCase();
-      var team = String(((document.getElementById('teamName') || {}).value || '')).trim();
-
-      // ★ 패치: code와 team이 뒤바뀐 경우 교환
-      // 대회코드는 영문+숫자 조합, 조명은 "숫자+알파벳+숫자+조" 형식
-      (function() {
-        try {
-          var savedCode = (localStorage.getItem('parkgolf_tournament_code') || localStorage.getItem('pasis_tournament_code') || '').toUpperCase();
-          // team이 저장된 대회코드와 같으면 뒤바뀐 것
-          if (savedCode && team.toUpperCase() === savedCode) {
-            var tmp = team;
-            team = code; // code(조명)를 team으로
-            code = tmp;  // team(대회코드)을 code로
-          }
-        } catch(e) {}
-      })();
+      var team = (function(){ try{ var p=new URLSearchParams(window.location.search||''); var t=p.get('t')||p.get('team')||''; if(t) return decodeURIComponent(t); }catch(e){} return String(((document.getElementById('teamName')||{}).value||'')).trim(); })();
 
       if(!webappUrl) throw new Error('웹앱 URL이 없습니다.');
       if(!code) throw new Error('대회 코드가 없습니다.');
