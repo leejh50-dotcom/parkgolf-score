@@ -1494,42 +1494,58 @@ function test_doPost() {
       setTimeout(updateHeaders, 400);
     };
   }
-  // ★ QR 스캔 후 t= 파라미터(조명)를 teamName 입력란에 정확히 세팅하는 패치
+  // ★ 패치: QR 스캔 후 t= 파라미터(조명)를 localStorage와 teamName에 저장
   var _origApplyQR = window._applyQRAndOpenScoring;
   if (typeof _origApplyQR === 'function') {
     window._applyQRAndOpenScoring = function(qrText) {
+      try {
+        var qs = qrText.indexOf('?') !== -1 ? '?' + qrText.split('?')[1] : qrText;
+        var params = new URLSearchParams(qs);
+        var teamVal = params.get('t') || params.get('team') || '';
+        if (teamVal) {
+          var decoded = decodeURIComponent(teamVal);
+          localStorage.setItem('pasis_current_team', decoded);
+          var tn = document.getElementById('teamName');
+          if (tn) tn.value = decoded;
+        }
+      } catch(e) {}
       _origApplyQR.call(this, qrText);
+      // 원본 함수 실행 후 다시 덮어쓰기 (타이밍 문제 방어)
       setTimeout(function() {
         try {
-          var qs = qrText;
-          if (qrText.indexOf('?') !== -1) qs = '?' + qrText.split('?')[1];
-          var params = new URLSearchParams(qs);
-          var teamVal = params.get('t') || params.get('team') || '';
-          if (teamVal) {
-            var tn = document.getElementById('teamName');
-            if (tn) tn.value = decodeURIComponent(teamVal);
+          var saved = localStorage.getItem('pasis_current_team') || '';
+          if (saved) {
+            var tn2 = document.getElementById('teamName');
+            if (tn2) tn2.value = saved;
           }
         } catch(e) {}
-      }, 50);
+      }, 300);
     };
   }
 
-  // initFromQueryParams 이후 (URL 파라미터 직접 접속)
+  // ★ 패치: initFromQueryParams에서도 조명 저장
   var _origInit = window.initFromQueryParams;
   if (typeof _origInit === 'function') {
     window.initFromQueryParams = function() {
+      try {
+        var params = new URLSearchParams(window.location.search || '');
+        var teamVal = params.get('t') || params.get('team') || '';
+        if (teamVal) {
+          var decoded = decodeURIComponent(teamVal);
+          localStorage.setItem('pasis_current_team', decoded);
+        }
+      } catch(e) {}
       _origInit.call(this);
       setTimeout(function() {
         try {
-          var params = new URLSearchParams(window.location.search || '');
-          var teamVal = params.get('t') || params.get('team') || '';
-          if (teamVal) {
+          var saved = localStorage.getItem('pasis_current_team') || '';
+          if (saved) {
             var tn = document.getElementById('teamName');
-            if (tn) tn.value = decodeURIComponent(teamVal);
+            if (tn) tn.value = saved;
           }
+          if (typeof updateHeaders === 'function') updateHeaders();
         } catch(e) {}
-        if (typeof updateHeaders === 'function') updateHeaders();
-      }, 300);
+      }, 400);
     };
   }
   // loadData 이후 (저장된 데이터 불러오기)
@@ -2325,6 +2341,18 @@ window.addEventListener('load', function(){
       var webappUrl = ((document.getElementById('adminWebappUrl') || {}).value || localStorage.getItem('parkgolf_webapp_url') || localStorage.getItem('pasis_webapp_url') || '').trim();
       var code = String(((document.getElementById('tournamentCode') || {}).value || localStorage.getItem('parkgolf_tournament_code') || localStorage.getItem('pasis_tournament_code') || '')).trim().toUpperCase();
       var team = String(((document.getElementById('teamName') || {}).value || '')).trim();
+
+      // ★ 패치: team이 대회코드와 같으면 localStorage의 조명값으로 교체
+      (function() {
+        try {
+          var savedTeam = localStorage.getItem('pasis_current_team') || '';
+          if (savedTeam && team.toUpperCase() === code) {
+            team = savedTeam;
+            var tn = document.getElementById('teamName');
+            if (tn) tn.value = savedTeam;
+          }
+        } catch(e) {}
+      })();
 
       if(!webappUrl) throw new Error('웹앱 URL이 없습니다.');
       if(!code) throw new Error('대회 코드가 없습니다.');
