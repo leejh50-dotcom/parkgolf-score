@@ -1,4 +1,3 @@
-<!-- v=course2 -->
 <!DOCTYPE html>
 <!-- © 2026 송근 / PASIS SV4.0 Pro - 무단 복제·상업적 이용 금지 / Unauthorized copying or commercial use is strictly prohibited. -->
 <html lang="ko">
@@ -1495,44 +1494,42 @@ function test_doPost() {
       var params = new URLSearchParams(qs);
       var coVal = params.get('co') || '';
       if (!coVal) return;
-      var activeCourses = coVal.split(',').map(function(s){ return s.trim().toUpperCase(); });
-      // 코스 행 전체 표시/숨김
-      ['A','B','C','D'].forEach(function(c) {
-        var isActive = activeCourses.indexOf(c) !== -1;
-        // 헤더 th
-        var thEl = document.querySelector('th[data-course="'+c+'"], .course-header-'+c);
-        // 입력 행
-        for (var i = 1; i <= 4; i++) {
-          var inputEl = document.getElementById('score-'+c+'-'+i);
-          if (inputEl) {
-            var rowEl = inputEl.closest('tr') || inputEl.closest('.score-row');
-            if (rowEl) rowEl.style.display = isActive ? '' : 'none';
-            if (!isActive) { inputEl.value = ''; if(window.summaryScores && window.summaryScores[c]) window.summaryScores[c][i] = ''; }
-          }
-        }
-        // 코스 행 레이블(th/td)
-        var labelEl = document.querySelector('[data-course-label="'+c+'"], .course-label-'+c+', th.course-'+c);
-        if (labelEl) labelEl.closest('tr') && (labelEl.closest('tr').style.display = isActive ? '' : 'none');
-      });
-      // 코스명 표시 업데이트
-      var courseLabel = document.getElementById('activeCourseLabel');
-      if (!courseLabel) {
-        courseLabel = document.createElement('div');
-        courseLabel.id = 'activeCourseLabel';
-        courseLabel.style.cssText = 'text-align:center;font-size:13px;font-weight:900;color:#c8860a;margin:4px 0;';
-        var summaryTable = document.querySelector('.summary-table-new, table');
-        if (summaryTable) summaryTable.parentNode.insertBefore(courseLabel, summaryTable);
-      }
-      courseLabel.textContent = '코스: ' + activeCourses.join(', ');
-      // summaryScores 초기화 (비활성 코스)
-      if (window.summaryScores) {
-        ['A','B','C','D'].forEach(function(c) {
-          if (activeCourses.indexOf(c) === -1) {
-            for (var i = 1; i <= 4; i++) window.summaryScores[c][i] = '';
+      var active = coVal.split(',').map(function(s){ return s.trim().toUpperCase(); });
+      var courseOrder = ['A','B','C','D']; // 열 인덱스 0~3
+
+      for (var p = 1; p <= 4; p++) {
+        // 헤더 행 th (A/B/C/D)
+        var scardEl = document.getElementById('scard'+p);
+        if (!scardEl) continue;
+        var ths = scardEl.querySelectorAll('table tr:first-child th');
+        var tds = scardEl.querySelectorAll('table tr:nth-child(2) td');
+
+        courseOrder.forEach(function(c, idx) {
+          var isOn = active.indexOf(c) !== -1;
+          var display = isOn ? '' : 'none';
+          if (ths[idx]) ths[idx].style.display = display;
+          if (tds[idx]) tds[idx].style.display = display;
+          // summaryScores 초기화
+          if (!isOn && window.summaryScores && window.summaryScores[c]) {
+            window.summaryScores[c][p] = '';
+            var el = document.getElementById('in-'+c+'-'+p);
+            if (el) el.value = '';
           }
         });
-        if (typeof updateTotalsAndRanks === 'function') updateTotalsAndRanks();
       }
+
+      // 코스 레이블 표시
+      var lbl = document.getElementById('activeCourseLabel');
+      if (!lbl) {
+        lbl = document.createElement('div');
+        lbl.id = 'activeCourseLabel';
+        lbl.style.cssText = 'text-align:center;font-size:13px;font-weight:900;color:#c8860a;margin:4px 0;padding:4px 0;';
+        var firstScard = document.getElementById('scard1');
+        if (firstScard) firstScard.parentNode.insertBefore(lbl, firstScard);
+      }
+      lbl.textContent = '사용 코스: ' + active.join(', ');
+
+      if (typeof updateTotalsAndRanks === 'function') updateTotalsAndRanks();
     } catch(e) { console.log('applyActiveCourses error:', e); }
   }
 
