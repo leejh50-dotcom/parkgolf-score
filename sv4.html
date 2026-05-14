@@ -2358,14 +2358,16 @@ window.addEventListener('load', function(){
       var code = String(((document.getElementById('tournamentCode') || {}).value || localStorage.getItem('parkgolf_tournament_code') || localStorage.getItem('pasis_tournament_code') || '')).trim().toUpperCase();
       var team = String(((document.getElementById('teamName') || {}).value || '')).trim();
 
-      // ★ 패치: team이 대회코드와 같으면 localStorage의 조명값으로 교체
+      // ★ 패치: code와 team이 뒤바뀐 경우 교환
+      // 대회코드는 영문+숫자 조합, 조명은 "숫자+알파벳+숫자+조" 형식
       (function() {
         try {
-          var savedTeam = localStorage.getItem('pasis_current_team') || '';
-          if (savedTeam && team.toUpperCase() === code) {
-            team = savedTeam;
-            var tn = document.getElementById('teamName');
-            if (tn) tn.value = savedTeam;
+          var savedCode = (localStorage.getItem('parkgolf_tournament_code') || localStorage.getItem('pasis_tournament_code') || '').toUpperCase();
+          // team이 저장된 대회코드와 같으면 뒤바뀐 것
+          if (savedCode && team.toUpperCase() === savedCode) {
+            var tmp = team;
+            team = code; // code(조명)를 team으로
+            code = tmp;  // team(대회코드)을 code로
           }
         } catch(e) {}
       })();
