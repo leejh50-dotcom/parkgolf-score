@@ -539,13 +539,24 @@ function showCover() {
 function startInput() {
   hide('coverScreen');
   show('mainContent', false);
-  // 팀명에서 코스 자동 파싱 (예: "1일차 C-1 / 2일차 A-1" → ['C','A'])
+  // ★ co= 파라미터 우선 → 없으면 조명(팀명)에서 파싱
   if (COURSES.length === 4) {
-    var _m = (APP.team||'').match(/[A-Da-d](?=-\d)/g) || (APP.team||'').match(/(?<![A-Za-z])[A-Da-d](?=[^A-Za-z]|$)/g);
-    if (_m && _m.length && _m.length < 4) {
-      var _ac = [];
-      _m.forEach(function(c){ var u=c.toUpperCase(); if(_ac.indexOf(u)<0)_ac.push(u); });
-      if (_ac.length) COURSES = _ac;
+    var _p = new URLSearchParams(window.location.search || '');
+    var _co = _p.get('co') || '';
+    if (_co) {
+      // G열 방식: co=C,A
+      var _cp = _co.split(/[,\s]+/).map(function(s){ return s.trim().toUpperCase(); })
+                   .filter(function(s){ return 'ABCD'.indexOf(s) >= 0; });
+      if (_cp.length && _cp.length < 4) COURSES = _cp;
+    } else {
+      // 조명 파싱 fallback: "1일차 C-1 / 2일차 A-1" → ['C','A']
+      var _m = (APP.team||'').match(/[A-Da-d](?=-\d)/g) ||
+               (APP.team||'').match(/(?<![A-Za-z])[A-Da-d](?=[^A-Za-z]|$)/g);
+      if (_m && _m.length && _m.length < 4) {
+        var _ac = [];
+        _m.forEach(function(c){ var u=c.toUpperCase(); if(_ac.indexOf(u)<0)_ac.push(u); });
+        if (_ac.length) COURSES = _ac;
+      }
     }
   }
   renderUI();
@@ -803,7 +814,7 @@ function doSend() {
   var playersData = APP.players.map(function(p) {
     var st = getStatus(p);
     var note = p.bigo || (st === 'absent' ? '불참' : st === 'quit' ? '기권' : '');
-    var scores = {};
+    var scores = { A: '', B: '', C: '', D: '' };  // 비활성 코스는 공백
     COURSES.forEach(function(c) { scores[c] = p[c] === '' ? 0 : Number(p[c]); });
     return {
       name: p.name, gender: p.gender, affiliation: p.affil,
