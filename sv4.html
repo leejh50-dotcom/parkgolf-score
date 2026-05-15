@@ -1494,21 +1494,27 @@ function test_doPost() {
       var params = new URLSearchParams(qs);
       var coVal = params.get('co') || '';
 
-      // co= 없으면 teamName에서 코스 자동 파싱 시도
+      // co= 없으면 teamName 값에서 코스 자동 파싱
       // 예: "1일차 C-1 / 2일차 A-1" → C, A 추출
       if (!coVal) {
-        var teamEl = document.getElementById('teamName');
-        var teamVal = teamEl ? teamEl.value : '';
-        if (!teamVal) {
-          var teamEl2 = document.getElementById('shareTeam');
-          teamVal = teamEl2 ? teamEl2.textContent : '';
+        var teamVal2 = params.get('team') || '';
+        if (!teamVal2) {
+          var teamEl = document.getElementById('teamName');
+          teamVal2 = teamEl ? teamEl.value : '';
         }
-        if (teamVal) {
-          var matched = teamVal.match(/[A-Da-d](?=[\s\-\/코스]|$)/g);
-          if (!matched) matched = teamVal.match(/[A-Da-d]/g);
-          if (matched) {
+        if (teamVal2) {
+          // "C-1", "A-3", "D-5" 패턴에서 코스명 추출
+          var matched = teamVal2.match(/[A-Da-d](?=-\d)/g);
+          if (!matched || !matched.length) {
+            // 패턴 없으면 단독 알파벳 추출
+            matched = teamVal2.match(/\b[A-Da-d]\b/g);
+          }
+          if (matched && matched.length) {
             var uniq = [];
-            matched.forEach(function(c){ var u=c.toUpperCase(); if(uniq.indexOf(u)===-1) uniq.push(u); });
+            matched.forEach(function(c){
+              var u = c.toUpperCase();
+              if (uniq.indexOf(u) === -1) uniq.push(u);
+            });
             coVal = uniq.join(',');
           }
         }
@@ -1556,29 +1562,24 @@ function test_doPost() {
     } catch(e) { console.log('applyActiveCourses error:', e); }
   }
 
-  // ★ _applyQRAndOpenScoring 래핑 - 폴링으로 정의될 때까지 기다림
-  (function patchApplyQR() {
+  // ★ _openScoringScreen 래핑 - 점수입력 화면 열릴 때 반드시 호출됨
+  (function patchOpenScoring() {
     var tries = 0;
     function tryPatch() {
-      // window에 없으면 전역에서 직접 접근
-      var origFn = window._applyQRAndOpenScoring;
-      if (typeof origFn === 'function' && !origFn.__coursePatch) {
-        window._applyQRAndOpenScoring = function(url) {
-          origFn.call(this, url);
-          setTimeout(function(){ updateHeaders(); applyActiveCourses(url); }, 500);
+      if (typeof _openScoringScreen === 'function' && !_openScoringScreen.__coursePatch) {
+        var orig = _openScoringScreen;
+        _openScoringScreen = function() {
+          orig.apply(this, arguments);
+          setTimeout(function(){
+            updateHeaders();
+            // teamName에서 코스 파싱
+            var teamEl = document.getElementById('teamName');
+            var teamVal = teamEl ? teamEl.value : '';
+            applyActiveCourses('?team=' + encodeURIComponent(teamVal));
+          }, 600);
         };
-        window._applyQRAndOpenScoring.__coursePatch = true;
-        return;
-      }
-      if (typeof _applyQRAndOpenScoring === 'function' && !_applyQRAndOpenScoring.__coursePatch) {
-        var orig2 = _applyQRAndOpenScoring;
-        window._applyQRAndOpenScoring = function(url) {
-          orig2.call(this, url);
-          setTimeout(function(){ updateHeaders(); applyActiveCourses(url); }, 500);
-        };
-        window._applyQRAndOpenScoring.__coursePatch = true;
-        // 전역 함수 교체
-        try { _applyQRAndOpenScoring = window._applyQRAndOpenScoring; } catch(e){}
+        _openScoringScreen.__coursePatch = true;
+        window._openScoringScreen = _openScoringScreen;
         return;
       }
       if (++tries < 50) setTimeout(tryPatch, 100);
