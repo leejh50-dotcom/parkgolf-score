@@ -1490,24 +1490,41 @@ function test_doPost() {
   // ★ co= 파라미터로 활성 코스 적용하는 함수
   function applyActiveCourses(qrText) {
     try {
-      var qs = qrText.indexOf('?') !== -1 ? '?' + qrText.split('?')[1] : qrText;
+      var qs = (qrText||'').indexOf('?') !== -1 ? '?' + qrText.split('?')[1] : (qrText||'');
       var params = new URLSearchParams(qs);
       var coVal = params.get('co') || '';
+
+      // co= 없으면 teamName에서 코스 자동 파싱 시도
+      // 예: "1일차 C-1 / 2일차 A-1" → C, A 추출
+      if (!coVal) {
+        var teamEl = document.getElementById('teamName');
+        var teamVal = teamEl ? teamEl.value : '';
+        if (!teamVal) {
+          var teamEl2 = document.getElementById('shareTeam');
+          teamVal = teamEl2 ? teamEl2.textContent : '';
+        }
+        if (teamVal) {
+          var matched = teamVal.match(/[A-Da-d](?=[\s\-\/코스]|$)/g);
+          if (!matched) matched = teamVal.match(/[A-Da-d]/g);
+          if (matched) {
+            var uniq = [];
+            matched.forEach(function(c){ var u=c.toUpperCase(); if(uniq.indexOf(u)===-1) uniq.push(u); });
+            coVal = uniq.join(',');
+          }
+        }
+      }
+
       if (!coVal) return;
       var active = coVal.split(',').map(function(s){ return s.trim().toUpperCase(); });
-      var courseOrder = ['A','B','C','D']; // 열 인덱스 0~3
+      var courseOrder = ['A','B','C','D'];
 
       for (var p = 1; p <= 4; p++) {
         var scardEl = document.getElementById('scard'+p);
         if (!scardEl) continue;
         var tbl = scardEl.querySelector('table.scard-tbl');
         if (!tbl) continue;
-
-        // colgroup의 col 요소들
         var cols = tbl.querySelectorAll('colgroup col');
-        // 헤더 행 th
         var ths = tbl.querySelectorAll('tr:first-child th');
-        // 입력 행 td
         var tds = tbl.querySelectorAll('tr:nth-child(2) td');
 
         courseOrder.forEach(function(c, idx) {
@@ -1516,7 +1533,6 @@ function test_doPost() {
           if (cols[idx]) cols[idx].style.display = display;
           if (ths[idx]) ths[idx].style.display = display;
           if (tds[idx]) tds[idx].style.display = display;
-          // 비활성 코스 값 초기화
           if (!isOn) {
             var el = document.getElementById('in-'+c+'-'+p);
             if (el) el.value = '';
@@ -1540,14 +1556,36 @@ function test_doPost() {
     } catch(e) { console.log('applyActiveCourses error:', e); }
   }
 
-  // _applyQRAndOpenScoring 오버라이드 (QR 스캔 후)
-  var _origApply = window._applyQRAndOpenScoring;
-  if(typeof _origApply==='function'){
-    window._applyQRAndOpenScoring = function(url){
-      _origApply.call(this, url);
-      setTimeout(function(){ updateHeaders(); applyActiveCourses(url); }, 400);
-    };
-  }
+  // ★ _applyQRAndOpenScoring 래핑 - 폴링으로 정의될 때까지 기다림
+  (function patchApplyQR() {
+    var tries = 0;
+    function tryPatch() {
+      // window에 없으면 전역에서 직접 접근
+      var origFn = window._applyQRAndOpenScoring;
+      if (typeof origFn === 'function' && !origFn.__coursePatch) {
+        window._applyQRAndOpenScoring = function(url) {
+          origFn.call(this, url);
+          setTimeout(function(){ updateHeaders(); applyActiveCourses(url); }, 500);
+        };
+        window._applyQRAndOpenScoring.__coursePatch = true;
+        return;
+      }
+      if (typeof _applyQRAndOpenScoring === 'function' && !_applyQRAndOpenScoring.__coursePatch) {
+        var orig2 = _applyQRAndOpenScoring;
+        window._applyQRAndOpenScoring = function(url) {
+          orig2.call(this, url);
+          setTimeout(function(){ updateHeaders(); applyActiveCourses(url); }, 500);
+        };
+        window._applyQRAndOpenScoring.__coursePatch = true;
+        // 전역 함수 교체
+        try { _applyQRAndOpenScoring = window._applyQRAndOpenScoring; } catch(e){}
+        return;
+      }
+      if (++tries < 50) setTimeout(tryPatch, 100);
+    }
+    tryPatch();
+  })();
+
   // initFromQueryParams 이후 (URL 파라미터 직접 접속)
   var _origInit = window.initFromQueryParams;
   if(typeof _origInit==='function'){
