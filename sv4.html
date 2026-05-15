@@ -1498,22 +1498,29 @@ function test_doPost() {
       var courseOrder = ['A','B','C','D']; // 열 인덱스 0~3
 
       for (var p = 1; p <= 4; p++) {
-        // 헤더 행 th (A/B/C/D)
         var scardEl = document.getElementById('scard'+p);
         if (!scardEl) continue;
-        var ths = scardEl.querySelectorAll('table tr:first-child th');
-        var tds = scardEl.querySelectorAll('table tr:nth-child(2) td');
+        var tbl = scardEl.querySelector('table.scard-tbl');
+        if (!tbl) continue;
+
+        // colgroup의 col 요소들
+        var cols = tbl.querySelectorAll('colgroup col');
+        // 헤더 행 th
+        var ths = tbl.querySelectorAll('tr:first-child th');
+        // 입력 행 td
+        var tds = tbl.querySelectorAll('tr:nth-child(2) td');
 
         courseOrder.forEach(function(c, idx) {
           var isOn = active.indexOf(c) !== -1;
           var display = isOn ? '' : 'none';
+          if (cols[idx]) cols[idx].style.display = display;
           if (ths[idx]) ths[idx].style.display = display;
           if (tds[idx]) tds[idx].style.display = display;
-          // summaryScores 초기화
-          if (!isOn && window.summaryScores && window.summaryScores[c]) {
-            window.summaryScores[c][p] = '';
+          // 비활성 코스 값 초기화
+          if (!isOn) {
             var el = document.getElementById('in-'+c+'-'+p);
             if (el) el.value = '';
+            if (window.summaryScores && window.summaryScores[c]) window.summaryScores[c][p] = '';
           }
         });
       }
@@ -1523,7 +1530,7 @@ function test_doPost() {
       if (!lbl) {
         lbl = document.createElement('div');
         lbl.id = 'activeCourseLabel';
-        lbl.style.cssText = 'text-align:center;font-size:13px;font-weight:900;color:#c8860a;margin:4px 0;padding:4px 0;';
+        lbl.style.cssText = 'text-align:center;font-size:14px;font-weight:900;color:#c8860a;background:#fff8ec;border:2px solid #c8860a;border-radius:8px;padding:6px 0;margin:8px 0;';
         var firstScard = document.getElementById('scard1');
         if (firstScard) firstScard.parentNode.insertBefore(lbl, firstScard);
       }
