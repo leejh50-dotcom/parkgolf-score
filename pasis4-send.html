@@ -494,16 +494,8 @@ function init() {
     APP.url  = decodeURIComponent(p.get('u') || '');
     APP.team = decodeURIComponent(p.get('t') || '');
     APP.date = decodeURIComponent(p.get('d') || '');
+    var _co=p.get('co')||'';if(_co){var _cp=_co.split(/[,\s]+/).map(function(s){return s.trim().toUpperCase();}).filter(function(s){return 'ABCD'.indexOf(s)>=0;});if(_cp.length)COURSES=_cp;}
     APP.hasParam = !!(APP.code && APP.url && APP.team);
-
-    // ★ co= 파라미터로 활성 코스 설정 (예: co=A,C → ['A','C'])
-    var coParam = p.get('co') || '';
-    if (coParam) {
-      var parsed = coParam.split(/[,\s]+/)
-        .map(function(s){ return s.trim().toUpperCase(); })
-        .filter(function(s){ return ['A','B','C','D'].indexOf(s) >= 0; });
-      if (parsed.length) COURSES = parsed;
-    }
 
     if (APP.hasParam) {
       APP.players = [];
@@ -747,7 +739,7 @@ function onFocus(idx) {
 // ── 참가 상태 판별 (공통 유틸) ──
 function getStatus(p) {
   var filled = COURSES.filter(function(c) { return p[c] !== ''; }).length;
-  return filled === 0 ? 'absent' : filled < COURSES.length ? 'quit' : 'present';
+  return filled === 0 ? 'absent' : filled < 4 ? 'quit' : 'present';
 }
 
 // ── 확인 오버레이 ──
