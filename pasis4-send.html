@@ -688,7 +688,7 @@ function renderUI() {
       + '</div>'
       + '<div class="score-tbl-wrap">'
         + '<table class="score-tbl">'
-          + '<thead><tr><th>A</th><th>B</th><th>C</th><th>D</th><th class="th-total">합계</th></tr></thead>'
+          + '<thead><tr>' + COURSES.map(function(c){return '<th>'+c+'</th>';}).join('') + '<th class="th-total">합계</th></tr></thead>'
           + '<tbody><tr>'
             + tds
             + '<td class="td-total"><span class="total-disp" id="tot' + idx + '">—</span></td>'
@@ -747,7 +747,7 @@ function onFocus(idx) {
 // ── 참가 상태 판별 (공통 유틸) ──
 function getStatus(p) {
   var filled = COURSES.filter(function(c) { return p[c] !== ''; }).length;
-  return filled === 0 ? 'absent' : filled < 4 ? 'quit' : 'present';
+  return filled === 0 ? 'absent' : filled < COURSES.length ? 'quit' : 'present';
 }
 
 // ── 확인 오버레이 ──
