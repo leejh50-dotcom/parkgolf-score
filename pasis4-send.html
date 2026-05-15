@@ -494,7 +494,6 @@ function init() {
     APP.url  = decodeURIComponent(p.get('u') || '');
     APP.team = decodeURIComponent(p.get('t') || '');
     APP.date = decodeURIComponent(p.get('d') || '');
-    var _co=p.get('co')||'';if(_co){var _cp=_co.split(/[,\s]+/).map(function(s){return s.trim().toUpperCase();}).filter(function(s){return 'ABCD'.indexOf(s)>=0;});if(_cp.length)COURSES=_cp;}
     APP.hasParam = !!(APP.code && APP.url && APP.team);
 
     if (APP.hasParam) {
@@ -540,14 +539,13 @@ function showCover() {
 function startInput() {
   hide('coverScreen');
   show('mainContent', false);
-  // ★ COURSES가 기본값이면 APP.team에서 코스 파싱 시도
+  // 팀명에서 코스 자동 파싱 (예: "1일차 C-1 / 2일차 A-1" → ['C','A'])
   if (COURSES.length === 4) {
-    var _tm = APP.team || '';
-    var _m = _tm.match(/[A-Da-d](?=-\d)/g) || _tm.match(/[A-Da-d]/g);
-    if (_m && _m.length) {
+    var _m = (APP.team||'').match(/[A-Da-d](?=-\d)/g);
+    if (_m && _m.length && _m.length < 4) {
       var _ac = [];
-      _m.forEach(function(c){ var u=c.toUpperCase(); if(_ac.indexOf(u)<0) _ac.push(u); });
-      if (_ac.length && _ac.length < 4) COURSES = _ac;
+      _m.forEach(function(c){ var u=c.toUpperCase(); if(_ac.indexOf(u)<0)_ac.push(u); });
+      if (_ac.length) COURSES = _ac;
     }
   }
   renderUI();
@@ -749,7 +747,7 @@ function onFocus(idx) {
 // ── 참가 상태 판별 (공통 유틸) ──
 function getStatus(p) {
   var filled = COURSES.filter(function(c) { return p[c] !== ''; }).length;
-  return filled === 0 ? 'absent' : filled < 4 ? 'quit' : 'present';
+  return filled === 0 ? 'absent' : filled < COURSES.length ? 'quit' : 'present';
 }
 
 // ── 확인 오버레이 ──
