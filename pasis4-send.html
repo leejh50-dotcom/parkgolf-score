@@ -541,7 +541,7 @@ function startInput() {
   show('mainContent', false);
   // 팀명에서 코스 자동 파싱 (예: "1일차 C-1 / 2일차 A-1" → ['C','A'])
   if (COURSES.length === 4) {
-    var _m = (APP.team||'').match(/[A-Da-d](?=-\d)/g);
+    var _m = (APP.team||'').match(/[A-Da-d](?=-\d)/g) || (APP.team||'').match(/(?<![A-Za-z])[A-Da-d](?=[^A-Za-z]|$)/g);
     if (_m && _m.length && _m.length < 4) {
       var _ac = [];
       _m.forEach(function(c){ var u=c.toUpperCase(); if(_ac.indexOf(u)<0)_ac.push(u); });
