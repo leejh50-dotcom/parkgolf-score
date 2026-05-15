@@ -540,6 +540,16 @@ function showCover() {
 function startInput() {
   hide('coverScreen');
   show('mainContent', false);
+  // ★ COURSES가 기본값이면 APP.team에서 코스 파싱 시도
+  if (COURSES.length === 4) {
+    var _tm = APP.team || '';
+    var _m = _tm.match(/[A-Da-d](?=-\d)/g) || _tm.match(/[A-Da-d]/g);
+    if (_m && _m.length) {
+      var _ac = [];
+      _m.forEach(function(c){ var u=c.toUpperCase(); if(_ac.indexOf(u)<0) _ac.push(u); });
+      if (_ac.length && _ac.length < 4) COURSES = _ac;
+    }
+  }
   renderUI();
   window.scrollTo({ top: 0 });
 }
