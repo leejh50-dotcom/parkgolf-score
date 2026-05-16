@@ -104,17 +104,18 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
 .hdr-sub{color:rgba(255,255,255,.82);font-size:11px;margin-top:2px;font-weight:600;}
 
 .sheet-title{
-  text-align:center;font-size:18px;font-weight:900;
-  color:var(--gold-dk);padding:12px 0 4px;letter-spacing:.5px;
+  text-align:center;font-size:16px;font-weight:900;
+  color:var(--gold-dk);padding:6px 0 2px;letter-spacing:.5px;
 }
 .team-bar{
-  background:var(--white);margin:6px 12px 0;
-  border-radius:10px;padding:8px 14px;box-shadow:var(--shadow);
-  display:flex;align-items:center;gap:10px;border-left:4px solid var(--gold);
+  background:var(--white);margin:4px 0 0;
+  border-radius:8px;padding:5px 12px;box-shadow:var(--shadow);
+  border-left:4px solid var(--gold);
 }
-.team-icon{font-size:18px;}
-.team-name{font-size:15px;font-weight:900;color:var(--gold-dk);}
-.team-meta{font-size:11px;color:var(--gray);margin-top:1px;}
+.team-oneline{display:flex;align-items:center;flex-wrap:nowrap;gap:0;}
+.team-name{font-size:15px;font-weight:900;color:var(--gold-dk);white-space:nowrap;}
+.team-meta{font-size:13px;color:var(--gray);}
+.team-sep{font-size:13px;color:var(--gray);}
 
 .err-banner{
   background:#fef2f2;border:1.5px solid #fca5a5;border-radius:10px;
@@ -126,7 +127,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
 
 /* 경기자 카드 */
 .player-card{
-  background:var(--white);margin:6px 0 0;
+  background:var(--white);margin:4px 0 0;
   border-radius:6px;box-shadow:var(--shadow);
   overflow:hidden;border:1.5px solid #e8dfc8;
   transition:border-color .2s;
@@ -159,7 +160,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
 .score-tbl tr:nth-child(odd) td.td-score{border:1px solid #c8b88a;padding:2px;text-align:center;height:54px;background:#fff;}
 .score-tbl tr:nth-child(even) td.td-score{border:1px solid #c8b88a;padding:2px;text-align:center;height:54px;background:#f5f0e4;}
 .score-tbl td.td-total{border:1px solid #c8b88a;text-align:center;height:54px;background:#fff8ec;}
-.score-tbl td.td-hio{border:1px solid #c8b88a;padding:3px 2px;text-align:center;background:#f5f5f5;}
+.score-tbl td.td-hio{border:1px solid #c8b88a;padding:1px 2px;text-align:center;background:#f5f5f5;}
 .score-tbl td.td-hio input::placeholder{color:#d8d0c0;opacity:1;}
 .score-input{
   width:100%;height:50px;border:none;outline:none;
@@ -192,9 +193,9 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
 
 /* 주의 배너 */
 .warn-banner{
-  background:#fff8e8;border:1.5px solid #fcd34d;border-radius:10px;
-  margin:10px 12px 4px;padding:8px 13px;
-  display:flex;gap:7px;font-size:12px;color:#92400e;line-height:1.6;
+  background:#fff8e8;border:1.5px solid #fcd34d;border-radius:8px;
+  margin:4px 0 2px;padding:4px 10px;
+  display:flex;gap:6px;font-size:12px;color:#92400e;line-height:1.3;
 }
 
 /* 전송 버튼 */
@@ -407,13 +408,13 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
   </div>
   <div class="sheet-title">개인별 점수 기록표</div>
   <div class="team-bar">
-    <span class="team-icon">🏌️</span>
-    <span>
-      <div class="team-name" id="teamNameDisp">—</div>
-      <div class="team-meta" id="teamCodeDisp"></div>
-    </span>
+    <div class="team-oneline">
+      <span class="team-name" id="teamNameDisp">—</span>
+      <span class="team-sep"> · </span>
+      <span class="team-meta" id="teamCodeDisp"></span>
+    </div>
   </div>
-  <div style="height:6px"></div>
+  <div style="height:2px"></div>
   <div class="err-banner" id="errBanner"></div>
   <div id="playerList"></div>
   <div class="warn-banner">
@@ -687,7 +688,7 @@ function renderUI() {
 
   var hioRow = '<tr><td class="td-course" style="font-size:13px;font-weight:500;background:#f0ebe0;">홀인원</td>'
     + APP.players.map(function(p, i) {
-        return '<td class="td-hio"><input type="text" placeholder="A9홀" maxlength="10" id="bigo' + i + '" style="width:100%;border:none;outline:none;text-align:center;font-size:18px;font-weight:700;color:var(--gold);background:transparent;font-family:inherit;height:32px;line-height:32px;display:block;"></td>';
+        return '<td class="td-hio"><input type="text" placeholder="A9홀" maxlength="10" id="bigo' + i + '" style="width:100%;border:none;outline:none;text-align:center;font-size:18px;font-weight:700;color:var(--gold);background:transparent;font-family:inherit;height:26px;line-height:26px;display:block;"></td>';
       }).join('')
     + '</tr>';
 
