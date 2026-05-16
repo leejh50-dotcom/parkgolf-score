@@ -146,18 +146,16 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
 
 /* 점수 테이블 */
 .score-tbl-wrap{padding:0 12px;}
-.score-tbl{width:100%;border-collapse:collapse;}
-.score-tbl th{
-  background:#f5f0e4;color:var(--gold-dk);
-  font-size:18px;font-weight:800;padding:8px 0;
-  text-align:center;border:1px solid #e0d5b8;
-}
-.score-tbl th.th-total{background:#efe8d0;}
-.score-tbl td{border:1px solid #e0d5b8;padding:0;text-align:center;background:#fff;}
-.score-tbl td.td-total{background:#fef8ec;}
+.score-tbl{width:100%;border-collapse:collapse;table-layout:fixed;}
+.score-tbl th.th-course{background:#f5f0e4;color:#7a4f00;font-size:16px;font-weight:500;padding:10px 2px;border:0.5px solid #e0d5b8;text-align:center;width:13%;}
+.score-tbl th.th-name{background:#fff8ec;color:#7a4f00;font-size:24px;font-weight:700;padding:10px 2px;border:0.5px solid #e0d5b8;text-align:center;}
+.score-tbl td.td-course{background:#f5f0e4;border:0.5px solid #e0d5b8;text-align:center;padding:10px 2px;font-size:24px;font-weight:700;color:#888;}
+.score-tbl td.td-score{border:0.5px solid #e0d5b8;padding:2px;text-align:center;height:60px;background:#fff;}
+.score-tbl td.td-total{background:#fff8ec;border:0.5px solid #e0d5b8;text-align:center;height:60px;}
+.score-tbl td.td-hio{border:0.5px solid #e0d5b8;padding:8px 2px;text-align:center;background:#fff;}
 .score-input{
-  width:100%;height:64px;border:none;outline:none;
-  font-size:32px;font-weight:900;text-align:center;
+  width:100%;height:58px;border:none;outline:none;
+  font-size:40px;font-weight:700;text-align:center;
   color:#1a1a1a;background:transparent;
   -webkit-appearance:none;appearance:none;
   font-family:'Noto Sans KR',sans-serif;
@@ -165,7 +163,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
 .score-input:focus{background:#fff8e8;color:var(--gold-dk);}
 .score-input.has-val{color:var(--gold-dk);}
 .total-disp{
-  font-size:22px;font-weight:900;color:var(--gold);
+  font-size:40px;font-weight:700;color:var(--gold);
   display:block;line-height:52px;text-align:center;
 }
 
@@ -264,25 +262,25 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
 .guide-copy-ok.show{display:block;}
 .overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px);}
 .overlay.hidden{display:none;}
-.confirm-box{background:#fff;border-radius:18px;width:100%;max-width:440px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.35);animation:slideUp .22s ease;display:flex;flex-direction:column;max-height:96vh;}
+.confirm-box{background:#fff;border-radius:18px;width:100%;max-width:380px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.35);animation:slideUp .22s ease;display:flex;flex-direction:column;max-height:90vh;}
 @keyframes slideUp{from{transform:translateY(24px);opacity:0}to{transform:translateY(0);opacity:1}}
 .cf-head{background:linear-gradient(135deg,var(--gold-dk),var(--gold));color:#fff;padding:13px 17px 11px;font-size:17px;font-weight:900;}
 .cf-head small{display:block;font-size:12px;opacity:.85;margin-top:2px;font-weight:600;}
-.cf-body{padding:6px 10px;overflow-y:auto;flex:1;min-height:0;}
-.cf-row{display:flex;align-items:center;justify-content:space-between;background:var(--gold-lt);border:1px solid #f0d08a;border-radius:11px;padding:7px 12px;margin-bottom:5px;}
+.cf-body{padding:10px 12px;overflow-y:auto;flex:1;min-height:0;}
+.cf-row{display:flex;align-items:center;justify-content:space-between;background:var(--gold-lt);border:1px solid #f0d08a;border-radius:11px;padding:9px 12px;margin-bottom:7px;}
 .cf-row.absent{background:#f9f9f9;border-color:#ddd;opacity:.75;}
 .cf-row.quit{background:#fffdf0;border-color:#fcd34d;}
-.cf-name{font-size:19px;font-weight:900;}
+.cf-name{font-size:15px;font-weight:900;}
 .cf-detail{font-size:11px;color:var(--gray);margin-top:2px;}
 .cf-right{text-align:right;}
-.cf-total{font-size:26px;font-weight:900;color:var(--gold);}
+.cf-total{font-size:21px;font-weight:900;color:var(--gold);}
 .cf-bigo{font-size:10px;font-weight:800;padding:1px 6px;border-radius:4px;margin-top:2px;display:inline-block;}
 .cf-bigo-absent{background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;}
 .cf-bigo-quit{background:#fffbeb;color:#d97706;border:1px solid #fcd34d;}
 .cf-bigo-note{background:#f0fdf4;color:#059669;border:1px solid #6ee7b7;}
-.cf-warn{background:#fef3c7;border-top:1px solid #fcd34d;padding:6px 14px;font-size:12px;color:#92400e;line-height:1.5;text-align:center;flex-shrink:0;}
-.cf-foot{padding:6px 10px 10px;display:flex;gap:8px;flex-shrink:0;}
-.btn-back,.btn-go{flex:1;padding:10px;border:none;border-radius:12px;font-size:16px;font-weight:900;cursor:pointer;font-family:'Noto Sans KR',sans-serif;line-height:1.3;}
+.cf-warn{background:#fef3c7;border-top:1px solid #fcd34d;padding:9px 14px;font-size:12px;color:#92400e;line-height:1.6;text-align:center;flex-shrink:0;}
+.cf-foot{padding:8px 12px 12px;display:flex;gap:8px;flex-shrink:0;}
+.btn-back,.btn-go{flex:1;padding:13px;border:none;border-radius:12px;font-size:16px;font-weight:900;cursor:pointer;font-family:'Noto Sans KR',sans-serif;line-height:1.3;}
 .btn-back{background:#e5e7eb;color:#374151;}
 .btn-go{background:linear-gradient(135deg,var(--gold-dk),var(--gold));color:#fff;}
 
@@ -302,15 +300,15 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
 }
 #doneScreen.show{display:flex;}
 .done-top{width:100%;max-width:320px;}
-.done-icon{font-size:48px;margin-bottom:4px;animation:dBounce .6s ease;display:block;}
+.done-icon{font-size:72px;margin-bottom:6px;animation:dBounce .6s ease;display:block;}
 @keyframes dBounce{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
-.done-title{font-size:30px;font-weight:900;color:#fff;margin-top:0;}
-.done-team{font-size:18px;font-weight:800;color:rgba(255,255,255,.85);margin-top:2px;}
-.done-sub{font-size:13px;color:rgba(255,255,255,.65);margin-top:4px;line-height:1.6;background:rgba(0,0,0,.2);border-radius:10px;padding:6px 14px;}
-.done-players{margin-top:6px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:5px;}
-.done-row{background:rgba(255,255,255,.12);border-radius:10px;padding:7px 16px;display:flex;justify-content:space-between;align-items:center;}
-.done-name{font-size:18px;font-weight:800;color:#fff;}
-.done-score{font-size:20px;font-weight:900;color:#a7f3d0;}
+.done-title{font-size:32px;font-weight:900;color:#fff;}
+.done-team{font-size:18px;font-weight:800;color:rgba(255,255,255,.85);margin-top:4px;}
+.done-sub{font-size:13px;color:rgba(255,255,255,.65);margin-top:8px;line-height:1.8;background:rgba(0,0,0,.2);border-radius:12px;padding:9px 14px;}
+.done-players{margin-top:10px;width:100%;max-width:320px;display:flex;flex-direction:column;gap:6px;}
+.done-row{background:rgba(255,255,255,.12);border-radius:10px;padding:8px 14px;display:flex;justify-content:space-between;align-items:center;}
+.done-name{font-size:14px;font-weight:800;color:#fff;}
+.done-score{font-size:16px;font-weight:900;color:#a7f3d0;}
 
 /* 완료 후 홍보 */
 #donePromo{
@@ -550,13 +548,8 @@ function startInput() {
       if (_cp.length && _cp.length < 4) COURSES = _cp;
     } else {
       // 조명 파싱 fallback: "1일차 C-1 / 2일차 A-1" → ['C','A']
-      // iOS/Android 전 버전 호환 파싱 (lookbehind 미사용)
-    var _tm = APP.team || '';
-    var _m = _tm.match(/[A-Da-d](?=-\d)/g);
-    if (!_m) {
-      _m = _tm.match(/(?:^|[\s\/·\-])([A-Da-d])(?:[\s\/·\-조]|$)/g);
-      if (_m) _m = _m.map(function(s){ return s.replace(/[^A-Da-d]/g,''); });
-    }
+      var _m = (APP.team||'').match(/[A-Da-d](?=-\d)/g) ||
+               (APP.team||'').match(/(?<![A-Za-z])[A-Da-d](?=[^A-Za-z]|$)/g);
       if (_m && _m.length && _m.length < 4) {
         var _ac = [];
         _m.forEach(function(c){ var u=c.toUpperCase(); if(_ac.indexOf(u)<0)_ac.push(u); });
@@ -677,57 +670,65 @@ function renderUI() {
   var list = document.getElementById('playerList');
   list.innerHTML = '';
 
-  APP.players.forEach(function(p, idx) {
-    var card = document.createElement('div');
-    card.className = 'player-card';
-    card.id = 'card-' + idx;
+  // ── 세로 테이블: 경기자가 열, 코스가 행 ──
+  var wrap = document.createElement('div');
+  wrap.className = 'player-card';
 
-    var gBadge = p.gender === '남' ? '<span class="gender-badge gender-m">남</span>'
-               : p.gender === '여' ? '<span class="gender-badge gender-f">여</span>' : '';
+  var cgHtml = '<colgroup><col style="width:13%">'
+    + APP.players.map(function(){ return '<col style="width:21.75%">'; }).join('')
+    + '</colgroup>';
 
-    var tds = COURSES.map(function(c) {
-      return '<td><input class="score-input" type="number" inputmode="numeric" pattern="[0-9]*" '
-           + 'min="0" max="99" placeholder="—" '
-           + 'id="sc' + idx + c + '" '
-           + 'onblur="sfBlur(' + idx + ')"'
-           + '></td>';
+  var nameRow = '<tr><th class="th-course">코스</th>'
+    + APP.players.map(function(p) {
+        var badge = p.gender==='남' ? ' <span class="gender-badge gender-m" style="font-size:13px;">남</span>'
+                  : p.gender==='여' ? ' <span class="gender-badge gender-f" style="font-size:13px;">여</span>' : '';
+        return '<th class="th-name">' + esc(p.name) + badge + '</th>';
+      }).join('')
+    + '</tr>';
+
+  var courseRows = COURSES.map(function(c) {
+    var cells = APP.players.map(function(p, i) {
+      return '<td class="td-score"><input class="score-input" type="number" inputmode="numeric" pattern="[0-9]*" min="0" max="99" placeholder="—" id="sc' + i + c + '" onblur="sfBlur(' + i + ')"></td>';
     }).join('');
+    return '<tr><td class="td-course">' + c + '</td>' + cells + '</tr>';
+  }).join('');
 
-    card.innerHTML =
-      '<div class="player-head">'
-      + '<div class="player-num">' + p.slot + '</div>'
-      + '<div style="flex:1;display:flex;align-items:center;flex-wrap:wrap;">'
-        + '<span class="player-name">' + esc(p.name) + '</span>'
-        + (p.affil ? '<span class="player-affil">' + esc(p.affil) + '</span>' : '')
-        + gBadge
-      + '</div>'
-      + '</div>'
-      + '<div class="score-tbl-wrap">'
-        + '<table class="score-tbl">'
-          + '<thead><tr>' + COURSES.map(function(c){return '<th>'+c+'</th>';}).join('') + '<th class="th-total">합계</th></tr></thead>'
-          + '<tbody><tr>'
-            + tds
-            + '<td class="td-total"><span class="total-disp" id="tot' + idx + '">—</span></td>'
-          + '</tr></tbody>'
-        + '</table>'
-      + '</div>'
-      + '<div class="bigo-row">'
-        + '<span class="bigo-label">비고</span>'
-        + '<input class="bigo-input" type="text" placeholder="예: A9홀인원" maxlength="12" '
-          + 'id="bigo' + idx + '">'
-      + '</div>';
+  var totalRow = '<tr><td class="td-course" style="font-size:18px;color:#7a4f00;background:#fff8ec;">합계</td>'
+    + APP.players.map(function(p, i) {
+        return '<td class="td-total"><span class="total-disp" id="tot' + i + '">—</span></td>';
+      }).join('')
+    + '</tr>';
 
-    list.appendChild(card);
+  var hioRow = '<tr><td class="td-course" style="font-size:13px;font-weight:500;">홀인원</td>'
+    + APP.players.map(function(p, i) {
+        return '<td class="td-hio"><input type="text" placeholder="A9홀" maxlength="10" id="bigo' + i + '" style="width:100%;border:none;outline:none;text-align:center;font-size:22px;font-weight:700;color:var(--gold);background:transparent;font-family:inherit;"></td>';
+      }).join('')
+    + '</tr>';
 
+  wrap.innerHTML =
+    '<div class="score-tbl-wrap">'
+    + '<table class="score-tbl">'
+    + cgHtml
+    + '<thead>' + nameRow + '</thead>'
+    + '<tbody>' + courseRows + totalRow + hioRow + '</tbody>'
+    + '</table>'
+    + '</div>';
+
+  list.appendChild(wrap);
+
+  APP.players.forEach(function(p, idx) {
     COURSES.forEach(function(c) {
       var el = document.getElementById('sc' + idx + c);
-      el.addEventListener('input', function() { onScore(this, idx, c); });
-      el.addEventListener('focus', function() { onFocus(idx); });
+      if(el) {
+        el.addEventListener('input', function() { onScore(this, idx, c); });
+        el.addEventListener('focus', function() { onFocus(idx); });
+      }
     });
-
     var bigoEl = document.getElementById('bigo' + idx);
-    bigoEl.addEventListener('input', function() { APP.players[idx].bigo = this.value.trim(); });
-    bigoEl.addEventListener('focus', function() { onFocus(idx); });
+    if(bigoEl) {
+      bigoEl.addEventListener('input', function() { APP.players[idx].bigo = this.value.trim(); });
+      bigoEl.addEventListener('focus', function() { onFocus(idx); });
+    }
   });
 }
 
