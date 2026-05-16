@@ -768,7 +768,7 @@ function onFocus(idx) {
 // ── 참가 상태 판별 (공통 유틸) ──
 function getStatus(p) {
   var filled = COURSES.filter(function(c) { return p[c] !== ''; }).length;
-  return filled === 0 ? 'absent' : filled < 4 ? 'quit' : 'present';
+  return filled === 0 ? 'absent' : filled < COURSES.length ? 'quit' : 'present';
 }
 
 // ── 확인 오버레이 ──
@@ -824,7 +824,7 @@ function doSend() {
   var playersData = APP.players.map(function(p) {
     var st = getStatus(p);
     var note = p.bigo || (st === 'absent' ? '불참' : st === 'quit' ? '기권' : '');
-    var scores = {};
+    var scores = { A: '', B: '', C: '', D: '' };
     COURSES.forEach(function(c) { scores[c] = p[c] === '' ? 0 : Number(p[c]); });
     return {
       name: p.name, gender: p.gender, affiliation: p.affil,
