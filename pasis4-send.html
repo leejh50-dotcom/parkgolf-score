@@ -9,20 +9,11 @@
 <meta name="apple-mobile-web-app-title" content="PS전송">
 <meta name="theme-color" content="#c8860a">
 <link rel="manifest" href="manifest-sv4send.json">
-<script>
-/* 항상 최신 파일 강제 로드 */
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.getRegistrations().then(function(regs){
-    regs.forEach(function(r){ r.unregister(); });
-  });
-}
-if('caches' in window){
-  caches.keys().then(function(keys){
-    keys.forEach(function(k){ caches.delete(k); });
-  });
-}
-</script>
 <link rel="apple-touch-icon" href="pasis4-send-icon.png">
+<script>
+if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(s){s.unregister();});});}
+if('caches' in window){caches.keys().then(function(k){k.forEach(function(c){caches.delete(c);});});}
+</script>
 <title>PASIS4 Send · 파크골프 점수 전송</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;900&display=swap');
@@ -146,12 +137,12 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
   border-bottom:1.5px solid #e8dfc8;background:#fff;
 }
 .player-num{
-  width:38px;height:38px;border-radius:50%;
+  width:30px;height:30px;border-radius:50%;
   background:var(--gold-dk);color:#fff;
-  font-size:18px;font-weight:900;
+  font-size:15px;font-weight:900;
   display:flex;align-items:center;justify-content:center;flex-shrink:0;
 }
-.player-name{font-size:24px;font-weight:900;color:#1a1a1a;line-height:1.2;}
+.player-name{font-size:19px;font-weight:900;color:#1a1a1a;line-height:1.2;}
 .player-affil{font-size:12px;font-weight:600;color:var(--gray);margin-left:6px;vertical-align:middle;}
 .gender-badge{padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;margin-left:4px;flex-shrink:0;}
 .gender-m{background:#dbeafe;color:#1d4ed8;}
@@ -469,7 +460,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
   <div class="confirm-box">
     <div class="cf-head">📋 전송 전 확인<small id="cfSub"></small></div>
     <div class="cf-body" id="cfBody"></div>
-    <div class="cf-warn">⚠️ <strong>재전송 불가 — 꼭 확인 후 전송하세요.</div>
+    <div class="cf-warn">⚠️ <strong>재전송 불가</strong> — 꼭 확인 후 전송하세요.</div>
     <div class="cf-foot">
       <button class="btn-back" onclick="closeConfirm()">← 뒤로<br>(수정)</button>
       <button class="btn-go" onclick="doSend()">✅ 확인·<br>전송</button>
@@ -554,26 +545,6 @@ function showCover() {
 function startInput() {
   hide('coverScreen');
   show('mainContent', false);
-  // ★ co= 파라미터 우선 → 없으면 조명(팀명)에서 파싱
-  if (COURSES.length === 4) {
-    var _p = new URLSearchParams(window.location.search || '');
-    var _co = _p.get('co') || '';
-    if (_co) {
-      // G열 방식: co=C,A
-      var _cp = _co.split(/[,\s]+/).map(function(s){ return s.trim().toUpperCase(); })
-                   .filter(function(s){ return 'ABCD'.indexOf(s) >= 0; });
-      if (_cp.length && _cp.length < 4) COURSES = _cp;
-    } else {
-      // 조명 파싱 fallback: "1일차 C-1 / 2일차 A-1" → ['C','A']
-      var _m = (APP.team||'').match(/[A-Da-d](?=-\d)/g) ||
-               (APP.team||'').match(/(?<![A-Za-z])[A-Da-d](?=[^A-Za-z]|$)/g);
-      if (_m && _m.length && _m.length < 4) {
-        var _ac = [];
-        _m.forEach(function(c){ var u=c.toUpperCase(); if(_ac.indexOf(u)<0)_ac.push(u); });
-        if (_ac.length) COURSES = _ac;
-      }
-    }
-  }
   renderUI();
   window.scrollTo({ top: 0 });
 }
@@ -696,8 +667,8 @@ function renderUI() {
 
   var nameRow = '<tr><th class="th-course">코스</th>'
     + APP.players.map(function(p) {
-        var _fs = p.name.length >= 4 ? '15px' : '20px';
-        return '<th class="th-name" style="font-size:'+_fs+'">' + esc(p.name) + '</th>';
+        var fs = p.name.length >= 4 ? '15px' : '20px';
+        return '<th class="th-name" style="font-size:'+fs+'">' + esc(p.name) + '</th>';
       }).join('')
     + '</tr>';
 
@@ -779,7 +750,7 @@ function onFocus(idx) {
 // ── 참가 상태 판별 (공통 유틸) ──
 function getStatus(p) {
   var filled = COURSES.filter(function(c) { return p[c] !== ''; }).length;
-  return filled === 0 ? 'absent' : filled < COURSES.length ? 'quit' : 'present';
+  return filled === 0 ? 'absent' : filled < 4 ? 'quit' : 'present';
 }
 
 // ── 확인 오버레이 ──
@@ -835,7 +806,7 @@ function doSend() {
   var playersData = APP.players.map(function(p) {
     var st = getStatus(p);
     var note = p.bigo || (st === 'absent' ? '불참' : st === 'quit' ? '기권' : '');
-    var scores = { A: '', B: '', C: '', D: '' };  // 비활성 코스는 공백
+    var scores = {};
     COURSES.forEach(function(c) { scores[c] = p[c] === '' ? 0 : Number(p[c]); });
     return {
       name: p.name, gender: p.gender, affiliation: p.affil,
