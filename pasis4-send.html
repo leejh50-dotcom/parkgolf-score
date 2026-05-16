@@ -9,6 +9,19 @@
 <meta name="apple-mobile-web-app-title" content="PS전송">
 <meta name="theme-color" content="#c8860a">
 <link rel="manifest" href="manifest-sv4send.json">
+<script>
+/* 항상 최신 파일 강제 로드 */
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.getRegistrations().then(function(regs){
+    regs.forEach(function(r){ r.unregister(); });
+  });
+}
+if('caches' in window){
+  caches.keys().then(function(keys){
+    keys.forEach(function(k){ caches.delete(k); });
+  });
+}
+</script>
 <link rel="apple-touch-icon" href="pasis4-send-icon.png">
 <title>PASIS4 Send · 파크골프 점수 전송</title>
 <style>
