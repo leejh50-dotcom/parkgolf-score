@@ -16,8 +16,17 @@
 <meta name="theme-color" content="#c8860a">
 <meta name="apple-mobile-web-app-title" content="파시스 SV4.0">
 <script>
-if('serviceWorker'in navigator){navigator.serviceWorker.getRegistrations().then(function(regs){regs.forEach(function(r){r.unregister();});});}
-if('caches'in window){caches.keys().then(function(keys){keys.forEach(function(k){caches.delete(k);});});}
+/* ★ 서비스워커 및 캐시 완전 제거 - 항상 최신 파일 사용 */
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.getRegistrations().then(function(regs){
+    regs.forEach(function(r){ r.unregister(); });
+  });
+}
+if('caches' in window){
+  caches.keys().then(function(keys){
+    keys.forEach(function(k){ caches.delete(k); });
+  });
+}
 </script>
 
 <style>
@@ -1510,19 +1519,78 @@ function test_doPost() {
 
 
 
-<script>(function(_0x2749ec,_0x30b796){const _0x1d7144=_0x5bb6,_0x44565c=_0x2749ec();while(!![]){try{const _0x267750=parseInt(_0x1d7144(0x13e))/0x1*(parseInt(_0x1d7144(0x182))/0x2)+parseInt(_0x1d7144(0x142))/0x3*(parseInt(_0x1d7144(0x121))/0x4)+parseInt(_0x1d7144(0x171))/0x5*(-parseInt(_0x1d7144(0x16e))/0x6)+-parseInt(_0x1d7144(0x164))/0x7+parseInt(_0x1d7144(0x1ab))/0x8+parseInt(_0x1d7144(0x1b1))/0x9*(parseInt(_0x1d7144(0x17f))/0xa)+-parseInt(_0x1d7144(0x16d))/0xb;if(_0x267750===_0x30b796)break;else _0x44565c['push'](_0x44565c['shift']());}catch(_0xfc7ce0){_0x44565c['push'](_0x44565c['shift']());}}}(_0x333e,0x92616));function openAdminModal(){const _0x2caaac=_0x5bb6,_0x4695fb=localStorage['getItem'](_0x2caaac(0x11e))||'',_0x43c18a=localStorage[_0x2caaac(0x178)](_0x2caaac(0x187))||'',_0x40bf3f=document[_0x2caaac(0x1bf)](_0x2caaac(0x145)),_0x5f23ca=document['getElementById'](_0x2caaac(0x1b7));if(_0x40bf3f&&_0x4695fb)_0x40bf3f[_0x2caaac(0x1b8)]=_0x4695fb;if(_0x5f23ca&&_0x43c18a)_0x5f23ca[_0x2caaac(0x1b8)]=_0x43c18a;const _0x242b62=document['getElementById'](_0x2caaac(0x136));if(_0x242b62)_0x242b62[_0x2caaac(0x155)][_0x2caaac(0x170)]=_0x2caaac(0x181);_0x4695fb&&_0x43c18a&&fetch(_0x4695fb,{'method':_0x2caaac(0x134),'headers':{'Content-Type':_0x2caaac(0x129)},'body':JSON[_0x2caaac(0x1d2)]({'action':'getteams','mode':_0x2caaac(0x1aa),'code':_0x43c18a})})['then'](function(_0x11660f){const _0x28f0f3=_0x2caaac;return _0x11660f[_0x28f0f3(0x159)]();})[_0x2caaac(0x1bb)](function(_0x49bd34){const _0xae29e5=_0x2caaac;if(!_0x49bd34['success']||!_0x49bd34[_0xae29e5(0x168)]||_0x49bd34[_0xae29e5(0x168)]['length']===0x0)return;var _0x3b313f=document[_0xae29e5(0x1bf)](_0xae29e5(0x186));if(!_0x3b313f)return;var _0x424d17=String(_0x49bd34[_0xae29e5(0x168)][0x0]['team']||''),_0xf2337b=_0x49bd34['teams'][_0xae29e5(0x1cf)](function(_0x5a326a){const _0x2a6c0c=_0xae29e5;return/^남/['test'](_0x5a326a[_0x2a6c0c(0x13c)]);}),_0x4b4ae7=_0x49bd34['teams'][_0xae29e5(0x1cf)](function(_0x40f74f){const _0x227fb3=_0xae29e5;return/^여/['test'](_0x40f74f[_0x227fb3(0x13c)]);});if(_0xf2337b&&_0x4b4ae7)_0x3b313f['value']=_0xae29e5(0x131);else{if(_0xf2337b)_0x3b313f[_0xae29e5(0x1b8)]=_0xae29e5(0x1ba);else{if(_0x4b4ae7)_0x3b313f[_0xae29e5(0x1b8)]=_0xae29e5(0x177);else _0x3b313f['value']=_0xae29e5(0x18a);}}})[_0x2caaac(0x172)](function(){});}function closeAdminModal(){const _0x39a17f=_0x5bb6,_0x41c3be=document[_0x39a17f(0x1bf)](_0x39a17f(0x136));if(_0x41c3be)_0x41c3be[_0x39a17f(0x155)][_0x39a17f(0x170)]='none';}function saveAdminUrlAndCode(){const _0x25a241=_0x5bb6,_0x41c669=(document[_0x25a241(0x1bf)]('adminWebappUrl')[_0x25a241(0x1b8)]||'')[_0x25a241(0x17c)](),_0x71cf30=(document['getElementById'](_0x25a241(0x1b7))[_0x25a241(0x1b8)]||'')[_0x25a241(0x17c)]()[_0x25a241(0x11d)]();if(!_0x41c669){alert(_0x25a241(0x18c));return;}if(!_0x71cf30){alert(_0x25a241(0x190));return;}if(!_0x41c669[_0x25a241(0x19e)]('script.google.com')){alert('❌\x20올바른\x20Google\x20Apps\x20Script\x20URL이\x20아닙니다.');return;}localStorage[_0x25a241(0x1ad)]('parkgolf_webapp_url',_0x41c669),localStorage[_0x25a241(0x1ad)](_0x25a241(0x187),_0x71cf30);const _0x3876ef=document[_0x25a241(0x1bf)](_0x25a241(0x1c0));if(_0x3876ef)_0x3876ef[_0x25a241(0x1b8)]=_0x71cf30;let _0xd35c14=[];try{_0xd35c14=JSON[_0x25a241(0x151)](localStorage['getItem'](_0x25a241(0x17a))||'[]');}catch(_0x37858b){}const _0x5d4912=_0xd35c14[_0x25a241(0x1cf)](function(_0x1b21c8){const _0xd2b678=_0x25a241;return _0x1b21c8[_0xd2b678(0x180)]===_0x41c669&&_0x1b21c8[_0xd2b678(0x18f)]===_0x71cf30;});if(!_0x5d4912){_0xd35c14.unshift({'url':_0x41c669,'code':_0x71cf30,'saved':new Date()['toLocaleString']('ko-KR')});if(_0xd35c14[_0x25a241(0x17b)]>0xa)_0xd35c14=_0xd35c14[_0x25a241(0x16f)](0x0,0xa);localStorage[_0x25a241(0x1ad)]('parkgolf_saved_urls',JSON[_0x25a241(0x1d2)](_0xd35c14));}fetch(_0x41c669,{'method':_0x25a241(0x134),'headers':{'Content-Type':_0x25a241(0x129)},'body':JSON[_0x25a241(0x1d2)]({'action':_0x25a241(0x160),'code':_0x71cf30,'webappUrl':_0x41c669})})[_0x25a241(0x1bb)](function(_0x280678){return _0x280678['json']();})[_0x25a241(0x1bb)](function(_0x48e10f){const _0x40acd0=_0x25a241;if(_0x48e10f['success'])showToast(_0x40acd0(0x1af));})[_0x25a241(0x172)](function(){}),showAdminFeedback('✅\x20저장되었습니다!\x20\x20대회코드:\x20'+_0x71cf30);}async function loadSheetShareUrl(){const _0x439549=_0x5bb6,_0x563e14=(document['getElementById'](_0x439549(0x145))[_0x439549(0x1b8)]||'')[_0x439549(0x17c)]()||localStorage['getItem'](_0x439549(0x11e))||'';if(!_0x563e14){alert(_0x439549(0x15b));return;}try{const _0x197599=await fetch(_0x563e14,{'method':_0x439549(0x134),'headers':{'Content-Type':_0x439549(0x129)},'body':JSON['stringify']({'action':_0x439549(0x15a),'code':'_'})}),_0x153ad6=await _0x197599['json']();if(!_0x153ad6[_0x439549(0x122)])throw new Error(_0x153ad6[_0x439549(0x1c3)]||_0x439549(0x156));const _0x50e551=document[_0x439549(0x1bf)](_0x439549(0x169));if(_0x50e551)_0x50e551[_0x439549(0x179)]=_0x153ad6[_0x439549(0x146)]||'없음';localStorage['setItem'](_0x439549(0x140),_0x153ad6[_0x439549(0x146)]||''),showAdminFeedback(_0x439549(0x124));}catch(_0x1937a0){alert('❌\x20'+_0x1937a0['message']);}}function copySheetUrl(){const _0x590d1d=_0x5bb6,_0x41acdd=document[_0x590d1d(0x1bf)]('sheetShareUrl'),_0x440580=(_0x41acdd?_0x41acdd[_0x590d1d(0x179)]:'')||localStorage[_0x590d1d(0x178)](_0x590d1d(0x140))||'';if(!_0x440580||_0x440580===_0x590d1d(0x143)){alert('⚠️\x20먼저\x20시트\x20URL을\x20불러오세요.');return;}fallbackCopySheetUrl_(_0x440580);}function fallbackCopySheetUrl_(_0x4b10cf){const _0x45d554=_0x5bb6;try{const _0x20c529=document[_0x45d554(0x12b)]('textarea');_0x20c529['value']=_0x4b10cf,_0x20c529[_0x45d554(0x155)]['cssText']='position:fixed;top:0;left:0;opacity:0;font-size:16px;',document[_0x45d554(0x16a)]['appendChild'](_0x20c529),_0x20c529['focus'](),_0x20c529[_0x45d554(0x165)](),_0x20c529['setSelectionRange'](0x0,_0x4b10cf[_0x45d554(0x17b)]);const _0x24ed8f=document[_0x45d554(0x1a8)](_0x45d554(0x1bc));document[_0x45d554(0x16a)][_0x45d554(0x150)](_0x20c529),_0x24ed8f?showAdminFeedback(_0x45d554(0x1a9)):alert(_0x45d554(0x1c8)+_0x4b10cf);}catch(_0x29ee5f){alert(_0x45d554(0x12f)+_0x4b10cf);}}async function loadConfigFromSheet(){const _0x4ba141=_0x5bb6,_0x436ef3=(document[_0x4ba141(0x1bf)](_0x4ba141(0x145))['value']||'')[_0x4ba141(0x17c)]()||localStorage[_0x4ba141(0x178)](_0x4ba141(0x11e))||'';if(!_0x436ef3){alert('⚠️\x20먼저\x20웹앱\x20URL을\x20입력칸에\x20붙여넣으세요.\x0a(URL은\x20PC에서\x20복사해\x20카톡으로\x20받으세요)');return;}const _0x15f461=event[_0x4ba141(0x13b)];_0x15f461['textContent']=_0x4ba141(0x1c4),_0x15f461[_0x4ba141(0x1a5)]=!![];try{const _0x40b320=await fetch(_0x436ef3,{'method':_0x4ba141(0x134),'headers':{'Content-Type':_0x4ba141(0x129)},'body':JSON[_0x4ba141(0x1d2)]({'action':'loadconfig','code':'_'})}),_0x45391d=await _0x40b320[_0x4ba141(0x159)]();if(!_0x45391d[_0x4ba141(0x122)])throw new Error(_0x45391d['message']||_0x4ba141(0x156));const _0x25513e=document['getElementById'](_0x4ba141(0x145)),_0x4cf489=document[_0x4ba141(0x1bf)]('adminCodeInput');if(_0x25513e&&_0x45391d[_0x4ba141(0x152)])_0x25513e[_0x4ba141(0x1b8)]=_0x45391d[_0x4ba141(0x152)];if(_0x4cf489&&_0x45391d['code'])_0x4cf489[_0x4ba141(0x1b8)]=_0x45391d[_0x4ba141(0x18f)];localStorage[_0x4ba141(0x1ad)](_0x4ba141(0x11e),_0x45391d[_0x4ba141(0x152)]||''),localStorage[_0x4ba141(0x1ad)](_0x4ba141(0x187),_0x45391d[_0x4ba141(0x18f)]||'');const _0x1992f2=document['getElementById']('tournamentCode');if(_0x1992f2&&_0x45391d[_0x4ba141(0x18f)])_0x1992f2[_0x4ba141(0x1b8)]=_0x45391d[_0x4ba141(0x18f)];alert(_0x4ba141(0x199)+_0x45391d['code']+'\x0a저장시간:\x20'+(_0x45391d['savedAt']||'-'));}catch(_0x4ceaf4){alert('❌\x20불러오기\x20실패:\x20'+_0x4ceaf4[_0x4ba141(0x1c3)]);}finally{_0x15f461['textContent']='☁️\x20PC\x20설정\x20불러오기',_0x15f461[_0x4ba141(0x1a5)]=![];}}function showSavedUrlsList(){const _0x2c0db9=_0x5bb6;let _0xfb34ab=[];try{_0xfb34ab=JSON[_0x2c0db9(0x151)](localStorage['getItem'](_0x2c0db9(0x17a))||'[]');}catch(_0x1fc1e7){}const _0x59b7eb=document[_0x2c0db9(0x1bf)]('savedUrlsList');!_0xfb34ab[_0x2c0db9(0x17b)]?_0x59b7eb[_0x2c0db9(0x163)]=_0x2c0db9(0x19d):_0x59b7eb[_0x2c0db9(0x163)]=_0xfb34ab[_0x2c0db9(0x1d0)](function(_0xb85944,_0x30e90a){const _0x26d252=_0x2c0db9;return'<div\x20style=\x22border:1px\x20solid\x20#e5e7eb;border-radius:10px;padding:12px;margin-bottom:10px;\x22>'+_0x26d252(0x183)+_0xb85944[_0x26d252(0x18f)]+'</div>'+'<div\x20style=\x22font-size:12px;color:#6b7280;word-break:break-all;margin-bottom:6px;\x22>'+(_0xb85944[_0x26d252(0x180)]||'')[_0x26d252(0x16f)](0x0,0x32)+_0x26d252(0x132)+_0x26d252(0x133)+(_0xb85944[_0x26d252(0x18b)]||'')+_0x26d252(0x14f)+_0x26d252(0x1ca)+_0x26d252(0x1b2)+_0x30e90a+_0x26d252(0x1a7)+'<button\x20onclick=\x22deleteSavedUrl('+_0x30e90a+')\x22\x20style=\x22padding:8px\x2014px;background:#dc2626;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;\x22>🗑\x20삭제</button>'+'</div>'+'</div>';})[_0x2c0db9(0x174)](''),document['getElementById'](_0x2c0db9(0x16c))[_0x2c0db9(0x155)][_0x2c0db9(0x170)]=_0x2c0db9(0x181);}function deleteSavedUrl(_0x40289d){const _0x18f210=_0x5bb6;let _0x116e5f=[];try{_0x116e5f=JSON[_0x18f210(0x151)](localStorage[_0x18f210(0x178)](_0x18f210(0x17a))||'[]');}catch(_0x48b899){}if(!confirm('삭제하시겠습니까?'))return;_0x116e5f[_0x18f210(0x1c6)](_0x40289d,0x1),localStorage[_0x18f210(0x1ad)](_0x18f210(0x17a),JSON[_0x18f210(0x1d2)](_0x116e5f)),showSavedUrlsList();}function closeSavedUrlsModal(){const _0x42663b=_0x5bb6;document['getElementById'](_0x42663b(0x16c))['style'][_0x42663b(0x170)]=_0x42663b(0x144);}function applySavedUrl(_0x4eacdf){const _0x3d92eb=_0x5bb6;let _0x2ed5c4=[];try{_0x2ed5c4=JSON['parse'](localStorage['getItem'](_0x3d92eb(0x17a))||'[]');}catch(_0x111a7e){}const _0x18e395=_0x2ed5c4[_0x4eacdf];if(!_0x18e395)return;localStorage[_0x3d92eb(0x1ad)](_0x3d92eb(0x11e),_0x18e395[_0x3d92eb(0x180)]),localStorage[_0x3d92eb(0x1ad)](_0x3d92eb(0x187),_0x18e395['code']);const _0x4257d7=document[_0x3d92eb(0x1bf)](_0x3d92eb(0x145)),_0x567031=document[_0x3d92eb(0x1bf)](_0x3d92eb(0x1b7));if(_0x4257d7)_0x4257d7['value']=_0x18e395[_0x3d92eb(0x180)];if(_0x567031)_0x567031[_0x3d92eb(0x1b8)]=_0x18e395[_0x3d92eb(0x18f)];const _0x1f5264=document[_0x3d92eb(0x1bf)](_0x3d92eb(0x1c0));if(_0x1f5264)_0x1f5264['value']=_0x18e395[_0x3d92eb(0x18f)];closeSavedUrlsModal(),alert(_0x3d92eb(0x130)+_0x18e395[_0x3d92eb(0x18f)]);}let _modalQrInstance=null;function _0x333e(){const _0xd609f7=['Bg9JyxrPB24','ksiGC3r5Bgu9iMzSzxG6mtTWywrKAw5NoJHWEcaWo2jHy2TNCM91BMq6iZi1nJnLyJTJB2XVCJOJzMzMo2jVCMrLCJPUB25Lo2jVCMrLCI1YywrPDxm6ohb4o2zVBNqTC2L6ztOXm3b4o2zVBNqTD2vPz2H0oJCWmdTJDxjZB3i6Cg9PBNrLCJSIpUkCHsdSOihSMQK8l2j1DhrVBJ4','zxHLy0nVBw1HBMq','4PYfifvstcdRS7xSGQZRKjJSL4JSIRxRI4JRI6qHicdSUBtSUBtSMktTHQhSNlZROzWG64+z66om7jEq6RkmioYGHoYgOE2vMoYeUoYALc4','ywXS','ndq0mZyWBxvoDhfw','AgvHza','C2v0sxrLBq','uviG7ioD7isXioUQQoUtNdO','4PYfioYGGoYEPsdSMytRO4WGkoQ4SoQ4ScaRioQ1RoQ4GoYlNo2kUcK','phnWyw4GC3r5Bgu9iNDPzhrOoJe3ChG7AgvPz2H0oJe3ChG7yMfJA2DYB3vUzdOJyZG4nJbHo2jVCMrLCI1YywrPDxm6ntaLo2nVBg9YoInMzMy7zM9UDc1ZAxPLoJeXChG7zM9UDc13zwLNAhq6otaWo2rPC3bSyxK6zMXLEdTHBgLNBI1PDgvTCZPJzw50zxi7ANvZDgLMEs1JB250zw50oMnLBNrLCJTMBgv4lxnOCMLUAZOWoYi+','mti2rgnVz0Xm','pgj1DhrVBIbVBMnSAwnRpsjHChbSEvnHDMvKvxjSka','BMvHCMvZDa','y2XPy2S','zMLSBfn0EwXL','i2jHDgnOuxjpDMvYBgf5E3bVC2L0Aw9UoMfIC29SDxrLiwLTCg9YDgfUDdT0B3a6mcfPBxbVCNrHBNq7BgvMDdOWiwLTCg9YDgfUDdT3Awr0AdOXmdaLiwLTCg9YDgfUDdTIywnRz3jVDw5KoInMzMyHAw1WB3j0yw50o292zxjMBg93oNzPC2LIBguHAw1WB3j0yw50Fq','ywrTAw5dB2rLsw5WDxq','DMfSDwu','p2nVzgu9','BwfSzq','DgHLBG','y29WEq','yMf0y2HrCK92zxjSyxK','C3bSAxq','z2v0rwXLBwvUDej5swq','Dg91CM5HBwvUDenVzgu','4PQG77IpioYHSo2oUoYeSsdSI5ZTIRJSL5aG642W7j207ysW6RcaioYxHUYkTEUlIoUlPc4kcU2vToQYScdRSkNRSPu6cJeUioQ1RoQ4GoYlNo2kUoULVcdSL73RI4JRI6qkmI4G7iob64UOioUPLoUjTcbB7yYm7iUC7iQK6Rsa66ASxsdIHPiGw+YHSo2oUoYeSsdSI6tTLOLDcJmUioYHSo2oUoYeSsdSMytRO4WG7zUeioUlPoYlNcbruIdSG53SHle','z2vUzgvY','BwvZC2fNzq','4O+ZioU2IoUFRoYyPoUkLcdSPjeUlI4','7jES7j6q67Aa66Em','C3bSAwnL','Dg9mB2nHBgveyxrLu3rYAw5N','4PQG77IpioYEKoUpMsdRS7xSGQWG7iUK7yYOcUYvHoUEMcbvuKZSNyqG7kEb7kcrioYeOo2dNCk367o17ikS7zw0ioYJVoYeUoYALdOkcG','i2jHDgnOuxjpDMvYBgf5igLTzYWJyMf0y2HrCK92zxjSyxKGy2fUDMfZE21HEc13Awr0AdOXmdaLo2HLAwDODdPHDxrVo2rPC3bSyxK6yMXVy2S7Fq','pgrPDIbZDhLSzt0IzgLZCgXHEtPMBgv4o2DHCdO4ChG7iJ4','jNq9','i2jXCLrVB2XIyxj7zgLZCgXHEtPUB25LiwLTCg9YDgfUDh0','Bw9KywXrCKrHDgu','Cg9ZAxrPB246CMvSyxrPDMu7zgLZCgXHEtPIBg9JAZTTyxjNAw4TyM90Dg9ToJzWEdT3Awr0AdOXmdaLoW','C29Tzq','BwfW','7isX67oe67Ae66AS','C3rYAw5NAwz5','4O+ZiffsioY9LoUtNcdSG53SHleG7ksrlI4U','C2nYAxb0lMDVB2DSzs5JB20','zMLSBfrLEhq','yxbWzw5Kq2HPBgq','Dg9vChbLCKnHC2u','CgfYA2DVBgzFD2vIyxbWx3vYBa','AhjLzG','AhrTBcXIB2r5E2HLAwDODdPHDxrViwLTCg9YDgfUDdTVDMvYzMXVDZP2AxnPyMXLiwLTCg9YDgfUDh0','nezOveLtCq','C3vJy2vZCW','y2XHC3noyw1L','4PYfioYlNo2kUcbvuKWG67Ai65+S7jIK6RIWioYzHoUJJa','uviG7l2u65oC66w8ioUOVoYGGcdSG53SHlhTLBtSO7ZSHlJSMPqH','q29YCMvJDeXLDMvS','zgLZCgXHEtPNCMLKo2DYAwqTDgvTCgXHDguTy29SDw1UCZOXzNiGmwzYo2DHCdOZChGGnNb4o3DPzhrOoJeWmcu7BwfYz2LUlwjVDhrVBtO0ChG7','pgj1DhrVBIbVBMnSAwnRpsj3Aw5KB3CUChjPBNqOksiGC3r5Bgu9iNbHzgrPBMC6ohb4ide4ChG7yMfJA2DYB3vUzdOJzJvJodqYo2nVBg9YoImZzdiWmda7yM9YzgvYoM5VBMu7yM9YzgvYlxjHzgL1CZO4ChG7zM9UDc1ZAxPLoJe0ChG7zM9UDc13zwLNAhq6otaWo2n1CNnVCJPWB2LUDgvYoYi+8j+wQcdSNBJSH4qVuergpc9IDxr0B24+','Dgv4Dc9WBgfPBG','4P2mioYyRoUWLoULUcbhB29NBguGqxbWCYbty3jPChqGvvjm7j20ioYvHoUlMEUlIoUlPc4','y3jLyxrLrwXLBwvUDa','Bw9KywXrCLjLC3vSDa','4Os577IpioYHSo2oUoYeSsdSI5ZTIRJSNzGG66QO65oCka','y3nZvgv4Da','4PQG77IpioUZTEYcRcdSI6tTJkGk7kEb7kcrioYeOo2dNE2vMoYxRcdRS7xSGQZTLzJSHlJSMPq6cGO','4PYfioYGGEYAQsdSMytRO4W6ia','C2vWyxjHDgu','lI4Upc9KAxy+','pgrPDIbZDhLSzt0IzM9UDc1ZAxPLoJeXChG7y29SB3i6iZLJytnHzJTTyxjNAw4TyM90Dg9ToJHWEdSIpG','ue9tva','pgj1DhrVBIbVBMnSAwnRpsjKB2n1BwvUDc5NzxrfBgvTzw50qNLjzcGNyMf0y2HrCK92zxjSyxKNks5Yzw1VDMuOktT2yxiGCZ1KB2n1BwvUDc5NzxrfBgvTzw50qNLjzcGNyMf0y2HrCLbYAw50u3r5BguNktTPzIHZkxmUCMvTB3zLkcK7iIbZDhLSzt0ICgfKzgLUzZO4ChGGmtrWEdTIywnRz3jVDw5KoNjNyMeOmJu1ldi1nsWYntuSmc4YktTJB2XVCJOJzMzMo2jVCMrLCJPUB25Lo2jVCMrLCI1YywrPDxm6ohb4o2zVBNqTC2L6ztOXnhb4o2zVBNqTD2vPz2H0oJKWmdTJDxjZB3i6Cg9PBNrLCJSIpUkCLsdRI6VQUla8l2j1DhrVBJ4','ywrTAw5nB2rHBa','i2zMzMzMzG','BwLU','7yYm7ygS6RoO7zsexW','6RcCioYHScbruIdSG53SHleG7jMe66omiq','DgfYz2v0','DgvHBq','Dgv4DejHC2vSAw5L','mtfZwuXNtfi','BwLKzgXL','CgfYA2DVBgzFC2HLzxrFDxjS','Dw5ZAgLMDa','mJu2mtqZou5Ys0jVta','vvjm7j2eioU2IoUFRoYyPoYeUoYALa','BM9Uzq','ywrTAw5xzwjHChbvCMW','C2HLzxrvCMW','jNbYzwXPBwLUyxj5rgf0zt0','zM9UDc1ZAxPLoJeXChG7zM9UDc13zwLNAhq6nZaWo2nVBg9YoIm0ndq7BwfYz2LUlxrVCdOYChG7Dgv4Dc1HBgLNBJPJzw50zxi7','iZaWmdaWma','Dg9tDhjPBMC','zgL2','CMvTB3zL','yM9SzcaXnxb4icjnywXNDw4Gr290AgLJiIXZyw5ZlxnLCMLM','lMjXCI1JyxjKE2jYzwfRlwLUC2LKztPHDM9PzdTWywDLlwjYzwfRlwLUC2LKztPHDM9PzdTIB3jKzxi6mxb4ihnVBgLKicnIyMiHAw1WB3j0yw50o2jVEc1ZAgfKB3C6BM9UzsfPBxbVCNrHBNr9','pc9KAxy+','CMvTB3zLq2HPBgq','CgfYC2u','D2vIyxbWvxjS','zM9UDc1ZAxPLoJe2ChG7zM9UDc13zwLNAhq6otaWo2nVBg9YoIm3ytnMmda7BwfYz2LUlwjVDhrVBtO0ChG7Dgv4Dc1HBgLNBJPJzw50zxi7','yMf0y2HrCLbYAw50u3r5Bgu','C3r5Bgu','67Ai65+S7jIK6RIWioYlPo2mQa','yNfYvg9VBgjHCG','CMvWBgfJzq','ANnVBG','z2v0C2HLzxr1CMW','4PQG77IpioYBUEYvSsbvuKZSNyqG66I87kcaioYEHEUGPE2vMoYeUoYALc4','C2nYB2XSsw50B1zPzxC','pc9ZCgfUpG','z2v0q29UDgv4Da','D2LKDgG','C2f2zwnVBMzPzW','A28Ts1i','CxvLCNLtzwXLy3rVCG','Aw5Uzxjive1m','mJaZmtG2ow5vBxbdCG','C2vSzwn0','zM9YrwfJAa','jMD0oW','DgvHBxm','C2HLzxrtAgfYzvvYBa','yM9KEq','64kO7j6q67Aa66Em','C2f2zwrvCMXZtw9KywW','mty2odiYn0TRuNf6tq','mZeYmJGYCKDezLzj','C2XPy2u','zgLZCgXHEq','mta1tvv2EM1k','y2f0y2G','4P2mioYBUsdSLBeGvvjm7j2eioYEHEUGPE2vMoYeUoYALcek4PgG67ki7jEq7isCioUOVoYGGcdSOidSNQxTLzJSHlJSMPqU','AM9PBG','DgvZDa','i2jHDgnOuxjhCMLKE2rPC3bSyxK6z3jPzcfPBxbVCNrHBNq7z3jPzc10zw1WBgf0zs1JB2X1Bw5ZoNjLCgvHDcGZldfMCIKHAw1WB3j0yw50o2DHCdO0Bw0HAw1WB3j0yw50o3bHzgrPBMC6mcfPBxbVCNrHBNq7D2LKDgG6mtaWjsfPBxbVCNrHBNq7Bwf4lxDPzhrOoJiWmg1TiwLTCg9YDgfUDh0','zMvTywXL','z2v0sxrLBq','Dgv4DenVBNrLBNq','CgfYA2DVBgzFC2f2zwrFDxjSCW','BgvUz3rO','DhjPBq','p2m9','ywzMAwW','nZK1mZGWC3LNChLf','DxjS','yMXVy2S','mJaYotbIsurrCfG','pgrPDIbZDhLSzt0IzM9UDc13zwLNAhq6otaWo2zVBNqTC2L6ztOXnxb4o21HCMDPBI1IB3r0B206mNb4oYi+','jMX0oW','D2LKDgG6mtaWjtS','Bw9KywXuzwfTtw9Kzq','CgfYA2DVBgzFDg91CM5HBwvUDf9JB2rL','pgrPDIbZDhLSzt0IzM9UDc1ZAxPLoJe1ChG7zM9UDc13zwLNAhq6otaWoYi+8j+tIYdSOBdRS4qGuviG4Ocuia','yMf0y2HrCKDYAwq','BwL4zwq','C2f2zwq','7jU57jwXifvstoYDHcdSNOxROkxTLBtSO7ZSHlJSMPqU','cGRSOBdTJRJSHleG7iUC7yQ46RcaioYxHUYCVoUPTcdRQlZSOiak6RwS6RIa7iUC7yQ4iokgKIdTJiZSI5ZSIQtQTidRPQWG4OAsiokAOEYHSo2oUoYeSsdSI6tTLOKG7zUeioUlPoYlNcdSI5ZRJ4tTLzJSHlJSMPqU','ksdcTYdSTj0G','y29Kzq','64Ya7zQm7l2u65oC66w8ioYEHEUGPE2vToYJVoYeUoYALc4','CgXHEwvYCW','BMfTzq','4O+ZiffsioYdNEYeSsdSPjeUlI4Gka','zgLZCgXHEtPMBgv4o2DHCdOZChG7ywXPz24TAxrLBxm6yMfZzwXPBMu7CgfKzgLUzZOXChGGmdS','y3jLyxrLt2jQzwn0vvjm','zMLSBfjLy3q','z2v0DgvHBxm','phnWyw4GC3r5Bgu9iMzVBNqTD2vPz2H0oJGWmdTMB250lxnPEMu6mtjWEdSIpG','4PYfifbdioYePoYGLsdRTOJRN6ZSMktQUlaG7jMe66omiqOk64Ya7zQm7l2u65oCoIa','jMq9','7kgW7y647isXioUnSoYDTo2eSoULVcdRTOJRN6ZSMktSP4aG66Q77zAi7iQ164Ui64UKlG','4PYfiffsioY9LoUtNoQWGcdSOidSNQxRKjJSL4JSIRxRI4JRI6qHcGRSUBtTHQhSNlZROzWG7kce7iAH7zwy6RgW64kyioYDUoYhHo2vMoYeUoYALc4','phaGC3r5Bgu9iNrLEhqTywXPz246y2vUDgvYo2nVBg9YoIm2yJCYoda7CgfKzgLUzZOYmhb4ida7iJ7SOidSNQxRKjWGvvjm7j20ioYxHUYkTEUlIoUlPc48l3a+','Aw5JBhvKzxm','4P2mioUmGo2AJcdSVztRK5ZRPBWG7j6f66cL7zwy7is47jQuiqRIKAdRSOJSL5dSHjWG66I87kcaioYGGoYEPE2vMoYeUoYALc4','4P2mioYyPoULMdOG','y2vUDgvY','AgvPz2H0','Dgv4DefSAwDU','Bg9N','zgLZywjSzwq'];_0x333e=function(){return _0xd609f7;};return _0x333e();}function _0x5bb6(_0x36b497,_0x20ffbe){_0x36b497=_0x36b497-0x11c;const _0x333ecc=_0x333e();let _0x5bb605=_0x333ecc[_0x36b497];if(_0x5bb6['ssXBkN']===undefined){var _0x5d4e57=function(_0x2fb120){const _0x1c84a1='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';let _0x4695fb='',_0x43c18a='';for(let _0x40bf3f=0x0,_0x5f23ca,_0x242b62,_0x11660f=0x0;_0x242b62=_0x2fb120['charAt'](_0x11660f++);~_0x242b62&&(_0x5f23ca=_0x40bf3f%0x4?_0x5f23ca*0x40+_0x242b62:_0x242b62,_0x40bf3f++%0x4)?_0x4695fb+=String['fromCharCode'](0xff&_0x5f23ca>>(-0x2*_0x40bf3f&0x6)):0x0){_0x242b62=_0x1c84a1['indexOf'](_0x242b62);}for(let _0x49bd34=0x0,_0x3b313f=_0x4695fb['length'];_0x49bd34<_0x3b313f;_0x49bd34++){_0x43c18a+='%'+('00'+_0x4695fb['charCodeAt'](_0x49bd34)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x43c18a);};_0x5bb6['wFaPrB']=_0x5d4e57,_0x5bb6['bkoMfk']={},_0x5bb6['ssXBkN']=!![];}const _0x203eeb=_0x333ecc[0x0],_0x5347f5=_0x36b497+_0x203eeb,_0x460eba=_0x5bb6['bkoMfk'][_0x5347f5];return!_0x460eba?(_0x5bb605=_0x5bb6['wFaPrB'](_0x5bb605),_0x5bb6['bkoMfk'][_0x5347f5]=_0x5bb605):_0x5bb605=_0x460eba,_0x5bb605;}function generateQRInModal(){const _0x422179=_0x5bb6,_0x180503=(document[_0x422179(0x1bf)](_0x422179(0x145))['value']||'')[_0x422179(0x17c)]()||localStorage[_0x422179(0x178)](_0x422179(0x11e))||'',_0x27b721=((document[_0x422179(0x1bf)]('adminCodeInput')[_0x422179(0x1b8)]||'')[_0x422179(0x17c)]()||localStorage[_0x422179(0x178)]('parkgolf_tournament_code')||'')[_0x422179(0x11d)](),_0x122f7e=document[_0x422179(0x1bf)](_0x422179(0x1cd))['value']||'통합',_0x3ee1bc=window[_0x422179(0x1a6)][_0x422179(0x11f)][_0x422179(0x1be)]('?')[0x0];if(!_0x27b721){alert(_0x422179(0x19f));return;}if(!_0x180503){alert(_0x422179(0x173));return;}if(!_0x180503['includes'](_0x422179(0x1d4))){alert(_0x422179(0x12a));return;}const _0xaad7f5=_0x3ee1bc+_0x422179(0x1b9)+encodeURIComponent(_0x27b721)+'&url='+encodeURIComponent(_0x180503)+_0x422179(0x147)+encodeURIComponent(_0x122f7e),_0x40ff89=document[_0x422179(0x1bf)]('modalQrCode');_0x40ff89['innerHTML']='';if(_modalQrInstance)try{_modalQrInstance['clear']();}catch(_0x1d46a7){}_modalQrInstance=new QRCode(_0x40ff89,{'text':_0xaad7f5,'width':0xf0,'height':0xf0,'colorDark':'#000000','colorLight':_0x422179(0x137),'correctLevel':QRCode[_0x422179(0x126)]['H']});function _0x4512d8(_0x2acad9,_0x45fc49){const _0x34c465=_0x422179,_0xb63a26=_0x2acad9[_0x34c465(0x162)]('canvas');if(!_0xb63a26){setTimeout(function(){_0x4512d8(_0x2acad9,_0x45fc49);},0x64);return;}const _0xfa68f7=_0xb63a26[_0x34c465(0x15e)]('2d'),_0x4a367f=_0xb63a26[_0x34c465(0x15f)]/0x2,_0x344264=Math[_0x34c465(0x138)](_0x45fc49[_0x34c465(0x17b)]*0xe+0x14,_0xb63a26[_0x34c465(0x15f)]*0.75),_0x5d7655=0x1c,_0x5c8cb6=_0xb63a26[_0x34c465(0x1a2)]-0x4;_0xfa68f7[_0x34c465(0x1b5)]='rgba(200,134,10,0.93)',_0xfa68f7[_0x34c465(0x196)](_0x4a367f-_0x344264/0x2,_0x5c8cb6-_0x5d7655,_0x344264,_0x5d7655),_0xfa68f7[_0x34c465(0x1b5)]='#fff',_0xfa68f7['font']=_0x34c465(0x14d),_0xfa68f7[_0x34c465(0x1a3)]=_0x34c465(0x1a1),_0xfa68f7[_0x34c465(0x13d)]=_0x34c465(0x13f),_0xfa68f7[_0x34c465(0x1d5)](_0x45fc49,_0x4a367f,_0x5c8cb6-_0x5d7655/0x2);}setTimeout(function(){_0x4512d8(_0x40ff89,_0x27b721);},0xc8),document['getElementById'](_0x422179(0x12c))['style'][_0x422179(0x170)]=_0x422179(0x181),setTimeout(function(){const _0xdb3684=_0x422179;document[_0xdb3684(0x1bf)](_0xdb3684(0x12c))[_0xdb3684(0x15c)]({'behavior':'smooth','block':_0xdb3684(0x1b3)});},0x96);}function downloadQRModal(){const _0x3feaab=_0x5bb6,_0xd5f821=document[_0x3feaab(0x162)]('#modalQrCode\x20canvas');if(!_0xd5f821){alert(_0x3feaab(0x125));return;}const _0x2531c6=(document[_0x3feaab(0x1bf)](_0x3feaab(0x1b7))[_0x3feaab(0x1b8)]||''||(localStorage[_0x3feaab(0x178)](_0x3feaab(0x187))||'QR'))[_0x3feaab(0x17c)]()['toUpperCase']();_0xd5f821['toBlob'](function(_0x243a8f){const _0x32bd6f=_0x3feaab,_0x5217d6=document[_0x32bd6f(0x12b)]('a');_0x5217d6[_0x32bd6f(0x11f)]=URL[_0x32bd6f(0x195)](_0x243a8f),_0x5217d6['download']=_0x32bd6f(0x139)+_0x2531c6+'_QR.png',document[_0x32bd6f(0x16a)][_0x32bd6f(0x11c)](_0x5217d6),_0x5217d6[_0x32bd6f(0x1b4)](),document[_0x32bd6f(0x16a)][_0x32bd6f(0x150)](_0x5217d6),URL['revokeObjectURL'](_0x5217d6['href']),alert(_0x32bd6f(0x19c));});}async function generateBatchQR(){const _0x1b3790=_0x5bb6,_0xece94e=(document[_0x1b3790(0x1bf)](_0x1b3790(0x145))['value']||'')[_0x1b3790(0x17c)]()||localStorage[_0x1b3790(0x178)](_0x1b3790(0x11e))||'',_0x115ea1=((document[_0x1b3790(0x1bf)](_0x1b3790(0x1b7))[_0x1b3790(0x1b8)]||'')[_0x1b3790(0x17c)]()||localStorage[_0x1b3790(0x178)](_0x1b3790(0x187))||'')[_0x1b3790(0x11d)](),_0x59fab7=document['getElementById'](_0x1b3790(0x1cd))[_0x1b3790(0x1b8)]||'통합',_0x182777=document[_0x1b3790(0x1bf)](_0x1b3790(0x186)),_0x38305f=_0x182777?_0x182777['value']:'mixed',_0x1308f0={'mixed':'혼성','male':_0x1b3790(0x16b),'female':_0x1b3790(0x1c5),'separate':_0x1b3790(0x1d1)};console[_0x1b3790(0x1a4)](_0x1b3790(0x1ae),_0x1308f0[_0x38305f]||_0x38305f);const _0x114b6a=window[_0x1b3790(0x1a6)]['href'][_0x1b3790(0x1be)]('?')[0x0];if(!_0x115ea1){alert(_0x1b3790(0x19f));return;}if(!_0xece94e){alert(_0x1b3790(0x173));return;}if(!_0xece94e['includes']('script.google.com')){alert(_0x1b3790(0x12a));return;}if(!confirm('📋\x20조별\x20QR\x20일괄생성을\x20시작합니다.\x0a\x0a⚠️\x20반드시\x20구글시트에서\x20조편성을\x20먼저\x20실행하세요!\x0a\x0a조편성이\x20완료되어\x20있으면\x20확인을\x20누르세요.'))return;const _0x23a7f2=event['target'],_0x2e7009=_0x23a7f2[_0x1b3790(0x163)];_0x23a7f2[_0x1b3790(0x163)]='⏳\x20조편성\x20데이터\x20불러오는\x20중...',_0x23a7f2[_0x1b3790(0x1a5)]=!![];try{const _0x340f62=await fetch(_0xece94e,{'method':_0x1b3790(0x134),'headers':{'Content-Type':_0x1b3790(0x129)},'body':JSON['stringify']({'code':_0x115ea1,'action':_0x1b3790(0x197),'mode':_0x38305f})}),_0x18729e=await _0x340f62['json']();if(!_0x18729e[_0x1b3790(0x122)]){var _0x5303f0=_0x18729e[_0x1b3790(0x1c3)]||_0x1b3790(0x19b);if(_0x5303f0[_0x1b3790(0x19e)]('비어')||_0x5303f0[_0x1b3790(0x19e)]('없습니다'))throw new Error(_0x1b3790(0x1c1));throw new Error(_0x5303f0);}if(_0x18729e['teams']&&_0x18729e[_0x1b3790(0x168)][_0x1b3790(0x17b)]>0x0){var _0x55c97f=String(_0x18729e[_0x1b3790(0x168)][0x0]['team']||''),_0xcb75bf=_0x1b3790(0x18a);if(/^남/['test'](_0x55c97f))_0xcb75bf=_0x18729e[_0x1b3790(0x168)]['some'](function(_0x1cf07a){const _0x5418a3=_0x1b3790;return/^여/[_0x5418a3(0x175)](_0x1cf07a[_0x5418a3(0x13c)]);})?_0x1b3790(0x131):_0x1b3790(0x1ba);else{if(/^여/[_0x1b3790(0x175)](_0x55c97f))_0xcb75bf='female';}_0x182777&&_0xcb75bf!==_0x38305f&&(_0x182777[_0x1b3790(0x1b8)]=_0xcb75bf,showToast(_0x1b3790(0x12d)+(_0x1308f0[_0xcb75bf]||_0xcb75bf)+')로\x20자동\x20조정되었습니다.'));}if(!_0x18729e[_0x1b3790(0x168)]||_0x18729e['teams'][_0x1b3790(0x17b)]===0x0)throw new Error('⚠️\x20조편성\x20결과가\x20없습니다.\x0a\x0a해결\x20방법:\x0a1.\x20구글시트\x20[파시스관리]\x20→\x20[조편성\x20실행]\x20먼저\x0a2.\x20조편성\x20완료\x20확인\x20후\x20QR\x20생성');const _0xccf9bf=_0x18729e[_0x1b3790(0x168)];_0x23a7f2[_0x1b3790(0x163)]=_0x1b3790(0x1d3);const _0x1a2ca8=document[_0x1b3790(0x1bf)](_0x1b3790(0x1bd));if(_0x1a2ca8)_0x1a2ca8['remove']();const _0x14154e=document[_0x1b3790(0x1bf)](_0x1b3790(0x154));if(_0x14154e)_0x14154e[_0x1b3790(0x14c)]();const _0x40fba1=document['createElement'](_0x1b3790(0x155));_0x40fba1['id']=_0x1b3790(0x154),_0x40fba1['textContent']=_0x1b3790(0x1c9)+'@page{margin:8mm}'+'@media\x20print{'+_0x1b3790(0x120)+'body>*{visibility:hidden!important}'+'#batchQrOverlay,#batchQrOverlay\x20*{visibility:visible!important}'+_0x1b3790(0x1b6)+_0x1b3790(0x1cc)+_0x1b3790(0x176)+'.bqr-card{padding:6px!important}'+'.bqr-card\x20img,.bqr-card\x20canvas{width:100%!important;height:auto!important}'+_0x1b3790(0x14e)+'}',document[_0x1b3790(0x1ac)][_0x1b3790(0x11c)](_0x40fba1);const _0x6d24aa=document[_0x1b3790(0x12b)](_0x1b3790(0x14b));_0x6d24aa['id']='batchQrOverlay',_0x6d24aa[_0x1b3790(0x155)]['cssText']='position:fixed;inset:0;z-index:99999;background:#f5f5f5;overflow-y:auto;font-family:\x22Malgun\x20Gothic\x22,\x22Apple\x20SD\x20Gothic\x20Neo\x22,sans-serif;';const _0x100d7f=document[_0x1b3790(0x12b)](_0x1b3790(0x14b));_0x100d7f['id']=_0x1b3790(0x157),_0x100d7f[_0x1b3790(0x155)][_0x1b3790(0x12e)]='position:sticky;top:0;background:#7a4f00;color:#fff;padding:10px\x2016px;display:flex;align-items:center;justify-content:space-between;z-index:1;box-shadow:0\x202px\x208px\x20rgba(0,0,0,0.3);',_0x100d7f['innerHTML']=_0x1b3790(0x188)+escHtml(_0x115ea1)+'\x20('+escHtml(_0x59fab7)+_0x1b3790(0x18e)+_0xccf9bf[_0x1b3790(0x17b)]+'개\x20조</div>'+_0x1b3790(0x1ca)+_0x1b3790(0x128)+_0x1b3790(0x135)+_0x1b3790(0x14f),_0x6d24aa[_0x1b3790(0x11c)](_0x100d7f);const _0xd02a2=document[_0x1b3790(0x12b)](_0x1b3790(0x14b));_0xd02a2['id']=_0x1b3790(0x189),_0xd02a2['style'][_0x1b3790(0x12e)]='display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px;max-width:1100px;margin:0\x20auto;',_0x6d24aa['appendChild'](_0xd02a2),document['body']['appendChild'](_0x6d24aa);const _0x39fdab=new Date()[_0x1b3790(0x1c7)](_0x1b3790(0x161));let _0x2713fb=0x0;_0xccf9bf[_0x1b3790(0x166)](function(_0x16519b,_0x269f08){const _0x5dcf03=_0x1b3790;var _0x5eb4ca=_0x114b6a+_0x5dcf03(0x17d)+encodeURIComponent(_0x115ea1)+'&u='+encodeURIComponent(_0xece94e)+_0x5dcf03(0x19a)+encodeURIComponent(_0x59fab7)+_0x5dcf03(0x1cb)+encodeURIComponent(_0x16519b['team']);_0x16519b[_0x5dcf03(0x191)][_0x5dcf03(0x166)](function(_0x4e5a7b,_0x1379c2){const _0x577f77=_0x5dcf03;_0x5eb4ca+='&'+(_0x1379c2+0x1)+'='+encodeURIComponent(_0x4e5a7b[_0x577f77(0x192)]+'|'+_0x4e5a7b[_0x577f77(0x1c2)]+'|'+_0x4e5a7b[_0x577f77(0x17e)]);});var _0xf2a65d=document[_0x5dcf03(0x12b)](_0x5dcf03(0x14b));_0xf2a65d[_0x5dcf03(0x123)]='bqr-card',_0xf2a65d[_0x5dcf03(0x155)][_0x5dcf03(0x12e)]='background:#fff;border-radius:8px;border:1px\x20solid\x20#ddd;padding:8px;display:flex;flex-direction:column;align-items:center;box-shadow:0\x201px\x204px\x20rgba(0,0,0,0.08);';var _0x312e37=document[_0x5dcf03(0x12b)](_0x5dcf03(0x14b));_0x312e37[_0x5dcf03(0x155)][_0x5dcf03(0x12e)]=_0x5dcf03(0x153),_0x312e37[_0x5dcf03(0x179)]=_0x16519b['team'],_0xf2a65d[_0x5dcf03(0x11c)](_0x312e37);var _0x4695e3=document[_0x5dcf03(0x12b)]('div');_0x4695e3[_0x5dcf03(0x155)]['cssText']=_0x5dcf03(0x1ce);var _0x5ad94f=document[_0x5dcf03(0x12b)](_0x5dcf03(0x14b));_0x5ad94f['style'][_0x5dcf03(0x12e)]=_0x5dcf03(0x185),_0x4695e3[_0x5dcf03(0x11c)](_0x5ad94f),_0xf2a65d['appendChild'](_0x4695e3);var _0x162c3e=document[_0x5dcf03(0x12b)](_0x5dcf03(0x14b));_0x162c3e[_0x5dcf03(0x155)][_0x5dcf03(0x12e)]=_0x5dcf03(0x127),_0x16519b['players'][_0x5dcf03(0x166)](function(_0x21aca3,_0x1bc63d){const _0x3d792d=_0x5dcf03;var _0x3dc1b6=document[_0x3d792d(0x12b)](_0x3d792d(0x14b));_0x3dc1b6[_0x3d792d(0x155)]['cssText']=_0x3d792d(0x194),_0x3dc1b6['innerHTML']=_0x3d792d(0x1b0)+(_0x1bc63d+0x1)+_0x3d792d(0x15d)+_0x3d792d(0x198)+escHtml(_0x21aca3[_0x3d792d(0x192)])+'</span>'+'<span\x20style=\x22font-size:11px;color:#555;font-weight:600;\x22>'+escHtml(_0x21aca3[_0x3d792d(0x1c2)]||'')+_0x3d792d(0x15d)+'<span\x20style=\x22font-size:11px;color:#777;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;\x22>'+escHtml(_0x21aca3['affil']||'')+_0x3d792d(0x15d),_0x162c3e['appendChild'](_0x3dc1b6);}),_0xf2a65d['appendChild'](_0x162c3e);var _0x11ef94=document['createElement'](_0x5dcf03(0x14b));_0x11ef94[_0x5dcf03(0x155)][_0x5dcf03(0x12e)]=_0x5dcf03(0x148),_0x11ef94['textContent']=_0x115ea1+'\x20\x20'+_0x59fab7+'\x20\x20'+_0x39fdab,_0xf2a65d[_0x5dcf03(0x11c)](_0x11ef94),_0xd02a2[_0x5dcf03(0x11c)](_0xf2a65d),new QRCode(_0x5ad94f,{'text':_0x5eb4ca,'width':0x1a4,'height':0x1a4,'colorDark':_0x5dcf03(0x149),'colorLight':_0x5dcf03(0x137),'correctLevel':QRCode[_0x5dcf03(0x126)]['M']}),_0x2713fb++,_0x23a7f2[_0x5dcf03(0x163)]=_0x5dcf03(0x193)+_0x2713fb+'/'+_0xccf9bf[_0x5dcf03(0x17b)]+')',_0x2713fb===_0xccf9bf[_0x5dcf03(0x17b)]&&(_0x23a7f2[_0x5dcf03(0x163)]='✅\x20'+_0xccf9bf['length']+_0x5dcf03(0x13a),_0x23a7f2['disabled']=![]);});}catch(_0x4b521d){alert(_0x1b3790(0x1a0)+(_0x4b521d[_0x1b3790(0x1c3)]||_0x4b521d)+_0x1b3790(0x18d)),_0x23a7f2[_0x1b3790(0x163)]=_0x2e7009,_0x23a7f2[_0x1b3790(0x1a5)]=![];}}function escHtml(_0x3a2189){const _0x4f3c8c=_0x5bb6;return(_0x3a2189||'')[_0x4f3c8c(0x14a)]()['replace'](/&/g,'&amp;')[_0x4f3c8c(0x158)](/\x3C/g,_0x4f3c8c(0x184))[_0x4f3c8c(0x158)](/\x3E/g,_0x4f3c8c(0x167));}</script>
+<script>(function(_0x2749ec,_0x30b796){const _0x1d7144=_0x5bb6,_0x44565c=_0x2749ec();while(!![]){try{const _0x267750=parseInt(_0x1d7144(0x13e))/0x1*(parseInt(_0x1d7144(0x182))/0x2)+parseInt(_0x1d7144(0x142))/0x3*(parseInt(_0x1d7144(0x121))/0x4)+parseInt(_0x1d7144(0x171))/0x5*(-parseInt(_0x1d7144(0x16e))/0x6)+-parseInt(_0x1d7144(0x164))/0x7+parseInt(_0x1d7144(0x1ab))/0x8+parseInt(_0x1d7144(0x1b1))/0x9*(parseInt(_0x1d7144(0x17f))/0xa)+-parseInt(_0x1d7144(0x16d))/0xb;if(_0x267750===_0x30b796)break;else _0x44565c['push'](_0x44565c['shift']());}catch(_0xfc7ce0){_0x44565c['push'](_0x44565c['shift']());}}}(_0x333e,0x92616));function openAdminModal(){const _0x2caaac=_0x5bb6,_0x4695fb=localStorage['getItem'](_0x2caaac(0x11e))||'',_0x43c18a=localStorage[_0x2caaac(0x178)](_0x2caaac(0x187))||'',_0x40bf3f=document[_0x2caaac(0x1bf)](_0x2caaac(0x145)),_0x5f23ca=document['getElementById'](_0x2caaac(0x1b7));if(_0x40bf3f&&_0x4695fb)_0x40bf3f[_0x2caaac(0x1b8)]=_0x4695fb;if(_0x5f23ca&&_0x43c18a)_0x5f23ca[_0x2caaac(0x1b8)]=_0x43c18a;const _0x242b62=document['getElementById'](_0x2caaac(0x136));if(_0x242b62)_0x242b62[_0x2caaac(0x155)][_0x2caaac(0x170)]=_0x2caaac(0x181);_0x4695fb&&_0x43c18a&&fetch(_0x4695fb,{'method':_0x2caaac(0x134),'headers':{'Content-Type':_0x2caaac(0x129)},'body':JSON[_0x2caaac(0x1d2)]({'action':'getteams','mode':_0x2caaac(0x1aa),'code':_0x43c18a})})['then'](function(_0x11660f){const _0x28f0f3=_0x2caaac;return _0x11660f[_0x28f0f3(0x159)]();})[_0x2caaac(0x1bb)](function(_0x49bd34){const _0xae29e5=_0x2caaac;if(!_0x49bd34['success']||!_0x49bd34[_0xae29e5(0x168)]||_0x49bd34[_0xae29e5(0x168)]['length']===0x0)return;var _0x3b313f=document[_0xae29e5(0x1bf)](_0xae29e5(0x186));if(!_0x3b313f)return;var _0x424d17=String(_0x49bd34[_0xae29e5(0x168)][0x0]['team']||''),_0xf2337b=_0x49bd34['teams'][_0xae29e5(0x1cf)](function(_0x5a326a){const _0x2a6c0c=_0xae29e5;return/^남/['test'](_0x5a326a[_0x2a6c0c(0x13c)]);}),_0x4b4ae7=_0x49bd34['teams'][_0xae29e5(0x1cf)](function(_0x40f74f){const _0x227fb3=_0xae29e5;return/^여/['test'](_0x40f74f[_0x227fb3(0x13c)]);});if(_0xf2337b&&_0x4b4ae7)_0x3b313f['value']=_0xae29e5(0x131);else{if(_0xf2337b)_0x3b313f[_0xae29e5(0x1b8)]=_0xae29e5(0x1ba);else{if(_0x4b4ae7)_0x3b313f[_0xae29e5(0x1b8)]=_0xae29e5(0x177);else _0x3b313f['value']=_0xae29e5(0x18a);}}})[_0x2caaac(0x172)](function(){});}function closeAdminModal(){const _0x39a17f=_0x5bb6,_0x41c3be=document[_0x39a17f(0x1bf)](_0x39a17f(0x136));if(_0x41c3be)_0x41c3be[_0x39a17f(0x155)][_0x39a17f(0x170)]='none';}function saveAdminUrlAndCode(){const _0x25a241=_0x5bb6,_0x41c669=(document[_0x25a241(0x1bf)]('adminWebappUrl')[_0x25a241(0x1b8)]||'')[_0x25a241(0x17c)](),_0x71cf30=(document['getElementById'](_0x25a241(0x1b7))[_0x25a241(0x1b8)]||'')[_0x25a241(0x17c)]()[_0x25a241(0x11d)]();if(!_0x41c669){alert(_0x25a241(0x18c));return;}if(!_0x71cf30){alert(_0x25a241(0x190));return;}if(!_0x41c669[_0x25a241(0x19e)]('script.google.com')){alert('❌\x20올바른\x20Google\x20Apps\x20Script\x20URL이\x20아닙니다.');return;}localStorage[_0x25a241(0x1ad)]('parkgolf_webapp_url',_0x41c669),localStorage[_0x25a241(0x1ad)](_0x25a241(0x187),_0x71cf30);const _0x3876ef=document[_0x25a241(0x1bf)](_0x25a241(0x1c0));if(_0x3876ef)_0x3876ef[_0x25a241(0x1b8)]=_0x71cf30;let _0xd35c14=[];try{_0xd35c14=JSON[_0x25a241(0x151)](localStorage['getItem'](_0x25a241(0x17a))||'[]');}catch(_0x37858b){}const _0x5d4912=_0xd35c14[_0x25a241(0x1cf)](function(_0x1b21c8){const _0xd2b678=_0x25a241;return _0x1b21c8[_0xd2b678(0x180)]===_0x41c669&&_0x1b21c8[_0xd2b678(0x18f)]===_0x71cf30;});if(!_0x5d4912){_0xd35c14.unshift({'url':_0x41c669,'code':_0x71cf30,'saved':new Date()['toLocaleString']('ko-KR')});if(_0xd35c14[_0x25a241(0x17b)]>0xa)_0xd35c14=_0xd35c14[_0x25a241(0x16f)](0x0,0xa);localStorage[_0x25a241(0x1ad)]('parkgolf_saved_urls',JSON[_0x25a241(0x1d2)](_0xd35c14));}fetch(_0x41c669,{'method':_0x25a241(0x134),'headers':{'Content-Type':_0x25a241(0x129)},'body':JSON[_0x25a241(0x1d2)]({'action':_0x25a241(0x160),'code':_0x71cf30,'webappUrl':_0x41c669})})[_0x25a241(0x1bb)](function(_0x280678){return _0x280678['json']();})[_0x25a241(0x1bb)](function(_0x48e10f){const _0x40acd0=_0x25a241;if(_0x48e10f['success'])showToast(_0x40acd0(0x1af));})[_0x25a241(0x172)](function(){}),showAdminFeedback('✅\x20저장되었습니다!\x20\x20대회코드:\x20'+_0x71cf30);}async function loadSheetShareUrl(){const _0x439549=_0x5bb6,_0x563e14=(document['getElementById'](_0x439549(0x145))[_0x439549(0x1b8)]||'')[_0x439549(0x17c)]()||localStorage['getItem'](_0x439549(0x11e))||'';if(!_0x563e14){alert(_0x439549(0x15b));return;}try{const _0x197599=await fetch(_0x563e14,{'method':_0x439549(0x134),'headers':{'Content-Type':_0x439549(0x129)},'body':JSON['stringify']({'action':_0x439549(0x15a),'code':'_'})}),_0x153ad6=await _0x197599['json']();if(!_0x153ad6[_0x439549(0x122)])throw new Error(_0x153ad6[_0x439549(0x1c3)]||_0x439549(0x156));const _0x50e551=document[_0x439549(0x1bf)](_0x439549(0x169));if(_0x50e551)_0x50e551[_0x439549(0x179)]=_0x153ad6[_0x439549(0x146)]||'없음';localStorage['setItem'](_0x439549(0x140),_0x153ad6[_0x439549(0x146)]||''),showAdminFeedback(_0x439549(0x124));}catch(_0x1937a0){alert('❌\x20'+_0x1937a0['message']);}}function copySheetUrl(){const _0x590d1d=_0x5bb6,_0x41acdd=document[_0x590d1d(0x1bf)]('sheetShareUrl'),_0x440580=(_0x41acdd?_0x41acdd[_0x590d1d(0x179)]:'')||localStorage[_0x590d1d(0x178)](_0x590d1d(0x140))||'';if(!_0x440580||_0x440580===_0x590d1d(0x143)){alert('⚠️\x20먼저\x20시트\x20URL을\x20불러오세요.');return;}fallbackCopySheetUrl_(_0x440580);}function fallbackCopySheetUrl_(_0x4b10cf){const _0x45d554=_0x5bb6;try{const _0x20c529=document[_0x45d554(0x12b)]('textarea');_0x20c529['value']=_0x4b10cf,_0x20c529[_0x45d554(0x155)]['cssText']='position:fixed;top:0;left:0;opacity:0;font-size:16px;',document[_0x45d554(0x16a)]['appendChild'](_0x20c529),_0x20c529['focus'](),_0x20c529[_0x45d554(0x165)](),_0x20c529['setSelectionRange'](0x0,_0x4b10cf[_0x45d554(0x17b)]);const _0x24ed8f=document[_0x45d554(0x1a8)](_0x45d554(0x1bc));document[_0x45d554(0x16a)][_0x45d554(0x150)](_0x20c529),_0x24ed8f?showAdminFeedback(_0x45d554(0x1a9)):alert(_0x45d554(0x1c8)+_0x4b10cf);}catch(_0x29ee5f){alert(_0x45d554(0x12f)+_0x4b10cf);}}async function loadConfigFromSheet(){const _0x4ba141=_0x5bb6,_0x436ef3=(document[_0x4ba141(0x1bf)](_0x4ba141(0x145))['value']||'')[_0x4ba141(0x17c)]()||localStorage[_0x4ba141(0x178)](_0x4ba141(0x11e))||'';if(!_0x436ef3){alert('⚠️\x20먼저\x20웹앱\x20URL을\x20입력칸에\x20붙여넣으세요.\x0a(URL은\x20PC에서\x20복사해\x20카톡으로\x20받으세요)');return;}const _0x15f461=event[_0x4ba141(0x13b)];_0x15f461['textContent']=_0x4ba141(0x1c4),_0x15f461[_0x4ba141(0x1a5)]=!![];try{const _0x40b320=await fetch(_0x436ef3,{'method':_0x4ba141(0x134),'headers':{'Content-Type':_0x4ba141(0x129)},'body':JSON[_0x4ba141(0x1d2)]({'action':'loadconfig','code':'_'})}),_0x45391d=await _0x40b320[_0x4ba141(0x159)]();if(!_0x45391d[_0x4ba141(0x122)])throw new Error(_0x45391d['message']||_0x4ba141(0x156));const _0x25513e=document['getElementById'](_0x4ba141(0x145)),_0x4cf489=document[_0x4ba141(0x1bf)]('adminCodeInput');if(_0x25513e&&_0x45391d[_0x4ba141(0x152)])_0x25513e[_0x4ba141(0x1b8)]=_0x45391d[_0x4ba141(0x152)];if(_0x4cf489&&_0x45391d['code'])_0x4cf489[_0x4ba141(0x1b8)]=_0x45391d[_0x4ba141(0x18f)];localStorage[_0x4ba141(0x1ad)](_0x4ba141(0x11e),_0x45391d[_0x4ba141(0x152)]||''),localStorage[_0x4ba141(0x1ad)](_0x4ba141(0x187),_0x45391d[_0x4ba141(0x18f)]||'');const _0x1992f2=document['getElementById']('tournamentCode');if(_0x1992f2&&_0x45391d[_0x4ba141(0x18f)])_0x1992f2[_0x4ba141(0x1b8)]=_0x45391d[_0x4ba141(0x18f)];alert(_0x4ba141(0x199)+_0x45391d['code']+'\x0a저장시간:\x20'+(_0x45391d['savedAt']||'-'));}catch(_0x4ceaf4){alert('❌\x20불러오기\x20실패:\x20'+_0x4ceaf4[_0x4ba141(0x1c3)]);}finally{_0x15f461['textContent']='☁️\x20PC\x20설정\x20불러오기',_0x15f461[_0x4ba141(0x1a5)]=![];}}function showSavedUrlsList(){const _0x2c0db9=_0x5bb6;let _0xfb34ab=[];try{_0xfb34ab=JSON[_0x2c0db9(0x151)](localStorage['getItem'](_0x2c0db9(0x17a))||'[]');}catch(_0x1fc1e7){}const _0x59b7eb=document[_0x2c0db9(0x1bf)]('savedUrlsList');!_0xfb34ab[_0x2c0db9(0x17b)]?_0x59b7eb[_0x2c0db9(0x163)]=_0x2c0db9(0x19d):_0x59b7eb[_0x2c0db9(0x163)]=_0xfb34ab[_0x2c0db9(0x1d0)](function(_0xb85944,_0x30e90a){const _0x26d252=_0x2c0db9;return'<div\x20style=\x22border:1px\x20solid\x20#e5e7eb;border-radius:10px;padding:12px;margin-bottom:10px;\x22>'+_0x26d252(0x183)+_0xb85944[_0x26d252(0x18f)]+'</div>'+'<div\x20style=\x22font-size:12px;color:#6b7280;word-break:break-all;margin-bottom:6px;\x22>'+(_0xb85944[_0x26d252(0x180)]||'')[_0x26d252(0x16f)](0x0,0x32)+_0x26d252(0x132)+_0x26d252(0x133)+(_0xb85944[_0x26d252(0x18b)]||'')+_0x26d252(0x14f)+_0x26d252(0x1ca)+_0x26d252(0x1b2)+_0x30e90a+_0x26d252(0x1a7)+'<button\x20onclick=\x22deleteSavedUrl('+_0x30e90a+')\x22\x20style=\x22padding:8px\x2014px;background:#dc2626;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;\x22>🗑\x20삭제</button>'+'</div>'+'</div>';})[_0x2c0db9(0x174)](''),document['getElementById'](_0x2c0db9(0x16c))[_0x2c0db9(0x155)][_0x2c0db9(0x170)]=_0x2c0db9(0x181);}function deleteSavedUrl(_0x40289d){const _0x18f210=_0x5bb6;let _0x116e5f=[];try{_0x116e5f=JSON[_0x18f210(0x151)](localStorage[_0x18f210(0x178)](_0x18f210(0x17a))||'[]');}catch(_0x48b899){}if(!confirm('삭제하시겠습니까?'))return;_0x116e5f[_0x18f210(0x1c6)](_0x40289d,0x1),localStorage[_0x18f210(0x1ad)](_0x18f210(0x17a),JSON[_0x18f210(0x1d2)](_0x116e5f)),showSavedUrlsList();}function closeSavedUrlsModal(){const _0x42663b=_0x5bb6;document['getElementById'](_0x42663b(0x16c))['style'][_0x42663b(0x170)]=_0x42663b(0x144);}function applySavedUrl(_0x4eacdf){const _0x3d92eb=_0x5bb6;let _0x2ed5c4=[];try{_0x2ed5c4=JSON['parse'](localStorage['getItem'](_0x3d92eb(0x17a))||'[]');}catch(_0x111a7e){}const _0x18e395=_0x2ed5c4[_0x4eacdf];if(!_0x18e395)return;localStorage[_0x3d92eb(0x1ad)](_0x3d92eb(0x11e),_0x18e395[_0x3d92eb(0x180)]),localStorage[_0x3d92eb(0x1ad)](_0x3d92eb(0x187),_0x18e395['code']);const _0x4257d7=document[_0x3d92eb(0x1bf)](_0x3d92eb(0x145)),_0x567031=document[_0x3d92eb(0x1bf)](_0x3d92eb(0x1b7));if(_0x4257d7)_0x4257d7['value']=_0x18e395[_0x3d92eb(0x180)];if(_0x567031)_0x567031[_0x3d92eb(0x1b8)]=_0x18e395[_0x3d92eb(0x18f)];const _0x1f5264=document[_0x3d92eb(0x1bf)](_0x3d92eb(0x1c0));if(_0x1f5264)_0x1f5264['value']=_0x18e395[_0x3d92eb(0x18f)];closeSavedUrlsModal(),alert(_0x3d92eb(0x130)+_0x18e395[_0x3d92eb(0x18f)]);}let _modalQrInstance=null;function _0x333e(){const _0xd609f7=['Bg9JyxrPB24','ksiGC3r5Bgu9iMzSzxG6mtTWywrKAw5NoJHWEcaWo2jHy2TNCM91BMq6iZi1nJnLyJTJB2XVCJOJzMzMo2jVCMrLCJPUB25Lo2jVCMrLCI1YywrPDxm6ohb4o2zVBNqTC2L6ztOXm3b4o2zVBNqTD2vPz2H0oJCWmdTJDxjZB3i6Cg9PBNrLCJSIpUkCHsdSOihSMQK8l2j1DhrVBJ4','zxHLy0nVBw1HBMq','4PYfifvstcdRS7xSGQZRKjJSL4JSIRxRI4JRI6qHicdSUBtSUBtSMktTHQhSNlZROzWG64+z66om7jEq6RkmioYGHoYgOE2vMoYeUoYALc4','ywXS','ndq0mZyWBxvoDhfw','AgvHza','C2v0sxrLBq','uviG7ioD7isXioUQQoUtNdO','4PYfioYGGoYEPsdSMytRO4WGkoQ4SoQ4ScaRioQ1RoQ4GoYlNo2kUcK','phnWyw4GC3r5Bgu9iNDPzhrOoJe3ChG7AgvPz2H0oJe3ChG7yMfJA2DYB3vUzdOJyZG4nJbHo2jVCMrLCI1YywrPDxm6ntaLo2nVBg9YoInMzMy7zM9UDc1ZAxPLoJeXChG7zM9UDc13zwLNAhq6otaWo2rPC3bSyxK6zMXLEdTHBgLNBI1PDgvTCZPJzw50zxi7ANvZDgLMEs1JB250zw50oMnLBNrLCJTMBgv4lxnOCMLUAZOWoYi+','mti2rgnVz0Xm','pgj1DhrVBIbVBMnSAwnRpsjHChbSEvnHDMvKvxjSka','BMvHCMvZDa','y2XPy2S','zMLSBfn0EwXL','i2jHDgnOuxjpDMvYBgf5E3bVC2L0Aw9UoMfIC29SDxrLiwLTCg9YDgfUDdT0B3a6mcfPBxbVCNrHBNq7BgvMDdOWiwLTCg9YDgfUDdT3Awr0AdOXmdaLiwLTCg9YDgfUDdTIywnRz3jVDw5KoInMzMyHAw1WB3j0yw50o292zxjMBg93oNzPC2LIBguHAw1WB3j0yw50Fq','ywrTAw5dB2rLsw5WDxq','DMfSDwu','p2nVzgu9','BwfSzq','DgHLBG','y29WEq','yMf0y2HrCK92zxjSyxK','C3bSAxq','z2v0rwXLBwvUDej5swq','Dg91CM5HBwvUDenVzgu','4PQG77IpioYHSo2oUoYeSsdSI5ZTIRJSL5aG642W7j207ysW6RcaioYxHUYkTEUlIoUlPc4kcU2vToQYScdRSkNRSPu6cJeUioQ1RoQ4GoYlNo2kUoULVcdSL73RI4JRI6qkmI4G7iob64UOioUPLoUjTcbB7yYm7iUC7iQK6Rsa66ASxsdIHPiGw+YHSo2oUoYeSsdSI6tTLOLDcJmUioYHSo2oUoYeSsdSMytRO4WG7zUeioUlPoYlNcbruIdSG53SHle','z2vUzgvY','BwvZC2fNzq','4O+ZioU2IoUFRoYyPoUkLcdSPjeUlI4','7jES7j6q67Aa66Em','C3bSAwnL','Dg9mB2nHBgveyxrLu3rYAw5N','4PQG77IpioYEKoUpMsdRS7xSGQWG7iUK7yYOcUYvHoUEMcbvuKZSNyqG7kEb7kcrioYeOo2dNCk367o17ikS7zw0ioYJVoYeUoYALdOkcG','i2jHDgnOuxjpDMvYBgf5igLTzYWJyMf0y2HrCK92zxjSyxKGy2fUDMfZE21HEc13Awr0AdOXmdaLo2HLAwDODdPHDxrVo2rPC3bSyxK6yMXVy2S7Fq','pgrPDIbZDhLSzt0IzgLZCgXHEtPMBgv4o2DHCdO4ChG7iJ4','jNq9','i2jXCLrVB2XIyxj7zgLZCgXHEtPUB25LiwLTCg9YDgfUDh0','Bw9KywXrCKrHDgu','Cg9ZAxrPB246CMvSyxrPDMu7zgLZCgXHEtPIBg9JAZTTyxjNAw4TyM90Dg9ToJzWEdT3Awr0AdOXmdaLoW','C29Tzq','BwfW','7isX67oe67Ae66AS','C3rYAw5NAwz5','4O+ZiffsioY9LoUtNcdSG53SHleG7ksrlI4U','C2nYAxb0lMDVB2DSzs5JB20','zMLSBfrLEhq','yxbWzw5Kq2HPBgq','Dg9vChbLCKnHC2u','CgfYA2DVBgzFD2vIyxbWx3vYBa','AhjLzG','AhrTBcXIB2r5E2HLAwDODdPHDxrViwLTCg9YDgfUDdTVDMvYzMXVDZP2AxnPyMXLiwLTCg9YDgfUDh0','nezOveLtCq','C3vJy2vZCW','y2XHC3noyw1L','4PYfioYlNo2kUcbvuKWG67Ai65+S7jIK6RIWioYzHoUJJa','uviG7l2u65oC66w8ioUOVoYGGcdSG53SHlhTLBtSO7ZSHlJSMPqH','q29YCMvJDeXLDMvS','zgLZCgXHEtPNCMLKo2DYAwqTDgvTCgXHDguTy29SDw1UCZOXzNiGmwzYo2DHCdOZChGGnNb4o3DPzhrOoJeWmcu7BwfYz2LUlwjVDhrVBtO0ChG7','pgj1DhrVBIbVBMnSAwnRpsj3Aw5KB3CUChjPBNqOksiGC3r5Bgu9iNbHzgrPBMC6ohb4ide4ChG7yMfJA2DYB3vUzdOJzJvJodqYo2nVBg9YoImZzdiWmda7yM9YzgvYoM5VBMu7yM9YzgvYlxjHzgL1CZO4ChG7zM9UDc1ZAxPLoJe0ChG7zM9UDc13zwLNAhq6otaWo2n1CNnVCJPWB2LUDgvYoYi+8j+wQcdSNBJSH4qVuergpc9IDxr0B24+','Dgv4Dc9WBgfPBG','4P2mioYyRoUWLoULUcbhB29NBguGqxbWCYbty3jPChqGvvjm7j20ioYvHoUlMEUlIoUlPc4','y3jLyxrLrwXLBwvUDa','Bw9KywXrCLjLC3vSDa','4Os577IpioYHSo2oUoYeSsdSI5ZTIRJSNzGG66QO65oCka','y3nZvgv4Da','4PQG77IpioUZTEYcRcdSI6tTJkGk7kEb7kcrioYeOo2dNE2vMoYxRcdRS7xSGQZTLzJSHlJSMPq6cGO','4PYfioYGGEYAQsdSMytRO4W6ia','C2vWyxjHDgu','lI4Upc9KAxy+','pgrPDIbZDhLSzt0IzM9UDc1ZAxPLoJeXChG7y29SB3i6iZLJytnHzJTTyxjNAw4TyM90Dg9ToJHWEdSIpG','ue9tva','pgj1DhrVBIbVBMnSAwnRpsjKB2n1BwvUDc5NzxrfBgvTzw50qNLjzcGNyMf0y2HrCK92zxjSyxKNks5Yzw1VDMuOktT2yxiGCZ1KB2n1BwvUDc5NzxrfBgvTzw50qNLjzcGNyMf0y2HrCLbYAw50u3r5BguNktTPzIHZkxmUCMvTB3zLkcK7iIbZDhLSzt0ICgfKzgLUzZO4ChGGmtrWEdTIywnRz3jVDw5KoNjNyMeOmJu1ldi1nsWYntuSmc4YktTJB2XVCJOJzMzMo2jVCMrLCJPUB25Lo2jVCMrLCI1YywrPDxm6ohb4o2zVBNqTC2L6ztOXnhb4o2zVBNqTD2vPz2H0oJKWmdTJDxjZB3i6Cg9PBNrLCJSIpUkCLsdRI6VQUla8l2j1DhrVBJ4','ywrTAw5nB2rHBa','i2zMzMzMzG','BwLU','7yYm7ygS6RoO7zsexW','6RcCioYHScbruIdSG53SHleG7jMe66omiq','DgfYz2v0','DgvHBq','Dgv4DejHC2vSAw5L','mtfZwuXNtfi','BwLKzgXL','CgfYA2DVBgzFC2HLzxrFDxjS','Dw5ZAgLMDa','mJu2mtqZou5Ys0jVta','vvjm7j2eioU2IoUFRoYyPoYeUoYALa','BM9Uzq','ywrTAw5xzwjHChbvCMW','C2HLzxrvCMW','jNbYzwXPBwLUyxj5rgf0zt0','zM9UDc1ZAxPLoJeXChG7zM9UDc13zwLNAhq6nZaWo2nVBg9YoIm0ndq7BwfYz2LUlxrVCdOYChG7Dgv4Dc1HBgLNBJPJzw50zxi7','iZaWmdaWma','Dg9tDhjPBMC','zgL2','CMvTB3zL','yM9SzcaXnxb4icjnywXNDw4Gr290AgLJiIXZyw5ZlxnLCMLM','lMjXCI1JyxjKE2jYzwfRlwLUC2LKztPHDM9PzdTWywDLlwjYzwfRlwLUC2LKztPHDM9PzdTIB3jKzxi6mxb4ihnVBgLKicnIyMiHAw1WB3j0yw50o2jVEc1ZAgfKB3C6BM9UzsfPBxbVCNrHBNr9','pc9KAxy+','CMvTB3zLq2HPBgq','CgfYC2u','D2vIyxbWvxjS','zM9UDc1ZAxPLoJe2ChG7zM9UDc13zwLNAhq6otaWo2nVBg9YoIm3ytnMmda7BwfYz2LUlwjVDhrVBtO0ChG7Dgv4Dc1HBgLNBJPJzw50zxi7','yMf0y2HrCLbYAw50u3r5Bgu','C3r5Bgu','67Ai65+S7jIK6RIWioYlPo2mQa','yNfYvg9VBgjHCG','CMvWBgfJzq','ANnVBG','z2v0C2HLzxr1CMW','4PQG77IpioYBUEYvSsbvuKZSNyqG66I87kcaioYEHEUGPE2vMoYeUoYALc4','C2nYB2XSsw50B1zPzxC','pc9ZCgfUpG','z2v0q29UDgv4Da','D2LKDgG','C2f2zwnVBMzPzW','A28Ts1i','CxvLCNLtzwXLy3rVCG','Aw5Uzxjive1m','mJaZmtG2ow5vBxbdCG','C2vSzwn0','zM9YrwfJAa','jMD0oW','DgvHBxm','C2HLzxrtAgfYzvvYBa','yM9KEq','64kO7j6q67Aa66Em','C2f2zwrvCMXZtw9KywW','mty2odiYn0TRuNf6tq','mZeYmJGYCKDezLzj','C2XPy2u','zgLZCgXHEq','mta1tvv2EM1k','y2f0y2G','4P2mioYBUsdSLBeGvvjm7j2eioYEHEUGPE2vMoYeUoYALcek4PgG67ki7jEq7isCioUOVoYGGcdSOidSNQxTLzJSHlJSMPqU','AM9PBG','DgvZDa','i2jHDgnOuxjhCMLKE2rPC3bSyxK6z3jPzcfPBxbVCNrHBNq7z3jPzc10zw1WBgf0zs1JB2X1Bw5ZoNjLCgvHDcGZldfMCIKHAw1WB3j0yw50o2DHCdO0Bw0HAw1WB3j0yw50o3bHzgrPBMC6mcfPBxbVCNrHBNq7D2LKDgG6mtaWjsfPBxbVCNrHBNq7Bwf4lxDPzhrOoJiWmg1TiwLTCg9YDgfUDh0','zMvTywXL','z2v0sxrLBq','Dgv4DenVBNrLBNq','CgfYA2DVBgzFC2f2zwrFDxjSCW','BgvUz3rO','DhjPBq','p2m9','ywzMAwW','nZK1mZGWC3LNChLf','DxjS','yMXVy2S','mJaYotbIsurrCfG','pgrPDIbZDhLSzt0IzM9UDc13zwLNAhq6otaWo2zVBNqTC2L6ztOXnxb4o21HCMDPBI1IB3r0B206mNb4oYi+','jMX0oW','D2LKDgG6mtaWjtS','Bw9KywXuzwfTtw9Kzq','CgfYA2DVBgzFDg91CM5HBwvUDf9JB2rL','pgrPDIbZDhLSzt0IzM9UDc1ZAxPLoJe1ChG7zM9UDc13zwLNAhq6otaWoYi+8j+tIYdSOBdRS4qGuviG4Ocuia','yMf0y2HrCKDYAwq','BwL4zwq','C2f2zwq','7jU57jwXifvstoYDHcdSNOxROkxTLBtSO7ZSHlJSMPqU','cGRSOBdTJRJSHleG7iUC7yQ46RcaioYxHUYCVoUPTcdRQlZSOiak6RwS6RIa7iUC7yQ4iokgKIdTJiZSI5ZSIQtQTidRPQWG4OAsiokAOEYHSo2oUoYeSsdSI6tTLOKG7zUeioUlPoYlNcdSI5ZRJ4tTLzJSHlJSMPqU','ksdcTYdSTj0G','y29Kzq','64Ya7zQm7l2u65oC66w8ioYEHEUGPE2vToYJVoYeUoYALc4','CgXHEwvYCW','BMfTzq','4O+ZiffsioYdNEYeSsdSPjeUlI4Gka','zgLZCgXHEtPMBgv4o2DHCdOZChG7ywXPz24TAxrLBxm6yMfZzwXPBMu7CgfKzgLUzZOXChGGmdS','y3jLyxrLt2jQzwn0vvjm','zMLSBfjLy3q','z2v0DgvHBxm','phnWyw4GC3r5Bgu9iMzVBNqTD2vPz2H0oJGWmdTMB250lxnPEMu6mtjWEdSIpG','4PYfifbdioYePoYGLsdRTOJRN6ZSMktQUlaG7jMe66omiqOk64Ya7zQm7l2u65oCoIa','jMq9','7kgW7y647isXioUnSoYDTo2eSoULVcdRTOJRN6ZSMktSP4aG66Q77zAi7iQ164Ui64UKlG','4PYfiffsioY9LoUtNoQWGcdSOidSNQxRKjJSL4JSIRxRI4JRI6qHcGRSUBtTHQhSNlZROzWG7kce7iAH7zwy6RgW64kyioYDUoYhHo2vMoYeUoYALc4','phaGC3r5Bgu9iNrLEhqTywXPz246y2vUDgvYo2nVBg9YoIm2yJCYoda7CgfKzgLUzZOYmhb4ida7iJ7SOidSNQxRKjWGvvjm7j20ioYxHUYkTEUlIoUlPc48l3a+','Aw5JBhvKzxm','4P2mioUmGo2AJcdSVztRK5ZRPBWG7j6f66cL7zwy7is47jQuiqRIKAdRSOJSL5dSHjWG66I87kcaioYGGoYEPE2vMoYeUoYALc4','4P2mioYyPoULMdOG','y2vUDgvY','AgvPz2H0','Dgv4DefSAwDU','Bg9N','zgLZywjSzwq'];_0x333e=function(){return _0xd609f7;};return _0x333e();}function _0x5bb6(_0x36b497,_0x20ffbe){_0x36b497=_0x36b497-0x11c;const _0x333ecc=_0x333e();let _0x5bb605=_0x333ecc[_0x36b497];if(_0x5bb6['ssXBkN']===undefined){var _0x5d4e57=function(_0x2fb120){const _0x1c84a1='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789+/=';let _0x4695fb='',_0x43c18a='';for(let _0x40bf3f=0x0,_0x5f23ca,_0x242b62,_0x11660f=0x0;_0x242b62=_0x2fb120['charAt'](_0x11660f++);~_0x242b62&&(_0x5f23ca=_0x40bf3f%0x4?_0x5f23ca*0x40+_0x242b62:_0x242b62,_0x40bf3f++%0x4)?_0x4695fb+=String['fromCharCode'](0xff&_0x5f23ca>>(-0x2*_0x40bf3f&0x6)):0x0){_0x242b62=_0x1c84a1['indexOf'](_0x242b62);}for(let _0x49bd34=0x0,_0x3b313f=_0x4695fb['length'];_0x49bd34<_0x3b313f;_0x49bd34++){_0x43c18a+='%'+('00'+_0x4695fb['charCodeAt'](_0x49bd34)['toString'](0x10))['slice'](-0x2);}return decodeURIComponent(_0x43c18a);};_0x5bb6['wFaPrB']=_0x5d4e57,_0x5bb6['bkoMfk']={},_0x5bb6['ssXBkN']=!![];}const _0x203eeb=_0x333ecc[0x0],_0x5347f5=_0x36b497+_0x203eeb,_0x460eba=_0x5bb6['bkoMfk'][_0x5347f5];return!_0x460eba?(_0x5bb605=_0x5bb6['wFaPrB'](_0x5bb605),_0x5bb6['bkoMfk'][_0x5347f5]=_0x5bb605):_0x5bb605=_0x460eba,_0x5bb605;}function generateQRInModal(){const _0x422179=_0x5bb6,_0x180503=(document[_0x422179(0x1bf)](_0x422179(0x145))['value']||'')[_0x422179(0x17c)]()||localStorage[_0x422179(0x178)](_0x422179(0x11e))||'',_0x27b721=((document[_0x422179(0x1bf)]('adminCodeInput')[_0x422179(0x1b8)]||'')[_0x422179(0x17c)]()||localStorage[_0x422179(0x178)]('parkgolf_tournament_code')||'')[_0x422179(0x11d)](),_0x122f7e=document[_0x422179(0x1bf)](_0x422179(0x1cd))['value']||'통합',_0x3ee1bc=window[_0x422179(0x1a6)][_0x422179(0x11f)][_0x422179(0x1be)]('?')[0x0];if(!_0x27b721){alert(_0x422179(0x19f));return;}if(!_0x180503){alert(_0x422179(0x173));return;}if(!_0x180503['includes'](_0x422179(0x1d4))){alert(_0x422179(0x12a));return;}const _0xaad7f5=_0x3ee1bc+_0x422179(0x1b9)+encodeURIComponent(_0x27b721)+'&url='+encodeURIComponent(_0x180503)+_0x422179(0x147)+encodeURIComponent(_0x122f7e),_0x40ff89=document[_0x422179(0x1bf)]('modalQrCode');_0x40ff89['innerHTML']='';if(_modalQrInstance)try{_modalQrInstance['clear']();}catch(_0x1d46a7){}_modalQrInstance=new QRCode(_0x40ff89,{'text':_0xaad7f5,'width':0xf0,'height':0xf0,'colorDark':'#000000','colorLight':_0x422179(0x137),'correctLevel':QRCode[_0x422179(0x126)]['H']});function _0x4512d8(_0x2acad9,_0x45fc49){const _0x34c465=_0x422179,_0xb63a26=_0x2acad9[_0x34c465(0x162)]('canvas');if(!_0xb63a26){setTimeout(function(){_0x4512d8(_0x2acad9,_0x45fc49);},0x64);return;}const _0xfa68f7=_0xb63a26[_0x34c465(0x15e)]('2d'),_0x4a367f=_0xb63a26[_0x34c465(0x15f)]/0x2,_0x344264=Math[_0x34c465(0x138)](_0x45fc49[_0x34c465(0x17b)]*0xe+0x14,_0xb63a26[_0x34c465(0x15f)]*0.75),_0x5d7655=0x1c,_0x5c8cb6=_0xb63a26[_0x34c465(0x1a2)]-0x4;_0xfa68f7[_0x34c465(0x1b5)]='rgba(200,134,10,0.93)',_0xfa68f7[_0x34c465(0x196)](_0x4a367f-_0x344264/0x2,_0x5c8cb6-_0x5d7655,_0x344264,_0x5d7655),_0xfa68f7[_0x34c465(0x1b5)]='#fff',_0xfa68f7['font']=_0x34c465(0x14d),_0xfa68f7[_0x34c465(0x1a3)]=_0x34c465(0x1a1),_0xfa68f7[_0x34c465(0x13d)]=_0x34c465(0x13f),_0xfa68f7[_0x34c465(0x1d5)](_0x45fc49,_0x4a367f,_0x5c8cb6-_0x5d7655/0x2);}setTimeout(function(){_0x4512d8(_0x40ff89,_0x27b721);},0xc8),document['getElementById'](_0x422179(0x12c))['style'][_0x422179(0x170)]=_0x422179(0x181),setTimeout(function(){const _0xdb3684=_0x422179;document[_0xdb3684(0x1bf)](_0xdb3684(0x12c))[_0xdb3684(0x15c)]({'behavior':'smooth','block':_0xdb3684(0x1b3)});},0x96);}function downloadQRModal(){const _0x3feaab=_0x5bb6,_0xd5f821=document[_0x3feaab(0x162)]('#modalQrCode\x20canvas');if(!_0xd5f821){alert(_0x3feaab(0x125));return;}const _0x2531c6=(document[_0x3feaab(0x1bf)](_0x3feaab(0x1b7))[_0x3feaab(0x1b8)]||''||(localStorage[_0x3feaab(0x178)](_0x3feaab(0x187))||'QR'))[_0x3feaab(0x17c)]()['toUpperCase']();_0xd5f821['toBlob'](function(_0x243a8f){const _0x32bd6f=_0x3feaab,_0x5217d6=document[_0x32bd6f(0x12b)]('a');_0x5217d6[_0x32bd6f(0x11f)]=URL[_0x32bd6f(0x195)](_0x243a8f),_0x5217d6['download']=_0x32bd6f(0x139)+_0x2531c6+'_QR.png',document[_0x32bd6f(0x16a)][_0x32bd6f(0x11c)](_0x5217d6),_0x5217d6[_0x32bd6f(0x1b4)](),document[_0x32bd6f(0x16a)][_0x32bd6f(0x150)](_0x5217d6),URL['revokeObjectURL'](_0x5217d6['href']),alert(_0x32bd6f(0x19c));});}async function generateBatchQR(){const _0x1b3790=_0x5bb6,_0xece94e=(document[_0x1b3790(0x1bf)](_0x1b3790(0x145))['value']||'')[_0x1b3790(0x17c)]()||localStorage[_0x1b3790(0x178)](_0x1b3790(0x11e))||'',_0x115ea1=((document[_0x1b3790(0x1bf)](_0x1b3790(0x1b7))[_0x1b3790(0x1b8)]||'')[_0x1b3790(0x17c)]()||localStorage[_0x1b3790(0x178)](_0x1b3790(0x187))||'')[_0x1b3790(0x11d)](),_0x59fab7=document['getElementById'](_0x1b3790(0x1cd))[_0x1b3790(0x1b8)]||'통합',_0x182777=document[_0x1b3790(0x1bf)](_0x1b3790(0x186)),_0x38305f=_0x182777?_0x182777['value']:'mixed',_0x1308f0={'mixed':'혼성','male':_0x1b3790(0x16b),'female':_0x1b3790(0x1c5),'separate':_0x1b3790(0x1d1)};console[_0x1b3790(0x1a4)](_0x1b3790(0x1ae),_0x1308f0[_0x38305f]||_0x38305f);const _0x114b6a=window[_0x1b3790(0x1a6)]['href'][_0x1b3790(0x1be)]('?')[0x0];if(!_0x115ea1){alert(_0x1b3790(0x19f));return;}if(!_0xece94e){alert(_0x1b3790(0x173));return;}if(!_0xece94e['includes']('script.google.com')){alert(_0x1b3790(0x12a));return;}if(!confirm('📋\x20조별\x20QR\x20일괄생성을\x20시작합니다.\x0a\x0a⚠️\x20반드시\x20구글시트에서\x20조편성을\x20먼저\x20실행하세요!\x0a\x0a조편성이\x20완료되어\x20있으면\x20확인을\x20누르세요.'))return;const _0x23a7f2=event['target'],_0x2e7009=_0x23a7f2[_0x1b3790(0x163)];_0x23a7f2[_0x1b3790(0x163)]='⏳\x20조편성\x20데이터\x20불러오는\x20중...',_0x23a7f2[_0x1b3790(0x1a5)]=!![];try{const _0x340f62=await fetch(_0xece94e,{'method':_0x1b3790(0x134),'headers':{'Content-Type':_0x1b3790(0x129)},'body':JSON['stringify']({'code':_0x115ea1,'action':_0x1b3790(0x197),'mode':_0x38305f})}),_0x18729e=await _0x340f62['json']();if(!_0x18729e[_0x1b3790(0x122)]){var _0x5303f0=_0x18729e[_0x1b3790(0x1c3)]||_0x1b3790(0x19b);if(_0x5303f0[_0x1b3790(0x19e)]('비어')||_0x5303f0[_0x1b3790(0x19e)]('없습니다'))throw new Error(_0x1b3790(0x1c1));throw new Error(_0x5303f0);}if(_0x18729e['teams']&&_0x18729e[_0x1b3790(0x168)][_0x1b3790(0x17b)]>0x0){var _0x55c97f=String(_0x18729e[_0x1b3790(0x168)][0x0]['team']||''),_0xcb75bf=_0x1b3790(0x18a);if(/^남/['test'](_0x55c97f))_0xcb75bf=_0x18729e[_0x1b3790(0x168)]['some'](function(_0x1cf07a){const _0x5418a3=_0x1b3790;return/^여/[_0x5418a3(0x175)](_0x1cf07a[_0x5418a3(0x13c)]);})?_0x1b3790(0x131):_0x1b3790(0x1ba);else{if(/^여/[_0x1b3790(0x175)](_0x55c97f))_0xcb75bf='female';}_0x182777&&_0xcb75bf!==_0x38305f&&(_0x182777[_0x1b3790(0x1b8)]=_0xcb75bf,showToast(_0x1b3790(0x12d)+(_0x1308f0[_0xcb75bf]||_0xcb75bf)+')로\x20자동\x20조정되었습니다.'));}if(!_0x18729e[_0x1b3790(0x168)]||_0x18729e['teams'][_0x1b3790(0x17b)]===0x0)throw new Error('⚠️\x20조편성\x20결과가\x20없습니다.\x0a\x0a해결\x20방법:\x0a1.\x20구글시트\x20[파시스관리]\x20→\x20[조편성\x20실행]\x20먼저\x0a2.\x20조편성\x20완료\x20확인\x20후\x20QR\x20생성');const _0xccf9bf=_0x18729e[_0x1b3790(0x168)];_0x23a7f2[_0x1b3790(0x163)]=_0x1b3790(0x1d3);const _0x1a2ca8=document[_0x1b3790(0x1bf)](_0x1b3790(0x1bd));if(_0x1a2ca8)_0x1a2ca8['remove']();const _0x14154e=document[_0x1b3790(0x1bf)](_0x1b3790(0x154));if(_0x14154e)_0x14154e[_0x1b3790(0x14c)]();const _0x40fba1=document['createElement'](_0x1b3790(0x155));_0x40fba1['id']=_0x1b3790(0x154),_0x40fba1['textContent']=_0x1b3790(0x1c9)+'@page{margin:8mm}'+'@media\x20print{'+_0x1b3790(0x120)+'body>*{visibility:hidden!important}'+'#batchQrOverlay,#batchQrOverlay\x20*{visibility:visible!important}'+_0x1b3790(0x1b6)+_0x1b3790(0x1cc)+_0x1b3790(0x176)+'.bqr-card{padding:6px!important}'+'.bqr-card\x20img,.bqr-card\x20canvas{width:100%!important;height:auto!important}'+_0x1b3790(0x14e)+'}',document[_0x1b3790(0x1ac)][_0x1b3790(0x11c)](_0x40fba1);const _0x6d24aa=document[_0x1b3790(0x12b)](_0x1b3790(0x14b));_0x6d24aa['id']='batchQrOverlay',_0x6d24aa[_0x1b3790(0x155)]['cssText']='position:fixed;inset:0;z-index:99999;background:#f5f5f5;overflow-y:auto;font-family:\x22Malgun\x20Gothic\x22,\x22Apple\x20SD\x20Gothic\x20Neo\x22,sans-serif;';const _0x100d7f=document[_0x1b3790(0x12b)](_0x1b3790(0x14b));_0x100d7f['id']=_0x1b3790(0x157),_0x100d7f[_0x1b3790(0x155)][_0x1b3790(0x12e)]='position:sticky;top:0;background:#7a4f00;color:#fff;padding:10px\x2016px;display:flex;align-items:center;justify-content:space-between;z-index:1;box-shadow:0\x202px\x208px\x20rgba(0,0,0,0.3);',_0x100d7f['innerHTML']=_0x1b3790(0x188)+escHtml(_0x115ea1)+'\x20('+escHtml(_0x59fab7)+_0x1b3790(0x18e)+_0xccf9bf[_0x1b3790(0x17b)]+'개\x20조</div>'+_0x1b3790(0x1ca)+_0x1b3790(0x128)+_0x1b3790(0x135)+_0x1b3790(0x14f),_0x6d24aa[_0x1b3790(0x11c)](_0x100d7f);const _0xd02a2=document[_0x1b3790(0x12b)](_0x1b3790(0x14b));_0xd02a2['id']=_0x1b3790(0x189),_0xd02a2['style'][_0x1b3790(0x12e)]='display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:12px;max-width:1100px;margin:0\x20auto;',_0x6d24aa['appendChild'](_0xd02a2),document['body']['appendChild'](_0x6d24aa);const _0x39fdab=new Date()[_0x1b3790(0x1c7)](_0x1b3790(0x161));let _0x2713fb=0x0;_0xccf9bf[_0x1b3790(0x166)](function(_0x16519b,_0x269f08){const _0x5dcf03=_0x1b3790;var _0x5eb4ca=_0x114b6a+_0x5dcf03(0x17d)+encodeURIComponent(_0x115ea1)+'&u='+encodeURIComponent(_0xece94e)+_0x5dcf03(0x19a)+encodeURIComponent(_0x59fab7)+_0x5dcf03(0x1cb)+encodeURIComponent(_0x16519b['team']);_0x16519b[_0x5dcf03(0x191)][_0x5dcf03(0x166)](function(_0x4e5a7b,_0x1379c2){const _0x577f77=_0x5dcf03;_0x5eb4ca+='&'+(_0x1379c2+0x1)+'='+encodeURIComponent(_0x4e5a7b[_0x577f77(0x192)]+'|'+_0x4e5a7b[_0x577f77(0x1c2)]+'|'+_0x4e5a7b[_0x577f77(0x17e)]);});
+/* ★ co= 파라미터: G열 코스 정보 추가 */
+if(_0x16519b['courses']&&_0x16519b['courses'].length){_0x5eb4ca+='&co='+encodeURIComponent(_0x16519b['courses'].join(','));}var _0xf2a65d=document[_0x5dcf03(0x12b)](_0x5dcf03(0x14b));_0xf2a65d[_0x5dcf03(0x123)]='bqr-card',_0xf2a65d[_0x5dcf03(0x155)][_0x5dcf03(0x12e)]='background:#fff;border-radius:8px;border:1px\x20solid\x20#ddd;padding:8px;display:flex;flex-direction:column;align-items:center;box-shadow:0\x201px\x204px\x20rgba(0,0,0,0.08);';var _0x312e37=document[_0x5dcf03(0x12b)](_0x5dcf03(0x14b));_0x312e37[_0x5dcf03(0x155)][_0x5dcf03(0x12e)]=_0x5dcf03(0x153),_0x312e37[_0x5dcf03(0x179)]=_0x16519b['team'],_0xf2a65d[_0x5dcf03(0x11c)](_0x312e37);var _0x4695e3=document[_0x5dcf03(0x12b)]('div');_0x4695e3[_0x5dcf03(0x155)]['cssText']=_0x5dcf03(0x1ce);var _0x5ad94f=document[_0x5dcf03(0x12b)](_0x5dcf03(0x14b));_0x5ad94f['style'][_0x5dcf03(0x12e)]=_0x5dcf03(0x185),_0x4695e3[_0x5dcf03(0x11c)](_0x5ad94f),_0xf2a65d['appendChild'](_0x4695e3);var _0x162c3e=document[_0x5dcf03(0x12b)](_0x5dcf03(0x14b));_0x162c3e[_0x5dcf03(0x155)][_0x5dcf03(0x12e)]=_0x5dcf03(0x127),_0x16519b['players'][_0x5dcf03(0x166)](function(_0x21aca3,_0x1bc63d){const _0x3d792d=_0x5dcf03;var _0x3dc1b6=document[_0x3d792d(0x12b)](_0x3d792d(0x14b));_0x3dc1b6[_0x3d792d(0x155)]['cssText']=_0x3d792d(0x194),_0x3dc1b6['innerHTML']=_0x3d792d(0x1b0)+(_0x1bc63d+0x1)+_0x3d792d(0x15d)+_0x3d792d(0x198)+escHtml(_0x21aca3[_0x3d792d(0x192)])+'</span>'+'<span\x20style=\x22font-size:11px;color:#555;font-weight:600;\x22>'+escHtml(_0x21aca3[_0x3d792d(0x1c2)]||'')+_0x3d792d(0x15d)+'<span\x20style=\x22font-size:11px;color:#777;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;\x22>'+escHtml(_0x21aca3['affil']||'')+_0x3d792d(0x15d),_0x162c3e['appendChild'](_0x3dc1b6);}),_0xf2a65d['appendChild'](_0x162c3e);var _0x11ef94=document['createElement'](_0x5dcf03(0x14b));_0x11ef94[_0x5dcf03(0x155)][_0x5dcf03(0x12e)]=_0x5dcf03(0x148),_0x11ef94['textContent']=_0x115ea1+'\x20\x20'+_0x59fab7+'\x20\x20'+_0x39fdab,_0xf2a65d[_0x5dcf03(0x11c)](_0x11ef94),_0xd02a2[_0x5dcf03(0x11c)](_0xf2a65d),new QRCode(_0x5ad94f,{'text':_0x5eb4ca,'width':0x1a4,'height':0x1a4,'colorDark':_0x5dcf03(0x149),'colorLight':_0x5dcf03(0x137),'correctLevel':QRCode[_0x5dcf03(0x126)]['M']}),_0x2713fb++,_0x23a7f2[_0x5dcf03(0x163)]=_0x5dcf03(0x193)+_0x2713fb+'/'+_0xccf9bf[_0x5dcf03(0x17b)]+')',_0x2713fb===_0xccf9bf[_0x5dcf03(0x17b)]&&(_0x23a7f2[_0x5dcf03(0x163)]='✅\x20'+_0xccf9bf['length']+_0x5dcf03(0x13a),_0x23a7f2['disabled']=![]);});}catch(_0x4b521d){alert(_0x1b3790(0x1a0)+(_0x4b521d[_0x1b3790(0x1c3)]||_0x4b521d)+_0x1b3790(0x18d)),_0x23a7f2[_0x1b3790(0x163)]=_0x2e7009,_0x23a7f2[_0x1b3790(0x1a5)]=![];}}function escHtml(_0x3a2189){const _0x4f3c8c=_0x5bb6;return(_0x3a2189||'')[_0x4f3c8c(0x14a)]()['replace'](/&/g,'&amp;')[_0x4f3c8c(0x158)](/\x3C/g,_0x4f3c8c(0x184))[_0x4f3c8c(0x158)](/\x3E/g,_0x4f3c8c(0x167));}</script>
 
 
 <script>
-(function(){function getVal(id){var el=document.getElementById(id);return el?(el.value||el.textContent||'').trim():'';}
-function updateHeaders(){for(var i=1;i<=4;i++){var nm=getVal('player'+i);var gn=getVal('gender'+i);var af=getVal('affiliation'+i);var el=document.getElementById('nameHeader'+i);if(!el)continue;if(nm){var txt=nm;if(gn||af){txt+='  ( '+(gn||'')+(af?'  '+af:'')+' )';}
-el.textContent=txt;}else{el.textContent='경기자 '+i;}}}
-var _orig=window.syncNameHeaders;window.syncNameHeaders=function(){if(typeof _orig==='function')_orig();setTimeout(updateHeaders,50);};var _origApply=window._applyQRAndOpenScoring;if(typeof _origApply==='function'){window._applyQRAndOpenScoring=function(url){try{var _qs=url.indexOf('?')>=0?url.split('?')[1]:url;var _cv=new URLSearchParams(_qs).get('co');if(_cv)localStorage.setItem('parkgolf_active_courses',_cv);else localStorage.removeItem('parkgolf_active_courses');}catch(e){}
-_origApply.call(this,url);setTimeout(updateHeaders,400);};}
-var _origInit=window.initFromQueryParams;if(typeof _origInit==='function'){window.initFromQueryParams=function(){try{var _cv2=new URLSearchParams(window.location.search||'').get('co');if(_cv2)localStorage.setItem('parkgolf_active_courses',_cv2);else localStorage.removeItem('parkgolf_active_courses');}catch(e){}
-_origInit.call(this);setTimeout(updateHeaders,300);};}
-var _origLoad=window.loadData;if(typeof _origLoad==='function'){window.loadData=function(){var r=_origLoad.call(this);setTimeout(updateHeaders,200);return r;};}
-var cnt=0;var poll=setInterval(function(){updateHeaders();if(++cnt>=5)clearInterval(poll);},1000);document.addEventListener('DOMContentLoaded',function(){setTimeout(updateHeaders,300);setTimeout(updateHeaders,800);setTimeout(updateHeaders,2000);});})();
+// ── nameHeader 이름+성별+소속 표시 패치 ──
+(function(){
+  function getVal(id){ var el=document.getElementById(id); return el?(el.value||el.textContent||'').trim():''; }
+  function updateHeaders(){
+    for(var i=1;i<=4;i++){
+      var nm = getVal('player'+i);
+      var gn = getVal('gender'+i);
+      var af = getVal('affiliation'+i);
+      var el = document.getElementById('nameHeader'+i);
+      if(!el) continue;
+      if(nm){
+        var txt = nm;
+        if(gn||af){ txt += '  ( ' + (gn||'') + (af?'  '+af:'') + ' )'; }
+        el.textContent = txt;
+      } else {
+        el.textContent = '경기자 ' + i;
+      }
+    }
+  }
+  // syncNameHeaders 오버라이드
+  var _orig = window.syncNameHeaders;
+  window.syncNameHeaders = function(){
+    if(typeof _orig==='function') _orig();
+    setTimeout(updateHeaders, 50);
+  };
+  // _applyQRAndOpenScoring 오버라이드 (QR 스캔 후)
+  var _origApply = window._applyQRAndOpenScoring;
+  if(typeof _origApply==='function'){
+    window._applyQRAndOpenScoring = function(url){
+      // ★ co= 파라미터 → localStorage 저장
+      try{var _qs=url.indexOf('?')>=0?url.split('?')[1]:url;var _cv=new URLSearchParams(_qs).get('co');if(_cv)localStorage.setItem('parkgolf_active_courses',_cv);else localStorage.removeItem('parkgolf_active_courses');}catch(e){}
+      _origApply.call(this, url);
+      setTimeout(updateHeaders, 400);
+    };
+  }
+  // initFromQueryParams 이후 (URL 파라미터 직접 접속)
+  var _origInit = window.initFromQueryParams;
+  if(typeof _origInit==='function'){
+    window.initFromQueryParams = function(){
+      // ★ co= 파라미터 → localStorage 저장
+      try{var _cv2=new URLSearchParams(window.location.search||'').get('co');if(_cv2)localStorage.setItem('parkgolf_active_courses',_cv2);else localStorage.removeItem('parkgolf_active_courses');}catch(e){}
+      _origInit.call(this);
+      setTimeout(updateHeaders, 300);
+    };
+  }
+  // loadData 이후 (저장된 데이터 불러오기)
+  var _origLoad = window.loadData;
+  if(typeof _origLoad==='function'){
+    window.loadData = function(){
+      var r = _origLoad.call(this);
+      setTimeout(updateHeaders, 200);
+      return r;
+    };
+  }
+  // 폴링: 1초마다 5회 체크 (늦게 채워지는 경우 대비)
+  var cnt = 0;
+  var poll = setInterval(function(){
+    updateHeaders();
+    if(++cnt >= 5) clearInterval(poll);
+  }, 1000);
+  document.addEventListener('DOMContentLoaded', function(){
+    setTimeout(updateHeaders, 300);
+    setTimeout(updateHeaders, 800);
+    setTimeout(updateHeaders, 2000);
+  });
+})();
 </script>
 
 
@@ -1540,22 +1608,184 @@ var cnt=0;var poll=setInterval(function(){updateHeaders();if(++cnt>=5)clearInter
 
 
 <script>
-(function(){function patchBigo(){for(var i=1;i<=4;i++){var el=document.getElementById('in-HIO-'+i);if(!el)continue;var clone=el.cloneNode(true);clone.type='text';clone.setAttribute('inputmode','text');clone.maxLength=30;clone.removeAttribute('pattern');clone.style.color='#111';el.parentNode.replaceChild(clone,el);(function(idx,inp){inp.addEventListener('input',function(){try{summaryScores['HIO'][idx]=this.value;}catch(e){}
-try{if(typeof autoSave==='function')autoSave();}catch(e){}});})(i,clone);}}
-var _origFetch=window.fetch;window.fetch=function(url,options){try{if(options&&options.body&&typeof url==='string'&&url.indexOf('script.google.com')!==-1){var body=JSON.parse(options.body);if(body&&Array.isArray(body.players)){var playerIdx=0;for(var pi=1;pi<=4;pi++){var nameEl=document.getElementById('player'+pi);if(!nameEl||!nameEl.value.trim())continue;var bigoEl=document.getElementById('in-HIO-'+pi);var bigoVal=bigoEl?bigoEl.value||'':'';if(playerIdx<body.players.length){body.players[playerIdx].holeInOne=bigoVal;}
-playerIdx++;}
-options=Object.assign({},options,{body:JSON.stringify(body)});}}}catch(eFetch){}
-var isScorePost=(typeof url==='string'&&url.indexOf('script.google.com')!==-1&&options&&options.method==='POST');if(!isScorePost)return _origFetch.apply(this,arguments);return _origFetch.apply(this,arguments).then(function(resp){return resp.text().then(function(text){var data={};try{data=JSON.parse(text);}catch(ep){}
-if(data&&data.coldstart){return new Promise(function(resolve){setTimeout(function(){resolve(_origFetch(url,options));},500);});}
-return new Response(text,{status:resp.status||200,headers:{'Content-Type':'application/json'}});});}).catch(function(err){console.warn('⚠️ 전송 실패 — 3초 후 재시도:',err);return new Promise(function(resolve){setTimeout(function(){resolve(_origFetch(url,options));},3000);});});};function patchSend(){var orig=window.sendToGoogleSheet;if(typeof orig!=='function'||orig._sv4patched)return false;window.sendToGoogleSheet=function(){for(var i=1;i<=4;i++){var el=document.getElementById('in-HIO-'+i);if(el)try{summaryScores['HIO'][i]=el.value||'';}catch(e){}}
-return orig.apply(this,arguments);};window.sendToGoogleSheet._sv4patched=true;return true;}
-function pingGAS(){try{var url=localStorage.getItem('parkgolf_webapp_url')||'';if(!url)return;fetch(url+'?ping=1',{method:'GET',mode:'no-cors'}).catch(function(){});}catch(e){}}
-function refreshCount(){try{var list=JSON.parse(localStorage.getItem('parkGolfHistories_sv4')||'[]');var el=document.getElementById('historyCount');if(el)el.textContent=list.length;}catch(e){}}
-function initClearAllBtn(){var btn=document.getElementById('clearAllBtn');if(!btn)return;btn.addEventListener('click',function(){if(!confirm('이름·성별·소속·점수를 모두 초기화하시겠습니까?'))return;try{if(typeof clearScores==='function')clearScores();}catch(e){}
-for(var i=1;i<=4;i++){var p=document.getElementById('player'+i);var g=document.getElementById('gender'+i);var a=document.getElementById('affiliation'+i);var h=document.getElementById('nameHeader'+i);if(p)p.value='';if(g)g.value='';if(a)a.value='';if(h)h.textContent='경기자 '+i;}
-var tn=document.getElementById('teamName');var tc=document.getElementById('shareTeam');if(tn)tn.value='';if(tc)tc.textContent='미입력';try{if(typeof autoSave==='function')autoSave();}catch(e){}});}
-document.addEventListener('DOMContentLoaded',function(){setTimeout(patchBigo,500);setTimeout(patchBigo,1000);setTimeout(patchBigo,2000);if(!patchSend()){var tries=0;var t=setInterval(function(){if(patchSend()||++tries>20)clearInterval(t);},200);}
-setTimeout(pingGAS,300);setTimeout(pingGAS,2000);setTimeout(pingGAS,5000);setInterval(refreshCount,2000);setTimeout(refreshCount,500);initClearAllBtn();});})();
+// ══════════════════════════════════════════
+// PASIS SV4 통합 패치 스크립트
+// ══════════════════════════════════════════
+(function(){
+  // ① 비고 필드: 텍스트 입력 강제 + 전송 직전 동기화
+  function patchBigo() {
+    for(var i=1;i<=4;i++){
+      var el = document.getElementById('in-HIO-'+i);
+      if(!el) continue;
+      // 기존 이벤트 제거 후 새 요소로 교체
+      var clone = el.cloneNode(true);
+      clone.type = 'text';
+      clone.setAttribute('inputmode','text');
+      clone.maxLength = 30;
+      clone.removeAttribute('pattern');
+      clone.style.color = '#111';
+      el.parentNode.replaceChild(clone, el);
+      (function(idx, inp){
+        inp.addEventListener('input', function(){
+          // 텍스트 그대로 저장 (숫자 변환 없이)
+          try { summaryScores['HIO'][idx] = this.value; } catch(e){}
+          try { if(typeof autoSave==='function') autoSave(); } catch(e){}
+        });
+      })(i, clone);
+    }
+  }
+
+  // ② fetch 가로채기: GAS 전송 body에서 holeInOne을 DOM 원문으로 교체
+  //    num2()가 이미 숫자변환 후여도 여기서 텍스트로 복원
+  var _origFetch = window.fetch;
+  // ★ fetch 가로채기: 비고 텍스트 교체 + 실패 시 1회 자동 재시도
+  window.fetch = function(url, options) {
+    // 비고 텍스트 교체
+    try {
+      if(options && options.body && typeof url === 'string'
+         && url.indexOf('script.google.com') !== -1) {
+        var body = JSON.parse(options.body);
+        if(body && Array.isArray(body.players)) {
+          var playerIdx = 0;
+          for(var pi=1; pi<=4; pi++){
+            var nameEl = document.getElementById('player'+pi);
+            if(!nameEl || !nameEl.value.trim()) continue;
+            var bigoEl = document.getElementById('in-HIO-'+pi);
+            var bigoVal = bigoEl ? bigoEl.value || '' : '';
+            if(playerIdx < body.players.length) {
+              body.players[playerIdx].holeInOne = bigoVal;
+            }
+            playerIdx++;
+          }
+          options = Object.assign({}, options, {body: JSON.stringify(body)});
+        }
+      }
+    } catch(eFetch){}
+
+    // GAS 점수 전송 요청 → 실패 시 2초 후 1회 자동 재시도
+    var isScorePost = (typeof url === 'string' && url.indexOf('script.google.com') !== -1
+                      && options && options.method === 'POST');
+    if(!isScorePost) return _origFetch.apply(this, arguments);
+
+    return _origFetch.apply(this, arguments).then(function(resp) {
+      // 응답 텍스트를 읽고 재구성 (body 소비 문제 방지)
+      return resp.text().then(function(text) {
+        var data = {};
+        try { data = JSON.parse(text); } catch(ep) {}
+
+        if(data && data.coldstart) {
+          // 콜드 스타트 → 즉시 재시도 (0.5초 후)
+          return new Promise(function(resolve) {
+            setTimeout(function(){
+              resolve(_origFetch(url, options));
+            }, 500);
+          });
+        }
+
+        // 정상 응답 → Response 재구성해서 반환
+        return new Response(text, {
+          status: resp.status || 200,
+          headers: {'Content-Type':'application/json'}
+        });
+      });
+    }).catch(function(err) {
+      // 네트워크 오류 → 3초 후 재시도
+      console.warn('⚠️ 전송 실패 — 3초 후 재시도:', err);
+      return new Promise(function(resolve) {
+        setTimeout(function(){
+          resolve(_origFetch(url, options));
+        }, 3000);
+      });
+    });
+  };
+
+  // sendToGoogleSheet 최초 전송 실패 방지: 중복 전송 차단 오버라이드
+  function patchSend() {
+    var orig = window.sendToGoogleSheet;
+    if(typeof orig !== 'function' || orig._sv4patched) return false;
+    window.sendToGoogleSheet = function(){
+      // 비고 DOM→summaryScores 동기화 (fetch 가로채기 보완)
+      for(var i=1;i<=4;i++){
+        var el = document.getElementById('in-HIO-'+i);
+        if(el) try { summaryScores['HIO'][i] = el.value || ''; } catch(e){}
+      }
+      return orig.apply(this, arguments);
+    };
+    window.sendToGoogleSheet._sv4patched = true;
+    return true;
+  }
+
+  // ③ GAS 워밍업 ping (콜드 스타트 방지)
+  function pingGAS(){
+    try {
+      var url = localStorage.getItem('parkgolf_webapp_url') || '';
+      if(!url) return;
+      fetch(url + '?ping=1', {method:'GET', mode:'no-cors'}).catch(function(){});
+    } catch(e){}
+  }
+
+  // ④ 히스토리 카운트 실시간 갱신
+  function refreshCount(){
+    try {
+      var list = JSON.parse(localStorage.getItem('parkGolfHistories_sv4')||'[]');
+      var el = document.getElementById('historyCount');
+      if(el) el.textContent = list.length;
+    } catch(e){}
+  }
+
+  // ⑤ 전체 초기화 버튼 (이름+성별+소속+점수)
+  function initClearAllBtn(){
+    var btn = document.getElementById('clearAllBtn');
+    if(!btn) return;
+    btn.addEventListener('click', function(){
+      if(!confirm('이름·성별·소속·점수를 모두 초기화하시겠습니까?')) return;
+      try { if(typeof clearScores==='function') clearScores(); } catch(e){}
+      for(var i=1;i<=4;i++){
+        var p=document.getElementById('player'+i);
+        var g=document.getElementById('gender'+i);
+        var a=document.getElementById('affiliation'+i);
+        var h=document.getElementById('nameHeader'+i);
+        if(p) p.value='';
+        if(g) g.value='';
+        if(a) a.value='';
+        if(h) h.textContent='경기자 '+i;
+      }
+      var tn=document.getElementById('teamName');
+      var tc=document.getElementById('shareTeam');
+      if(tn) tn.value='';
+      if(tc) tc.textContent='미입력';
+      try { if(typeof autoSave==='function') autoSave(); } catch(e){}
+    });
+  }
+
+  // 실행
+  document.addEventListener('DOMContentLoaded', function(){
+    // 비고 패치 — 여러 번 시도
+    setTimeout(patchBigo, 500);
+    setTimeout(patchBigo, 1000);
+    setTimeout(patchBigo, 2000);
+
+    // sendToGoogleSheet 패치 — 로드될 때까지 대기
+    if(!patchSend()){
+      var tries = 0;
+      var t = setInterval(function(){
+        if(patchSend() || ++tries > 20) clearInterval(t);
+      }, 200);
+    }
+
+    // GAS 워밍업 (콜드 스타트 방지 — 앱 열리면 즉시 ping)
+    setTimeout(pingGAS, 300);
+    setTimeout(pingGAS, 2000);
+    setTimeout(pingGAS, 5000);
+
+    // 히스토리 카운트
+    setInterval(refreshCount, 2000);
+    setTimeout(refreshCount, 500);
+
+    // 버튼 초기화
+    initClearAllBtn();
+  });
+})();
 </script>
 
 
@@ -1572,10 +1802,52 @@ setTimeout(pingGAS,300);setTimeout(pingGAS,2000);setTimeout(pingGAS,5000);setInt
 
 
 <script>
-(function(){function showLoading(msg){var el=document.getElementById('sv4LoadingOverlay');var msgEl=document.getElementById('sv4LoadingMsg');var bar=document.getElementById('sv4LoadingBar');if(!el)return;if(msgEl)msgEl.textContent=msg||'조편성 진행 중입니다';el.style.display='flex';if(bar){bar.style.width='0%';setTimeout(function(){bar.style.width='95%';},50);}}
-function hideLoading(){var el=document.getElementById('sv4LoadingOverlay');if(el)el.style.display='none';}
-var _waitTeam=setInterval(function(){var orig=window.executeTeamAssignment;if(typeof orig==='function'&&!orig._patched){window.executeTeamAssignment=async function(){var _teamFetchStarted=false;var _origFetchLocal=window.fetch;window.fetch=function(url,opts){if(!_teamFetchStarted&&typeof url==='string'&&url.indexOf('script.google.com')!==-1){_teamFetchStarted=true;showLoading('조편성 진행 중입니다');}
-return _origFetchLocal.apply(this,arguments);};try{await orig.apply(this,arguments);}finally{window.fetch=_origFetchLocal;hideLoading();}};window.executeTeamAssignment._patched=true;clearInterval(_waitTeam);}},200);setTimeout(function(){clearInterval(_waitTeam);},5000);})();
+// ── 조편성 로딩 오버레이 ──
+(function(){
+  function showLoading(msg) {
+    var el = document.getElementById('sv4LoadingOverlay');
+    var msgEl = document.getElementById('sv4LoadingMsg');
+    var bar = document.getElementById('sv4LoadingBar');
+    if(!el) return;
+    if(msgEl) msgEl.textContent = msg || '조편성 진행 중입니다';
+    el.style.display = 'flex';
+    if(bar) { bar.style.width = '0%'; setTimeout(function(){ bar.style.width = '95%'; }, 50); }
+  }
+  function hideLoading() {
+    var el = document.getElementById('sv4LoadingOverlay');
+    if(el) el.style.display = 'none';
+  }
+
+  // executeTeamAssignment 오버라이드
+  // 난독화된 함수는 confirm() 후 fetch → 오버레이는 fetch 직전에 표시
+  var _waitTeam = setInterval(function(){
+    var orig = window.executeTeamAssignment;
+    if(typeof orig === 'function' && !orig._patched) {
+      window.executeTeamAssignment = async function(){
+        // confirm은 기존 함수 안에 있으므로 먼저 실행
+        // fetch 시작 시점을 fetch 가로채기로 감지하여 오버레이 표시
+        var _teamFetchStarted = false;
+        var _origFetchLocal = window.fetch;
+        window.fetch = function(url, opts){
+          if(!_teamFetchStarted && typeof url==='string' && url.indexOf('script.google.com')!==-1){
+            _teamFetchStarted = true;
+            showLoading('조편성 진행 중입니다');
+          }
+          return _origFetchLocal.apply(this, arguments);
+        };
+        try {
+          await orig.apply(this, arguments);
+        } finally {
+          window.fetch = _origFetchLocal; // fetch 복원
+          hideLoading();
+        }
+      };
+      window.executeTeamAssignment._patched = true;
+      clearInterval(_waitTeam);
+    }
+  }, 200);
+  setTimeout(function(){ clearInterval(_waitTeam); }, 5000);
+})();
 </script>
 
 
@@ -1583,109 +1855,836 @@ return _origFetchLocal.apply(this,arguments);};try{await orig.apply(this,argumen
 
 
 <script>
-(function(){var _waitSend=setInterval(function(){var orig=window.sendToGoogleSheet;if(typeof orig!=='function'||orig._warmed){if(orig&&orig._warmed)clearInterval(_waitSend);return;}
-clearInterval(_waitSend);window.sendToGoogleSheet=function(){var self=this,args=arguments;var btn=document.getElementById('sendBtn');if(btn&&btn.disabled)return;var gasUrl='';try{var el=document.getElementById('webappUrl')||document.getElementById('qrUrl');if(el)gasUrl=el.value.trim();if(!gasUrl)gasUrl=localStorage.getItem('parkgolf_webapp_url')||'';}catch(e){}
-if(!gasUrl||gasUrl.indexOf('script.google.com')===-1){return orig.apply(self,args);}
-var origText=btn?btn.textContent:'';if(btn){btn.disabled=true;btn.style.opacity='0.6';btn.textContent='⚡ 서버 연결 중...';}
-fetch(gasUrl+'?warmup=1').then(function(r){return r.text();}).catch(function(){return'';}).finally(function(){if(btn){btn.disabled=false;btn.style.opacity='';btn.textContent=origText;}
-orig.apply(self,args);});};window.sendToGoogleSheet._warmed=true;},300);setTimeout(function(){clearInterval(_waitSend);},8000);})();
+// ── GAS 워밍업: GET 응답 확인 후 POST 전송 ──
+(function(){
+  var _waitSend = setInterval(function(){
+    var orig = window.sendToGoogleSheet;
+    if(typeof orig !== 'function' || orig._warmed) {
+      if(orig && orig._warmed) clearInterval(_waitSend);
+      return;
+    }
+    clearInterval(_waitSend);
+
+    window.sendToGoogleSheet = function(){
+      var self = this, args = arguments;
+      var btn = document.getElementById('sendBtn');
+      if(btn && btn.disabled) return; // 이미 전송 중
+
+      var gasUrl = '';
+      try {
+        var el = document.getElementById('webappUrl') || document.getElementById('qrUrl');
+        if(el) gasUrl = el.value.trim();
+        if(!gasUrl) gasUrl = localStorage.getItem('parkgolf_webapp_url') || '';
+      } catch(e){}
+
+      // GAS URL 없으면 바로 전송
+      if(!gasUrl || gasUrl.indexOf('script.google.com') === -1) {
+        return orig.apply(self, args);
+      }
+
+      // 버튼 상태 변경
+      var origText = btn ? btn.textContent : '';
+      if(btn){ btn.disabled=true; btn.style.opacity='0.6'; btn.textContent='⚡ 서버 연결 중...'; }
+
+      // GET 요청 — 실제 응답 기다림 (GAS 완전 워밍업 확인)
+      fetch(gasUrl + '?warmup=1')
+        .then(function(r){ return r.text(); })
+        .catch(function(){ return ''; })
+        .finally(function(){
+          if(btn){ btn.disabled=false; btn.style.opacity=''; btn.textContent=origText; }
+          // GAS가 GET 처리 완료 → 이제 POST 전송 (GAS 완전히 워밍업됨)
+          orig.apply(self, args);
+        });
+    };
+    window.sendToGoogleSheet._warmed = true;
+  }, 300);
+  setTimeout(function(){ clearInterval(_waitSend); }, 8000);
+})();
 </script>
 
 
 <script>
-(function(){function sleep(ms){return new Promise(function(resolve){setTimeout(resolve,ms);});}
-async function warmupWebApp(url){try{await fetch(url,{method:'GET',cache:'no-store'});await sleep(150);}catch(e){}}
-function collectPlayersForSend(){var players=[];for(var i=1;i<=4;i++){var nameHeaderEl=document.getElementById('nameHeader'+i);var hiddenPlayerEl=document.getElementById('player'+i);var genderEl=document.getElementById('gender'+i);var affEl=document.getElementById('affiliation'+i);var name='';if(typeof playerNames!=='undefined'&&playerNames&&playerNames[i-1]){name=String(playerNames[i-1]||'').trim();}
-if(!name&&hiddenPlayerEl){name=String(hiddenPlayerEl.value||'').trim();}
-if(!name&&nameHeaderEl){name=String(nameHeaderEl.textContent||nameHeaderEl.innerText||'').trim();name=name.replace(/^\d+\s*/,'').trim();if(/^경기자\s*\d+$/.test(name))name='';}
-if(!name)continue;var gender='';if(typeof playerGenders!=='undefined'&&playerGenders&&playerGenders[i-1]){gender=String(playerGenders[i-1]||'').trim();}
-if(!gender&&genderEl){gender=String(genderEl.value||'').trim();}
-if(!gender&&nameHeaderEl){var infoText=String(nameHeaderEl.textContent||nameHeaderEl.innerText||'');var m=infoText.match(/\(\s*([남여])\s+/);if(m)gender=m[1];}
-if(!gender){throw new Error('⚠️ '+name+' 선수의 성별을 선택해주세요.');}
-var affiliation='';if(typeof playerAffiliations!=='undefined'&&playerAffiliations&&playerAffiliations[i-1]){affiliation=String(playerAffiliations[i-1]||'').trim();}
-if(!affiliation&&affEl){affiliation=String(affEl.value||'').trim();}
-if(!affiliation&&nameHeaderEl){var infoText2=String(nameHeaderEl.textContent||nameHeaderEl.innerText||'');var m2=infoText2.match(/\(\s*[남여]\s+([^\)]+)\s*\)/);if(m2)affiliation=String(m2[1]||'').trim();}
-var A=typeof num2==='function'?num2(summaryScores.A[i]):Number(summaryScores.A[i])||0;var B=typeof num2==='function'?num2(summaryScores.B[i]):Number(summaryScores.B[i])||0;var C=typeof num2==='function'?num2(summaryScores.C[i]):Number(summaryScores.C[i])||0;var D=typeof num2==='function'?num2(summaryScores.D[i]):Number(summaryScores.D[i])||0;var H=typeof num2==='function'?num2(summaryScores.HIO&&summaryScores.HIO[i]):Number((summaryScores.HIO&&summaryScores.HIO[i])||0)||0;players.push({name:name,gender:gender,affiliation:affiliation,A:A,B:B,C:C,D:D,holeInOne:H,total:A+B+C+D});}
-return players;}
-async function sendToGoogleSheetPatched(){var btn=document.getElementById('autoSendBtn');if(btn&&btn.disabled)return;var restoreBtn=function(){if(!btn)return;btn.disabled=false;btn.style.opacity='';btn.textContent='구글 시트 자동 전송 (대회 자동 집계)';};try{if(btn){btn.disabled=true;btn.style.opacity='0.5';btn.textContent='⏳ 전송 중...';}
-var webappUrl=((document.getElementById('adminWebappUrl')||{}).value||(localStorage.getItem('parkgolf_webapp_url')||localStorage.getItem('pasis_webapp_url'))||'').trim();var code=(((document.getElementById('tournamentCode')||{}).value||(localStorage.getItem('parkgolf_tournament_code')||localStorage.getItem('pasis_tournament_code'))||'')+'').trim().toUpperCase();var team=(function(){try{var p=new URLSearchParams(window.location.search||'');var t=p.get('t')||p.get('team')||'';if(t)return decodeURIComponent(t);}catch(e){}return(((document.getElementById('teamName')||{}).value||'')+'').trim();})();if(!webappUrl)throw new Error('웹앱 URL이 없습니다.');if(!code)throw new Error('대회 코드가 없습니다.');if(!team)throw new Error('조명이 없습니다.');var players=collectPlayersForSend();if(!players.length)throw new Error('전송할 선수 이름이 없습니다.');var payload={code:code,team:team,players:players,time:new Date().toLocaleString('ko-KR',{timeZone:'Asia/Seoul'})};await warmupWebApp(webappUrl);var res=await fetch(webappUrl,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});var json=await res.json();if(!json||!json.success){throw new Error((json&&json.message)?json.message:'전송 실패');}
-if(typeof showToast==='function'){showToast('전송 완료! '+team);}else{alert('전송 완료! '+team);}
-var histories=[];try{histories=JSON.parse(localStorage.getItem('parkGolfHistories_sv4')||'[]');}catch(e){}
-histories.unshift({date:new Date().toLocaleString('ko-KR',{timeZone:'Asia/Seoul'}),team:team,code:code,players:players.map(function(p){return p.name;}),teamName:team,summaryScores:JSON.parse(JSON.stringify(summaryScores)),playerNames:[1,2,3,4].map(function(i){var el=document.getElementById('nameHeader'+i);return el?(el.value||''):'';})});if(histories.length>30)histories=histories.slice(0,30);localStorage.setItem('parkGolfHistories_sv4',JSON.stringify(histories));var historyCount=document.getElementById('historyCount');if(historyCount)historyCount.textContent=histories.length;}catch(err){alert('❌ '+(err&&err.message?err.message:err));}finally{restoreBtn();}}
-window.sendToGoogleSheet=sendToGoogleSheetPatched;document.addEventListener('DOMContentLoaded',function(){var btn=document.getElementById('autoSendBtn');if(!btn)return;btn.onclick=function(ev){if(ev){ev.preventDefault();ev.stopPropagation();}
-sendToGoogleSheetPatched();return false;};});})();
+(function() {
+  function sleep(ms){ return new Promise(function(resolve){ setTimeout(resolve, ms); }); }
+
+  async function warmupWebApp(url){
+    try {
+      await fetch(url, { method: 'GET', cache: 'no-store' });
+      await sleep(150);
+    } catch (e) {
+      // 워밍업 실패는 본 전송에서 다시 처리
+    }
+  }
+
+  function collectPlayersForSend() {
+    var players = [];
+    for (var i = 1; i <= 4; i++) {
+      var nameHeaderEl = document.getElementById('nameHeader' + i);
+      var hiddenPlayerEl = document.getElementById('player' + i);
+      var genderEl = document.getElementById('gender' + i);
+      var affEl = document.getElementById('affiliation' + i);
+
+      var name = '';
+      if (typeof playerNames !== 'undefined' && playerNames && playerNames[i - 1]) {
+        name = String(playerNames[i - 1] || '').trim();
+      }
+      if (!name && hiddenPlayerEl) {
+        name = String(hiddenPlayerEl.value || '').trim();
+      }
+      if (!name && nameHeaderEl) {
+        name = String(nameHeaderEl.textContent || nameHeaderEl.innerText || '').trim();
+        name = name.replace(/^\d+\s*/, '').trim();
+        if (/^경기자\s*\d+$/.test(name)) name = '';
+      }
+      if (!name) continue;
+
+      var gender = '';
+      if (typeof playerGenders !== 'undefined' && playerGenders && playerGenders[i - 1]) {
+        gender = String(playerGenders[i - 1] || '').trim();
+      }
+      if (!gender && genderEl) {
+        gender = String(genderEl.value || '').trim();
+      }
+      if (!gender && nameHeaderEl) {
+        var infoText = String(nameHeaderEl.textContent || nameHeaderEl.innerText || '');
+        var m = infoText.match(/\(\s*([남여])\s+/);
+        if (m) gender = m[1];
+      }
+      if (!gender) {
+        throw new Error('⚠️ ' + name + ' 선수의 성별을 선택해주세요.');
+      }
+
+      var affiliation = '';
+      if (typeof playerAffiliations !== 'undefined' && playerAffiliations && playerAffiliations[i - 1]) {
+        affiliation = String(playerAffiliations[i - 1] || '').trim();
+      }
+      if (!affiliation && affEl) {
+        affiliation = String(affEl.value || '').trim();
+      }
+      if (!affiliation && nameHeaderEl) {
+        var infoText2 = String(nameHeaderEl.textContent || nameHeaderEl.innerText || '');
+        var m2 = infoText2.match(/\(\s*[남여]\s+([^\)]+)\s*\)/);
+        if (m2) affiliation = String(m2[1] || '').trim();
+      }
+
+      var A = typeof num2 === 'function' ? num2(summaryScores.A[i]) : Number(summaryScores.A[i]) || 0;
+      var B = typeof num2 === 'function' ? num2(summaryScores.B[i]) : Number(summaryScores.B[i]) || 0;
+      var C = typeof num2 === 'function' ? num2(summaryScores.C[i]) : Number(summaryScores.C[i]) || 0;
+      var D = typeof num2 === 'function' ? num2(summaryScores.D[i]) : Number(summaryScores.D[i]) || 0;
+      var H = typeof num2 === 'function' ? num2(summaryScores.HIO && summaryScores.HIO[i]) : Number((summaryScores.HIO && summaryScores.HIO[i]) || 0) || 0;
+
+      players.push({
+        name: name,
+        gender: gender,
+        affiliation: affiliation,
+        A: A, B: B, C: C, D: D,
+        holeInOne: H,
+        total: A + B + C + D
+      });
+    }
+    return players;
+  }
+
+  async function sendToGoogleSheetPatched() {
+    var btn = document.getElementById('autoSendBtn');
+    if (btn && btn.disabled) return;
+
+    var restoreBtn = function() {
+      if (!btn) return;
+      btn.disabled = false;
+      btn.style.opacity = '';
+      btn.textContent = '구글 시트 자동 전송 (대회 자동 집계)';
+    };
+
+    try {
+      if (btn) {
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+        btn.textContent = '⏳ 전송 중...';
+      }
+
+      var webappUrl = ((document.getElementById('adminWebappUrl') || {}).value || (localStorage.getItem('parkgolf_webapp_url') || localStorage.getItem('pasis_webapp_url')) || '').trim();
+      var code = (((document.getElementById('tournamentCode') || {}).value || (localStorage.getItem('parkgolf_tournament_code') || localStorage.getItem('pasis_tournament_code')) || '') + '').trim().toUpperCase();
+      var team = (function(){ try{ var p=new URLSearchParams(window.location.search||''); var t=p.get('t')||p.get('team')||''; if(t) return decodeURIComponent(t); }catch(e){} return (((document.getElementById('teamName')||{}).value||'')+'').trim(); })();
+
+      if (!webappUrl) throw new Error('웹앱 URL이 없습니다.');
+      if (!code) throw new Error('대회 코드가 없습니다.');
+      if (!team) throw new Error('조명이 없습니다.');
+
+      var players = collectPlayersForSend();
+      if (!players.length) throw new Error('전송할 선수 이름이 없습니다.');
+
+      var payload = {
+        code: code,
+        team: team,
+        players: players,
+        time: new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })
+      };
+
+      // 첫 전송 안정화: 워밍업 후 본 전송
+      await warmupWebApp(webappUrl);
+
+      var res = await fetch(webappUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+
+      var json = await res.json();
+
+      if (!json || !json.success) {
+        throw new Error((json && json.message) ? json.message : '전송 실패');
+      }
+
+      if (typeof showToast === 'function') {
+        showToast('전송 완료! ' + team);
+      } else {
+        alert('전송 완료! ' + team);
+      }
+
+      var histories = [];
+      try {
+        histories = JSON.parse(localStorage.getItem('parkGolfHistories_sv4') || '[]');
+      } catch (e) {}
+
+      histories.unshift({
+        date: new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }),
+        team: team,
+        code: code,
+        players: players.map(function(p){ return p.name; }),
+        teamName: team,
+        summaryScores: JSON.parse(JSON.stringify(summaryScores)),
+        playerNames: [1,2,3,4].map(function(i){
+          var el = document.getElementById('nameHeader' + i);
+          return el ? (el.value || '') : '';
+        })
+      });
+
+      if (histories.length > 30) histories = histories.slice(0, 30);
+      localStorage.setItem('parkGolfHistories_sv4', JSON.stringify(histories));
+
+      var historyCount = document.getElementById('historyCount');
+      if (historyCount) historyCount.textContent = histories.length;
+    } catch (err) {
+      alert('❌ ' + (err && err.message ? err.message : err));
+    } finally {
+      restoreBtn();
+    }
+  }
+
+  window.sendToGoogleSheet = sendToGoogleSheetPatched;
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var btn = document.getElementById('autoSendBtn');
+    if (!btn) return;
+    btn.onclick = function(ev) {
+      if (ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+      }
+      sendToGoogleSheetPatched();
+      return false;
+    };
+  });
+})();
 </script>
 
 <script>
-(function(){var _orig=window.openAdminModal;window.openAdminModal=function(){if(_orig)_orig.apply(this,arguments);try{var saved=JSON.parse(localStorage.getItem('parkgolf_saved_urls')||'[]');if(saved.length){var latest=saved[0];var cEl=document.getElementById('adminCodeInput');var uEl=document.getElementById('adminWebappUrl');if(cEl&&latest.code)cEl.value=latest.code;if(uEl&&latest.url)uEl.value=latest.url;}}catch(e){}};})();window.addEventListener('load',function(){setTimeout(function(){var el=document.getElementById('qrUrl');if(el)el.value='https://leejh50-dotcom.github.io/parkgolf-score/pasis4-send.html';},100);});
+/* ── 관리자 모달: 최근 저장 코드 자동 표시 ── */
+(function(){
+  var _orig = window.openAdminModal;
+  window.openAdminModal = function(){
+    if(_orig) _orig.apply(this, arguments);
+    try{
+      var saved = JSON.parse(localStorage.getItem('parkgolf_saved_urls')||'[]');
+      if(saved.length){
+        var latest = saved[0];
+        var cEl = document.getElementById('adminCodeInput');
+        var uEl = document.getElementById('adminWebappUrl');
+        if(cEl && latest.code) cEl.value = latest.code;
+        if(uEl && latest.url) uEl.value = latest.url;
+      }
+    }catch(e){}
+  };
+})();
+
+/* ── QR 생성 URL 강제 설정: sv4.html 대신 pasis4-send.html로 고정 ── */
+window.addEventListener('load', function(){
+  setTimeout(function(){
+    var el = document.getElementById('qrUrl');
+    if(el) el.value = 'https://leejh50-dotcom.github.io/parkgolf-score/pasis4-send.html';
+  }, 100);
+});
 </script>
 <script>
-(function(){var _origSetItem=localStorage.setItem.bind(localStorage);localStorage.setItem=function(key,value){if(key==='parkgolf_saved_urls'){try{var arr=JSON.parse(value||'[]');if(Array.isArray(arr)&&arr.length>=2){var last=arr[arr.length-1];var rest=arr.slice(0,arr.length-1).filter(function(x){return!(x.url===last.url&&x.code===last.code);});arr=[last].concat(rest);if(arr.length>10)arr=arr.slice(0,10);value=JSON.stringify(arr);}}catch(e){}}
-_origSetItem(key,value);};})();(function(){var _origShow=window.showSavedUrlsList;window.showSavedUrlsList=function(){if(_origShow)_origShow.apply(this,arguments);setTimeout(function(){try{var saved=JSON.parse(localStorage.getItem('parkgolf_saved_urls')||'[]');var el=document.getElementById('savedUrlsList');if(!el||!saved.length)return;el.innerHTML=saved.map(function(item,idx){return'<div style="border:1px solid #e5e7eb;border-radius:10px;padding:12px;margin-bottom:10px;">'
-+'<div style="font-size:15px;font-weight:900;color:#1e3c72;margin-bottom:4px;">'+esc_(item.code)+'</div>'
-+'<div style="font-size:12px;color:#6b7280;word-break:break-all;margin-bottom:4px;">'+(item.url||'').slice(0,50)+'...</div>'
-+'<div style="font-size:11px;color:#9ca3af;margin-bottom:8px;">'+(item.saved||'')+'</div>'
-+'<div style="display:flex;gap:8px;">'
-+'<button onclick="applySavedUrl('+idx+')" style="flex:1;padding:8px 14px;background:#c8860a;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✅ 적용</button>'
-+'<button onclick="deleteSavedUrl('+idx+')" style="padding:8px 14px;background:#dc2626;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">🗑 삭제</button>'
-+'</div></div>';}).join('');}catch(e){}},50);};function esc_(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}})();
+(function(){
+  var _origSetItem = localStorage.setItem.bind(localStorage);
+  localStorage.setItem = function(key, value){
+    if(key === 'parkgolf_saved_urls'){
+      try{
+        var arr = JSON.parse(value||'[]');
+        if(Array.isArray(arr) && arr.length >= 2){
+          var last = arr[arr.length-1];
+          /* 마지막 항목이 나머지와 다른 경우 = 새로 추가된 항목 → 앞으로 이동 */
+          var rest = arr.slice(0, arr.length-1).filter(function(x){
+            return !(x.url===last.url && x.code===last.code);
+          });
+          arr = [last].concat(rest);
+          if(arr.length > 10) arr = arr.slice(0, 10);
+          value = JSON.stringify(arr);
+        }
+      }catch(e){}
+    }
+    _origSetItem(key, value);
+  };
+})();
+
+/* ── savedUrlsList: localStorage 기준(이미 최신순)으로 렌더링 override ── */
+(function(){
+  var _origShow = window.showSavedUrlsList;
+  window.showSavedUrlsList = function(){
+    if(_origShow) _origShow.apply(this, arguments);
+    setTimeout(function(){
+      try{
+        var saved = JSON.parse(localStorage.getItem('parkgolf_saved_urls')||'[]');
+        var el = document.getElementById('savedUrlsList');
+        if(!el || !saved.length) return;
+        el.innerHTML = saved.map(function(item, idx){
+          return '<div style="border:1px solid #e5e7eb;border-radius:10px;padding:12px;margin-bottom:10px;">'
+            +'<div style="font-size:15px;font-weight:900;color:#1e3c72;margin-bottom:4px;">'+esc_(item.code)+'</div>'
+            +'<div style="font-size:12px;color:#6b7280;word-break:break-all;margin-bottom:4px;">'+(item.url||'').slice(0,50)+'...</div>'
+            +'<div style="font-size:11px;color:#9ca3af;margin-bottom:8px;">'+(item.saved||'')+'</div>'
+            +'<div style="display:flex;gap:8px;">'
+            +'<button onclick="applySavedUrl('+idx+')" style="flex:1;padding:8px 14px;background:#c8860a;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">✅ 적용</button>'
+            +'<button onclick="deleteSavedUrl('+idx+')" style="padding:8px 14px;background:#dc2626;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">🗑 삭제</button>'
+            +'</div></div>';
+        }).join('');
+      }catch(e){}
+    }, 50);
+  };
+  function esc_(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+})();
 </script>
 
 <script>
-(function(){function syncConfigKeys(){try{var adminUrlEl=document.getElementById('adminWebappUrl');var codeEl=document.getElementById('adminCodeInput');var mainCodeEl=document.getElementById('tournamentCode');var webappUrl=(adminUrlEl&&adminUrlEl.value?adminUrlEl.value.trim():'')||localStorage.getItem('parkgolf_webapp_url')||localStorage.getItem('pasis_webapp_url')||'';var tournamentCode=(codeEl&&codeEl.value?codeEl.value.trim():'')||(mainCodeEl&&mainCodeEl.value?mainCodeEl.value.trim():'')||localStorage.getItem('parkgolf_tournament_code')||localStorage.getItem('pasis_tournament_code')||'';if(webappUrl){localStorage.setItem('parkgolf_webapp_url',webappUrl);localStorage.setItem('pasis_webapp_url',webappUrl);if(adminUrlEl&&!adminUrlEl.value)adminUrlEl.value=webappUrl;}
-if(tournamentCode){tournamentCode=String(tournamentCode).trim().toUpperCase();localStorage.setItem('parkgolf_tournament_code',tournamentCode);localStorage.setItem('pasis_tournament_code',tournamentCode);if(codeEl&&!codeEl.value)codeEl.value=tournamentCode;if(mainCodeEl&&!mainCodeEl.value)mainCodeEl.value=tournamentCode;}}catch(e){console.log('config key sync failed',e);}}
-var originalSaveAdminUrlAndCode=window.saveAdminUrlAndCode;window.saveAdminUrlAndCode=function(){if(typeof originalSaveAdminUrlAndCode==='function'){originalSaveAdminUrlAndCode.apply(this,arguments);}
-setTimeout(syncConfigKeys,0);};document.addEventListener('DOMContentLoaded',function(){syncConfigKeys();setTimeout(syncConfigKeys,200);setTimeout(syncConfigKeys,800);});window.addEventListener('load',function(){syncConfigKeys();setTimeout(syncConfigKeys,300);});window.syncConfigKeys=syncConfigKeys;})();
+(function(){
+  function syncConfigKeys() {
+    try {
+      var adminUrlEl = document.getElementById('adminWebappUrl');
+      var codeEl = document.getElementById('adminCodeInput');
+      var mainCodeEl = document.getElementById('tournamentCode');
+
+      var webappUrl =
+        (adminUrlEl && adminUrlEl.value ? adminUrlEl.value.trim() : '') ||
+        localStorage.getItem('parkgolf_webapp_url') ||
+        localStorage.getItem('pasis_webapp_url') ||
+        '';
+
+      var tournamentCode =
+        (codeEl && codeEl.value ? codeEl.value.trim() : '') ||
+        (mainCodeEl && mainCodeEl.value ? mainCodeEl.value.trim() : '') ||
+        localStorage.getItem('parkgolf_tournament_code') ||
+        localStorage.getItem('pasis_tournament_code') ||
+        '';
+
+      if (webappUrl) {
+        localStorage.setItem('parkgolf_webapp_url', webappUrl);
+        localStorage.setItem('pasis_webapp_url', webappUrl);
+        if (adminUrlEl && !adminUrlEl.value) adminUrlEl.value = webappUrl;
+      }
+
+      if (tournamentCode) {
+        tournamentCode = String(tournamentCode).trim().toUpperCase();
+        localStorage.setItem('parkgolf_tournament_code', tournamentCode);
+        localStorage.setItem('pasis_tournament_code', tournamentCode);
+        if (codeEl && !codeEl.value) codeEl.value = tournamentCode;
+        if (mainCodeEl && !mainCodeEl.value) mainCodeEl.value = tournamentCode;
+      }
+    } catch (e) {
+      console.log('config key sync failed', e);
+    }
+  }
+
+  var originalSaveAdminUrlAndCode = window.saveAdminUrlAndCode;
+  window.saveAdminUrlAndCode = function() {
+    if (typeof originalSaveAdminUrlAndCode === 'function') {
+      originalSaveAdminUrlAndCode.apply(this, arguments);
+    }
+    setTimeout(syncConfigKeys, 0);
+  };
+
+  document.addEventListener('DOMContentLoaded', function() {
+    syncConfigKeys();
+    setTimeout(syncConfigKeys, 200);
+    setTimeout(syncConfigKeys, 800);
+  });
+
+  window.addEventListener('load', function() {
+    syncConfigKeys();
+    setTimeout(syncConfigKeys, 300);
+  });
+
+  window.syncConfigKeys = syncConfigKeys;
+})();
 </script>
 
 
 
 <script>
-(function(){function parseHeaderInfo(i){var el=document.getElementById('nameHeader'+i);var raw=el?String(el.textContent||el.innerText||'').trim():'';var info={raw:raw,name:'',gender:'',affiliation:''};if(!raw)return info;var m=raw.match(/^\s*(.*?)\s*\(\s*([남여])\s+([^)]+?)\s*\)\s*$/);if(m){info.name=String(m[1]||'').trim();info.gender=String(m[2]||'').trim();info.affiliation=String(m[3]||'').trim();return info;}
-var nameOnly=raw.replace(/^\d+\s*/,'').trim();if(/^경기자\s*\d+$/.test(nameOnly))nameOnly='';info.name=nameOnly;return info;}
-function getFieldValue(id){var el=document.getElementById(id);if(!el)return'';return String(el.value||el.textContent||'').trim();}
-function syncVisiblePlayersToHidden(){for(var i=1;i<=4;i++){var parsed=parseHeaderInfo(i);var p=document.getElementById('player'+i);var g=document.getElementById('gender'+i);var a=document.getElementById('affiliation'+i);if(parsed.name&&p&&!String(p.value||'').trim())p.value=parsed.name;if(parsed.gender&&g&&!String(g.value||'').trim())g.value=parsed.gender;if(parsed.affiliation&&a&&!String(a.value||'').trim())a.value=parsed.affiliation;}
-try{if(typeof autoSave==='function')autoSave();}catch(e){}}
-function getBigoText(i){var el=document.getElementById('in-HIO-'+i);if(!el)return'';return String(el.value||el.textContent||'').trim();}
-function collectPlayersForSendV4(){syncVisiblePlayersToHidden();var players=[];for(var i=1;i<=4;i++){var parsed=parseHeaderInfo(i);var name='';if(typeof playerNames!=='undefined'&&playerNames&&playerNames[i-1]){name=String(playerNames[i-1]||'').trim();}
-if(!name)name=getFieldValue('player'+i);if(!name)name=parsed.name;var gender='';if(typeof playerGenders!=='undefined'&&playerGenders&&playerGenders[i-1]){gender=String(playerGenders[i-1]||'').trim();}
-if(!gender)gender=getFieldValue('gender'+i);if(!gender)gender=parsed.gender;var affiliation='';if(typeof playerAffiliations!=='undefined'&&playerAffiliations&&playerAffiliations[i-1]){affiliation=String(playerAffiliations[i-1]||'').trim();}
-if(!affiliation)affiliation=getFieldValue('affiliation'+i);if(!affiliation)affiliation=parsed.affiliation;var A=(typeof num2==='function')?num2(summaryScores&&summaryScores.A?summaryScores.A[i]:0):(Number(summaryScores&&summaryScores.A?summaryScores.A[i]:0)||0);var B=(typeof num2==='function')?num2(summaryScores&&summaryScores.B?summaryScores.B[i]:0):(Number(summaryScores&&summaryScores.B?summaryScores.B[i]:0)||0);var C=(typeof num2==='function')?num2(summaryScores&&summaryScores.C?summaryScores.C[i]:0):(Number(summaryScores&&summaryScores.C?summaryScores.C[i]:0)||0);var D=(typeof num2==='function')?num2(summaryScores&&summaryScores.D?summaryScores.D[i]:0):(Number(summaryScores&&summaryScores.D?summaryScores.D[i]:0)||0);var holeInOne=getBigoText(i);var hasVisibleRow=!!(name||gender||affiliation||A||B||C||D||holeInOne);if(!hasVisibleRow)continue;if(!name)continue;if(!gender)throw new Error('⚠️ '+name+' 선수의 성별을 선택해주세요.');players.push({slot:i,name:name,gender:gender,affiliation:affiliation,A:A,B:B,C:C,D:D,holeInOne:holeInOne,total:A+B+C+D});}
-return players;}
-async function sendToGoogleSheetPatchedV4(){var btn=document.getElementById('autoSendBtn');if(btn&&btn.disabled)return;function restoreBtn(){if(!btn)return;btn.disabled=false;btn.style.opacity='';btn.textContent='구글 시트 자동 전송 (대회 자동 집계)';}
-try{if(btn){btn.disabled=true;btn.style.opacity='0.5';btn.textContent='⏳ 전송 중...';}
-syncVisiblePlayersToHidden();var webappUrl=((document.getElementById('adminWebappUrl')||{}).value||localStorage.getItem('parkgolf_webapp_url')||localStorage.getItem('pasis_webapp_url')||'').trim();var code=String(((document.getElementById('tournamentCode')||{}).value||localStorage.getItem('parkgolf_tournament_code')||localStorage.getItem('pasis_tournament_code')||'')).trim().toUpperCase();var team=(function(){try{var p=new URLSearchParams(window.location.search||'');var t=p.get('t')||p.get('team')||'';if(t)return decodeURIComponent(t);}catch(e){}return String(((document.getElementById('teamName')||{}).value||'')).trim();})();if(!webappUrl)throw new Error('웹앱 URL이 없습니다.');if(!code)throw new Error('대회 코드가 없습니다.');if(!team)throw new Error('조명이 없습니다.');var players=collectPlayersForSendV4();if(!players.length)throw new Error('전송할 선수 이름이 없습니다.');var payload={code:code,team:team,players:players.map(function(p){return{name:p.name,gender:p.gender,affiliation:p.affiliation,A:p.A,B:p.B,C:p.C,D:p.D,holeInOne:p.holeInOne,total:p.total};}),time:new Date().toLocaleString('ko-KR',{timeZone:'Asia/Seoul'})};if(typeof warmupWebApp==='function'){await warmupWebApp(webappUrl);}else{try{await fetch(webappUrl+'?ping=1',{method:'GET',mode:'no-cors'});}catch(e){}
-await new Promise(function(resolve){setTimeout(resolve,500);});}
-var res=await fetch(webappUrl,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});var json=await res.json();if(!json||!json.success){throw new Error((json&&json.message)?json.message:'전송 실패');}
-if(typeof showToast==='function')showToast('전송 완료! '+team);else alert('전송 완료! '+team);var histories=[];try{histories=JSON.parse(localStorage.getItem('parkGolfHistories_sv4')||'[]');}catch(e){}
-histories.unshift({date:new Date().toLocaleString('ko-KR',{timeZone:'Asia/Seoul'}),team:team,code:code,players:players.map(function(p){return p.name;}),teamName:team,summaryScores:JSON.parse(JSON.stringify(summaryScores||{})),playerNames:players.map(function(p){return p.name;}),playerCount:players.length,bigoList:players.map(function(p){return p.holeInOne||'';})});if(histories.length>30)histories=histories.slice(0,30);localStorage.setItem('parkGolfHistories_sv4',JSON.stringify(histories));var historyCount=document.getElementById('historyCount');if(historyCount)historyCount.textContent=String(histories.length);}catch(err){alert('❌ '+(err&&err.message?err.message:err));}finally{restoreBtn();}}
-var prevFetch=window.fetch;window.fetch=function(url,options){try{var isScorePost=(typeof url==='string'&&url.indexOf('script.google.com')!==-1&&options&&String(options.method||'').toUpperCase()==='POST');if(isScorePost&&options&&options.body){var body=JSON.parse(options.body);if(body&&Array.isArray(body.players)){var freshPlayers=collectPlayersForSendV4().map(function(p){return{name:p.name,gender:p.gender,affiliation:p.affiliation,A:p.A,B:p.B,C:p.C,D:p.D,holeInOne:p.holeInOne,total:p.total};});if(freshPlayers.length){body.players=freshPlayers;if(document.getElementById('teamName'))body.team=String(document.getElementById('teamName').value||body.team||'').trim();options=Object.assign({},options,{body:JSON.stringify(body)});}}}}catch(e){}
-return prevFetch.apply(this,arguments);};window.generateAccessQR=function(){var appUrl='https://leejh50-dotcom.github.io/parkgolf-score/pasis4-send.html';var old=document.getElementById('pgAccessQrOv');if(old)old.remove();var code=(localStorage.getItem('parkgolf_tournament_code')||'대회코드').toUpperCase();var guideText=['안녕하세요 😊','이번 대회는 파시스(PASIS) SV4.0 프로로','점수를 실시간 집계합니다.','','━━━━━━━━━━━━━━━━━━','📋 경기 당일 점수 전송 방법','━━━━━━━━━━━━━━━━━━','① 경기 종료 후 QR카드를 꺼내세요','② 기본 카메라 앱으로 QR 스캔','③ 링크 팝업 탭 → 파시스 전송화면 열림','④ 4명 × 4코스 점수 입력 (16칸)','⑤ 전송 전 확인 화면에서 최종 확인','⑥ 확인·전송 버튼','','━━━━━━━━━━━━━━━━━━','⚠️ 주의사항','━━━━━━━━━━━━━━━━━━','• 전송은 1회만 가능합니다','  (전송 후 수정 불가 — 오류 시 관리자 문의)','• QR 스캔이 안 되면','  ① 종이 기록지를 관리자에게 직접 제출','  ② 동료 심판에게 QR카드를 건네고 대신 전송 부탁','','━━━━━━━━━━━━━━━━━━','📌 사전 연습 권장 (꼭 해보세요!)','━━━━━━━━━━━━━━━━━━','아래 주소로 미리 접속해 보세요.','','👉 '+appUrl,'','화면 구성을 미리 확인해 두시면','대회 당일 당황하지 않습니다 😊','','※ 연습 중 전송 버튼을 누르셔도','  실제 조 QR 없이는 전송되지 않습니다.','','━━━━━━━━━━━━━━━━━━','대회코드: '+code,'문의: 파시스 본부','👉 카카오톡 1:1 문의','https://open.kakao.com/o/sgdyKKti'].join('\n');var ov=document.createElement('div');ov.id='pgAccessQrOv';ov.style.cssText='position:fixed;inset:0;z-index:200000;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;font-family:"Malgun Gothic",sans-serif;overflow-y:auto;';ov.innerHTML='<div style="background:#fff;border-radius:18px;padding:24px 22px 20px;width:min(340px,90vw);max-height:92vh;overflow-y:auto;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.4);">'+
-'<div style="font-size:17px;font-weight:900;color:#2e7d32;margin-bottom:4px;">📱 파시스 접속 QR</div>'+
-'<div style="font-size:12px;color:#666;margin-bottom:14px;">심판 배포 · 카톡 전송용</div>'+
-'<div id="pgAccessQrCode" style="display:inline-block;padding:10px;background:#fff;border:2px solid #e0e0e0;border-radius:10px;"></div>'+
-'<div style="font-size:11px;color:#888;margin-top:8px;word-break:break-all;line-height:1.4;">'+appUrl+'</div>'+
-'<div style="background:#e8f5e9;border-radius:8px;padding:10px 12px;margin:12px 0 6px;font-size:12px;color:#2e7d32;text-align:left;line-height:1.6;">'+
-'📤 <strong>카톡 전송 방법</strong><br>'+
-'① 이 QR 화면 캡처 → 심판 단톡방 전송<br>'+
-'② 또는 아래 [안내문 복사] 버튼 탭 → 카톡 붙여넣기'+
-'</div>'+
-'<button id="pgCopyGuideBtn" onclick="pgOpenGuideModal()" '+
-'style="width:100%;padding:13px;background:linear-gradient(135deg,#1e3c72,#0d2247);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:900;cursor:pointer;margin-bottom:8px;">'+
-'📋 심판 안내문 복사</button>'+
-'<div id="pgCopyDone" style="display:none;font-size:12px;color:#2e7d32;font-weight:700;margin-bottom:8px;">✅ 복사됐습니다! 카톡에 붙여넣기 하세요.</div>'+
-'<button onclick="document.getElementById(\'pgAccessQrOv\').remove()" '+
-'style="width:100%;padding:12px;background:#2e7d32;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:900;cursor:pointer;">닫기</button>'+
-'</div>';document.body.appendChild(ov);window.pgOpenGuideModal=function(){var om=document.getElementById('pgGuideModal');if(om)om.remove();var modal=document.createElement('div');modal.id='pgGuideModal';modal.style.cssText='position:fixed;inset:0;z-index:300000;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;justify-content:center;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;';var sheet=document.createElement('div');sheet.style.cssText='background:#fff;border-radius:18px 18px 0 0;width:100%;max-width:480px;height:80vh;max-height:600px;display:flex;flex-direction:column;';var head=document.createElement('div');head.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:16px 18px 12px;border-bottom:1px solid #eee;flex-shrink:0;';var title=document.createElement('div');title.style.cssText='font-size:16px;font-weight:900;color:#1e3c72;';title.textContent='📋 심판 안내문';var closeBtn=document.createElement('button');closeBtn.textContent='✕';closeBtn.style.cssText='background:none;border:none;font-size:22px;cursor:pointer;color:#999;';closeBtn.onclick=function(){modal.remove();};head.appendChild(title);head.appendChild(closeBtn);var body=document.createElement('div');body.style.cssText='flex:1;overflow-y:auto;padding:16px 18px;';var pre=document.createElement('pre');pre.style.cssText='font-size:13px;line-height:1.7;white-space:pre-wrap;word-break:break-word;color:#333;margin:0;font-family:inherit;';pre.textContent=guideText;body.appendChild(pre);var foot=document.createElement('div');foot.style.cssText='padding:12px 18px 20px;border-top:1px solid #eee;flex-shrink:0;';var copyOk=document.createElement('div');copyOk.id='pgGuideModalCopyOk';copyOk.style.cssText='display:none;text-align:center;color:#2e7d32;font-size:13px;font-weight:700;margin-bottom:8px;';copyOk.textContent='✅ 복사됐습니다! 카톡에 붙여넣기 하세요.';var copyBtn=document.createElement('button');copyBtn.textContent='📋 카톡에 복사하기';copyBtn.style.cssText='width:100%;padding:14px;background:linear-gradient(135deg,#1e3c72,#0d2247);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:900;cursor:pointer;';copyBtn.onclick=function(){var onOk=function(){copyOk.style.display='block';setTimeout(function(){copyOk.style.display='none';},3000);};if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(guideText).then(onOk).catch(function(){pgFallbackCopy(guideText,onOk);});}else{pgFallbackCopy(guideText,onOk);}};foot.appendChild(copyOk);foot.appendChild(copyBtn);sheet.appendChild(head);sheet.appendChild(body);sheet.appendChild(foot);modal.appendChild(sheet);document.body.appendChild(modal);modal.addEventListener('click',function(e){if(e.target===modal)modal.remove();});};window.pgFallbackCopy=function(txt,cb){var ta=document.createElement('textarea');ta.value=txt;ta.style.cssText='position:fixed;top:-9999px;';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');if(cb)cb();}catch(e){}
-document.body.removeChild(ta);};function fallbackCopy(txt){var ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');var d=document.getElementById('pgCopyDone');if(d){d.style.display='block';setTimeout(function(){d.style.display='none';},3000);}}catch(e){alert('복사 실패. 직접 선택해서 복사해 주세요.');}
-document.body.removeChild(ta);}
-try{new QRCode(document.getElementById('pgAccessQrCode'),{text:appUrl,width:200,height:200,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});}catch(e){document.getElementById('pgAccessQrCode').textContent='QR 생성 오류';}
-ov.addEventListener('click',function(e){if(e.target===ov)ov.remove();});};window.setPrintLayout=function(n){var grid=document.getElementById('pgBatchGrid');var btn6=document.getElementById('pgLayout6Btn');var btn9=document.getElementById('pgLayout9Btn');if(!grid)return;var perPage=(n===6)?6:9;var cards=grid?grid.querySelectorAll('.pgCard'):[];for(var k=0;k<cards.length;k++){cards[k].classList.remove('page-break-after');if((k+1)%perPage===0&&(k+1)<cards.length)cards[k].classList.add('page-break-after');}
-if(n===6){grid.style.setProperty('grid-template-columns','repeat(2,minmax(0,1fr))','important');if(btn6){btn6.style.background='#fff';btn6.style.color='#7a4f00';btn6.style.border='none';btn6.textContent='6개/장 ✓';}
-if(btn9){btn9.style.background='rgba(255,255,255,.2)';btn9.style.color='#fff';btn9.style.border='1px solid rgba(255,255,255,.5)';btn9.textContent='9개/장';}}else{grid.style.setProperty('grid-template-columns','repeat(3,minmax(0,1fr))','important');if(btn9){btn9.style.background='#fff';btn9.style.color='#7a4f00';btn9.style.border='none';btn9.textContent='9개/장 ✓';}
-if(btn6){btn6.style.background='rgba(255,255,255,.2)';btn6.style.color='#fff';btn6.style.border='1px solid rgba(255,255,255,.5)';btn6.textContent='6개/장';}}};window.sendToGoogleSheet=sendToGoogleSheetPatchedV4;document.addEventListener('DOMContentLoaded',function(){syncVisiblePlayersToHidden();var btn=document.getElementById('autoSendBtn');if(btn){btn.onclick=function(ev){if(ev){ev.preventDefault();ev.stopPropagation();}
-sendToGoogleSheetPatchedV4();return false;};}
-setTimeout(syncVisiblePlayersToHidden,300);setTimeout(syncVisiblePlayersToHidden,1200);});})();
+// ══════════════════════════════════════════
+// PASIS SV4 v4 누락 방지 패치
+// ══════════════════════════════════════════
+(function(){
+  function parseHeaderInfo(i){
+    var el = document.getElementById('nameHeader' + i);
+    var raw = el ? String(el.textContent || el.innerText || '').trim() : '';
+    var info = { raw: raw, name: '', gender: '', affiliation: '' };
+    if(!raw) return info;
+
+    var m = raw.match(/^\s*(.*?)\s*\(\s*([남여])\s+([^)]+?)\s*\)\s*$/);
+    if(m){
+      info.name = String(m[1] || '').trim();
+      info.gender = String(m[2] || '').trim();
+      info.affiliation = String(m[3] || '').trim();
+      return info;
+    }
+
+    var nameOnly = raw.replace(/^\d+\s*/, '').trim();
+    if(/^경기자\s*\d+$/.test(nameOnly)) nameOnly = '';
+    info.name = nameOnly;
+    return info;
+  }
+
+  function getFieldValue(id){
+    var el = document.getElementById(id);
+    if(!el) return '';
+    return String(el.value || el.textContent || '').trim();
+  }
+
+  function syncVisiblePlayersToHidden(){
+    for(var i=1;i<=4;i++){
+      var parsed = parseHeaderInfo(i);
+      var p = document.getElementById('player' + i);
+      var g = document.getElementById('gender' + i);
+      var a = document.getElementById('affiliation' + i);
+
+      if(parsed.name && p && !String(p.value || '').trim()) p.value = parsed.name;
+      if(parsed.gender && g && !String(g.value || '').trim()) g.value = parsed.gender;
+      if(parsed.affiliation && a && !String(a.value || '').trim()) a.value = parsed.affiliation;
+    }
+
+    try {
+      if(typeof autoSave === 'function') autoSave();
+    } catch(e){}
+  }
+
+  function getBigoText(i){
+    var el = document.getElementById('in-HIO-' + i);
+    if(!el) return '';
+    return String(el.value || el.textContent || '').trim();
+  }
+
+  function collectPlayersForSendV4(){
+    syncVisiblePlayersToHidden();
+
+    var players = [];
+    for(var i=1;i<=4;i++){
+      var parsed = parseHeaderInfo(i);
+
+      var name = '';
+      if(typeof playerNames !== 'undefined' && playerNames && playerNames[i-1]) {
+        name = String(playerNames[i-1] || '').trim();
+      }
+      if(!name) name = getFieldValue('player' + i);
+      if(!name) name = parsed.name;
+
+      var gender = '';
+      if(typeof playerGenders !== 'undefined' && playerGenders && playerGenders[i-1]) {
+        gender = String(playerGenders[i-1] || '').trim();
+      }
+      if(!gender) gender = getFieldValue('gender' + i);
+      if(!gender) gender = parsed.gender;
+
+      var affiliation = '';
+      if(typeof playerAffiliations !== 'undefined' && playerAffiliations && playerAffiliations[i-1]) {
+        affiliation = String(playerAffiliations[i-1] || '').trim();
+      }
+      if(!affiliation) affiliation = getFieldValue('affiliation' + i);
+      if(!affiliation) affiliation = parsed.affiliation;
+
+      var A = (typeof num2 === 'function') ? num2(summaryScores && summaryScores.A ? summaryScores.A[i] : 0) : (Number(summaryScores && summaryScores.A ? summaryScores.A[i] : 0) || 0);
+      var B = (typeof num2 === 'function') ? num2(summaryScores && summaryScores.B ? summaryScores.B[i] : 0) : (Number(summaryScores && summaryScores.B ? summaryScores.B[i] : 0) || 0);
+      var C = (typeof num2 === 'function') ? num2(summaryScores && summaryScores.C ? summaryScores.C[i] : 0) : (Number(summaryScores && summaryScores.C ? summaryScores.C[i] : 0) || 0);
+      var D = (typeof num2 === 'function') ? num2(summaryScores && summaryScores.D ? summaryScores.D[i] : 0) : (Number(summaryScores && summaryScores.D ? summaryScores.D[i] : 0) || 0);
+      var holeInOne = getBigoText(i);
+
+      var hasVisibleRow = !!(name || gender || affiliation || A || B || C || D || holeInOne);
+      if(!hasVisibleRow) continue;
+      if(!name) continue;
+      if(!gender) throw new Error('⚠️ ' + name + ' 선수의 성별을 선택해주세요.');
+
+      players.push({
+        slot: i,
+        name: name,
+        gender: gender,
+        affiliation: affiliation,
+        A: A,
+        B: B,
+        C: C,
+        D: D,
+        holeInOne: holeInOne,
+        total: A + B + C + D
+      });
+    }
+
+    return players;
+  }
+
+  async function sendToGoogleSheetPatchedV4(){
+    var btn = document.getElementById('autoSendBtn');
+    if(btn && btn.disabled) return;
+
+    function restoreBtn(){
+      if(!btn) return;
+      btn.disabled = false;
+      btn.style.opacity = '';
+      btn.textContent = '구글 시트 자동 전송 (대회 자동 집계)';
+    }
+
+    try {
+      if(btn){
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+        btn.textContent = '⏳ 전송 중...';
+      }
+
+      syncVisiblePlayersToHidden();
+
+      var webappUrl = ((document.getElementById('adminWebappUrl') || {}).value || localStorage.getItem('parkgolf_webapp_url') || localStorage.getItem('pasis_webapp_url') || '').trim();
+      var code = String(((document.getElementById('tournamentCode') || {}).value || localStorage.getItem('parkgolf_tournament_code') || localStorage.getItem('pasis_tournament_code') || '')).trim().toUpperCase();
+      var team = (function(){ try{ var p=new URLSearchParams(window.location.search||''); var t=p.get('t')||p.get('team')||''; if(t) return decodeURIComponent(t); }catch(e){} return String(((document.getElementById('teamName')||{}).value||'')).trim(); })();
+
+      if(!webappUrl) throw new Error('웹앱 URL이 없습니다.');
+      if(!code) throw new Error('대회 코드가 없습니다.');
+      if(!team) throw new Error('조명이 없습니다.');
+
+      var players = collectPlayersForSendV4();
+      if(!players.length) throw new Error('전송할 선수 이름이 없습니다.');
+
+      var payload = {
+        code: code,
+        team: team,
+        players: players.map(function(p){
+          return {
+            name: p.name,
+            gender: p.gender,
+            affiliation: p.affiliation,
+            A: p.A,
+            B: p.B,
+            C: p.C,
+            D: p.D,
+            holeInOne: p.holeInOne,
+            total: p.total
+          };
+        }),
+        time: new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })
+      };
+
+      if(typeof warmupWebApp === 'function'){
+        await warmupWebApp(webappUrl);
+      } else {
+        try { await fetch(webappUrl + '?ping=1', { method: 'GET', mode: 'no-cors' }); } catch(e){}
+        await new Promise(function(resolve){ setTimeout(resolve, 500); });
+      }
+
+      var res = await fetch(webappUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+
+      var json = await res.json();
+      if(!json || !json.success){
+        throw new Error((json && json.message) ? json.message : '전송 실패');
+      }
+
+      if(typeof showToast === 'function') showToast('전송 완료! ' + team);
+      else alert('전송 완료! ' + team);
+
+      var histories = [];
+      try { histories = JSON.parse(localStorage.getItem('parkGolfHistories_sv4') || '[]'); } catch(e){}
+
+      histories.unshift({
+        date: new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' }),
+        team: team,
+        code: code,
+        players: players.map(function(p){ return p.name; }),
+        teamName: team,
+        summaryScores: JSON.parse(JSON.stringify(summaryScores || {})),
+        playerNames: players.map(function(p){ return p.name; }),
+        playerCount: players.length,
+        bigoList: players.map(function(p){ return p.holeInOne || ''; })
+      });
+
+      if(histories.length > 30) histories = histories.slice(0, 30);
+      localStorage.setItem('parkGolfHistories_sv4', JSON.stringify(histories));
+
+      var historyCount = document.getElementById('historyCount');
+      if(historyCount) historyCount.textContent = String(histories.length);
+    } catch(err){
+      alert('❌ ' + (err && err.message ? err.message : err));
+    } finally {
+      restoreBtn();
+    }
+  }
+
+  var prevFetch = window.fetch;
+  window.fetch = function(url, options){
+    try {
+      var isScorePost = (typeof url === 'string' && url.indexOf('script.google.com') !== -1 && options && String(options.method || '').toUpperCase() === 'POST');
+      if(isScorePost && options && options.body){
+        var body = JSON.parse(options.body);
+        if(body && Array.isArray(body.players)){
+          var freshPlayers = collectPlayersForSendV4().map(function(p){
+            return {
+              name: p.name,
+              gender: p.gender,
+              affiliation: p.affiliation,
+              A: p.A,
+              B: p.B,
+              C: p.C,
+              D: p.D,
+              holeInOne: p.holeInOne,
+              total: p.total
+            };
+          });
+          if(freshPlayers.length){
+            body.players = freshPlayers;
+            if(document.getElementById('teamName')) body.team = String(document.getElementById('teamName').value || body.team || '').trim();
+            options = Object.assign({}, options, { body: JSON.stringify(body) });
+          }
+        }
+      }
+    } catch(e){}
+    return prevFetch.apply(this, arguments);
+  };
+
+  /* ★ 파시스 접속 QR 생성 (심판 배포·카톡 전송용) */
+  window.generateAccessQR = function() {
+    var appUrl = 'https://leejh50-dotcom.github.io/parkgolf-score/pasis4-send.html';
+    var old = document.getElementById('pgAccessQrOv');
+    if (old) old.remove();
+
+    var code = (localStorage.getItem('parkgolf_tournament_code')||'대회코드').toUpperCase();
+
+    /* ★ pasis4-send와 동일한 안내문 */
+    var guideText = [
+      '안녕하세요 😊',
+      '이번 대회는 파시스(PASIS) SV4.0 프로로',
+      '점수를 실시간 집계합니다.',
+      '',
+      '━━━━━━━━━━━━━━━━━━',
+      '📋 경기 당일 점수 전송 방법',
+      '━━━━━━━━━━━━━━━━━━',
+      '① 경기 종료 후 QR카드를 꺼내세요',
+      '② 기본 카메라 앱으로 QR 스캔',
+      '③ 링크 팝업 탭 → 파시스 전송화면 열림',
+      '④ 4명 × 4코스 점수 입력 (16칸)',
+      '⑤ 전송 전 확인 화면에서 최종 확인',
+      '⑥ 확인·전송 버튼',
+      '',
+      '━━━━━━━━━━━━━━━━━━',
+      '⚠️ 주의사항',
+      '━━━━━━━━━━━━━━━━━━',
+      '• 전송은 1회만 가능합니다',
+      '  (전송 후 수정 불가 — 오류 시 관리자 문의)',
+      '• QR 스캔이 안 되면',
+      '  ① 종이 기록지를 관리자에게 직접 제출',
+      '  ② 동료 심판에게 QR카드를 건네고 대신 전송 부탁',
+      '',
+      '━━━━━━━━━━━━━━━━━━',
+      '📌 사전 연습 권장 (꼭 해보세요!)',
+      '━━━━━━━━━━━━━━━━━━',
+      '아래 주소로 미리 접속해 보세요.',
+      '',
+      '👉 ' + appUrl,
+      '',
+      '화면 구성을 미리 확인해 두시면',
+      '대회 당일 당황하지 않습니다 😊',
+      '',
+      '※ 연습 중 전송 버튼을 누르셔도',
+      '  실제 조 QR 없이는 전송되지 않습니다.',
+      '',
+      '━━━━━━━━━━━━━━━━━━',
+      '대회코드: ' + code,
+      '문의: 파시스 본부',
+      '👉 카카오톡 1:1 문의',
+      'https://open.kakao.com/o/sgdyKKti'
+    ].join('\n');
+
+    var ov = document.createElement('div');
+    ov.id = 'pgAccessQrOv';
+    ov.style.cssText = 'position:fixed;inset:0;z-index:200000;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;font-family:"Malgun Gothic",sans-serif;overflow-y:auto;';
+    ov.innerHTML =
+      '<div style="background:#fff;border-radius:18px;padding:24px 22px 20px;width:min(340px,90vw);max-height:92vh;overflow-y:auto;text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.4);">' +
+      '<div style="font-size:17px;font-weight:900;color:#2e7d32;margin-bottom:4px;">📱 파시스 접속 QR</div>' +
+      '<div style="font-size:12px;color:#666;margin-bottom:14px;">심판 배포 · 카톡 전송용</div>' +
+      '<div id="pgAccessQrCode" style="display:inline-block;padding:10px;background:#fff;border:2px solid #e0e0e0;border-radius:10px;"></div>' +
+      '<div style="font-size:11px;color:#888;margin-top:8px;word-break:break-all;line-height:1.4;">' + appUrl + '</div>' +
+      '<div style="background:#e8f5e9;border-radius:8px;padding:10px 12px;margin:12px 0 6px;font-size:12px;color:#2e7d32;text-align:left;line-height:1.6;">' +
+      '📤 <strong>카톡 전송 방법</strong><br>' +
+      '① 이 QR 화면 캡처 → 심판 단톡방 전송<br>' +
+      '② 또는 아래 [안내문 복사] 버튼 탭 → 카톡 붙여넣기' +
+      '</div>' +
+      '<button id="pgCopyGuideBtn" onclick="pgOpenGuideModal()" ' +
+      'style="width:100%;padding:13px;background:linear-gradient(135deg,#1e3c72,#0d2247);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:900;cursor:pointer;margin-bottom:8px;">' +
+      '📋 심판 안내문 복사</button>' +
+      '<div id="pgCopyDone" style="display:none;font-size:12px;color:#2e7d32;font-weight:700;margin-bottom:8px;">✅ 복사됐습니다! 카톡에 붙여넣기 하세요.</div>' +
+      '<button onclick="document.getElementById(\'pgAccessQrOv\').remove()" ' +
+      'style="width:100%;padding:12px;background:#2e7d32;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:900;cursor:pointer;">닫기</button>' +
+      '</div>';
+    document.body.appendChild(ov);
+
+    /* ★ 안내문 모달 */
+    window.pgOpenGuideModal = function() {
+      var om = document.getElementById('pgGuideModal');
+      if (om) om.remove();
+
+      var modal = document.createElement('div');
+      modal.id = 'pgGuideModal';
+      modal.style.cssText = 'position:fixed;inset:0;z-index:300000;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;justify-content:center;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;';
+
+      var sheet = document.createElement('div');
+      sheet.style.cssText = 'background:#fff;border-radius:18px 18px 0 0;width:100%;max-width:480px;height:80vh;max-height:600px;display:flex;flex-direction:column;';
+
+      /* 헤더 */
+      var head = document.createElement('div');
+      head.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:16px 18px 12px;border-bottom:1px solid #eee;flex-shrink:0;';
+      var title = document.createElement('div');
+      title.style.cssText = 'font-size:16px;font-weight:900;color:#1e3c72;';
+      title.textContent = '📋 심판 안내문';
+      var closeBtn = document.createElement('button');
+      closeBtn.textContent = '✕';
+      closeBtn.style.cssText = 'background:none;border:none;font-size:22px;cursor:pointer;color:#999;';
+      closeBtn.onclick = function(){ modal.remove(); };
+      head.appendChild(title);
+      head.appendChild(closeBtn);
+
+      /* 본문 */
+      var body = document.createElement('div');
+      body.style.cssText = 'flex:1;overflow-y:auto;padding:16px 18px;';
+      var pre = document.createElement('pre');
+      pre.style.cssText = 'font-size:13px;line-height:1.7;white-space:pre-wrap;word-break:break-word;color:#333;margin:0;font-family:inherit;';
+      pre.textContent = guideText;
+      body.appendChild(pre);
+
+      /* 푸터 */
+      var foot = document.createElement('div');
+      foot.style.cssText = 'padding:12px 18px 20px;border-top:1px solid #eee;flex-shrink:0;';
+      var copyOk = document.createElement('div');
+      copyOk.id = 'pgGuideModalCopyOk';
+      copyOk.style.cssText = 'display:none;text-align:center;color:#2e7d32;font-size:13px;font-weight:700;margin-bottom:8px;';
+      copyOk.textContent = '✅ 복사됐습니다! 카톡에 붙여넣기 하세요.';
+      var copyBtn = document.createElement('button');
+      copyBtn.textContent = '📋 카톡에 복사하기';
+      copyBtn.style.cssText = 'width:100%;padding:14px;background:linear-gradient(135deg,#1e3c72,#0d2247);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:900;cursor:pointer;';
+      copyBtn.onclick = function() {
+        var onOk = function() { copyOk.style.display='block'; setTimeout(function(){ copyOk.style.display='none'; }, 3000); };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(guideText).then(onOk).catch(function(){ pgFallbackCopy(guideText, onOk); });
+        } else { pgFallbackCopy(guideText, onOk); }
+      };
+      foot.appendChild(copyOk);
+      foot.appendChild(copyBtn);
+
+      sheet.appendChild(head);
+      sheet.appendChild(body);
+      sheet.appendChild(foot);
+      modal.appendChild(sheet);
+      document.body.appendChild(modal);
+      modal.addEventListener('click', function(e){ if(e.target===modal) modal.remove(); });
+    };
+
+    /* fallback 복사 */
+    window.pgFallbackCopy = function(txt, cb) {
+      var ta = document.createElement('textarea');
+      ta.value = txt; ta.style.cssText = 'position:fixed;top:-9999px;';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); if(cb) cb(); } catch(e){}
+      document.body.removeChild(ta);
+    };
+
+    function fallbackCopy(txt) {
+      var ta = document.createElement('textarea');
+      ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try {
+        document.execCommand('copy');
+        var d = document.getElementById('pgCopyDone');
+        if (d) { d.style.display = 'block'; setTimeout(function(){ d.style.display='none'; }, 3000); }
+      } catch(e) { alert('복사 실패. 직접 선택해서 복사해 주세요.'); }
+      document.body.removeChild(ta);
+    }
+
+    /* QR 생성 */
+    try {
+      new QRCode(document.getElementById('pgAccessQrCode'), {
+        text: appUrl,
+        width: 200, height: 200,
+        colorDark: '#000000', colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    } catch(e) {
+      document.getElementById('pgAccessQrCode').textContent = 'QR 생성 오류';
+    }
+
+    ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); });
+  };
+  window.setPrintLayout = function(n) {
+    var grid = document.getElementById('pgBatchGrid');
+    var btn6 = document.getElementById('pgLayout6Btn');
+    var btn9 = document.getElementById('pgLayout9Btn');
+    if (!grid) return;
+
+    var perPage = (n === 6) ? 6 : 9;
+    var cards = grid ? grid.querySelectorAll('.pgCard') : [];
+    for (var k=0; k<cards.length; k++) {
+      cards[k].classList.remove('page-break-after');
+      if ((k+1) % perPage === 0 && (k+1) < cards.length) cards[k].classList.add('page-break-after');
+    }
+    if (n === 6) {
+      /* 6개/장: 2열, 세로 간격 더 넓게 */
+      grid.style.setProperty('grid-template-columns', 'repeat(2,minmax(0,1fr))', 'important');
+      if (btn6) { btn6.style.background='#fff'; btn6.style.color='#7a4f00'; btn6.style.border='none'; btn6.textContent='6개/장 ✓'; }
+      if (btn9) { btn9.style.background='rgba(255,255,255,.2)'; btn9.style.color='#fff'; btn9.style.border='1px solid rgba(255,255,255,.5)'; btn9.textContent='9개/장'; }
+    } else {
+      /* 9개/장: 3열, 기본 */
+      grid.style.setProperty('grid-template-columns', 'repeat(3,minmax(0,1fr))', 'important');
+      if (btn9) { btn9.style.background='#fff'; btn9.style.color='#7a4f00'; btn9.style.border='none'; btn9.textContent='9개/장 ✓'; }
+      if (btn6) { btn6.style.background='rgba(255,255,255,.2)'; btn6.style.color='#fff'; btn6.style.border='1px solid rgba(255,255,255,.5)'; btn6.textContent='6개/장'; }
+    }
+  };
+  window.sendToGoogleSheet = sendToGoogleSheetPatchedV4;
+
+  document.addEventListener('DOMContentLoaded', function(){
+    syncVisiblePlayersToHidden();
+
+    var btn = document.getElementById('autoSendBtn');
+    if(btn){
+      btn.onclick = function(ev){
+        if(ev){
+          ev.preventDefault();
+          ev.stopPropagation();
+        }
+        sendToGoogleSheetPatchedV4();
+        return false;
+      };
+    }
+
+    setTimeout(syncVisiblePlayersToHidden, 300);
+    setTimeout(syncVisiblePlayersToHidden, 1200);
+  });
+})();
 </script>
 
 <!-- ═══ PASIS SV4.0 최종패치 ═══ -->
@@ -1839,123 +2838,552 @@ setTimeout(syncVisiblePlayersToHidden,300);setTimeout(syncVisiblePlayersToHidden
 </style>
 
 <script>
-(function(){function esc(s){return String(s||'').replace(/[&<>"]/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];});}
-window.generateBatchQR=function(){var webappUrl='',code='',qrDate='통합',mode='mixed';try{var wEl=document.getElementById('adminWebappUrl'),cEl=document.getElementById('adminCodeInput');var dEl=document.getElementById('modalQrDate');webappUrl=((wEl&&wEl.value)||localStorage.getItem('parkgolf_webapp_url')||'').trim();code=(((cEl&&cEl.value)||localStorage.getItem('parkgolf_tournament_code')||'').trim()).toUpperCase();qrDate=(dEl&&dEl.value)||'통합';mode='auto';}catch(e){}
-if(!code){alert('대회코드를 먼저 저장해 주세요.');return;}
-if(!webappUrl){alert('웹앱 URL을 먼저 저장해 주세요.');return;}
-if(!webappUrl.includes('script.google.com')){alert('웹앱 URL 형식이 올바르지 않습니다.');return;}
-if(!confirm('📋 조별 QR 일괄생성을 시작합니다.\n\n구글시트 조편성이 완료된 경우 확인을 누르세요.'))return;var btn=document.querySelector('button[onclick*="generateBatchQR"]');var oldText=btn?btn.textContent:'';if(btn)btn.textContent='⏳ 조편성 불러오는 중...';fetch(webappUrl,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'getteams',code:code,mode:mode})}).then(function(r){return r.json();}).then(function(data){if(!data.success||!Array.isArray(data.teams)||!data.teams.length)throw new Error((data&&data.message)||'조편성 데이터가 없습니다.');buildQrOv(data.teams,code,qrDate,webappUrl);if(btn)btn.textContent='✅ '+data.teams.length+'개 조 QR 생성 완료';}).catch(function(err){alert('조별 QR 생성 실패\n\n'+(err&&err.message?err.message:err));if(btn)btn.textContent=oldText||'📋 조별 QR 일괄생성 (인쇄용)';});};function buildQrOv(teams,code,qrDate,webappUrl){var old=document.getElementById('pgBatchOv');if(old)old.remove();var appUrl='https://leejh50-dotcom.github.io/parkgolf-score/pasis4-send.html';var dateStr=new Date().toLocaleDateString('ko-KR');var total=teams.length;var ov=document.createElement('div');ov.id='pgBatchOv';ov.innerHTML='<div id="pgBatchTop">'
-+'<div class="bt-title">📋 조별 QR · '+esc(code)+' · '+esc(qrDate)+' · '+total+'개 조</div>'
-+'<div class="bt-btns">'
-+'<button class="btn-layout" id="pgLayout6Btn" onclick="setPrintLayout(6)" title="6개/장" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.5);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer;">6개/장</button>'
-+'<button class="btn-layout" id="pgLayout9Btn" onclick="setPrintLayout(9)" title="9개/장" style="background:#fff;color:#7a4f00;border:none;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer;">9개/장 ✓</button>'
-+'<button class="btn-print" id="pgPrintBtn" onclick="window.print()" disabled style="opacity:.4;cursor:not-allowed;">🖨 인쇄하기</button>'
-+'<button class="btn-close" onclick="document.getElementById(\'pgBatchOv\').remove()">✕</button>'
-+'</div></div>'
-+'<div id="pgProgress" style="background:rgba(0,0,0,.15);height:4px;margin:0;">'
-+'<div id="pgProgressBar" style="height:4px;background:#fff;width:0%;transition:width .2s;"></div>'
-+'</div>'
-+'<div id="pgProgressTxt" style="text-align:center;font-size:12px;padding:4px 0;color:#fff;opacity:.85;">QR 생성 중... 0 / '+total+'</div>'
-+'<div id="pgBatchGrid"></div>';document.body.appendChild(ov);var grid=document.getElementById('pgBatchGrid');var progressBar=document.getElementById('pgProgressBar');var progressTxt=document.getElementById('pgProgressTxt');var printBtn=document.getElementById('pgPrintBtn');var BATCH=total>100?10:20;var idx=0;function makeCard(teamObj){var coParam=(teamObj.courses&&teamObj.courses.length)?'&co='+encodeURIComponent(teamObj.courses.join(',')):'';var qrText=appUrl+'?c='+encodeURIComponent(code)+'&u='+encodeURIComponent(webappUrl)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam;(teamObj.players||[]).forEach(function(p,i){qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||''));});if(qrText.length>2000){qrText=appUrl+'?c='+encodeURIComponent(code)+'&u='+encodeURIComponent(webappUrl)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam;(teamObj.players||[]).forEach(function(p,i){qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|');});}
-var ph=(teamObj.players||[]).slice(0,4).map(function(p,i){var gStr=p.gender?' ('+esc(p.gender.charAt(0))+')':'';var affClean=(p.affil||'').replace(/^(남|여)\s+/,'').trim();var aStr=affClean?' '+esc(affClean):'';return'<div class="pgCard-player"><span class="pgCard-num">'+(i+1)+'</span>'
-+'<span class="pgCard-pline"><span class="pgCard-pname">'+esc(p.name||'')+'</span>'
-+(gStr?'<span class="pgCard-pgender">'+gStr+'</span>':'')
-+(aStr?'<span class="pgCard-paffil">'+aStr+'</span>':'')+'</span></div>';}).join('');var card=document.createElement('div');card.className='pgCard';var bid='pgqr'+Math.random().toString(36).slice(2,8);card.innerHTML='<div class="pgCard-title">'+esc(teamObj.team||'')+'</div>'
-+'<div class="pgCard-qr"><div id="'+bid+'"></div></div>'
-+'<div class="pgCard-players">'+ph+'</div>'
-+'<div class="pgCard-footer">'+esc(code)+' · '+esc(qrDate)+' · '+dateStr+'</div>';grid.appendChild(card);try{new QRCode(card.querySelector('#'+bid),{text:qrText,width:256,height:256,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});}
-catch(e){card.querySelector('#'+bid).innerHTML='<div style="padding:8px;font-size:11px;color:red;text-align:center;">QR생성오류<br>'+esc(teamObj.team||'')+'</div>';}}
-function nextBatch(){var end=Math.min(idx+BATCH,total);for(var i=idx;i<end;i++){makeCard(teams[i]);}
-idx=end;var pct=Math.round(idx/total*100);if(progressBar)progressBar.style.width=pct+'%';if(progressTxt)progressTxt.textContent=idx<total?'QR 생성 중... '+idx+' / '+total+' ('+pct+'%)':'✅ 완료! '+total+'개 조 · 인쇄 버튼을 누르세요.';if(idx<total){setTimeout(nextBatch,0);}else{if(printBtn){printBtn.disabled=false;printBtn.style.opacity='';printBtn.style.cursor='';}
-var allCards=grid?grid.querySelectorAll('.pgCard'):[];for(var k=0;k<allCards.length;k++){allCards[k].classList.remove('page-break-after');if((k+1)%9===0&&(k+1)<allCards.length)allCards[k].classList.add('page-break-after');}
-setTimeout(function(){var pb=document.getElementById('pgProgress');var pt=document.getElementById('pgProgressTxt');if(pb)pb.style.display='none';if(pt)pt.style.padding='0';},1500);}}
-nextBatch();}
-function hasQP(){try{var p=new URLSearchParams(window.location.search||'');return!!(p.get('c')||p.get('t'));}catch(e){return false;}}
-function forceScoring(){var cv=document.getElementById('sv4CoverPage');if(cv)cv.style.setProperty('display','none','important');var ap=document.querySelector('.parkgolf-app');if(ap){ap.style.removeProperty('display');ap.style.setProperty('display','block','important');}
-var sm=document.getElementById('qrScanModal');if(sm)sm.style.setProperty('display','none','important');window.scrollTo({top:0});}
-function forceInitQR(){try{localStorage.removeItem('parkGolfData_sv4');try{if(typeof playerNames!=='undefined'){playerNames=['','','',''];}if(typeof playerGenders!=='undefined'){playerGenders=['','','',''];}if(typeof playerAffiliations!=='undefined'){playerAffiliations=['','','',''];}}catch(e2){}
-if(typeof initFromQueryParams==='function')initFromQueryParams();}catch(e){}
-forceScoring();}
-if(hasQP()){var _origLoadData=window.loadData;if(typeof _origLoadData==='function'){var _loadDataBlocked=false;window.loadData=function(){if(!_loadDataBlocked){_loadDataBlocked=true;return false;}
-return _origLoadData.apply(this,arguments);};}
-if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',function(){forceInitQR();setTimeout(forceInitQR,300);});}else{forceInitQR();}
-setTimeout(forceInitQR,200);setTimeout(forceInitQR,600);setTimeout(forceInitQR,1500);}
-function showDone(t,ps){var ov=document.createElement('div');ov.id='pasisDoneOv';ov.innerHTML='<div id="pasisDoneBox"><div class="pdIcon">✅</div><div class="pdTitle">전송 완료!</div>'
-+'<div class="pdSub"><strong>'+esc(t)+'</strong><br>'+esc((ps||[]).map(function(p){return p.name;}).join(' · '))+'<br>'
-+'<span style="color:#c8860a;font-weight:700;">구글시트에 기록되었습니다.</span></div>'
-+'<button class="pdClose" id="pdC">확인</button></div>';document.body.appendChild(ov);function cl(){if(ov.parentNode)ov.remove();}document.getElementById('pdC').onclick=cl;setTimeout(cl,4000);}
-function showConfirm(players,teamName,onSend){var old=document.getElementById('pasisSendOv');if(old)old.remove();function classify(p){var bigo=(p.holeInOne||'').toString();if(bigo.indexOf('불참')>-1)return'absent';if(bigo.indexOf('기권')>-1)return'quit';if(p.A===0&&p.B===0&&p.C===0&&p.D===0&&p.total===0)return'absent';if(p.A===0||p.B===0||p.C===0||p.D===0)return'quit';return'normal';}
-var rows=players.map(function(p){var sc=['A','B','C','D'].map(function(c){return c+':'+(p[c]||0);}).join(' ');var cls=classify(p);var badge='';var rowStyle='';var totalDisp=(p.total||0)+'<small> 타</small>';if(cls==='absent'){badge='<span style="background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;border-radius:4px;font-size:10px;padding:1px 7px;margin-left:5px;font-weight:800;">불참</span>';rowStyle='background:#f9f9f9;border-color:#ddd;opacity:.7;';totalDisp='<span style="font-size:12px;color:#aaa;font-weight:600;">순위제외</span>';}else if(cls==='quit'){badge='<span style="background:#fffbeb;color:#d97706;border:1px solid #fcd34d;border-radius:4px;font-size:10px;padding:1px 7px;margin-left:5px;font-weight:800;">기권</span>';rowStyle='background:#fffdf0;border-color:#fcd34d;';totalDisp='<span style="font-size:12px;color:#d97706;font-weight:700;">기권처리</span>';}
-return'<div class="psRow" style="'+rowStyle+'">'
-+'<div><div class="psName">'+esc(p.name)
-+(p.gender||p.affiliation?' <span class="psNameSub">('+[p.gender,p.affiliation].filter(Boolean).map(esc).join(', ')+')</span>':'')
-+badge+'</div>'
-+'<div class="psDetail">'+esc(sc)+(p.holeInOne?' · '+esc(p.holeInOne):'')+'</div></div>'
-+'<div class="psTotal">'+totalDisp+'</div></div>';}).join('');var warning='';var ov=document.createElement('div');ov.id='pasisSendOv';ov.innerHTML='<div id="pasisSendBox"><div class="psHead">📋 전송 전 확인<small>'+esc(teamName)+' · '+players.length+'명</small></div>'
-+'<div class="psBody">'+warning+rows+'</div>'
-+'<div style="background:#fef3c7;border-top:1px solid #fcd34d;padding:10px 18px;font-size:12px;color:#92400e;line-height:1.6;text-align:center;">'
-+'⚠️ <strong>전송 후 수정은 불가합니다.</strong><br>오류 발견 시 관리자에게 직접 문의하세요.'
-+'</div>'
-+'<div class="psFoot">'
-+'<button class="psBtnBack" id="psB" style="line-height:1.3;">← 뒤로<br>(수정)</button>'
-+'<button class="psBtnSend" id="psS" style="line-height:1.3;">✅ 확인·<br>전송</button>'
-+'</div></div>';document.body.appendChild(ov);document.getElementById('psB').onclick=function(){ov.remove();};document.getElementById('psS').onclick=function(){ov.remove();var sendingOv=document.createElement('div');sendingOv.id='pasisSendingOv';sendingOv.style.cssText='position:fixed;inset:0;z-index:200001;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;font-family:"Malgun Gothic",sans-serif;';sendingOv.innerHTML='<div style="background:#fff;border-radius:16px;padding:30px 40px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);">'
-+'<div style="font-size:36px;margin-bottom:10px;">⏳</div>'
-+'<div style="font-size:18px;font-weight:900;color:#1e3c72;">전송 중...</div>'
-+'<div style="font-size:13px;color:#6b7280;margin-top:6px;">잠시 기다려 주세요</div>'
-+'</div>';document.body.appendChild(sendingOv);function removeSendingOv(){var sv=document.getElementById('pasisSendingOv');if(sv)sv.remove();}
-var sendingTimeout=setTimeout(removeSendingOv,10000);var orig=window.showToast;window.showToast=function(msg){window.showToast=orig;clearTimeout(sendingTimeout);removeSendingOv();if(String(msg).indexOf('완료')!==-1||String(msg).indexOf('전송')!==-1)showDone(teamName,players);if(typeof orig==='function')orig(msg);};var origAlert=window.alert;window.alert=function(msg){window.alert=origAlert;clearTimeout(sendingTimeout);removeSendingOv();origAlert(msg);};onSend(players,teamName);};ov.addEventListener('click',function(e){if(e.target===ov)ov.remove();});}
-function hookSendBtn(){var btn=document.getElementById('autoSendBtn');if(!btn){setTimeout(hookSendBtn,300);return;}
-var newBtn=btn.cloneNode(true);btn.parentNode.replaceChild(newBtn,btn);btn=newBtn;btn.style.background='linear-gradient(135deg,#c8860a 0%,#7a4f00 100%)';btn.style.boxShadow='0 5px 10px rgba(122,79,0,.4)';btn.addEventListener('click',function(ev){if(ev){ev.preventDefault();ev.stopPropagation();}
-if(typeof syncVisiblePlayersToHidden==='function')syncVisiblePlayersToHidden();var players;try{if(typeof collectPlayersForSendV4==='function')players=collectPlayersForSendV4();else if(typeof window.collectPlayersForSend==='function')players=window.collectPlayersForSend();else players=[];}
-catch(e){alert('❌ '+e.message);return false;}
-var teamName=String(((document.getElementById('teamName')||{}).value||'')).trim()||'팀명';if(!players||!players.length){setTimeout(function(){try{if(typeof collectPlayersForSendV4==='function')players=collectPlayersForSendV4();else if(typeof window.collectPlayersForSend==='function')players=window.collectPlayersForSend();}catch(e){}
-showConfirm(players||[],teamName,function(cp,ct){var sendFn=typeof sendToGoogleSheetPatchedV4==='function'?sendToGoogleSheetPatchedV4:window.sendToGoogleSheet;if(typeof sendFn==='function')sendFn();});},300);return false;}
-showConfirm(players,teamName,function(cp,ct){var sendFn=typeof sendToGoogleSheetPatchedV4==='function'?sendToGoogleSheetPatchedV4:window.sendToGoogleSheet;if(typeof sendFn==='function')sendFn();});return false;},true);}
-if(document.readyState==='complete'){setTimeout(hookSendBtn,200);}
-else{window.addEventListener('load',function(){setTimeout(hookSendBtn,200);});}})();
+(function(){
+  function esc(s){ return String(s||'').replace(/[&<>"]/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c];}); }
+
+  window.generateBatchQR = function(){
+    var webappUrl='',code='',qrDate='통합',mode='mixed';
+    try{
+      var wEl=document.getElementById('adminWebappUrl'),cEl=document.getElementById('adminCodeInput');
+      var dEl=document.getElementById('modalQrDate');
+      webappUrl=((wEl&&wEl.value)||localStorage.getItem('parkgolf_webapp_url')||'').trim();
+      code=(((cEl&&cEl.value)||localStorage.getItem('parkgolf_tournament_code')||'').trim()).toUpperCase();
+      /* ★ 성별구분 select 삭제 → GAS가 조편성 시트에서 자동 판별 */
+      qrDate=(dEl&&dEl.value)||'통합'; mode='auto';
+    }catch(e){}
+    if(!code){alert('대회코드를 먼저 저장해 주세요.');return;}
+    if(!webappUrl){alert('웹앱 URL을 먼저 저장해 주세요.');return;}
+    if(!webappUrl.includes('script.google.com')){alert('웹앱 URL 형식이 올바르지 않습니다.');return;}
+    if(!confirm('📋 조별 QR 일괄생성을 시작합니다.\n\n구글시트 조편성이 완료된 경우 확인을 누르세요.')) return;
+    var btn=document.querySelector('button[onclick*="generateBatchQR"]');
+    var oldText=btn?btn.textContent:'';
+    if(btn) btn.textContent='⏳ 조편성 불러오는 중...';
+    fetch(webappUrl,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'getteams',code:code,mode:mode})})
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(!data.success||!Array.isArray(data.teams)||!data.teams.length) throw new Error((data&&data.message)||'조편성 데이터가 없습니다.');
+      buildQrOv(data.teams,code,qrDate,webappUrl);
+      if(btn) btn.textContent='✅ '+data.teams.length+'개 조 QR 생성 완료';
+    })
+    .catch(function(err){
+      alert('조별 QR 생성 실패\n\n'+(err&&err.message?err.message:err));
+      if(btn) btn.textContent=oldText||'📋 조별 QR 일괄생성 (인쇄용)';
+    });
+  };
+
+  function buildQrOv(teams,code,qrDate,webappUrl){
+    var old=document.getElementById('pgBatchOv');if(old)old.remove();
+    var appUrl='https://leejh50-dotcom.github.io/parkgolf-score/pasis4-send.html';
+    var dateStr=new Date().toLocaleDateString('ko-KR');
+    var total=teams.length;
+
+    var ov=document.createElement('div');ov.id='pgBatchOv';
+    ov.innerHTML='<div id="pgBatchTop">'
+      +'<div class="bt-title">📋 조별 QR · '+esc(code)+' · '+esc(qrDate)+' · '+total+'개 조</div>'
+      +'<div class="bt-btns">'
+      +'<button class="btn-layout" id="pgLayout6Btn" onclick="setPrintLayout(6)" title="6개/장" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.5);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer;">6개/장</button>'
+      +'<button class="btn-layout" id="pgLayout9Btn" onclick="setPrintLayout(9)" title="9개/장" style="background:#fff;color:#7a4f00;border:none;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer;">9개/장 ✓</button>'
+      +'<button class="btn-print" id="pgPrintBtn" onclick="window.print()" disabled style="opacity:.4;cursor:not-allowed;">🖨 인쇄하기</button>'
+      +'<button class="btn-close" onclick="document.getElementById(\'pgBatchOv\').remove()">✕</button>'
+      +'</div></div>'
+      /* ★ 진행률 바 */
+      +'<div id="pgProgress" style="background:rgba(0,0,0,.15);height:4px;margin:0;">'
+      +'<div id="pgProgressBar" style="height:4px;background:#fff;width:0%;transition:width .2s;"></div>'
+      +'</div>'
+      +'<div id="pgProgressTxt" style="text-align:center;font-size:12px;padding:4px 0;color:#fff;opacity:.85;">QR 생성 중... 0 / '+total+'</div>'
+      +'<div id="pgBatchGrid"></div>';
+    document.body.appendChild(ov);
+
+    var grid=document.getElementById('pgBatchGrid');
+    var progressBar=document.getElementById('pgProgressBar');
+    var progressTxt=document.getElementById('pgProgressTxt');
+    var printBtn=document.getElementById('pgPrintBtn');
+
+    /* ★ 핵심: 배치 크기 — 한 프레임당 처리할 카드 수
+       소규모(<100조): 20개씩 → 빠르게 완료
+       대규모(100조+): 10개씩 → 브라우저 멈춤 방지          */
+    var BATCH = total > 100 ? 10 : 20;
+    var idx = 0;
+
+    function makeCard(teamObj){
+      var coParam=(teamObj.courses&&teamObj.courses.length)?'&co='+encodeURIComponent(teamObj.courses.join(',')):'';
+      var qrText=appUrl+'?c='+encodeURIComponent(code)+'&u='+encodeURIComponent(webappUrl)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam;
+      (teamObj.players||[]).forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||'')); });
+
+      /* ★ QR URL 길이 체크: 2000자 초과 시 소속 생략하여 단축 */
+      if(qrText.length > 2000){
+        qrText=appUrl+'?c='+encodeURIComponent(code)+'&u='+encodeURIComponent(webappUrl)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam;
+        (teamObj.players||[]).forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'); });
+      }
+
+      /* ★ 코스 배지: G열 courses 있으면 카드에 표시 */
+      var courseBadge='';
+      if(teamObj.courses&&teamObj.courses.length&&teamObj.courses.length<4){
+        courseBadge='<div style="text-align:center;margin:3px 0 2px;">'
+          +teamObj.courses.map(function(c){
+            return '<span style="display:inline-block;background:#c8860a;color:#fff;'
+              +'border-radius:4px;padding:1px 7px;font-size:13px;font-weight:900;margin:0 2px;">'+esc(c)+'</span>';
+          }).join('')+'</div>';
+      }
+
+      var ph=(teamObj.players||[]).slice(0,4).map(function(p,i){
+        var gStr=p.gender?' ('+esc(p.gender.charAt(0))+')':'';
+        /* affil에서 성별 접두사(남 /여 ) 제거 */
+        var affClean=(p.affil||'').replace(/^(남|여)\s+/,'').trim();
+        var aStr=affClean?' '+esc(affClean):'';
+        return '<div class="pgCard-player"><span class="pgCard-num">'+(i+1)+'</span>'
+          +'<span class="pgCard-pline"><span class="pgCard-pname">'+esc(p.name||'')+'</span>'
+          +(gStr?'<span class="pgCard-pgender">'+gStr+'</span>':'')
+          +(aStr?'<span class="pgCard-paffil">'+aStr+'</span>':'')+'</span></div>';
+      }).join('');
+      var card=document.createElement('div');card.className='pgCard';
+      var bid='pgqr'+Math.random().toString(36).slice(2,8);
+      card.innerHTML='<div class="pgCard-title">'+esc(teamObj.team||'')+'</div>'
+        +courseBadge
+        +'<div class="pgCard-qr"><div id="'+bid+'"></div></div>'
+        +'<div class="pgCard-players">'+ph+'</div>'
+        +'<div class="pgCard-footer">'+esc(code)+' · '+esc(qrDate)+' · '+dateStr+'</div>';
+      grid.appendChild(card);
+      /* ★ QRCode 생성 오류 시 오류 표시 (조명 포함) */
+      try{ new QRCode(card.querySelector('#'+bid),{text:qrText,width:256,height:256,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M}); }
+      catch(e){ card.querySelector('#'+bid).innerHTML='<div style="padding:8px;font-size:11px;color:red;text-align:center;">QR생성오류<br>'+esc(teamObj.team||'')+'</div>'; }
+    }
+
+    function nextBatch(){
+      var end=Math.min(idx+BATCH, total);
+      for(var i=idx;i<end;i++){ makeCard(teams[i]); }
+      idx=end;
+
+      /* 진행률 업데이트 */
+      var pct=Math.round(idx/total*100);
+      if(progressBar) progressBar.style.width=pct+'%';
+      if(progressTxt) progressTxt.textContent = idx < total
+        ? 'QR 생성 중... '+idx+' / '+total+' ('+pct+'%)'
+        : '✅ 완료! '+total+'개 조 · 인쇄 버튼을 누르세요.';
+
+      if(idx < total){
+        setTimeout(nextBatch, 0); /* ← 브라우저에 제어권 반납 후 다음 배치 */
+      } else {
+        /* 완료 → 인쇄 버튼 활성화, 진행바 숨김 */
+        if(printBtn){ printBtn.disabled=false; printBtn.style.opacity=''; printBtn.style.cursor=''; }
+        var allCards = grid ? grid.querySelectorAll('.pgCard') : [];
+        for (var k=0; k<allCards.length; k++) {
+          allCards[k].classList.remove('page-break-after');
+          if ((k+1) % 9 === 0 && (k+1) < allCards.length) allCards[k].classList.add('page-break-after');
+        }
+        setTimeout(function(){
+          var pb=document.getElementById('pgProgress');
+          var pt=document.getElementById('pgProgressTxt');
+          if(pb) pb.style.display='none';
+          if(pt) pt.style.padding='0';
+        }, 1500);
+      }
+    }
+
+    nextBatch(); /* 첫 배치 시작 */
+  }
+
+  /* QR 스캔 자동 라우팅 */
+  function hasQP(){ try{var p=new URLSearchParams(window.location.search||'');return !!(p.get('c')||p.get('t'));}catch(e){return false;} }
+  function forceScoring(){
+    var cv=document.getElementById('sv4CoverPage');if(cv)cv.style.setProperty('display','none','important');
+    var ap=document.querySelector('.parkgolf-app');if(ap){ap.style.removeProperty('display');ap.style.setProperty('display','block','important');}
+    var sm=document.getElementById('qrScanModal');if(sm)sm.style.setProperty('display','none','important');
+    window.scrollTo({top:0});
+  }
+  function forceInitQR(){
+    try{
+      /* ★ QR 스캔 시 이전 localStorage 데이터가 덮어쓰는 버그 방지
+         → parkGolfData_sv4 삭제 후 initFromQueryParams 실행 */
+      localStorage.removeItem('parkGolfData_sv4');
+      /* playerNames/Genders/Affiliations 초기화 */
+      try{if(typeof playerNames!=='undefined'){playerNames=['','','',''];}if(typeof playerGenders!=='undefined'){playerGenders=['','','',''];}if(typeof playerAffiliations!=='undefined'){playerAffiliations=['','','',''];}}catch(e2){}
+      /* initFromQueryParams 강제 실행 */
+      if(typeof initFromQueryParams==='function') initFromQueryParams();
+    }catch(e){}
+    forceScoring();
+  }
+  if(hasQP()){
+    /* ★ loadData를 1회 차단 - QR 파라미터가 있을 때 localStorage 복원을 막음 */
+    var _origLoadData = window.loadData;
+    if(typeof _origLoadData==='function'){
+      var _loadDataBlocked = false;
+      window.loadData = function(){
+        if(!_loadDataBlocked){ _loadDataBlocked=true; return false; }
+        return _origLoadData.apply(this,arguments);
+      };
+    }
+    if(document.readyState==='loading'){
+      document.addEventListener('DOMContentLoaded', function(){ forceInitQR(); setTimeout(forceInitQR,300); });
+    } else {
+      forceInitQR();
+    }
+    setTimeout(forceInitQR,200);
+    setTimeout(forceInitQR,600);
+    setTimeout(forceInitQR,1500);
+  }
+
+  /* 전송 확인 오버레이 */
+  function showDone(t,ps){
+    var ov=document.createElement('div');ov.id='pasisDoneOv';
+    ov.innerHTML='<div id="pasisDoneBox"><div class="pdIcon">✅</div><div class="pdTitle">전송 완료!</div>'
+      +'<div class="pdSub"><strong>'+esc(t)+'</strong><br>'+esc((ps||[]).map(function(p){return p.name;}).join(' · '))+'<br>'
+      +'<span style="color:#c8860a;font-weight:700;">구글시트에 기록되었습니다.</span></div>'
+      +'<button class="pdClose" id="pdC">확인</button></div>';
+    document.body.appendChild(ov);
+    function cl(){if(ov.parentNode)ov.remove();} document.getElementById('pdC').onclick=cl; setTimeout(cl,4000);
+  }
+  function showConfirm(players,teamName,onSend){
+    var old=document.getElementById('pasisSendOv');if(old)old.remove();
+
+    /* ── 불참/기권 판정 헬퍼 ── */
+    function classify(p){
+      var bigo=(p.holeInOne||'').toString();
+      if(bigo.indexOf('불참')>-1) return 'absent';
+      if(bigo.indexOf('기권')>-1) return 'quit';
+      /* 모든 코스가 0 → 불참 */
+      if(p.A===0&&p.B===0&&p.C===0&&p.D===0&&p.total===0) return 'absent';
+      /* 일부 코스가 0 → 기권 */
+      if(p.A===0||p.B===0||p.C===0||p.D===0) return 'quit';
+      return 'normal';
+    }
+
+    var rows=players.map(function(p){
+      var sc=['A','B','C','D'].map(function(c){return c+':'+(p[c]||0);}).join(' ');
+      var cls=classify(p);
+      var badge='';
+      var rowStyle='';
+      var totalDisp=(p.total||0)+'<small> 타</small>';
+      if(cls==='absent'){
+        badge='<span style="background:#fef2f2;color:#dc2626;border:1px solid #fca5a5;border-radius:4px;font-size:10px;padding:1px 7px;margin-left:5px;font-weight:800;">불참</span>';
+        rowStyle='background:#f9f9f9;border-color:#ddd;opacity:.7;';
+        totalDisp='<span style="font-size:12px;color:#aaa;font-weight:600;">순위제외</span>';
+      } else if(cls==='quit'){
+        badge='<span style="background:#fffbeb;color:#d97706;border:1px solid #fcd34d;border-radius:4px;font-size:10px;padding:1px 7px;margin-left:5px;font-weight:800;">기권</span>';
+        rowStyle='background:#fffdf0;border-color:#fcd34d;';
+        totalDisp='<span style="font-size:12px;color:#d97706;font-weight:700;">기권처리</span>';
+      }
+      return '<div class="psRow" style="'+rowStyle+'">'
+        +'<div><div class="psName">'+esc(p.name)
+        +(p.gender||p.affiliation
+          ? ' <span class="psNameSub">('+[p.gender,p.affiliation].filter(Boolean).map(esc).join(', ')+')</span>'
+          : '')
+        +badge+'</div>'
+        +'<div class="psDetail">'+esc(sc)+(p.holeInOne?' · '+esc(p.holeInOne):'')+'</div></div>'
+        +'<div class="psTotal">'+totalDisp+'</div></div>';
+    }).join('');
+
+    /* 불참/기권 포함 시 경고 — 삭제 */
+    var warning='';
+
+    var ov=document.createElement('div');ov.id='pasisSendOv';
+    ov.innerHTML='<div id="pasisSendBox"><div class="psHead">📋 전송 전 확인<small>'+esc(teamName)+' · '+players.length+'명</small></div>'
+      +'<div class="psBody">'+warning+rows+'</div>'
+      +'<div style="background:#fef3c7;border-top:1px solid #fcd34d;padding:10px 18px;font-size:12px;color:#92400e;line-height:1.6;text-align:center;">'
+      +'⚠️ <strong>전송 후 수정은 불가합니다.</strong><br>오류 발견 시 관리자에게 직접 문의하세요.'
+      +'</div>'
+      +'<div class="psFoot">'
+      +'<button class="psBtnBack" id="psB" style="line-height:1.3;">← 뒤로<br>(수정)</button>'
+      +'<button class="psBtnSend" id="psS" style="line-height:1.3;">✅ 확인·<br>전송</button>'
+      +'</div></div>';
+    document.body.appendChild(ov);
+    document.getElementById('psB').onclick=function(){ov.remove();};
+    document.getElementById('psS').onclick=function(){
+      /* 오버레이 즉시 제거 후 전송 실행 */
+      ov.remove();
+      /* 전송중 표시 */
+      var sendingOv=document.createElement('div');
+      sendingOv.id='pasisSendingOv';
+      sendingOv.style.cssText='position:fixed;inset:0;z-index:200001;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;font-family:"Malgun Gothic",sans-serif;';
+      sendingOv.innerHTML='<div style="background:#fff;border-radius:16px;padding:30px 40px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);">'
+        +'<div style="font-size:36px;margin-bottom:10px;">⏳</div>'
+        +'<div style="font-size:18px;font-weight:900;color:#1e3c72;">전송 중...</div>'
+        +'<div style="font-size:13px;color:#6b7280;margin-top:6px;">잠시 기다려 주세요</div>'
+        +'</div>';
+      document.body.appendChild(sendingOv);
+
+      /* 전송중 오버레이 제거 함수 */
+      function removeSendingOv(){
+        var sv=document.getElementById('pasisSendingOv');
+        if(sv)sv.remove();
+      }
+
+      /* ★ 안전장치: 10초 후 무조건 제거 (무한 대기 방지) */
+      var sendingTimeout=setTimeout(removeSendingOv, 10000);
+
+      /* showToast 훅: 전송 완료/실패 모두 감지 */
+      var orig=window.showToast;
+      window.showToast=function(msg){
+        window.showToast=orig;
+        clearTimeout(sendingTimeout);
+        removeSendingOv();
+        if(String(msg).indexOf('완료')!==-1||String(msg).indexOf('전송')!==-1)showDone(teamName,players);
+        if(typeof orig==='function')orig(msg);
+      };
+
+      /* ★ alert 가로채기: 오류 alert 시에도 오버레이 제거 */
+      var origAlert=window.alert;
+      window.alert=function(msg){
+        window.alert=origAlert;
+        clearTimeout(sendingTimeout);
+        removeSendingOv();
+        origAlert(msg);
+      };
+
+      onSend(players,teamName);
+    };
+    ov.addEventListener('click',function(e){if(e.target===ov)ov.remove();});
+  }
+  function hookSendBtn(){
+    var btn=document.getElementById('autoSendBtn');
+    if(!btn){setTimeout(hookSendBtn,300);return;}
+
+    /* ★ 기존 이벤트 리스너 완전 제거 - 버튼 복제 후 교체 */
+    var newBtn = btn.cloneNode(true);
+    btn.parentNode.replaceChild(newBtn, btn);
+    btn = newBtn;
+
+    btn.style.background='linear-gradient(135deg,#c8860a 0%,#7a4f00 100%)';
+    btn.style.boxShadow='0 5px 10px rgba(122,79,0,.4)';
+    btn.addEventListener('click', function(ev){
+      if(ev){ev.preventDefault();ev.stopPropagation();}
+      if(typeof syncVisiblePlayersToHidden==='function')syncVisiblePlayersToHidden();
+      var players;
+      try{
+        if(typeof collectPlayersForSendV4==='function') players=collectPlayersForSendV4();
+        else if(typeof window.collectPlayersForSend==='function') players=window.collectPlayersForSend();
+        else players=[];
+      }
+      catch(e){alert('❌ '+e.message);return false;}
+      var teamName=String(((document.getElementById('teamName')||{}).value||'')).trim()||'팀명';
+
+      if(!players||!players.length){
+        setTimeout(function(){
+          try{
+            if(typeof collectPlayersForSendV4==='function') players=collectPlayersForSendV4();
+            else if(typeof window.collectPlayersForSend==='function') players=window.collectPlayersForSend();
+          }catch(e){}
+          showConfirm(players||[],teamName,function(cp,ct){
+            var sendFn=typeof sendToGoogleSheetPatchedV4==='function'?sendToGoogleSheetPatchedV4:window.sendToGoogleSheet;
+            if(typeof sendFn==='function')sendFn();
+          });
+        },300);
+        return false;
+      }
+
+      showConfirm(players,teamName,function(cp,ct){
+        var sendFn=typeof sendToGoogleSheetPatchedV4==='function'?sendToGoogleSheetPatchedV4:window.sendToGoogleSheet;
+        if(typeof sendFn==='function')sendFn();
+      });
+      return false;
+    }, true); /* ★ capture:true — obfuscated 리스너보다 먼저 실행 */
+  }
+  /* ★ window.load가 </html> 이후 스크립트보다 먼저 발생하는 타이밍 버그 대응 */
+  if(document.readyState==='complete'){setTimeout(hookSendBtn,200);}
+  else{window.addEventListener('load',function(){setTimeout(hookSendBtn,200);});}
+})();
 </script>
 
 
 <script>
-(function(){var realSendFn=window.sendToGoogleSheetPatchedV4||window.sendToGoogleSheet;function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
-function text(id){var el=document.getElementById(id);return el?String(el.value||el.textContent||el.innerText||'').replace(/\u00a0/g,' ').trim():'';}
-function num(v){var n=parseInt(String(v==null?'':v).replace(/[^0-9]/g,''),10);return isNaN(n)?0:n;}
-function parseHeader(i){var raw=text('nameHeader'+i).replace(/\s+/g,' ').trim();var info={name:'',gender:'',affiliation:''};if(!raw)return info;var m=raw.match(/^(.+?)\s*\(\s*([남여])\s*(?:[,/]?\s*([^\)]+?))?\s*\)$/);if(m){info.name=String(m[1]||'').trim();info.gender=String(m[2]||'').trim();info.affiliation=String(m[3]||'').trim();}else{var nm=raw.replace(/^\d+\s*/,'').trim();if(!/^경기자\s*\d+$/.test(nm))info.name=nm;}
-return info;}
-function syncBeforeCollect(){for(var i=1;i<=4;i++){var h=parseHeader(i);var p=document.getElementById('player'+i);var g=document.getElementById('gender'+i);var a=document.getElementById('affiliation'+i);var name=text('player'+i)||h.name;var gender=text('gender'+i)||h.gender;var aff=text('affiliation'+i)||h.affiliation;if(p)p.value=name;if(g)g.value=gender;if(a)a.value=aff;if(window.playerNames)window.playerNames[i-1]=name;if(window.playerGenders)window.playerGenders[i-1]=gender;if(window.playerAffiliations)window.playerAffiliations[i-1]=aff;['A','B','C','D'].forEach(function(c){var el=document.getElementById('in-'+c+'-'+i);var v=text('in-'+c+'-'+i).replace(/[^0-9]/g,'').slice(0,2);if(el)el.value=v;if(window.summaryScores&&window.summaryScores[c])window.summaryScores[c][i]=v;});if(window.summaryScores&&window.summaryScores.HIO)window.summaryScores.HIO[i]=text('in-HIO-'+i);}
-try{if(typeof window.autoSave==='function')window.autoSave();}catch(e){}}
-function collectPlayers(){syncBeforeCollect();var arr=[];for(var i=1;i<=4;i++){var h=parseHeader(i);var name=text('player'+i)||h.name;var gender=text('gender'+i)||h.gender;var aff=text('affiliation'+i)||h.affiliation;var A=num(text('in-A-'+i)||(window.summaryScores&&window.summaryScores.A&&window.summaryScores.A[i]));var B=num(text('in-B-'+i)||(window.summaryScores&&window.summaryScores.B&&window.summaryScores.B[i]));var C=num(text('in-C-'+i)||(window.summaryScores&&window.summaryScores.C&&window.summaryScores.C[i]));var D=num(text('in-D-'+i)||(window.summaryScores&&window.summaryScores.D&&window.summaryScores.D[i]));var note=text('in-HIO-'+i);var exists=!!(name||gender||aff||A||B||C||D||note);if(!exists)continue;if(!name)continue;if(!gender)throw new Error('⚠️ '+name+' 선수의 성별을 선택해주세요.');arr.push({slot:i,name:name,gender:gender,affiliation:aff,A:A,B:B,C:C,D:D,holeInOne:note,total:A+B+C+D});}
-return arr;}
-function remove(id){var el=document.getElementById(id);if(el)el.remove();}
-function classify(p){var note=String(p.holeInOne||'');if(note.indexOf('불참')>-1)return'absent';if(note.indexOf('기권')>-1)return'quit';if(p.A===0&&p.B===0&&p.C===0&&p.D===0&&p.total===0)return'absent';if((p.A===0||p.B===0||p.C===0||p.D===0)&&p.total>0)return'quit';return'normal';}
-function done(team,players){remove('pasisDoneOv_v2');var ov=document.createElement('div');ov.id='pasisDoneOv_v2';ov.style.cssText='position:fixed;inset:0;z-index:2147483606;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:16px;font-family:"Malgun Gothic",sans-serif;';ov.innerHTML='<div style="width:min(340px,92vw);background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.35);text-align:center;">'
-+'<div style="padding:28px 20px 12px;"><div style="font-size:44px;">✅</div><div style="font-size:24px;font-weight:900;color:#1e3c72;">전송 완료!</div>'
-+'<div style="font-size:14px;line-height:1.65;color:#4b5563;margin-top:10px;"><strong>'+esc(team)+'</strong><br>'+esc(players.map(function(p){return p.name;}).join(' · '))+'<br><span style="color:#c8860a;font-weight:800;">구글시트에 기록되었습니다.</span></div></div>'
-+'<div style="padding:14px 20px 20px;"><button id="pasisDoneClose_v2" style="width:100%;padding:14px;border:none;border-radius:14px;background:#c8860a;color:#fff;font-size:18px;font-weight:900;">확인</button></div></div>';document.body.appendChild(ov);var cl=function(){remove('pasisDoneOv_v2');};document.getElementById('pasisDoneClose_v2').onclick=cl;ov.onclick=function(e){if(e.target===ov)cl();};setTimeout(cl,4000);}
-function sending(){remove('pasisSendingOv_v2');var ov=document.createElement('div');ov.id='pasisSendingOv_v2';ov.style.cssText='position:fixed;inset:0;z-index:2147483605;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:16px;font-family:"Malgun Gothic",sans-serif;';ov.innerHTML='<div style="background:#fff;border-radius:18px;padding:28px 36px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);"><div style="font-size:40px;">⏳</div><div style="font-size:20px;font-weight:900;color:#1e3c72;">전송 중...</div><div style="font-size:13px;color:#6b7280;margin-top:6px;">잠시 기다려 주세요</div></div>';document.body.appendChild(ov);return ov;}
-function showConfirm(players,team){remove('pasisSendOv_v2');var rows=players.map(function(p){var st=classify(p),badge='',row='background:#fff;border:1.5px solid #e8d9b5;';var total='<span style="font-size:26px;font-weight:900;color:#c8860a;">'+esc(p.total)+'</span><span style="font-size:12px;color:#8b6b2d;font-weight:700;"> 타</span>';if(st==='absent'){badge='<span style="margin-left:6px;padding:2px 7px;border-radius:6px;background:#fef2f2;border:1px solid #fca5a5;color:#dc2626;font-size:11px;font-weight:900;">불참</span>';row+='opacity:.78;background:#f9f9f9;border-color:#ddd;';total='<span style="font-size:13px;color:#9ca3af;font-weight:800;">순위제외</span>';}
-if(st==='quit'){badge='<span style="margin-left:6px;padding:2px 7px;border-radius:6px;background:#fffbeb;border:1px solid #fcd34d;color:#d97706;font-size:11px;font-weight:900;">기권</span>';row+='background:#fffdf4;border-color:#f2cf75;';total='<span style="font-size:13px;color:#d97706;font-weight:900;">기권처리</span>';}
-var meta=[p.gender,p.affiliation].filter(Boolean).map(esc).join(', ');return'<div style="'+row+'border-radius:14px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;">'
-+'<div style="min-width:0;flex:1;"><div style="font-size:18px;font-weight:900;color:#1e3c72;line-height:1.35;">'+esc(p.name)+(meta?' <span style="font-size:13px;font-weight:700;color:#6b7280;">('+meta+')</span>':'')+badge+'</div>'
-+'<div style="font-size:13px;color:#555;line-height:1.55;margin-top:4px;">A:'+esc(p.A)+' B:'+esc(p.B)+' C:'+esc(p.C)+' D:'+esc(p.D)+(p.holeInOne?' · '+esc(p.holeInOne):'')+'</div></div>'
-+'<div style="min-width:80px;text-align:right;white-space:nowrap;">'+total+'</div></div>';}).join('');var ov=document.createElement('div');ov.id='pasisSendOv_v2';ov.style.cssText='position:fixed;inset:0;z-index:2147483604;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:14px;font-family:"Malgun Gothic",sans-serif;';ov.innerHTML='<div style="width:min(360px,94vw);max-height:92vh;background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.35);">'
-+'<div style="background:linear-gradient(135deg,#c8860a 0%,#9b6400 100%);padding:16px 18px 14px;color:#fff;"><div style="font-size:22px;font-weight:900;">📋 전송 전 확인</div><div style="font-size:15px;font-weight:700;margin-top:3px;">'+esc(team)+' · '+players.length+'명</div></div>'
-+'<div style="padding:14px 14px 6px;max-height:calc(92vh - 220px);overflow-y:auto;background:#fffaf0;">'+rows+'</div>'
-+'<div style="background:#fef3c7;border-top:1px solid #fcd34d;padding:11px 16px;font-size:13px;color:#92400e;line-height:1.55;text-align:center;">⚠️ <strong>전송 후 수정은 불가합니다.</strong><br>오류 발견 시 관리자에게 직접 문의하세요.</div>'
-+'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px;background:#fff;"><button id="pasisBack_v2" style="padding:14px;border:none;border-radius:16px;background:#e5e7eb;color:#374151;font-size:20px;font-weight:900;line-height:1.25;">← 뒤로<br>(수정)</button><button id="pasisGo_v2" style="padding:14px;border:none;border-radius:16px;background:#c8860a;color:#fff;font-size:20px;font-weight:900;line-height:1.25;">✅ 확인·<br>전송</button></div></div>';document.body.appendChild(ov);document.getElementById('pasisBack_v2').onclick=function(){remove('pasisSendOv_v2');};document.getElementById('pasisGo_v2').onclick=function(){remove('pasisSendOv_v2');doRealSend(players,team);};ov.onclick=function(e){if(e.target===ov)remove('pasisSendOv_v2');};}
-function doRealSend(players,team){var ov=sending(),cleaned=false,timer;var oldToast=window.showToast,oldAlert=window.alert;function cleanup(){if(cleaned)return;cleaned=true;clearTimeout(timer);remove('pasisSendingOv_v2');window.showToast=oldToast;window.alert=oldAlert;}
-timer=setTimeout(cleanup,10000);window.showToast=function(msg){cleanup();if(String(msg).indexOf('완료')>-1||String(msg).indexOf('전송')>-1)done(team,players);if(typeof oldToast==='function')return oldToast.apply(this,arguments);};window.alert=function(msg){cleanup();return oldAlert.apply(this,arguments);};var fn=realSendFn||window.sendToGoogleSheetPatchedV4||window.sendToGoogleSheet;if(typeof fn==='function')fn();else{cleanup();oldAlert('❌ 전송 함수를 찾을 수 없습니다.');}}
-function onClick(ev){if(ev){ev.preventDefault();ev.stopPropagation();ev.stopImmediatePropagation&&ev.stopImmediatePropagation();}
-var team=text('teamName')||'팀명',players;try{players=collectPlayers();}
-catch(e){alert(e.message||String(e));return false;}
-if(!players.length){setTimeout(function(){try{var ps=collectPlayers();if(ps.length)showConfirm(ps,team);else alert('전송할 선수 정보를 아직 불러오지 못했습니다. 잠시 후 다시 눌러주세요.');}
-catch(e){alert(e.message||String(e));}},150);return false;}
-showConfirm(players,team);return false;}
-function bind(){var btn=document.getElementById('autoSendBtn');if(!btn||btn.__pasisDetailV2Bound)return;btn.__pasisDetailV2Bound=true;btn.onclick=null;btn.style.background='linear-gradient(135deg,#c8860a 0%,#7a4f00 100%)';btn.style.boxShadow='0 5px 10px rgba(122,79,0,.4)';btn.addEventListener('click',onClick,true);}
-function repeat(){bind();[50,200,500,1000,2000,3500,5000,8000].forEach(function(ms){setTimeout(bind,ms);});}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',repeat);else repeat();window.addEventListener('load',repeat);try{new MutationObserver(function(){setTimeout(bind,0);}).observe(document.documentElement,{childList:true,subtree:true});}catch(e){}
-window.collectPlayersForSendDetailedV2=collectPlayers;})();
+/* ===== PASIS SV4 전송 상세 확인창 강제 복원 패치 v2 =====
+   - 기존 코드가 버튼을 다시 cloneNode 해도 이 패치가 다시 붙습니다.
+   - data-* 속성을 쓰지 않고 DOM expando 속성으로만 중복을 막습니다.
+*/
+(function(){
+  var realSendFn = window.sendToGoogleSheetPatchedV4 || window.sendToGoogleSheet;
+
+  function esc(s){
+    return String(s == null ? '' : s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+  function text(id){
+    var el = document.getElementById(id);
+    return el ? String(el.value || el.textContent || el.innerText || '').replace(/\u00a0/g,' ').trim() : '';
+  }
+  function num(v){
+    var n = parseInt(String(v == null ? '' : v).replace(/[^0-9]/g,''),10);
+    return isNaN(n) ? 0 : n;
+  }
+  function parseHeader(i){
+    var raw = text('nameHeader'+i).replace(/\s+/g,' ').trim();
+    var info = {name:'', gender:'', affiliation:''};
+    if(!raw) return info;
+    var m = raw.match(/^(.+?)\s*\(\s*([남여])\s*(?:[,/]?\s*([^\)]+?))?\s*\)$/);
+    if(m){
+      info.name = String(m[1]||'').trim();
+      info.gender = String(m[2]||'').trim();
+      info.affiliation = String(m[3]||'').trim();
+    }else{
+      var nm = raw.replace(/^\d+\s*/,'').trim();
+      if(!/^경기자\s*\d+$/.test(nm)) info.name = nm;
+    }
+    return info;
+  }
+  function syncBeforeCollect(){
+    for(var i=1;i<=4;i++){
+      var h = parseHeader(i);
+      var p = document.getElementById('player'+i);
+      var g = document.getElementById('gender'+i);
+      var a = document.getElementById('affiliation'+i);
+      var name = text('player'+i) || h.name;
+      var gender = text('gender'+i) || h.gender;
+      var aff = text('affiliation'+i) || h.affiliation;
+      if(p) p.value = name;
+      if(g) g.value = gender;
+      if(a) a.value = aff;
+      if(window.playerNames) window.playerNames[i-1] = name;
+      if(window.playerGenders) window.playerGenders[i-1] = gender;
+      if(window.playerAffiliations) window.playerAffiliations[i-1] = aff;
+      ['A','B','C','D'].forEach(function(c){
+        var el = document.getElementById('in-'+c+'-'+i);
+        var v = text('in-'+c+'-'+i).replace(/[^0-9]/g,'').slice(0,2);
+        if(el) el.value = v;
+        if(window.summaryScores && window.summaryScores[c]) window.summaryScores[c][i] = v;
+      });
+      if(window.summaryScores && window.summaryScores.HIO) window.summaryScores.HIO[i] = text('in-HIO-'+i);
+    }
+    try{ if(typeof window.autoSave === 'function') window.autoSave(); }catch(e){}
+  }
+  function collectPlayers(){
+    syncBeforeCollect();
+    var arr = [];
+    for(var i=1;i<=4;i++){
+      var h = parseHeader(i);
+      var name = text('player'+i) || h.name;
+      var gender = text('gender'+i) || h.gender;
+      var aff = text('affiliation'+i) || h.affiliation;
+      var A = num(text('in-A-'+i) || (window.summaryScores&&window.summaryScores.A&&window.summaryScores.A[i]));
+      var B = num(text('in-B-'+i) || (window.summaryScores&&window.summaryScores.B&&window.summaryScores.B[i]));
+      var C = num(text('in-C-'+i) || (window.summaryScores&&window.summaryScores.C&&window.summaryScores.C[i]));
+      var D = num(text('in-D-'+i) || (window.summaryScores&&window.summaryScores.D&&window.summaryScores.D[i]));
+      var note = text('in-HIO-'+i);
+      var exists = !!(name || gender || aff || A || B || C || D || note);
+      if(!exists) continue;
+      if(!name) continue;
+      if(!gender) throw new Error('⚠️ ' + name + ' 선수의 성별을 선택해주세요.');
+      arr.push({slot:i,name:name,gender:gender,affiliation:aff,A:A,B:B,C:C,D:D,holeInOne:note,total:A+B+C+D});
+    }
+    return arr;
+  }
+  function remove(id){ var el=document.getElementById(id); if(el) el.remove(); }
+  function classify(p){
+    var note = String(p.holeInOne||'');
+    if(note.indexOf('불참')>-1) return 'absent';
+    if(note.indexOf('기권')>-1) return 'quit';
+    if(p.A===0 && p.B===0 && p.C===0 && p.D===0 && p.total===0) return 'absent';
+    if((p.A===0 || p.B===0 || p.C===0 || p.D===0) && p.total>0) return 'quit';
+    return 'normal';
+  }
+  function done(team, players){
+    remove('pasisDoneOv_v2');
+    var ov=document.createElement('div');
+    ov.id='pasisDoneOv_v2';
+    ov.style.cssText='position:fixed;inset:0;z-index:2147483606;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:16px;font-family:"Malgun Gothic",sans-serif;';
+    ov.innerHTML='<div style="width:min(340px,92vw);background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.35);text-align:center;">'
+      +'<div style="padding:28px 20px 12px;"><div style="font-size:44px;">✅</div><div style="font-size:24px;font-weight:900;color:#1e3c72;">전송 완료!</div>'
+      +'<div style="font-size:14px;line-height:1.65;color:#4b5563;margin-top:10px;"><strong>'+esc(team)+'</strong><br>'+esc(players.map(function(p){return p.name;}).join(' · '))+'<br><span style="color:#c8860a;font-weight:800;">구글시트에 기록되었습니다.</span></div></div>'
+      +'<div style="padding:14px 20px 20px;"><button id="pasisDoneClose_v2" style="width:100%;padding:14px;border:none;border-radius:14px;background:#c8860a;color:#fff;font-size:18px;font-weight:900;">확인</button></div></div>';
+    document.body.appendChild(ov);
+    var cl=function(){remove('pasisDoneOv_v2');};
+    document.getElementById('pasisDoneClose_v2').onclick=cl;
+    ov.onclick=function(e){if(e.target===ov)cl();};
+    setTimeout(cl,4000);
+  }
+  function sending(){
+    remove('pasisSendingOv_v2');
+    var ov=document.createElement('div');
+    ov.id='pasisSendingOv_v2';
+    ov.style.cssText='position:fixed;inset:0;z-index:2147483605;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:16px;font-family:"Malgun Gothic",sans-serif;';
+    ov.innerHTML='<div style="background:#fff;border-radius:18px;padding:28px 36px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3);"><div style="font-size:40px;">⏳</div><div style="font-size:20px;font-weight:900;color:#1e3c72;">전송 중...</div><div style="font-size:13px;color:#6b7280;margin-top:6px;">잠시 기다려 주세요</div></div>';
+    document.body.appendChild(ov);
+    return ov;
+  }
+  function showConfirm(players, team){
+    remove('pasisSendOv_v2');
+    var rows = players.map(function(p){
+      var st=classify(p), badge='', row='background:#fff;border:1.5px solid #e8d9b5;';
+      var total='<span style="font-size:26px;font-weight:900;color:#c8860a;">'+esc(p.total)+'</span><span style="font-size:12px;color:#8b6b2d;font-weight:700;"> 타</span>';
+      if(st==='absent'){ badge='<span style="margin-left:6px;padding:2px 7px;border-radius:6px;background:#fef2f2;border:1px solid #fca5a5;color:#dc2626;font-size:11px;font-weight:900;">불참</span>'; row+='opacity:.78;background:#f9f9f9;border-color:#ddd;'; total='<span style="font-size:13px;color:#9ca3af;font-weight:800;">순위제외</span>'; }
+      if(st==='quit'){ badge='<span style="margin-left:6px;padding:2px 7px;border-radius:6px;background:#fffbeb;border:1px solid #fcd34d;color:#d97706;font-size:11px;font-weight:900;">기권</span>'; row+='background:#fffdf4;border-color:#f2cf75;'; total='<span style="font-size:13px;color:#d97706;font-weight:900;">기권처리</span>'; }
+      var meta=[p.gender,p.affiliation].filter(Boolean).map(esc).join(', ');
+      return '<div style="'+row+'border-radius:14px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;">'
+        +'<div style="min-width:0;flex:1;"><div style="font-size:18px;font-weight:900;color:#1e3c72;line-height:1.35;">'+esc(p.name)+(meta?' <span style="font-size:13px;font-weight:700;color:#6b7280;">('+meta+')</span>':'')+badge+'</div>'
+        +'<div style="font-size:13px;color:#555;line-height:1.55;margin-top:4px;">A:'+esc(p.A)+' B:'+esc(p.B)+' C:'+esc(p.C)+' D:'+esc(p.D)+(p.holeInOne?' · '+esc(p.holeInOne):'')+'</div></div>'
+        +'<div style="min-width:80px;text-align:right;white-space:nowrap;">'+total+'</div></div>';
+    }).join('');
+    var ov=document.createElement('div');
+    ov.id='pasisSendOv_v2';
+    ov.style.cssText='position:fixed;inset:0;z-index:2147483604;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:14px;font-family:"Malgun Gothic",sans-serif;';
+    ov.innerHTML='<div style="width:min(360px,94vw);max-height:92vh;background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.35);">'
+      +'<div style="background:linear-gradient(135deg,#c8860a 0%,#9b6400 100%);padding:16px 18px 14px;color:#fff;"><div style="font-size:22px;font-weight:900;">📋 전송 전 확인</div><div style="font-size:15px;font-weight:700;margin-top:3px;">'+esc(team)+' · '+players.length+'명</div></div>'
+      +'<div style="padding:14px 14px 6px;max-height:calc(92vh - 220px);overflow-y:auto;background:#fffaf0;">'+rows+'</div>'
+      +'<div style="background:#fef3c7;border-top:1px solid #fcd34d;padding:11px 16px;font-size:13px;color:#92400e;line-height:1.55;text-align:center;">⚠️ <strong>전송 후 수정은 불가합니다.</strong><br>오류 발견 시 관리자에게 직접 문의하세요.</div>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px;background:#fff;"><button id="pasisBack_v2" style="padding:14px;border:none;border-radius:16px;background:#e5e7eb;color:#374151;font-size:20px;font-weight:900;line-height:1.25;">← 뒤로<br>(수정)</button><button id="pasisGo_v2" style="padding:14px;border:none;border-radius:16px;background:#c8860a;color:#fff;font-size:20px;font-weight:900;line-height:1.25;">✅ 확인·<br>전송</button></div></div>';
+    document.body.appendChild(ov);
+    document.getElementById('pasisBack_v2').onclick=function(){remove('pasisSendOv_v2');};
+    document.getElementById('pasisGo_v2').onclick=function(){
+      remove('pasisSendOv_v2');
+      doRealSend(players, team);
+    };
+    ov.onclick=function(e){if(e.target===ov)remove('pasisSendOv_v2');};
+  }
+  function doRealSend(players, team){
+    var ov=sending(), cleaned=false, timer;
+    var oldToast=window.showToast, oldAlert=window.alert;
+    function cleanup(){
+      if(cleaned) return;
+      cleaned=true; clearTimeout(timer); remove('pasisSendingOv_v2');
+      window.showToast=oldToast; window.alert=oldAlert;
+    }
+    timer=setTimeout(cleanup,10000);
+    window.showToast=function(msg){
+      cleanup();
+      if(String(msg).indexOf('완료')>-1 || String(msg).indexOf('전송')>-1) done(team,players);
+      if(typeof oldToast==='function') return oldToast.apply(this,arguments);
+    };
+    window.alert=function(msg){ cleanup(); return oldAlert.apply(this,arguments); };
+    var fn = realSendFn || window.sendToGoogleSheetPatchedV4 || window.sendToGoogleSheet;
+    if(typeof fn==='function') fn();
+    else { cleanup(); oldAlert('❌ 전송 함수를 찾을 수 없습니다.'); }
+  }
+  function onClick(ev){
+    if(ev){ ev.preventDefault(); ev.stopPropagation(); ev.stopImmediatePropagation && ev.stopImmediatePropagation(); }
+    var team=text('teamName') || '팀명', players;
+    try{ players=collectPlayers(); }
+    catch(e){ alert(e.message||String(e)); return false; }
+    if(!players.length){
+      setTimeout(function(){
+        try{ var ps=collectPlayers(); if(ps.length) showConfirm(ps,team); else alert('전송할 선수 정보를 아직 불러오지 못했습니다. 잠시 후 다시 눌러주세요.'); }
+        catch(e){ alert(e.message||String(e)); }
+      },150);
+      return false;
+    }
+    showConfirm(players,team);
+    return false;
+  }
+  function bind(){
+    var btn=document.getElementById('autoSendBtn');
+    if(!btn || btn.__pasisDetailV2Bound) return;
+    btn.__pasisDetailV2Bound=true;
+    btn.onclick=null;
+    btn.style.background='linear-gradient(135deg,#c8860a 0%,#7a4f00 100%)';
+    btn.style.boxShadow='0 5px 10px rgba(122,79,0,.4)';
+    btn.addEventListener('click',onClick,true);
+  }
+  function repeat(){
+    bind();
+    [50,200,500,1000,2000,3500,5000,8000].forEach(function(ms){setTimeout(bind,ms);});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',repeat);
+  else repeat();
+  window.addEventListener('load',repeat);
+  try{
+    new MutationObserver(function(){ setTimeout(bind,0); }).observe(document.documentElement,{childList:true,subtree:true});
+  }catch(e){}
+  window.collectPlayersForSendDetailedV2=collectPlayers;
+})();
 </script>
 
 
