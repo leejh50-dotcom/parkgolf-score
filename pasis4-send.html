@@ -500,10 +500,18 @@ function init() {
     APP.team = decodeURIComponent(p.get('t') || '');
     APP.date = decodeURIComponent(p.get('d') || '');
     APP.hasParam = !!(APP.code && APP.url && APP.team);
+    // ★ co= 파라미터 (G열 코스) - 최우선 적용
     var _co = p.get('co') || '';
     if (_co) {
-      var _cp = _co.split(/[,\s]+/).map(function(s){return s.trim().toUpperCase();}).filter(function(s){return 'ABCD'.indexOf(s)>=0;});
-      if (_cp.length) { COURSES = _cp; APP._coFromParam = true; }
+      var _cp = _co.split(/[,\/\s]+/).map(function(s){return s.trim().toUpperCase();}).filter(function(s){return 'ABCD'.indexOf(s)>=0;});
+      if (_cp.length) {
+        // 중복 제거 후 ABCD 순서 정렬
+        var _uniq = [];
+        ['A','B','C','D'].forEach(function(x){ if(_cp.indexOf(x)>=0) _uniq.push(x); });
+        COURSES = _uniq.length ? _uniq : _cp;
+        APP._coFromParam = true;
+        APP.coursesFromG = true; // G열 출처 표시
+      }
     }
 
     if (APP.hasParam) {
@@ -538,7 +546,8 @@ function showCover() {
 
   if (hasParam) {
     document.getElementById('cvTeamName').textContent = APP.team;
-    document.getElementById('cvTeamCode').textContent = APP.code + (APP.date ? ' · ' + APP.date : '');
+    document.getElementById('cvTeamCode').textContent = APP.code + (APP.date ? ' · ' + APP.date : '')
+      + (APP.coursesFromG ? ' · 코스:' + COURSES.join(',') : '');
     document.getElementById('cvStartBtn').textContent = '▶ 점수 입력 시작';
   } else {
     document.getElementById('cvStartBtn').innerHTML = '점수입력<br><span style="font-size:18px;font-weight:700;opacity:.75">(연습용)</span>';
@@ -549,16 +558,29 @@ function showCover() {
 function startInput() {
   hide('coverScreen');
   show('mainContent', false);
+
+  // ① G열 co= 파라미터가 있으면 → 이미 COURSES 설정됨, 그대로 사용
+  // ② co= 없으면 → 조명(team)에서 코스 파싱 시도
+  // ③ 조명 파싱도 실패하면 → 기본값 ABCD 유지
   if (!APP._coFromParam) {
     var _tm = APP.team || '';
-    var _m = _tm.match(/[A-Da-d](?=-\d)/g) ||
-             _tm.match(/(?:^|[\s\/·\-])([A-Da-d])(?:[\s\/·\-조]|$)/g);
-    if (_m && _m.length && _m.length < 4) {
+    // 패턴1: "C-1" "A-3" 처럼 코스-번호 형식에서 코스 추출
+    var _m1 = _tm.match(/([A-Da-d])-\d/g);
+    if (_m1 && _m1.length) {
       var _ac = [];
-      _m.forEach(function(c){ var u=c.replace(/[^A-Da-d]/gi,'').toUpperCase(); if(u&&_ac.indexOf(u)<0)_ac.push(u); });
-      if (_ac.length && _ac.length < 4) COURSES = _ac;
+      _m1.forEach(function(s){ var u=s.charAt(0).toUpperCase(); if(_ac.indexOf(u)<0)_ac.push(u); });
+      if (_ac.length && _ac.length < 4) { COURSES = _ac; }
+    } else {
+      // 패턴2: 공백/슬래시/점 구분자 사이의 단독 알파벳
+      var _m2 = _tm.match(/(?:^|[\s\/·\-])([A-Da-d])(?:[\s\/·\-조]|$)/g);
+      if (_m2 && _m2.length) {
+        var _ac2 = [];
+        _m2.forEach(function(c){ var u=c.replace(/[^A-Da-d]/gi,'').toUpperCase(); if(u&&_ac2.indexOf(u)<0)_ac2.push(u); });
+        if (_ac2.length && _ac2.length < 4) COURSES = _ac2;
+      }
     }
   }
+
   renderUI();
   window.scrollTo({ top: 0 });
 }
