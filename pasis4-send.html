@@ -503,7 +503,7 @@ function init() {
     var _co = p.get('co') || '';
     if (_co) {
       var _cp = _co.split(/[,\s]+/).map(function(s){return s.trim().toUpperCase();}).filter(function(s){return 'ABCD'.indexOf(s)>=0;});
-      if (_cp.length && _cp.length < 4) COURSES = _cp;
+      if (_cp.length) { COURSES = _cp; APP._coFromParam = true; }  // G열 우선
     }
 
     if (APP.hasParam) {
@@ -549,7 +549,8 @@ function showCover() {
 function startInput() {
   hide('coverScreen');
   show('mainContent', false);
-  if (COURSES.length === 4) {
+  // G열(co=) 우선 → 없을 때만 조명 파싱
+  if (!APP._coFromParam) {
     var _tm = APP.team || '';
     var _m = _tm.match(/[A-Da-d](?=-\d)/g) ||
              _tm.match(/(?:^|[\s\/·\-])([A-Da-d])(?:[\s\/·\-조]|$)/g);
