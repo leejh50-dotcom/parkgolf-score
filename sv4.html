@@ -2721,18 +2721,19 @@ window.addEventListener('load', function(){
   #pgBatchTop .btn-layout, #pgBatchTop .bt-btns { display:none !important; }
   #pgProgress, #pgProgressTxt { display:none !important; }
 
-  /* 9개/장: 카드 높이 고정으로 3행이 A4에 꽉 채워지도록 */
+  /* 9개/장: 카드 높이 고정 + 행 간격 명시 */
   #pgBatchGrid {
     display:grid !important;
     grid-template-columns:repeat(3,1fr) !important;
     column-gap:3mm !important;
-    row-gap:6mm !important;
-    padding:0 2mm !important;
+    row-gap:8mm !important;
+    padding:4mm 2mm 0 !important;
     width:100% !important;
     box-sizing:border-box !important;
+    align-content:start !important;
   }
   #pgBatchGrid:not([style*="repeat(2"]) .pgCard {
-    height:86mm !important;
+    height:83mm !important;
     overflow:hidden !important;
   }
   /* 6개/장 */
@@ -2744,7 +2745,7 @@ window.addEventListener('load', function(){
     align-content:space-between !important;
   }
   #pgBatchGrid[style*="repeat(2"] .pgCard {
-    height:126mm !important;
+    height:82mm !important;
     overflow:hidden !important;
   }
   #pgBatchGrid[style*="repeat(2"] .pgCard-qr canvas {
