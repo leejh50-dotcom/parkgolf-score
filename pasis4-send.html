@@ -276,11 +276,11 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
 .cf-head{background:linear-gradient(135deg,var(--gold-dk),var(--gold));color:#fff;padding:13px 17px 11px;font-size:17px;font-weight:900;}
 .cf-head small{display:block;font-size:12px;opacity:.85;margin-top:2px;font-weight:600;}
 .cf-body{padding:6px 10px;overflow-y:auto;flex:1;min-height:0;}
-.cf-row{display:flex;align-items:center;justify-content:space-between;background:var(--gold-lt);border:1px solid #f0d08a;border-radius:11px;padding:7px 12px;margin-bottom:5px;}
+.cf-row{display:flex;align-items:center;justify-content:space-between;background:var(--gold-lt);border:1px solid #f0d08a;border-radius:11px;padding:11px 14px;margin-bottom:6px;}
 .cf-row.absent{background:#f9f9f9;border-color:#ddd;opacity:.75;}
 .cf-row.quit{background:#fffdf0;border-color:#fcd34d;}
-.cf-name{font-size:20px;font-weight:900;}
-.cf-detail{font-size:11px;color:var(--gray);margin-top:2px;}
+.cf-name{font-size:26px;font-weight:900;}
+.cf-detail{display:none;}
 .cf-right{text-align:right;}
 .cf-total{font-size:28px;font-weight:900;color:var(--gold);}
 .cf-bigo{font-size:10px;font-weight:800;padding:1px 6px;border-radius:4px;margin-top:2px;display:inline-block;}
@@ -861,13 +861,24 @@ function showErr(msg) {
 
 // ── 완료 화면 ──
 function nextScan() {
-  // 완료 화면 숨기고 표지로 복귀 → 바로 QR 스캔 가능
+  // 완료 화면 숨기기
   document.getElementById('doneScreen').classList.remove('show');
   document.getElementById('donePromo').classList.remove('show');
-  // 상태 초기화
-  APP = { players: [], _coFromParam: false };
+  // 선수 데이터만 초기화 (hasParam·code·url 등 URL 파라미터 유지)
+  APP.players = [];
+  APP._coFromParam = false;
   COURSES = ['A','B','C','D'];
   hide('mainContent');
+  // URL 파라미터 재적용 (코스 등 원복)
+  var p = new URLSearchParams(window.location.search);
+  var _co = p.get('co') || '';
+  if (_co) {
+    var _cp = _co.split(/[,\/\s]+/).map(function(s){return s.trim().toUpperCase();}).filter(function(s){return 'ABCD'.indexOf(s)>=0;});
+    var _uniq = [];
+    ['A','B','C','D'].forEach(function(x){ if(_cp.indexOf(x)>=0) _uniq.push(x); });
+    COURSES = _uniq.length ? _uniq : _cp;
+    APP._coFromParam = true;
+  }
   showCover();
   window.scrollTo({ top: 0 });
 }
