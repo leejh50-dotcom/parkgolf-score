@@ -2721,24 +2721,31 @@ window.addEventListener('load', function(){
   #pgBatchTop .btn-layout, #pgBatchTop .bt-btns { display:none !important; }
   #pgProgress, #pgProgressTxt { display:none !important; }
 
-  /* 9개/장: 행 간격 자동 균등분배 */
+  /* 9개/장: 카드 높이 고정으로 3행이 A4에 꽉 채워지도록 */
   #pgBatchGrid {
     display:grid !important;
     grid-template-columns:repeat(3,1fr) !important;
     column-gap:3mm !important;
-    row-gap:0 !important;
-    padding:2mm 2mm !important;
-    align-content:space-between !important;
+    row-gap:6mm !important;
+    padding:0 2mm !important;
     width:100% !important;
-    height:257mm !important;
     box-sizing:border-box !important;
+  }
+  #pgBatchGrid:not([style*="repeat(2"]) .pgCard {
+    height:82mm !important;
+    overflow:hidden !important;
   }
   /* 6개/장 */
   #pgBatchGrid[style*="repeat(2"] {
     grid-template-columns:repeat(2,1fr) !important;
     column-gap:4mm !important;
-    row-gap:15mm !important;
+    row-gap:0 !important;
     padding:2mm 4mm !important;
+    align-content:space-between !important;
+  }
+  #pgBatchGrid[style*="repeat(2"] .pgCard {
+    height:118mm !important;
+    overflow:hidden !important;
   }
   #pgBatchGrid[style*="repeat(2"] .pgCard-qr canvas {
     width:46mm !important; height:46mm !important;
@@ -2914,7 +2921,7 @@ window.addEventListener('load', function(){
       +'<div id="pgProgressBar" style="height:4px;background:#fff;width:0%;transition:width .2s;"></div>'
       +'</div>'
       +'<div id="pgProgressTxt" style="text-align:center;font-size:12px;padding:4px 0;color:#fff;opacity:.85;">QR 생성 중... 0 / '+total+'</div>'
-      +'<div id="pgBatchGrid" style="margin-top:8mm;"></div>';
+      +'<div id="pgBatchGrid"></div>';
     document.body.appendChild(ov);
 
     var grid=document.getElementById('pgBatchGrid');
