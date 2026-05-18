@@ -2726,7 +2726,7 @@ window.addEventListener('load', function(){
     display:grid !important;
     grid-template-columns:repeat(3,1fr) !important;
     column-gap:3mm !important;
-    row-gap:13mm !important;
+    row-gap:6mm !important;
     padding:2mm 2mm !important;
     align-content:space-between !important;
     width:100% !important;
@@ -2736,7 +2736,7 @@ window.addEventListener('load', function(){
   #pgBatchGrid[style*="repeat(2"] {
     grid-template-columns:repeat(2,1fr) !important;
     column-gap:4mm !important;
-    row-gap:8mm !important;
+    row-gap:15mm !important;
     padding:2mm 4mm !important;
   }
   #pgBatchGrid[style*="repeat(2"] .pgCard-qr canvas {
@@ -2759,30 +2759,52 @@ window.addEventListener('load', function(){
   .pgCard-qr > div { position:static !important; display:block !important; }
   .pgCard-qr canvas {
     display:block !important;
-    width:38mm !important; height:38mm !important;
+    width:36mm !important; height:36mm !important;
     margin:0 auto !important;
+  }
+  /* 6장: QR 더 크게 */
+  #pgBatchGrid[style*="repeat(2"] .pgCard-qr canvas {
+    width:44mm !important; height:44mm !important;
   }
   .pgCard-qr img { display:none !important; }
 
   .pgCard-title {
-    font-size:10pt !important; margin-bottom:0.5mm !important; color:#c8860a !important;
-    white-space:nowrap !important; overflow:hidden !important; text-overflow:ellipsis !important;
-    width:100% !important; text-align:center !important; line-height:1.2 !important; flex-shrink:0 !important;
+    font-size:11pt !important; margin-bottom:1mm !important; color:#111 !important;
+    white-space:normal !important; overflow:hidden !important;
+    display:-webkit-box !important; -webkit-line-clamp:2 !important; -webkit-box-orient:vertical !important;
+    width:100% !important; text-align:center !important; line-height:1.3 !important; flex-shrink:0 !important;
+    font-weight:900 !important;
+  }
+  /* 6장: 제목 더 크게 */
+  #pgBatchGrid[style*="repeat(2"] .pgCard-title {
+    font-size:13pt !important;
   }
   .pgCard-players {
-    width:100% !important; margin-top:0.5mm !important;
+    width:100% !important; margin-top:1mm !important;
     display:grid !important; grid-template-columns:1fr 1fr !important;
-    gap:0 2px !important; flex-shrink:0 !important;
+    gap:0.3mm 2px !important; flex-shrink:0 !important;
+  }
+  /* 9장: 2×4 → 1열로 4명 표시, 글자 크게 */
+  #pgBatchGrid:not([style*="repeat(2"]) .pgCard-players {
+    grid-template-columns:1fr 1fr !important;
   }
   .pgCard-pline {
-    font-size:7.5pt !important; white-space:nowrap !important;
+    font-size:8pt !important; white-space:nowrap !important;
     overflow:hidden !important; text-overflow:ellipsis !important;
-    display:block !important; line-height:1.3 !important;
+    display:block !important; line-height:1.5 !important;
+  }
+  /* 6장: 선수 글자 더 크게 */
+  #pgBatchGrid[style*="repeat(2"] .pgCard-pline {
+    font-size:9pt !important; line-height:1.6 !important;
   }
   .pgCard-pname { font-weight:800 !important; }
-  .pgCard-pgender, .pgCard-paffil { font-size:7pt !important; }
-  .pgCard-footer { font-size:6.5pt !important; margin-top:0.3mm !important; line-height:1.2 !important; flex-shrink:0 !important; }
-  .pgCard-num { font-size:7.5pt !important; background:none !important; color:#c8860a !important; }
+  .pgCard-pgender, .pgCard-paffil { font-size:8pt !important; }
+  #pgBatchGrid[style*="repeat(2"] .pgCard-pgender,
+  #pgBatchGrid[style*="repeat(2"] .pgCard-paffil { font-size:9pt !important; }
+  .pgCard-footer { font-size:7pt !important; margin-top:0.5mm !important; line-height:1.3 !important; flex-shrink:0 !important; }
+  #pgBatchGrid[style*="repeat(2"] .pgCard-footer { font-size:8pt !important; }
+  .pgCard-num { font-size:8pt !important; background:none !important; color:#c8860a !important; }
+  #pgBatchGrid[style*="repeat(2"] .pgCard-num { font-size:9pt !important; }
 }
 
 /* ══ 공통 카드 ══ */
