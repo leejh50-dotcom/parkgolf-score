@@ -160,7 +160,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
 .score-tbl tr:nth-child(odd) td.td-score{border:1px solid #c8b88a;padding:2px;text-align:center;height:54px;background:#fff;}
 .score-tbl tr:nth-child(even) td.td-score{border:1px solid #c8b88a;padding:2px;text-align:center;height:54px;background:#f5f0e4;}
 .score-tbl td.td-total{border:1px solid #c8b88a;text-align:center;height:54px;background:#fff8ec;}
-.score-tbl td.td-hio{border:1px solid #c8b88a;padding:1px 2px;text-align:center;background:#f5f5f5;}
+.score-tbl td.td-hio{border:1px solid #c8b88a;padding:0;text-align:center;background:#f5f5f5;height:28px;}
 .score-tbl td.td-hio input::placeholder{color:#d8d0c0;opacity:1;}
 .score-input{
   width:100%;height:50px;border:none;outline:none;
@@ -353,6 +353,13 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
     <div class="done-sub">구글시트에 정상 기록되었습니다. ✅</div>
   </div>
   <div class="done-players" id="donePlayers"></div>
+  <button id="nextScanBtn" onclick="nextScan()"
+    style="margin:18px auto 8px;display:block;width:88%;max-width:340px;
+           padding:16px 0;font-size:18px;font-weight:900;
+           background:#c8860a;color:#fff;border:none;border-radius:14px;
+           letter-spacing:1px;cursor:pointer;box-shadow:0 3px 12px rgba(200,134,10,.35);">
+    ← 표지로
+  </button>
 </div>
 
 <!-- 완료 후 홍보 -->
@@ -662,7 +669,7 @@ function renderUI() {
     document.getElementById('teamCodeDisp').textContent = APP.code + (APP.date ? ' · ' + APP.date : '');
   } else {
     document.getElementById('teamNameDisp').textContent = '연습 모드';
-    document.getElementById('teamCodeDisp').textContent = '실제 QR 스캔 시 선수 정보 자동 입력';
+    document.getElementById('teamCodeDisp').innerHTML = '<span style="white-space:nowrap;font-size:11px;">실제 QR 스캔 시 선수 정보 자동 입력</span>';
     APP.players = [
       { slot:1, name:'경기자1', gender:'남', affil:'소속', A:'',B:'',C:'',D:'', total:0, bigo:'' },
       { slot:2, name:'경기자2', gender:'여', affil:'소속', A:'',B:'',C:'',D:'', total:0, bigo:'' },
@@ -693,9 +700,9 @@ function renderUI() {
     + APP.players.map(function(p, i) {
         return '<td class="td-total"><span class="total-disp" id="tot' + i + '">—</span></td>';
       }).join('') + '</tr>';
-  var hioRow = '<tr><td class="td-course" style="font-size:13px;font-weight:500;background:#f0ebe0;">홀인원</td>'
+  var hioRow = '<tr><td class="td-course" style="font-size:11px;font-weight:500;background:#f0ebe0;padding:2px;">홀인원</td>'
     + APP.players.map(function(p, i) {
-        return '<td class="td-hio"><input type="text" placeholder="A9홀" maxlength="10" id="bigo' + i + '" style="width:100%;border:none;outline:none;text-align:center;font-size:18px;font-weight:700;color:var(--gold);background:transparent;font-family:inherit;height:26px;line-height:26px;display:block;"></td>';
+        return '<td class="td-hio"><input type="text" placeholder="A9홀" maxlength="10" id="bigo' + i + '" style="width:100%;border:none;outline:none;text-align:center;font-size:13px;font-weight:700;color:var(--gold);background:transparent;font-family:inherit;height:22px;line-height:22px;display:block;"></td>';
       }).join('') + '</tr>';
   wrap.innerHTML = '<div class="score-tbl-wrap"><table class="score-tbl">' + cgHtml + '<thead>' + nameRow + '</thead><tbody>' + courseRows + totalRow + hioRow + '</tbody></table></div>';
   list.appendChild(wrap);
@@ -853,6 +860,18 @@ function showErr(msg) {
 }
 
 // ── 완료 화면 ──
+function nextScan() {
+  // 완료 화면 숨기고 표지로 복귀 → 바로 QR 스캔 가능
+  document.getElementById('doneScreen').classList.remove('show');
+  document.getElementById('donePromo').classList.remove('show');
+  // 상태 초기화
+  APP = { players: [], _coFromParam: false };
+  COURSES = ['A','B','C','D'];
+  hide('mainContent');
+  showCover();
+  window.scrollTo({ top: 0 });
+}
+
 function showDone() {
   hide('mainContent');
   hide('coverScreen');
