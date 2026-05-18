@@ -2721,15 +2721,16 @@ window.addEventListener('load', function(){
   #pgBatchTop .btn-layout, #pgBatchTop .bt-btns { display:none !important; }
   #pgProgress, #pgProgressTxt { display:none !important; }
 
-  /* 9개/장: 균등 간격 */
+  /* 9개/장: 행 간격 자동 균등분배 */
   #pgBatchGrid {
     display:grid !important;
     grid-template-columns:repeat(3,1fr) !important;
     column-gap:3mm !important;
-    row-gap:6mm !important;
+    row-gap:0 !important;
     padding:2mm 2mm !important;
     align-content:space-between !important;
     width:100% !important;
+    height:calc(100vh - 20mm) !important;
     box-sizing:border-box !important;
   }
   /* 6개/장 */
