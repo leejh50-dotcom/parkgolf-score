@@ -2653,10 +2653,10 @@ window.addEventListener('load', function(){
       cards[k].classList.remove('page-break-after');
       if ((k+1) % perPage === 0 && (k+1) < cards.length) cards[k].classList.add('page-break-after');
     }
-    /* 페이지 번호 갱신 */
+    /* 페이지 번호 갱신 — counter(page) 자동 */
     var styleEl = document.getElementById('pgPageStyle');
     if(!styleEl){ styleEl=document.createElement('style'); styleEl.id='pgPageStyle'; document.head.appendChild(styleEl); }
-    styleEl.textContent = '@media print { #pgBatchTop .ph-sub::after { content:"1 / '+totalPages+'페이지"; } }';
+    styleEl.textContent = '@media print { #pgBatchTop .ph-sub::after { content:counter(page) " / " counter(pages) "페이지"; } }';
 
     if (n === 6) {
       grid.style.setProperty('grid-template-columns', 'repeat(2,minmax(0,1fr))', 'important');
@@ -2710,23 +2710,24 @@ window.addEventListener('load', function(){
 
 /* ══ 인쇄 전용 ══ */
 @media print {
-  /* 헤더 static 1줄(8mm) + 카드 4행/3행 정확히 계산 */
-  @page { size:A4 portrait; margin:5mm; }
+  /* ★ margin-top:12mm → fixed 헤더(10mm) 공간 확보, 모든 페이지에 반복 */
+  @page { size:A4 portrait; margin:12mm 5mm 5mm 5mm; }
 
   body * { visibility:hidden !important; }
   #pgBatchOv, #pgBatchOv * { visibility:visible !important; }
-  #pgBatchOv { position:absolute !important; left:0 !important; top:0 !important; width:100% !important; background:#fff !important; overflow:visible !important; }
+  #pgBatchOv { position:absolute !important; left:0 !important; top:0 !important;
+    width:100% !important; background:#fff !important; overflow:visible !important; }
 
-  /* ★ 헤더: static 1줄, 높이 8mm 고정 */
+  /* ★ 헤더: position:fixed → 모든 페이지 상단에 반복 출력 */
   #pgBatchTop {
     display:flex !important; visibility:visible !important;
-    position:static !important;
+    position:fixed !important; top:0mm !important; left:0 !important; right:0 !important;
     align-items:center !important; justify-content:space-between !important;
-    padding:0 2mm !important; margin:0 0 1mm !important;
-    height:8mm !important; box-sizing:border-box !important;
+    padding:1.5mm 4mm !important; margin:0 !important;
+    height:10mm !important; box-sizing:border-box !important;
     background:#fff !important;
     border-bottom:1.5pt solid #222 !important;
-    flex-shrink:0 !important;
+    z-index:9999 !important;
   }
   #pgBatchTop .bt-title {
     display:inline !important;
@@ -2734,22 +2735,22 @@ window.addEventListener('load', function(){
   }
   #pgBatchTop .ph-sub {
     display:inline !important;
-    font-size:8pt !important; color:#888 !important;
+    font-size:8pt !important; color:#666 !important;
     white-space:nowrap !important;
   }
-  #pgBatchTop .bt-btns,
-  #pgBatchTop .btn-close, #pgBatchTop .btn-print,
-  #pgBatchTop .btn-layout { display:none !important; }
+  #pgBatchTop .bt-btns, #pgBatchTop .btn-close,
+  #pgBatchTop .btn-print, #pgBatchTop .btn-layout { display:none !important; }
   #pgProgress, #pgProgressTxt { display:none !important; }
 
   /* ══ 12장/페이지 (3×4) ══
-     287mm - 헤더9mm - padding3mm - gap4mm×3 = 263mm / 4 = 65mm */
+     가용높이: 297-12(top)-5(bot) = 280mm
+     4행×65mm + gap4mm×3 + pad2mm = 260+12+2 = 274mm ✅ */
   #pgBatchGrid {
     display:grid !important;
     grid-template-columns:repeat(3,1fr) !important;
     column-gap:3mm !important;
     row-gap:4mm !important;
-    padding:3mm 2mm 0 !important;
+    padding:2mm 2mm 0 !important;
     width:100% !important; box-sizing:border-box !important;
     align-content:start !important;
   }
@@ -2759,16 +2760,16 @@ window.addEventListener('load', function(){
   }
 
   /* ══ 6장/페이지 (2×3) ══
-     287mm - 헤더9mm - padding3mm - gap4mm×2 = 267mm / 3 = 89mm */
+     3행×88mm + gap4mm×2 + pad2mm = 264+8+2 = 274mm ✅ */
   #pgBatchGrid[style*="repeat(2"] {
     grid-template-columns:repeat(2,1fr) !important;
     column-gap:5mm !important;
     row-gap:4mm !important;
-    padding:3mm 3mm 0 !important;
+    padding:2mm 3mm 0 !important;
     align-content:start !important;
   }
   #pgBatchGrid[style*="repeat(2"] .pgCard {
-    height:89mm !important;
+    height:88mm !important;
     overflow:hidden !important; box-sizing:border-box !important;
   }
 
@@ -2794,7 +2795,7 @@ window.addEventListener('load', function(){
   }
   #pgBatchGrid[style*="repeat(2"] .pgCard-title { font-size:11pt !important; }
 
-  /* 카드 본문: QR 좌 + 선수 우, 중앙 정렬 */
+  /* 카드 본문: QR 좌 + 선수 우 */
   .pgCard-body-print {
     display:flex !important; flex:1 !important; min-height:0 !important;
     align-items:center !important; justify-content:center !important;
@@ -2810,52 +2811,51 @@ window.addEventListener('load', function(){
     display:block !important;
     width:44mm !important; height:44mm !important; margin:0 !important;
   }
-  /* 6장 QR: 89-title13-footer8-pad3 = 65mm */
+  /* 6장 QR: 88-title13-footer8-pad3 = 64mm */
   #pgBatchGrid[style*="repeat(2"] .pgCard-qr canvas {
-    width:65mm !important; height:65mm !important;
+    width:64mm !important; height:64mm !important;
   }
   .pgCard-qr img { display:none !important; }
 
-  /* ★ 선수 2×2 그리드 */
+  /* ★ 인쇄 선수: 1×4 세로 */
   .pgCard-players {
     flex-shrink:0 !important;
     width:fit-content !important;
-    display:grid !important;
-    grid-template-columns:max-content max-content !important;
-    gap:1mm 5mm !important;
-    align-content:center !important;
+    display:flex !important; flex-direction:column !important;
+    gap:0.8mm !important;
+    justify-content:center !important;
     margin-top:0 !important;
   }
   .pgCard-player {
     display:flex !important; flex-direction:column !important;
     align-items:flex-start !important; min-width:0 !important;
   }
+  /* 번호 + 이름 한 줄 */
   .pgCard-pline {
     display:flex !important; align-items:baseline !important;
-    gap:1mm !important; white-space:nowrap !important; line-height:1.35 !important;
+    gap:1mm !important; white-space:nowrap !important; line-height:1.4 !important;
   }
   .pgCard-num {
     font-size:7pt !important; color:#bbb !important;
     background:none !important; flex-shrink:0 !important;
-    min-width:3.5mm !important; font-weight:400 !important;
+    min-width:3mm !important; font-weight:400 !important;
   }
-  .pgCard-pname { font-size:10pt !important; font-weight:800 !important; color:#111 !important; }
+  .pgCard-pname { font-size:10.5pt !important; font-weight:800 !important; color:#111 !important; }
   #pgBatchGrid[style*="repeat(2"] .pgCard-pname { font-size:14pt !important; }
-
-  /* 성별·소속: 이름 아래 들여쓰기 */
+  /* 성별·소속: 이름 바로 아래 한 줄 */
   .pgCard-pgender, .pgCard-paffil {
-    display:inline !important; font-size:6.5pt !important;
+    display:inline !important; font-size:7pt !important;
     color:#999 !important; line-height:1.2 !important;
   }
-  .pgCard-player > div:last-child { padding-left:4.5mm !important; }
+  .pgCard-player > div:last-child { padding-left:4mm !important; margin-top:0 !important; }
   #pgBatchGrid[style*="repeat(2"] .pgCard-pgender,
-  #pgBatchGrid[style*="repeat(2"] .pgCard-paffil { font-size:9pt !important; }
+  #pgBatchGrid[style*="repeat(2"] .pgCard-paffil { font-size:9.5pt !important; }
 
   .pgCard-footer {
     font-size:6pt !important; color:#bbb !important;
     text-align:center !important; flex-shrink:0 !important;
     border-top:0.3pt solid #eee !important;
-    padding-top:1mm !important; margin-top:1mm !important;
+    padding-top:1mm !important; margin-top:auto !important;
   }
   #pgBatchGrid[style*="repeat(2"] .pgCard-footer { font-size:8pt !important; }
 }
@@ -2956,10 +2956,15 @@ window.addEventListener('load', function(){
     var dateStr=new Date().toLocaleDateString('ko-KR');
     var total=teams.length;
 
+    var today = (function(){
+      var d=new Date(); var yy=d.getFullYear(); var mm=String(d.getMonth()+1).padStart(2,'0'); var dd=String(d.getDate()).padStart(2,'0');
+      return yy+'. '+mm+'. '+dd+'.';
+    })();
+
     var ov=document.createElement('div');ov.id='pgBatchOv';
     ov.innerHTML='<div id="pgBatchTop">'
-      +'<div class="bt-title">📋 조별 QR · '+esc(code)+' · '+esc(qrDate)+' · '+total+'개 조</div>'
-      +'<span class="ph-sub" style="font-size:9px;color:#888;"></span>'
+      +'<div class="bt-title">📋 조별 QR · '+esc(code)+' · '+esc(qrDate)+' · '+total+'개 조 · '+today+'</div>'
+      +'<span class="ph-sub"></span>'
       +'<div class="bt-btns">'
       +'<button class="btn-layout" id="pgLayout6Btn" onclick="setPrintLayout(6)" title="6개/장" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.5);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer;">6개/장</button>'
       +'<button class="btn-layout" id="pgLayout9Btn" onclick="setPrintLayout(9)" title="12개/장" style="background:#fff;color:#7a4f00;border:none;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer;">12개/장 ✓</button>'
@@ -3058,13 +3063,10 @@ window.addEventListener('load', function(){
           allCards[k].classList.remove('page-break-after');
           if ((k+1) % perPage === 0 && (k+1) < allCards.length) allCards[k].classList.add('page-break-after');
         }
-        /* 페이지 번호: 헤더 우측에 표시 */
-        var hdr = document.getElementById('pgBatchTop');
-        if(hdr){ var sub=hdr.querySelector('.ph-sub'); if(sub) sub.textContent=''; }
-        /* 인쇄용 페이지 번호 — CSS counter 방식 */
+        /* 페이지 번호: CSS counter(page) 방식 — 매 페이지 자동 */
         var styleEl = document.getElementById('pgPageStyle');
         if(!styleEl){ styleEl=document.createElement('style'); styleEl.id='pgPageStyle'; document.head.appendChild(styleEl); }
-        styleEl.textContent = '@media print { #pgBatchTop .ph-sub::after { content:"1 / '+totalPages+'페이지"; } }';
+        styleEl.textContent = '@media print { #pgBatchTop .ph-sub::after { content:counter(page) " / " counter(pages) "페이지"; } }';
         setTimeout(function(){
           var pb=document.getElementById('pgProgress');
           var pt=document.getElementById('pgProgressTxt');
