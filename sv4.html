@@ -2646,21 +2646,25 @@ window.addEventListener('load', function(){
     var btn9 = document.getElementById('pgLayout9Btn');
     if (!grid) return;
 
-    var perPage = (n === 6) ? 6 : 9;
+    var perPage = (n === 6) ? 6 : 12;
     var cards = grid ? grid.querySelectorAll('.pgCard') : [];
+    var totalPages = Math.ceil(cards.length / perPage);
     for (var k=0; k<cards.length; k++) {
       cards[k].classList.remove('page-break-after');
       if ((k+1) % perPage === 0 && (k+1) < cards.length) cards[k].classList.add('page-break-after');
     }
+    /* 페이지 번호 갱신 */
+    var styleEl = document.getElementById('pgPageStyle');
+    if(!styleEl){ styleEl=document.createElement('style'); styleEl.id='pgPageStyle'; document.head.appendChild(styleEl); }
+    styleEl.textContent = '@media print { #pgBatchTop .ph-sub::after { content:"1 / '+totalPages+'페이지"; } }';
+
     if (n === 6) {
-      /* 6개/장: 2열, 세로 간격 더 넓게 */
       grid.style.setProperty('grid-template-columns', 'repeat(2,minmax(0,1fr))', 'important');
       if (btn6) { btn6.style.background='#fff'; btn6.style.color='#7a4f00'; btn6.style.border='none'; btn6.textContent='6개/장 ✓'; }
-      if (btn9) { btn9.style.background='rgba(255,255,255,.2)'; btn9.style.color='#fff'; btn9.style.border='1px solid rgba(255,255,255,.5)'; btn9.textContent='9개/장'; }
+      if (btn9) { btn9.style.background='rgba(255,255,255,.2)'; btn9.style.color='#fff'; btn9.style.border='1px solid rgba(255,255,255,.5)'; btn9.textContent='12개/장'; }
     } else {
-      /* 9개/장: 3열, 기본 */
       grid.style.setProperty('grid-template-columns', 'repeat(3,minmax(0,1fr))', 'important');
-      if (btn9) { btn9.style.background='#fff'; btn9.style.color='#7a4f00'; btn9.style.border='none'; btn9.textContent='9개/장 ✓'; }
+      if (btn9) { btn9.style.background='#fff'; btn9.style.color='#7a4f00'; btn9.style.border='none'; btn9.textContent='12개/장 ✓'; }
       if (btn6) { btn6.style.background='rgba(255,255,255,.2)'; btn6.style.color='#fff'; btn6.style.border='1px solid rgba(255,255,255,.5)'; btn6.textContent='6개/장'; }
     }
   };
@@ -2723,6 +2727,11 @@ window.addEventListener('load', function(){
     display:block !important;
     font-size:10pt !important; font-weight:900 !important; color:#111 !important;
     padding:1.5mm 2mm !important; letter-spacing:-0.3px !important;
+  }
+  #pgBatchTop .ph-sub {
+    display:block !important;
+    font-size:8pt !important; color:#888 !important;
+    text-align:right !important; padding:0 2mm 1mm !important;
   }
   #pgBatchTop .bt-btns,
   #pgBatchTop .btn-close, #pgBatchTop .btn-print,
@@ -2881,11 +2890,14 @@ window.addEventListener('load', function(){
 .pgCard-body-print { display:contents; }
 /* 제목: 1줄 강제, 넘치면 ... */
 .pgCard-title { font-size:17px; font-weight:900; color:#c8860a; margin-bottom:5px; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width:100%; }
-.pgCard-players { width:100%; margin-top:5px; display:grid; grid-template-columns:1fr 1fr; gap:4px 4px; }
-.pgCard-player { display:flex; align-items:center; gap:3px; min-width:0; overflow:hidden; }
+/* 화면: 선수 목록 1열 세로 */
+.pgCard-players { width:100%; margin-top:5px; display:flex; flex-direction:column; gap:3px; }
+.pgCard-player { display:flex; flex-direction:column; min-width:0; }
+.pgCard-pline { display:flex; align-items:baseline; gap:3px; }
 .pgCard-num { font-size:11px; font-weight:900; color:#c8860a; flex-shrink:0; min-width:12px; }
-.pgCard-pline { font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0; flex:1; }
-.pgCard-pname { font-weight:800; color:#1e3c72; }
+.pgCard-pname { font-size:13px; font-weight:800; color:#1e3c72; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pgCard-pgender { font-size:10px; color:#888; padding-left:14px; }
+.pgCard-paffil { font-size:10px; color:#aaa; padding-left:14px; }
 .pgCard-pgender { font-size:11px; color:#555; margin-left:1px; }
 .pgCard-paffil { color:#666; margin-left:2px; font-size:11px; }
 .pgCard-footer { margin-top:5px; font-size:9px; color:#9ca3af; text-align:center; width:100%; }
@@ -2957,9 +2969,10 @@ window.addEventListener('load', function(){
     var ov=document.createElement('div');ov.id='pgBatchOv';
     ov.innerHTML='<div id="pgBatchTop">'
       +'<div class="bt-title">📋 조별 QR · '+esc(code)+' · '+esc(qrDate)+' · '+total+'개 조</div>'
+      +'<span class="ph-sub" style="font-size:9px;color:#888;"></span>'
       +'<div class="bt-btns">'
       +'<button class="btn-layout" id="pgLayout6Btn" onclick="setPrintLayout(6)" title="6개/장" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.5);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer;">6개/장</button>'
-      +'<button class="btn-layout" id="pgLayout9Btn" onclick="setPrintLayout(9)" title="9개/장" style="background:#fff;color:#7a4f00;border:none;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer;">9개/장 ✓</button>'
+      +'<button class="btn-layout" id="pgLayout9Btn" onclick="setPrintLayout(9)" title="12개/장" style="background:#fff;color:#7a4f00;border:none;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer;">12개/장 ✓</button>'
       +'<button class="btn-print" id="pgPrintBtn" onclick="window.print()" disabled style="opacity:.4;cursor:not-allowed;">🖨 인쇄하기</button>'
       +'<button class="btn-close" onclick="document.getElementById(\'pgBatchOv\').remove()">✕</button>'
       +'</div></div>'
@@ -3049,10 +3062,19 @@ window.addEventListener('load', function(){
         /* 완료 → 인쇄 버튼 활성화, 진행바 숨김 */
         if(printBtn){ printBtn.disabled=false; printBtn.style.opacity=''; printBtn.style.cursor=''; }
         var allCards = grid ? grid.querySelectorAll('.pgCard') : [];
+        var perPage = 12;
+        var totalPages = Math.ceil(allCards.length / perPage);
         for (var k=0; k<allCards.length; k++) {
           allCards[k].classList.remove('page-break-after');
-          if ((k+1) % 9 === 0 && (k+1) < allCards.length) allCards[k].classList.add('page-break-after');
+          if ((k+1) % perPage === 0 && (k+1) < allCards.length) allCards[k].classList.add('page-break-after');
         }
+        /* 페이지 번호: 헤더 우측에 표시 */
+        var hdr = document.getElementById('pgBatchTop');
+        if(hdr){ var sub=hdr.querySelector('.ph-sub'); if(sub) sub.textContent=''; }
+        /* 인쇄용 페이지 번호 — CSS counter 방식 */
+        var styleEl = document.getElementById('pgPageStyle');
+        if(!styleEl){ styleEl=document.createElement('style'); styleEl.id='pgPageStyle'; document.head.appendChild(styleEl); }
+        styleEl.textContent = '@media print { #pgBatchTop .ph-sub::after { content:"1 / '+totalPages+'페이지"; } }';
         setTimeout(function(){
           var pb=document.getElementById('pgProgress');
           var pt=document.getElementById('pgProgressTxt');
