@@ -2656,7 +2656,7 @@ window.addEventListener('load', function(){
     /* 페이지 번호 갱신 — counter(page) 자동 */
     var styleEl = document.getElementById('pgPageStyle');
     if(!styleEl){ styleEl=document.createElement('style'); styleEl.id='pgPageStyle'; document.head.appendChild(styleEl); }
-    styleEl.textContent = '@media print { #pgBatchTop .ph-sub::after { content:counter(page) " / " counter(pages) "페이지"; } }';
+    styleEl.textContent = '@media print { #pgBatchTop .ph-sub::after { content:counter(page) " / ' + totalPages + '페이지"; } }';
 
     if (n === 6) {
       grid.style.setProperty('grid-template-columns', 'repeat(2,minmax(0,1fr))', 'important');
@@ -2716,7 +2716,8 @@ window.addEventListener('load', function(){
   body * { visibility:hidden !important; }
   #pgBatchOv, #pgBatchOv * { visibility:visible !important; }
   #pgBatchOv { position:absolute !important; left:0 !important; top:0 !important;
-    width:100% !important; background:#fff !important; overflow:visible !important; }
+    width:100% !important; background:#fff !important; overflow:visible !important;
+    padding-top:10mm !important; box-sizing:border-box !important; }
 
   /* ★ 헤더: position:fixed → 모든 페이지 상단에 반복 출력 */
   #pgBatchTop {
@@ -2882,14 +2883,14 @@ window.addEventListener('load', function(){
 /* 제목: 1줄 강제, 넘치면 ... */
 .pgCard-title { font-size:17px; font-weight:900; color:#c8860a; margin-bottom:5px; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width:100%; }
 /* 화면: 선수 목록 1×4 세로, 성별·소속 이름 옆 한 줄 */
-.pgCard-players { width:100%; margin-top:5px; display:flex; flex-direction:column; gap:4px; }
-.pgCard-player { display:flex; flex-direction:row; align-items:baseline; gap:4px; min-width:0; flex-wrap:nowrap; }
-.pgCard-player > div:last-child { display:inline; padding-left:0 !important; }
-.pgCard-pline { display:flex; align-items:baseline; gap:3px; flex-shrink:0; }
+.pgCard-players { width:100%; margin-top:5px; display:grid; grid-template-columns:1fr 1fr; gap:3px 6px; }
+.pgCard-player { display:flex; flex-direction:column; min-width:0; }
+.pgCard-player > div:last-child { padding-left:0 !important; }
+.pgCard-pline { display:flex; align-items:baseline; gap:3px; }
 .pgCard-num { font-size:11px; font-weight:900; color:#c8860a; flex-shrink:0; min-width:12px; }
 .pgCard-pname { font-size:14px; font-weight:800; color:#1e3c72; white-space:nowrap; }
-.pgCard-pgender { font-size:10px; color:#888; white-space:nowrap; flex-shrink:0; }
-.pgCard-paffil { font-size:10px; color:#aaa; white-space:nowrap; flex-shrink:0; }
+.pgCard-pgender { font-size:10px; color:#888; }
+.pgCard-paffil { font-size:10px; color:#aaa; }
 .pgCard-footer { margin-top:5px; font-size:9px; color:#9ca3af; text-align:center; width:100%; }
 
 /* 전송 오버레이 */
@@ -3066,7 +3067,7 @@ window.addEventListener('load', function(){
         /* 페이지 번호: CSS counter(page) 방식 — 매 페이지 자동 */
         var styleEl = document.getElementById('pgPageStyle');
         if(!styleEl){ styleEl=document.createElement('style'); styleEl.id='pgPageStyle'; document.head.appendChild(styleEl); }
-        styleEl.textContent = '@media print { #pgBatchTop .ph-sub::after { content:counter(page) " / " counter(pages) "페이지"; } }';
+        styleEl.textContent = '@media print { #pgBatchTop .ph-sub::after { content:counter(page) " / ' + totalPages + '페이지"; } }';
         setTimeout(function(){
           var pb=document.getElementById('pgProgress');
           var pt=document.getElementById('pgProgressTxt');
