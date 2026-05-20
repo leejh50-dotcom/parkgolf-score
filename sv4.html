@@ -2737,17 +2737,33 @@ window.addEventListener('load', function(){
 @media screen {
   #pgBatchOv { position:fixed; inset:0; z-index:100000; overflow-y:auto; background:#f3f4f6; font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif; }
   #pgBatchTop { position:sticky; top:0; z-index:5; background:linear-gradient(135deg,#c8860a,#7a4f00); color:#fff; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 8px rgba(0,0,0,.25); }
-  #pgBatchGrid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; padding:10px; max-width:1200px; margin:0 auto; }
-  /* ★ 화면: QR 고정 크기 */
-  .pgCard-qr { width:60px !important; flex-shrink:0 !important; position:relative; overflow:hidden; }
+
+  /* ★ 1페이지 그리드: 3열 */
+  #pgBatchGrid { display:grid !important; grid-template-columns:repeat(3,minmax(0,1fr)) !important; gap:8px !important; padding:10px !important; max-width:1200px; margin:0 auto; }
+  /* ★ 2페이지~ 그리드: 3열 (pgPageBlock 안) */
+  .pgBatchGridPage { display:grid !important; grid-template-columns:repeat(3,minmax(0,1fr)) !important; gap:8px !important; padding:10px !important; max-width:1200px; margin:0 auto; }
+  /* ★ 6장 모드: 2열 */
+  #pgBatchGrid.is6 { grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+  .pgBatchGridPage.is6 { grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+  /* 페이지 헤더 */
+  .pgPageHeader { display:flex; justify-content:space-between; align-items:center; padding:6px 10px; background:#fff7e6; border-bottom:1.5px solid #c8860a; margin-bottom:4px; }
+  .pgPageHeader .ph-title { font-size:12px; font-weight:900; color:#7a4f00; }
+  .pgPageHeader .ph-num { font-size:11px; color:#888; }
+
+  /* ★ QR 크기: 카드 폭 기준 vw로 */
+  .pgCard-qr { width:18vw !important; flex-shrink:0 !important; position:static !important; overflow:hidden; }
   .pgCard-qr::before { display:none !important; }
-  .pgCard-qr > div { position:static !important; display:block !important; width:60px !important; height:60px !important; }
+  .pgCard-qr > div { position:static !important; display:block !important; width:18vw !important; height:18vw !important; }
   .pgCard-qr canvas { display:none !important; }
-  .pgCard-qr img { width:60px !important; height:60px !important; max-height:60px !important; display:block !important; object-fit:contain !important; }
-  /* 6장: QR 더 크게 */
-  #pgBatchGrid[style*="repeat(2"] .pgCard-qr,
-  #pgBatchGrid[style*="repeat(2"] .pgCard-qr > div { width:90px !important; height:90px !important; }
-  #pgBatchGrid[style*="repeat(2"] .pgCard-qr img { width:90px !important; height:90px !important; max-height:90px !important; }
+  .pgCard-qr img { width:18vw !important; height:18vw !important; max-height:18vw !important; display:block !important; object-fit:contain !important; }
+  /* ★ 6장 QR 더 크게 */
+  #pgBatchGrid.is6 .pgCard-qr,
+  .pgBatchGridPage.is6 .pgCard-qr,
+  #pgBatchGrid.is6 .pgCard-qr > div,
+  .pgBatchGridPage.is6 .pgCard-qr > div { width:28vw !important; height:28vw !important; }
+  #pgBatchGrid.is6 .pgCard-qr img,
+  .pgBatchGridPage.is6 .pgCard-qr img { width:28vw !important; height:28vw !important; max-height:28vw !important; }
+
   .pgCard { min-height:0 !important; overflow:hidden !important; }
 }
 
