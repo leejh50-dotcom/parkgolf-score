@@ -2904,8 +2904,8 @@ window.addEventListener('load', function(){
 .pgCard-body-print { display:contents; }
 /* 제목: 1줄 강제, 넘치면 ... */
 .pgCard-title { font-size:17px; font-weight:900; color:#c8860a; margin-bottom:5px; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width:100%; }
-/* 화면: 선수 목록 1×4 세로, 성별·소속 이름 옆 한 줄 */
-.pgCard-players { width:100%; margin-top:5px; display:flex; flex-direction:column; gap:4px; }
+/* 화면: 선수 목록 2×2 그리드 */
+.pgCard-players { width:100%; margin-top:5px; display:grid; grid-template-columns:1fr 1fr; gap:4px; }
 .pgCard-player { display:flex; flex-direction:row; align-items:baseline; gap:4px; min-width:0; flex-wrap:nowrap; }
 .pgCard-player > div:last-child { display:inline; padding-left:0 !important; }
 .pgCard-pline { display:flex; align-items:baseline; gap:3px; flex-shrink:0; }
