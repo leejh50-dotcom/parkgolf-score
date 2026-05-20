@@ -2697,15 +2697,38 @@ window.addEventListener('load', function(){
 @media screen {
   #pgBatchOv { position:fixed; inset:0; z-index:100000; overflow-y:auto; background:#f3f4f6; font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif; }
   #pgBatchTop { position:sticky; top:0; z-index:5; background:linear-gradient(135deg,#c8860a,#7a4f00); color:#fff; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 8px rgba(0,0,0,.25); }
-  /* 화면: 모바일 3열 → 카드당 폭이 좁으므로 글자·간격 최적화 */
-  #pgBatchGrid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; padding:10px; max-width:1200px; margin:0 auto; }
-  /* 화면: QR 정사각형 */
-  .pgCard-qr { width:100%; position:relative; }
-  .pgCard-qr::before { content:''; display:block; padding-top:100%; }
-  .pgCard-qr > div { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
+  /* ★ 화면: 항상 3열 고정 (5행 이후 확대 방지) */
+  #pgBatchGrid {
+    display:grid !important;
+    grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+    gap:8px !important;
+    padding:10px !important;
+    max-width:1200px !important;
+    margin:0 auto !important;
+    align-items:start !important;
+  }
+  /* ★ 화면: QR 크기를 카드 폭에 맞게 제한 (aspect-ratio 트릭 제거) */
+  .pgCard-qr { width:100%; position:relative; overflow:hidden; }
+  .pgCard-qr::before { display:none !important; }
+  .pgCard-qr > div { position:static !important; display:flex; align-items:center; justify-content:center; }
   /* ★ 화면에서만 canvas 숨김 (인쇄에서는 canvas 표시) */
   .pgCard-qr canvas { display:none !important; }
-  .pgCard-qr img { width:100% !important; height:auto !important; display:block !important; }
+  /* ★ QR 이미지: 카드 폭을 넘지 않도록 제한 */
+  .pgCard-qr img {
+    width:100% !important;
+    max-width:100% !important;
+    height:auto !important;
+    display:block !important;
+    max-height:200px !important;
+    object-fit:contain !important;
+  }
+  /* ★ pgCard: 높이 자동, 내용이 그리드를 밀어내지 않도록 */
+  .pgCard {
+    min-height:0 !important;
+    overflow:hidden !important;
+    display:flex !important;
+    flex-direction:column !important;
+  }
 }
 
 /* ══ 인쇄 전용 ══ */
