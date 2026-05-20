@@ -2743,7 +2743,9 @@ window.addEventListener('load', function(){
   .pgCard-qr { width:100%; position:relative; }
   .pgCard-qr::before { content:''; display:block; padding-top:100%; }
   .pgCard-qr > div { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
-  /* ★ 화면에서만 canvas 숨김 — 공통 @media screen 규칙에서 처리 */
+  /* ★ 화면에서만 canvas 숨김 (인쇄에서는 canvas 표시) */
+  .pgCard-qr canvas { display:none !important; }
+  .pgCard-qr img { width:100% !important; height:auto !important; display:block !important; }
 }
 
 /* ══ 인쇄 전용 ══ */
@@ -2969,20 +2971,11 @@ window.addEventListener('load', function(){
 .pgCard-qr { position:static !important; padding-top:0 !important; flex-shrink:0; }
 .pgCard-qr::before { display:none !important; }
 .pgCard-qr > div { position:static !important; display:block !important; }
-/* ★ QR 캔버스/이미지: 화면에서는 img만 표시, 인쇄는 @media print에서 별도 처리 */
-@media screen {
-  .pgCard-qr canvas { display:none !important; }
-  .pgCard-qr img { display:block !important; width:17vw !important; height:17vw !important; object-fit:contain; }
-  /* 6장 모드: QR 더 크게 */
-  #pgBatchGrid.is6 .pgCard-qr img,
-  .pgBatchGridPage.is6 .pgCard-qr img { width:26vw !important; height:26vw !important; }
-}
-/* ★ 관리자 모달 QR 미리보기: canvas에 대회코드 텍스트를 그리므로 canvas 표시, img는 숨김 */
-#modalQrCode canvas { display:block !important; width:100% !important; height:auto !important; max-width:240px; }
-#modalQrCode img   { display:none !important; }
-/* ★ 관리자용 QR 생성기(#qrcode): canvas만 표시, img 숨김 */
-#qrcode canvas { display:block !important; width:100% !important; height:auto !important; }
-#qrcode img   { display:none !important; }
+/* QR 캔버스: vw 기준으로 열 수에 맞게 */
+.pgCard-qr canvas { display:block !important; width:17vw !important; height:17vw !important; }
+/* 6장 모드: QR 더 크게 */
+#pgBatchGrid.is6 .pgCard-qr canvas,
+.pgBatchGridPage.is6 .pgCard-qr canvas { width:26vw !important; height:26vw !important; }
 /* 선수 목록: 세로 1열 */
 .pgCard-players { width:fit-content; display:flex; flex-direction:column; gap:1px; margin-top:0; flex-shrink:0; }
 .pgCard-player { display:flex; flex-direction:column; min-width:0; }
@@ -3141,21 +3134,7 @@ window.addEventListener('load', function(){
         +'<div class="pgCard-footer">'+esc(code)+' · '+esc(qrDate)+' · '+dateStr+'</div>';
       grid.appendChild(card);
       /* ★ QRCode 생성 오류 시 오류 표시 (조명 포함) */
-      try{
-        new QRCode(card.querySelector('#'+bid),{text:qrText,width:256,height:256,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
-        /* ★ QRCode.js가 canvas+img 둘 다 생성함 → 화면에서는 img만 표시
-           img가 없거나 크기가 0인 경우를 방지해 명시적으로 크기 지정 */
-        setTimeout(function(){
-          var qrDiv=card.querySelector('#'+bid);
-          if(!qrDiv) return;
-          var canvas=qrDiv.querySelector('canvas');
-          var img=qrDiv.querySelector('img');
-          /* canvas: 화면에서 반드시 숨김 */
-          if(canvas){ canvas.style.cssText='display:none !important;'; }
-          /* img: 화면에서 보이도록 크기 보장 */
-          if(img){ img.style.cssText='display:block !important; width:100%; height:auto; max-width:256px;'; }
-        }, 80);
-      }
+      try{ new QRCode(card.querySelector('#'+bid),{text:qrText,width:256,height:256,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M}); }
       catch(e){ card.querySelector('#'+bid).innerHTML='<div style="padding:8px;font-size:11px;color:red;text-align:center;">QR생성오류<br>'+esc(teamObj.team||'')+'</div>'; }
     }
 
