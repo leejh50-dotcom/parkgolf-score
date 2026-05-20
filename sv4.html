@@ -2731,6 +2731,57 @@ window.addEventListener('load', function(){
 })();
 </script>
 
+<!-- ═══ QR 미리보기: img 로드 후 canvas 숨김 처리 ═══ -->
+<script>
+(function(){
+  // QR div에 img가 추가되면 해당 .pgCard-qr에 qr-img-ready 클래스 추가
+  // (화면에서 canvas 대신 img만 보이도록)
+  function watchQrImg(root){
+    var imgs = root.querySelectorAll('.pgCard-qr img');
+    imgs.forEach(function(img){
+      var qrDiv = img.closest('.pgCard-qr');
+      if(!qrDiv) return;
+      if(img.complete && img.naturalWidth > 0){
+        qrDiv.classList.add('qr-img-ready');
+      } else {
+        img.addEventListener('load', function(){
+          qrDiv.classList.add('qr-img-ready');
+        });
+      }
+    });
+  }
+  // DOM 변화 감지: QR overlay가 생성될 때마다 감시
+  var mo = new MutationObserver(function(muts){
+    muts.forEach(function(m){
+      m.addedNodes.forEach(function(n){
+        if(n.nodeType===1){
+          watchQrImg(n);
+          // 자식 img 추가도 감지
+          var imgs2 = n.querySelectorAll ? n.querySelectorAll('.pgCard-qr img') : [];
+          imgs2.forEach(function(img){
+            var qrDiv = img.closest('.pgCard-qr');
+            if(!qrDiv) return;
+            if(img.complete && img.naturalWidth > 0){
+              qrDiv.classList.add('qr-img-ready');
+            } else {
+              img.addEventListener('load', function(){ qrDiv.classList.add('qr-img-ready'); });
+            }
+          });
+        }
+      });
+    });
+  });
+  document.addEventListener('DOMContentLoaded', function(){
+    mo.observe(document.body, {childList:true, subtree:true});
+    watchQrImg(document);
+  });
+  if(document.readyState !== 'loading'){
+    mo.observe(document.body, {childList:true, subtree:true});
+    watchQrImg(document);
+  }
+})();
+</script>
+
 <!-- ═══ PASIS SV4.0 최종패치 ═══ -->
 <style>
 /* ══ 화면 전용 ══ */
@@ -2743,9 +2794,11 @@ window.addEventListener('load', function(){
   .pgCard-qr { width:100%; position:relative; }
   .pgCard-qr::before { content:''; display:block; padding-top:100%; }
   .pgCard-qr > div { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
-  /* ★ 화면: canvas를 기본으로 표시, img도 표시 (QRCode.js가 둘 다 생성) */
+  /* ★ 화면: canvas만 표시, img는 숨김 (img 로드 후 JS로 전환) */
   .pgCard-qr canvas { display:block !important; width:100% !important; height:auto !important; }
-  .pgCard-qr img { width:100% !important; height:auto !important; display:block !important; }
+  .pgCard-qr img { display:none !important; width:100% !important; height:auto !important; }
+  .pgCard-qr.qr-img-ready canvas { display:none !important; }
+  .pgCard-qr.qr-img-ready img { display:block !important; }
 }
 
 /* ══ 인쇄 전용 ══ */
