@@ -2746,6 +2746,11 @@ window.addEventListener('load', function(){
     display:inline !important;
     font-size:8pt !important; color:#666 !important;
     white-space:nowrap !important;
+    font-size:0 !important; /* JS 텍스트 숨김 */
+  }
+  #pgBatchTop .ph-sub::after {
+    font-size:8pt !important; color:#666 !important;
+    content:counter(page) " / " counter(pages) "페이지" !important;
   }
   #pgBatchTop .bt-btns, #pgBatchTop .btn-close,
   #pgBatchTop .btn-print, #pgBatchTop .btn-layout { display:none !important; }
