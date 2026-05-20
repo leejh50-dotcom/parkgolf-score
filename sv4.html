@@ -2660,7 +2660,6 @@ window.addEventListener('load', function(){
     if (n === 6) {
       grid.classList.add('layout6');
       grid.style.setProperty('grid-template-columns', 'repeat(2,minmax(0,1fr))', 'important');
-      void grid.offsetWidth;
       if (btn6) { btn6.style.background='#fff'; btn6.style.color='#7a4f00'; btn6.style.border='none'; btn6.textContent='6개/장 ✓'; }
       if (btn9) { btn9.style.background='rgba(255,255,255,.2)'; btn9.style.color='#fff'; btn9.style.border='1px solid rgba(255,255,255,.5)'; btn9.textContent='12개/장'; }
     } else {
