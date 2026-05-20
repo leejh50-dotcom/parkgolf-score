@@ -2749,68 +2749,6 @@ window.addEventListener('load', function(){
 })();
 </script>
 
-<script>
-/* batchQrOverlay 그리드 강제 수정 */
-(function(){
-  var mo = new MutationObserver(function(){
-    var ov = document.getElementById('batchQrOverlay');
-    if(!ov) return;
-    /* 그리드 div: batchQrOverlay의 직접 자식 중 display:grid인 것 */
-    var children = ov.children;
-    for(var i=0;i<children.length;i++){
-      var el = children[i];
-      if(el.style && el.style.display === 'grid'){
-        el.style.setProperty('grid-template-columns','repeat(3,minmax(0,1fr))','important');
-        el.style.setProperty('width','100%','important');
-        el.style.setProperty('box-sizing','border-box','important');
-      }
-    }
-    /* bqr-card canvas 크기 고정 */
-    var canvases = ov.querySelectorAll('.bqr-card canvas');
-    for(var j=0;j<canvases.length;j++){
-      canvases[j].style.setProperty('width','100%','important');
-      canvases[j].style.setProperty('height','auto','important');
-      canvases[j].style.setProperty('display','block','important');
-      canvases[j].style.setProperty('max-width','100%','important');
-    }
-  });
-  mo.observe(document.body, {childList:true, subtree:true, attributes:true});
-})();
-
-/* ★ 난독화 generateBatchQR을 pgBatchOv 방식으로 강제 교체 */
-window.addEventListener('load', function(){
-  setTimeout(function(){
-    window.generateBatchQR = function(){
-      var webappUrl='', code='', qrDate='통합', mode='mixed';
-      try{
-        var wEl=document.getElementById('adminWebappUrl'), cEl=document.getElementById('adminCodeInput');
-        var dEl=document.getElementById('modalQrDate');
-        webappUrl=((wEl&&wEl.value)||localStorage.getItem('parkgolf_webapp_url')||'').trim();
-        code=(((cEl&&cEl.value)||localStorage.getItem('parkgolf_tournament_code')||'').trim()).toUpperCase();
-        qrDate=(dEl&&dEl.value)||'통합'; mode='auto';
-      }catch(e){}
-      if(!code){alert('대회코드를 먼저 저장해 주세요.');return;}
-      if(!webappUrl){alert('웹앱 URL을 먼저 저장해 주세요.');return;}
-      if(!webappUrl.includes('script.google.com')){alert('웹앱 URL 형식이 올바르지 않습니다.');return;}
-      if(!confirm('📋 조별 QR 일괄생성을 시작합니다.\n\n구글시트 조편성이 완료된 경우 확인을 누르세요.')) return;
-      var btn=document.querySelector('button[onclick*="generateBatchQR"]');
-      var oldText=btn?btn.textContent:'';
-      if(btn) btn.textContent='⏳ 조편성 불러오는 중...';
-      fetch(webappUrl,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'getteams',code:code,mode:mode})})
-      .then(function(r){return r.json();})
-      .then(function(data){
-        if(!data.success||!Array.isArray(data.teams)||!data.teams.length) throw new Error((data&&data.message)||'조편성 데이터가 없습니다.');
-        buildQrOv(data.teams,code,qrDate,webappUrl);
-        if(btn) btn.textContent='✅ '+data.teams.length+'개 조 QR 생성 완료';
-      })
-      .catch(function(err){
-        alert('조별 QR 생성 실패\n\n'+(err&&err.message?err.message:err));
-        if(btn) btn.textContent=oldText||'📋 조별 QR 일괄생성 (인쇄용)';
-      });
-    };
-  }, 500);
-});
-</script>
 <!-- ═══ PASIS SV4.0 최종패치 ═══ -->
 <style>
 /* ══ 화면 전용 ══ */
