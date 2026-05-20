@@ -2672,8 +2672,10 @@ window.addEventListener('load', function(){
     var hdrSub = hdrTop ? hdrTop.querySelector('.ph-sub') : null;
     if(hdrSub) hdrSub.textContent = '1 / ' + totalPages + '페이지';
 
-    /* 1페이지 그리드 열: CSS .is6 클래스로 처리 */
-    grid.style.setProperty('grid-template-columns', cols, 'important');
+    /* 화면 열: 모바일(≤600px)은 1열, PC는 설정값 */
+    var isMobile = window.innerWidth <= 600;
+    var screenCols = isMobile ? 'repeat(1,minmax(0,1fr))' : cols;
+    grid.style.setProperty('grid-template-columns', screenCols, 'important');
 
     /* 2페이지~: 카드를 새 그리드+헤더로 분리 */
     for (var p=1; p < totalPages; p++) {
@@ -2687,6 +2689,8 @@ window.addEventListener('load', function(){
 
       var newGrid = document.createElement('div');
       newGrid.className = 'pgBatchGridPage' + (n === 6 ? ' is6' : '');
+      /* 모바일 화면: 1열 강제 */
+      if (isMobile) newGrid.style.setProperty('grid-template-columns','repeat(1,minmax(0,1fr))','important');
 
       pageCards.forEach(function(c){ newGrid.appendChild(c); });
 
@@ -2980,22 +2984,17 @@ window.addEventListener('load', function(){
 
 /* ══ 모바일 화면 전용 (max-width:600px) ══ */
 @media screen and (max-width:600px) {
-  /* 12장 모드: 1열로 변경 → 카드 1개씩, 이름 공간 확보 */
-  #pgBatchGrid:not(.is6) {
-    grid-template-columns:repeat(1,1fr) !important;
+  /* 12장/6장 모드 모두: 1열, JS setProperty로 덮어씌워지므로 CSS는 백업 역할 */
+  #pgBatchGrid, .pgBatchGridPage {
+    grid-template-columns:repeat(1,minmax(0,1fr)) !important;
     gap:10px !important;
     padding:8px !important;
   }
-  /* 6장 모드: 1열 */
-  #pgBatchGrid.is6 {
-    grid-template-columns:repeat(1,1fr) !important;
-    gap:10px !important;
-    padding:8px !important;
-  }
-  /* 카드: 세로 배열 유지, 높이 자동 */
-  .pgCard {
-    padding:10px 10px 8px !important;
+  /* 카드 높이 강제 auto */
+  #pgBatchGrid .pgCard,
+  .pgBatchGridPage .pgCard {
     height:auto !important;
+    min-height:0 !important;
   }
   /* 제목 줄바꿈 허용 */
   .pgCard-title {
@@ -3191,8 +3190,9 @@ window.addEventListener('load', function(){
         var hdrSub = hdrTop ? hdrTop.querySelector('.ph-sub') : null;
         if(hdrSub) hdrSub.textContent = '1 / ' + totalPages + '페이지';
 
-        /* 1페이지 그리드 열 설정 */
-        if(grid) grid.style.setProperty('grid-template-columns', cols, 'important');
+        /* 1페이지 그리드 열: 모바일은 1열, PC는 3열 */
+        var isMob = window.innerWidth <= 600;
+        if(grid) grid.style.setProperty('grid-template-columns', isMob ? 'repeat(1,minmax(0,1fr))' : cols, 'important');
 
         var ov2 = document.getElementById('pgBatchOv');
 
@@ -3208,6 +3208,7 @@ window.addEventListener('load', function(){
 
           var newGrid = document.createElement('div');
           newGrid.className = 'pgBatchGridPage';  /* 기본 12장 모드 */
+          if (isMob) newGrid.style.setProperty('grid-template-columns','repeat(1,minmax(0,1fr))','important');
           pageCards.forEach(function(c){ newGrid.appendChild(c); });
 
           var wrapper = document.createElement('div');
