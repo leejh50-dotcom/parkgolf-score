@@ -2743,8 +2743,8 @@ window.addEventListener('load', function(){
   .pgCard-qr { width:100%; position:relative; }
   .pgCard-qr::before { content:''; display:block; padding-top:100%; }
   .pgCard-qr > div { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
-  /* ★ 화면에서만 canvas 숨김 (인쇄에서는 canvas 표시) */
-  .pgCard-qr canvas { display:none !important; }
+  /* ★ 화면: canvas를 기본으로 표시, img도 표시 (QRCode.js가 둘 다 생성) */
+  .pgCard-qr canvas { display:block !important; width:100% !important; height:auto !important; }
   .pgCard-qr img { width:100% !important; height:auto !important; display:block !important; }
 }
 
