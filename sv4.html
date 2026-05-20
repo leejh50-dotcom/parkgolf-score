@@ -3076,6 +3076,24 @@ window.addEventListener('load', function(){
   #pgBatchGrid .pgCard,
   .pgBatchGridPage .pgCard { height:auto !important; min-height:0 !important; }
 }
+
+/* ★ 화면에서 pgBatchGridPage 3열 그리드 */
+@media screen {
+  .pgBatchGridPage {
+    display:grid !important;
+    grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+    gap:8px !important;
+    padding:10px !important;
+    max-width:1200px !important;
+    margin:0 auto !important;
+    width:100% !important;
+    box-sizing:border-box !important;
+  }
+  .pgBatchGridPage .pgCard {
+    height:auto !important;
+    min-height:0 !important;
+  }
+}
 #pasisSendOv { position:fixed; inset:0; z-index:200000; background:rgba(0,0,0,.55); display:flex; align-items:center; justify-content:center; font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif; }
 #pasisSendBox { background:#fff; border-radius:16px; width:min(400px,94vw); max-height:96vh; overflow-y:auto; box-shadow:0 24px 64px rgba(0,0,0,.3); }
 .psHead { background:linear-gradient(135deg,#c8860a,#7a4f00); color:#fff; padding:12px 16px 10px; font-size:17px; font-weight:900; border-radius:16px 16px 0 0; }
