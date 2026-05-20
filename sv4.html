@@ -2641,49 +2641,68 @@ window.addEventListener('load', function(){
     ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); });
   };
   window.setPrintLayout = function(n) {
+    var ov = document.getElementById('pgBatchOv');
     var grid = document.getElementById('pgBatchGrid');
     var btn6 = document.getElementById('pgLayout6Btn');
     var btn9 = document.getElementById('pgLayout9Btn');
-    if (!grid) return;
+    if (!grid || !ov) return;
 
     var perPage = (n === 6) ? 6 : 12;
+    var cols = (n === 6) ? 'repeat(2,minmax(0,1fr))' : 'repeat(3,minmax(0,1fr))';
+
+    /* 기존 추가 페이지 블록 제거 후 카드 원래 그리드로 복귀 */
+    var oldBlocks = ov.querySelectorAll('.pgPageBlock');
+    var allCards = [];
+    /* 1페이지 카드 먼저 */
+    var firstCards = Array.prototype.slice.call(grid.querySelectorAll('.pgCard'));
+    firstCards.forEach(function(c){ allCards.push(c); });
+    /* 추가 페이지 카드 */
+    for (var b=0; b<oldBlocks.length; b++) {
+      var bc = oldBlocks[b].querySelectorAll('.pgCard');
+      Array.prototype.slice.call(bc).forEach(function(c){ allCards.push(c); });
+      oldBlocks[b].remove();
+    }
+    /* 모든 카드를 1페이지 그리드에 임시 복귀 */
+    allCards.forEach(function(c){ grid.appendChild(c); });
+
+    var totalPages = Math.ceil(allCards.length / perPage);
+
     var hdrTop = document.getElementById('pgBatchTop');
     var titleText = hdrTop ? (hdrTop.querySelector('.bt-title')||{}).textContent || '' : '';
-
-    /* 기존 삽입 헤더 제거 */
-    var oldHdrs = grid.querySelectorAll('.pgPageHeader');
-    for (var h=0; h<oldHdrs.length; h++) oldHdrs[h].remove();
-
-    /* 카드 목록 (헤더 제외) */
-    var cards = grid.querySelectorAll('.pgCard');
-    var totalPages = Math.ceil(cards.length / perPage);
-
-    /* page-break 및 헤더 삽입 */
-    for (var k=0; k<cards.length; k++) {
-      cards[k].classList.remove('page-break-after');
-      if ((k+1) % perPage === 0 && k+1 < cards.length) {
-        cards[k].classList.add('page-break-after');
-        /* 다음 페이지 시작 헤더 삽입 */
-        var pageNum = Math.floor((k+1)/perPage) + 1;
-        var hdrDiv = document.createElement('div');
-        hdrDiv.className = 'pgPageHeader';
-        hdrDiv.style.cssText = 'grid-column:1/-1;';
-        hdrDiv.innerHTML = '<span class="ph-title">'+titleText+'</span>'
-          +'<span class="ph-num">'+pageNum+' / '+totalPages+'페이지</span>';
-        cards[k].insertAdjacentElement('afterend', hdrDiv);
-      }
-    }
-
-    /* 1페이지 번호 업데이트 */
-    var hdrSub = document.querySelector('#pgBatchTop .ph-sub');
+    var hdrSub = hdrTop ? hdrTop.querySelector('.ph-sub') : null;
     if(hdrSub) hdrSub.textContent = '1 / ' + totalPages + '페이지';
 
+    /* 1페이지 그리드 열 설정 */
+    grid.style.setProperty('grid-template-columns', cols, 'important');
+
+    /* 2페이지~: 카드를 새 그리드+헤더로 분리 */
+    for (var p=1; p < totalPages; p++) {
+      var pageCards = allCards.slice(p * perPage, (p+1) * perPage);
+      if (!pageCards.length) break;
+
+      var phDiv = document.createElement('div');
+      phDiv.className = 'pgPageHeader';
+      phDiv.innerHTML = '<span class="ph-title">'+titleText+'</span>'
+        +'<span class="ph-num">'+(p+1)+' / '+totalPages+'페이지</span>';
+
+      var newGrid = document.createElement('div');
+      newGrid.className = 'pgBatchGridPage';
+      newGrid.style.cssText = 'display:grid;grid-template-columns:'+cols+';column-gap:3mm;row-gap:4mm;padding:2mm 2mm 0;width:100%;box-sizing:border-box;align-content:start;';
+
+      pageCards.forEach(function(c){ newGrid.appendChild(c); });
+
+      var wrapper = document.createElement('div');
+      wrapper.className = 'pgPageBlock';
+      wrapper.style.cssText = 'break-before:page; page-break-before:always;';
+      wrapper.appendChild(phDiv);
+      wrapper.appendChild(newGrid);
+      ov.appendChild(wrapper);
+    }
+
     if (n === 6) {
-      grid.style.setProperty('grid-template-columns', 'repeat(2,minmax(0,1fr))', 'important');
       if (btn6) { btn6.style.background='#fff'; btn6.style.color='#7a4f00'; btn6.style.border='none'; btn6.textContent='6개/장 ✓'; }
       if (btn9) { btn9.style.background='rgba(255,255,255,.2)'; btn9.style.color='#fff'; btn9.style.border='1px solid rgba(255,255,255,.5)'; btn9.textContent='12개/장'; }
     } else {
-      grid.style.setProperty('grid-template-columns', 'repeat(3,minmax(0,1fr))', 'important');
       if (btn9) { btn9.style.background='#fff'; btn9.style.color='#7a4f00'; btn9.style.border='none'; btn9.textContent='12개/장 ✓'; }
       if (btn6) { btn6.style.background='rgba(255,255,255,.2)'; btn6.style.color='#fff'; btn6.style.border='1px solid rgba(255,255,255,.5)'; btn6.textContent='6개/장'; }
     }
@@ -2894,6 +2913,27 @@ window.addEventListener('load', function(){
     padding-top:1mm !important; margin-top:auto !important;
   }
   #pgBatchGrid[style*="repeat(2"] .pgCard-footer { font-size:8pt !important; }
+
+  /* ★ 2페이지~ 페이지 블록 */
+  .pgPageBlock {
+    break-before:page !important; page-break-before:always !important;
+    display:block !important;
+  }
+  .pgBatchGridPage {
+    display:grid !important;
+    column-gap:3mm !important;
+    row-gap:4mm !important;
+    padding:2mm 2mm 0 !important;
+    width:100% !important; box-sizing:border-box !important;
+    align-content:start !important;
+  }
+  .pgBatchGridPage .pgCard {
+    height:65mm !important;
+    overflow:hidden !important; box-sizing:border-box !important;
+  }
+  .pgBatchGridPage[style*="repeat(2"] .pgCard {
+    height:88mm !important;
+  }
 }
 
 /* ══ 공통 카드 ══ */
@@ -3092,33 +3132,45 @@ window.addEventListener('load', function(){
       } else {
         /* 완료 → 인쇄 버튼 활성화, 진행바 숨김 */
         if(printBtn){ printBtn.disabled=false; printBtn.style.opacity=''; printBtn.style.cursor=''; }
-        var allCards = grid ? grid.querySelectorAll('.pgCard') : [];
-        var perPage = 12;
-        var totalPages = Math.ceil(allCards.length / perPage);
 
-        /* 기존 삽입 헤더 제거 */
-        var oldHdrs = grid ? grid.querySelectorAll('.pgPageHeader') : [];
-        for (var h=0; h<oldHdrs.length; h++) oldHdrs[h].remove();
+        var allCards = Array.prototype.slice.call(grid ? grid.querySelectorAll('.pgCard') : []);
+        var perPage = 12;
+        var cols = 'repeat(3,minmax(0,1fr))';
+        var totalPages = Math.ceil(allCards.length / perPage);
 
         var hdrTop = document.getElementById('pgBatchTop');
         var titleText = hdrTop ? (hdrTop.querySelector('.bt-title')||{}).textContent || '' : '';
-
-        for (var k=0; k<allCards.length; k++) {
-          allCards[k].classList.remove('page-break-after');
-          if ((k+1) % perPage === 0 && k+1 < allCards.length) {
-            allCards[k].classList.add('page-break-after');
-            var pageNum = Math.floor((k+1)/perPage) + 1;
-            var hdrDiv = document.createElement('div');
-            hdrDiv.className = 'pgPageHeader';
-            hdrDiv.style.cssText = 'grid-column:1/-1;';
-            hdrDiv.innerHTML = '<span class="ph-title">'+titleText+'</span>'
-              +'<span class="ph-num">'+pageNum+' / '+totalPages+'페이지</span>';
-            allCards[k].insertAdjacentElement('afterend', hdrDiv);
-          }
-        }
-        /* 1페이지 번호 */
-        var hdrSub = document.querySelector('#pgBatchTop .ph-sub');
+        var hdrSub = hdrTop ? hdrTop.querySelector('.ph-sub') : null;
         if(hdrSub) hdrSub.textContent = '1 / ' + totalPages + '페이지';
+
+        /* 1페이지 그리드 열 설정 */
+        if(grid) grid.style.setProperty('grid-template-columns', cols, 'important');
+
+        var ov2 = document.getElementById('pgBatchOv');
+
+        /* 2페이지~: 카드를 새 그리드+헤더로 분리 */
+        for (var p=1; p < totalPages; p++) {
+          var pageCards = allCards.slice(p * perPage, (p+1) * perPage);
+          if (!pageCards.length) break;
+
+          var phDiv = document.createElement('div');
+          phDiv.className = 'pgPageHeader';
+          phDiv.innerHTML = '<span class="ph-title">'+titleText+'</span>'
+            +'<span class="ph-num">'+(p+1)+' / '+totalPages+'페이지</span>';
+
+          var newGrid = document.createElement('div');
+          newGrid.className = 'pgBatchGridPage';
+          newGrid.style.cssText = 'display:grid;grid-template-columns:'+cols+';column-gap:3mm;row-gap:4mm;padding:2mm 2mm 0;width:100%;box-sizing:border-box;align-content:start;';
+          pageCards.forEach(function(c){ newGrid.appendChild(c); });
+
+          var wrapper = document.createElement('div');
+          wrapper.className = 'pgPageBlock';
+          wrapper.style.cssText = 'break-before:page; page-break-before:always;';
+          wrapper.appendChild(phDiv);
+          wrapper.appendChild(newGrid);
+          if(ov2) ov2.appendChild(wrapper);
+        }
+
         setTimeout(function(){
           var pb=document.getElementById('pgProgress');
           var pt=document.getElementById('pgProgressTxt');
