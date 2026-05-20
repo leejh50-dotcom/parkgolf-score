@@ -2673,6 +2673,7 @@ window.addEventListener('load', function(){
     if(hdrSub) hdrSub.textContent = '1 / ' + totalPages + '페이지';
 
     /* 1페이지 그리드 열: CSS .is6 클래스로 처리 */
+    grid.style.setProperty('grid-template-columns', cols, 'important');
 
     /* 2페이지~: 카드를 새 그리드+헤더로 분리 */
     for (var p=1; p < totalPages; p++) {
