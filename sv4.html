@@ -2653,10 +2653,9 @@ window.addEventListener('load', function(){
       cards[k].classList.remove('page-break-after');
       if ((k+1) % perPage === 0 && (k+1) < cards.length) cards[k].classList.add('page-break-after');
     }
-    /* 페이지 번호 갱신 — counter(page) 자동 */
-    var styleEl = document.getElementById('pgPageStyle');
-    if(!styleEl){ styleEl=document.createElement('style'); styleEl.id='pgPageStyle'; document.head.appendChild(styleEl); }
-    styleEl.textContent = '@media print { #pgBatchTop .ph-sub::after { content:counter(page) " / ' + totalPages + '페이지"; } }';
+    /* 페이지 번호: ph-sub에 직접 삽입 */
+    var hdrSub = document.querySelector('#pgBatchTop .ph-sub');
+    if(hdrSub) hdrSub.textContent = '1 / ' + totalPages + '페이지';
 
     if (n === 6) {
       grid.style.setProperty('grid-template-columns', 'repeat(2,minmax(0,1fr))', 'important');
@@ -2710,19 +2709,20 @@ window.addEventListener('load', function(){
 
 /* ══ 인쇄 전용 ══ */
 @media print {
-  /* ★ margin-top:12mm → fixed 헤더(10mm) 공간 확보, 모든 페이지에 반복 */
-  @page { size:A4 portrait; margin:12mm 5mm 5mm 5mm; }
+  /* @page margin-top=10mm(헤더)+5mm, 나머지 5mm
+     가용높이: 297-15-5 = 277mm */
+  @page { size:A4 portrait; margin:15mm 5mm 5mm 5mm; }
 
   body * { visibility:hidden !important; }
   #pgBatchOv, #pgBatchOv * { visibility:visible !important; }
   #pgBatchOv { position:absolute !important; left:0 !important; top:0 !important;
-    width:100% !important; background:#fff !important; overflow:visible !important;
-    padding-top:10mm !important; box-sizing:border-box !important; }
+    width:100% !important; background:#fff !important; overflow:visible !important; }
 
-  /* ★ 헤더: position:fixed → 모든 페이지 상단에 반복 출력 */
+  /* ★ 헤더: position:fixed → 모든 페이지 상단 반복
+     @page margin-top이 헤더 공간을 확보하므로 카드와 겹치지 않음 */
   #pgBatchTop {
     display:flex !important; visibility:visible !important;
-    position:fixed !important; top:0mm !important; left:0 !important; right:0 !important;
+    position:fixed !important; top:0 !important; left:0 !important; right:0 !important;
     align-items:center !important; justify-content:space-between !important;
     padding:1.5mm 4mm !important; margin:0 !important;
     height:10mm !important; box-sizing:border-box !important;
@@ -2744,33 +2744,33 @@ window.addEventListener('load', function(){
   #pgProgress, #pgProgressTxt { display:none !important; }
 
   /* ══ 12장/페이지 (3×4) ══
-     가용높이: 297-12(top)-5(bot) = 280mm
-     4행×65mm + gap4mm×3 + pad2mm = 260+12+2 = 274mm ✅ */
+     가용높이: 277mm
+     4행×62mm + gap4mm×3 + pad3mm = 248+12+3 = 263mm ✅ */
   #pgBatchGrid {
     display:grid !important;
     grid-template-columns:repeat(3,1fr) !important;
     column-gap:3mm !important;
     row-gap:4mm !important;
-    padding:2mm 2mm 0 !important;
+    padding:3mm 2mm 0 !important;
     width:100% !important; box-sizing:border-box !important;
     align-content:start !important;
   }
   #pgBatchGrid:not([style*="repeat(2"]) .pgCard {
-    height:65mm !important;
+    height:62mm !important;
     overflow:hidden !important; box-sizing:border-box !important;
   }
 
   /* ══ 6장/페이지 (2×3) ══
-     3행×88mm + gap4mm×2 + pad2mm = 264+8+2 = 274mm ✅ */
+     3행×85mm + gap4mm×2 + pad3mm = 255+8+3 = 266mm ✅ */
   #pgBatchGrid[style*="repeat(2"] {
     grid-template-columns:repeat(2,1fr) !important;
     column-gap:5mm !important;
     row-gap:4mm !important;
-    padding:2mm 3mm 0 !important;
+    padding:3mm 3mm 0 !important;
     align-content:start !important;
   }
   #pgBatchGrid[style*="repeat(2"] .pgCard {
-    height:88mm !important;
+    height:85mm !important;
     overflow:hidden !important; box-sizing:border-box !important;
   }
 
@@ -2883,14 +2883,14 @@ window.addEventListener('load', function(){
 /* 제목: 1줄 강제, 넘치면 ... */
 .pgCard-title { font-size:17px; font-weight:900; color:#c8860a; margin-bottom:5px; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width:100%; }
 /* 화면: 선수 목록 1×4 세로, 성별·소속 이름 옆 한 줄 */
-.pgCard-players { width:100%; margin-top:5px; display:grid; grid-template-columns:1fr 1fr; gap:3px 6px; }
-.pgCard-player { display:flex; flex-direction:column; min-width:0; }
-.pgCard-player > div:last-child { padding-left:0 !important; }
-.pgCard-pline { display:flex; align-items:baseline; gap:3px; }
+.pgCard-players { width:100%; margin-top:5px; display:grid; grid-template-columns:1fr 1fr; gap:4px 8px; }
+.pgCard-player { display:flex; flex-direction:row; align-items:baseline; gap:3px; min-width:0; flex-wrap:nowrap; overflow:hidden; }
+.pgCard-player > div:last-child { padding-left:0 !important; display:inline !important; }
+.pgCard-pline { display:flex; align-items:baseline; gap:2px; flex-shrink:0; }
 .pgCard-num { font-size:11px; font-weight:900; color:#c8860a; flex-shrink:0; min-width:12px; }
-.pgCard-pname { font-size:14px; font-weight:800; color:#1e3c72; white-space:nowrap; }
-.pgCard-pgender { font-size:10px; color:#888; }
-.pgCard-paffil { font-size:10px; color:#aaa; }
+.pgCard-pname { font-size:13px; font-weight:800; color:#1e3c72; white-space:nowrap; }
+.pgCard-pgender { font-size:10px; color:#888; white-space:nowrap; flex-shrink:0; }
+.pgCard-paffil { font-size:10px; color:#aaa; white-space:nowrap; flex-shrink:0; }
 .pgCard-footer { margin-top:5px; font-size:9px; color:#9ca3af; text-align:center; width:100%; }
 
 /* 전송 오버레이 */
@@ -3064,10 +3064,9 @@ window.addEventListener('load', function(){
           allCards[k].classList.remove('page-break-after');
           if ((k+1) % perPage === 0 && (k+1) < allCards.length) allCards[k].classList.add('page-break-after');
         }
-        /* 페이지 번호: CSS counter(page) 방식 — 매 페이지 자동 */
-        var styleEl = document.getElementById('pgPageStyle');
-        if(!styleEl){ styleEl=document.createElement('style'); styleEl.id='pgPageStyle'; document.head.appendChild(styleEl); }
-        styleEl.textContent = '@media print { #pgBatchTop .ph-sub::after { content:counter(page) " / ' + totalPages + '페이지"; } }';
+        /* 페이지 번호: ph-sub에 직접 삽입 */
+        var hdrSub = document.querySelector('#pgBatchTop .ph-sub');
+        if(hdrSub) hdrSub.textContent = '1 / ' + totalPages + '페이지';
         setTimeout(function(){
           var pb=document.getElementById('pgProgress');
           var pt=document.getElementById('pgProgressTxt');
