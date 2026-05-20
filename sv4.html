@@ -598,19 +598,21 @@ html, body {
 <!-- html5-qrcode 라이브러리 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-/* QRCode.js: 화면에서 img 제거, canvas만 사용 */
+/* 화면에서 QRCode img 제거 - canvas만 표시 */
 (function(){
   var _orig = QRCode;
   window.QRCode = function(el, opts){
-    var instance = new _orig(el, opts);
-    /* img 즉시 제거 */
+    var inst = new _orig(el, opts);
     setTimeout(function(){
-      var imgs = el.querySelectorAll ? el.querySelectorAll('img') : [];
-      for(var i=0;i<imgs.length;i++) imgs[i].remove();
-    }, 0);
-    return instance;
+      if(el && el.querySelectorAll){
+        var imgs = el.querySelectorAll('img');
+        for(var i=0;i<imgs.length;i++) imgs[i].style.cssText='display:none!important';
+        var canvases = el.querySelectorAll('canvas');
+        for(var j=0;j<canvases.length;j++) canvases[j].style.cssText='display:block!important;width:100%!important;height:auto!important';
+      }
+    }, 10);
+    return inst;
   };
-  /* prototype 복사 */
   window.QRCode.prototype = _orig.prototype;
   window.QRCode.CorrectLevel = _orig.CorrectLevel;
 })();
@@ -2757,13 +2759,16 @@ window.addEventListener('load', function(){
   #pgBatchTop { position:sticky; top:0; z-index:5; background:linear-gradient(135deg,#c8860a,#7a4f00); color:#fff; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 8px rgba(0,0,0,.25); }
   /* 화면: 모바일 3열 → 카드당 폭이 좁으므로 글자·간격 최적화 */
   #pgBatchGrid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; padding:10px; max-width:1200px; margin:0 auto; }
+  /* ★ 2페이지~ pgBatchGridPage도 3열 */
+  .pgBatchGridPage { display:grid !important; grid-template-columns:repeat(3,minmax(0,1fr)) !important; gap:8px !important; padding:10px !important; max-width:1200px !important; margin:0 auto !important; box-sizing:border-box !important; }
+  .pgBatchGridPage .pgCard { height:auto !important; }
   /* 화면: QR 정사각형 */
   .pgCard-qr { width:100%; position:relative; }
   .pgCard-qr::before { content:''; display:block; padding-top:100%; }
   .pgCard-qr > div { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
-  /* ★ 화면: canvas 표시 (img는 JS로 이미 제거됨) */
-  .pgCard-qr canvas { display:block !important; width:100% !important; height:auto !important; }
-  .pgCard-qr img { display:none !important; }
+  /* ★ 화면에서만 canvas 숨김 (인쇄에서는 canvas 표시) */
+  .pgCard-qr canvas { display:none !important; }
+  .pgCard-qr img { width:100% !important; height:auto !important; display:block !important; }
 }
 
 /* ══ 인쇄 전용 ══ */
@@ -2981,56 +2986,34 @@ window.addEventListener('load', function(){
 }
 /* 화면: 카드 */
 .pgCard { background:#fff; border-radius:10px; border:1px solid #e5e7eb; box-shadow:0 1px 4px rgba(0,0,0,.08); padding:8px 6px 6px; display:flex; flex-direction:column; align-items:stretch; break-inside:avoid; page-break-inside:avoid; }
-/* 화면: body-print → QR 위, 선수 아래 (세로 배열) */
-.pgCard-body-print { display:flex; flex-direction:column; align-items:stretch; flex:1; min-height:0; }
+/* 화면: body-print → flex 가로 배열 (QR 좌 + 이름 우) */
+.pgCard-body-print { display:flex; align-items:center; justify-content:center; gap:6px; flex:1; min-height:0; }
 /* 제목: 1줄 말줄임 */
-.pgCard-title { font-size:12px; font-weight:900; color:#c8860a; margin-bottom:4px; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width:100%; }
-/* QR: 카드 폭 꽉 채움 */
-.pgCard-qr { position:static !important; padding-top:0 !important; width:100% !important; }
+.pgCard-title { font-size:11px; font-weight:900; color:#c8860a; margin-bottom:4px; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width:100%; }
+/* QR */
+.pgCard-qr { position:static !important; padding-top:0 !important; flex-shrink:0; }
 .pgCard-qr::before { display:none !important; }
-.pgCard-qr > div { position:static !important; display:block !important; width:100% !important; }
-/* QR 캔버스: 카드 폭 100% */
-.pgCard-qr canvas { display:block !important; width:100% !important; height:auto !important; }
-/* 선수 목록: 2×2 그리드 */
-.pgCard-players { display:grid !important; grid-template-columns:1fr 1fr !important; gap:2px 6px; margin-top:5px; width:100%; }
+.pgCard-qr > div { position:static !important; display:block !important; }
+/* QR 캔버스: vw 기준으로 열 수에 맞게 */
+.pgCard-qr canvas { display:block !important; width:17vw !important; height:17vw !important; }
+/* 6장 모드: QR 더 크게 */
+#pgBatchGrid.is6 .pgCard-qr canvas,
+.pgBatchGridPage.is6 .pgCard-qr canvas { width:26vw !important; height:26vw !important; }
+/* 선수 목록: 세로 1열 */
+.pgCard-players { width:fit-content; display:flex; flex-direction:column; gap:1px; margin-top:0; flex-shrink:0; }
 .pgCard-player { display:flex; flex-direction:column; min-width:0; }
 .pgCard-pline { display:flex; align-items:baseline; gap:2px; }
-.pgCard-num { font-size:10px; font-weight:900; color:#c8860a; flex-shrink:0; min-width:10px; }
-.pgCard-pname { font-size:11px; font-weight:800; color:#1e3c72; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.pgCard-pgender { font-size:9px; color:#888; padding-left:12px; }
-.pgCard-paffil { font-size:9px; color:#aaa; padding-left:12px; }
-.pgCard-footer { margin-top:4px; font-size:8px; color:#9ca3af; text-align:center; width:100%; }
-
-/* ★ batchQrOverlay(난독화) 카드도 동일 레이아웃 */
-#batchQrGrid { display:grid !important; grid-template-columns:repeat(3,1fr) !important; gap:8px !important; padding:12px !important; max-width:1100px !important; margin:0 auto !important; box-sizing:border-box !important; }
-.bqr-card { background:#fff; border-radius:8px; border:1px solid #ddd; padding:8px; display:flex !important; flex-direction:column !important; align-items:stretch !important; box-sizing:border-box !important; min-width:0 !important; overflow:hidden !important; }
-.bqr-card > div:nth-child(1) { font-size:12px; font-weight:900; color:#c8860a; text-align:center; margin-bottom:4px; }
-.bqr-card > div:nth-child(2) { display:flex !important; flex-direction:column !important; width:100% !important; min-width:0 !important; }
-.bqr-card canvas { display:block !important; width:100% !important; height:auto !important; min-width:0 !important; }
+.pgCard-num { font-size:8px; font-weight:900; color:#c8860a; flex-shrink:0; min-width:8px; }
+.pgCard-pname { font-size:9px; font-weight:800; color:#1e3c72; white-space:nowrap; }
+.pgCard-pgender { font-size:7px; color:#888; padding-left:10px; }
+.pgCard-paffil { font-size:7px; color:#aaa; padding-left:10px; }
+.pgCard-footer { margin-top:3px; font-size:7px; color:#9ca3af; text-align:center; width:100%; }
 
 /* ══ 모바일 화면 전용 (max-width:600px) ══ */
 @media screen and (max-width:600px) {
   /* 카드 높이 auto (인쇄용 mm 고정값 무효화) */
   #pgBatchGrid .pgCard,
   .pgBatchGridPage .pgCard { height:auto !important; min-height:0 !important; }
-}
-
-/* ★ 화면에서 pgBatchGridPage 3열 그리드 */
-@media screen {
-  .pgBatchGridPage {
-    display:grid !important;
-    grid-template-columns:repeat(3,minmax(0,1fr)) !important;
-    gap:8px !important;
-    padding:10px !important;
-    max-width:1200px !important;
-    margin:0 auto !important;
-    width:100% !important;
-    box-sizing:border-box !important;
-  }
-  .pgBatchGridPage .pgCard {
-    height:auto !important;
-    min-height:0 !important;
-  }
 }
 #pasisSendOv { position:fixed; inset:0; z-index:200000; background:rgba(0,0,0,.55); display:flex; align-items:center; justify-content:center; font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif; }
 #pasisSendBox { background:#fff; border-radius:16px; width:min(400px,94vw); max-height:96vh; overflow-y:auto; box-shadow:0 24px 64px rgba(0,0,0,.3); }
