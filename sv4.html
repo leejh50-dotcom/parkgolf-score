@@ -2744,11 +2744,12 @@ window.addEventListener('load', function(){
   }
   #pgBatchTop .ph-sub {
     display:inline !important;
-    font-size:8pt !important; color:#666 !important;
     white-space:nowrap !important;
     font-size:0 !important; /* JS 텍스트 숨김 */
+    color:transparent !important;
   }
   #pgBatchTop .ph-sub::after {
+    display:inline !important;
     font-size:8pt !important; color:#666 !important;
     content:counter(page) " / " counter(pages) "페이지" !important;
   }
@@ -2764,7 +2765,7 @@ window.addEventListener('load', function(){
     grid-template-columns:repeat(3,1fr) !important;
     column-gap:3mm !important;
     row-gap:4mm !important;
-    padding:2mm 2mm 0 !important;
+    padding:12mm 2mm 0 !important;
     width:100% !important; box-sizing:border-box !important;
     align-content:start !important;
   }
