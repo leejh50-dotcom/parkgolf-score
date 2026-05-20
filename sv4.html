@@ -2653,10 +2653,9 @@ window.addEventListener('load', function(){
       cards[k].classList.remove('page-break-after');
       if ((k+1) % perPage === 0 && (k+1) < cards.length) cards[k].classList.add('page-break-after');
     }
-    /* 페이지 번호 갱신 — counter(page) 자동 */
-    var styleEl = document.getElementById('pgPageStyle');
-    if(!styleEl){ styleEl=document.createElement('style'); styleEl.id='pgPageStyle'; document.head.appendChild(styleEl); }
-    styleEl.textContent = '@media print { #pgBatchTop .ph-sub::after { content:counter(page) " / " counter(pages) "페이지"; } }';
+    /* 페이지 번호: JS로 직접 계산해서 표시 */
+    var phSub = document.querySelector('#pgBatchTop .ph-sub');
+    if(phSub) phSub.textContent = '1 / ' + totalPages + '페이지';
 
     if (n === 6) {
       grid.style.setProperty('grid-template-columns', 'repeat(2,minmax(0,1fr))', 'important');
@@ -3073,10 +3072,9 @@ window.addEventListener('load', function(){
           allCards[k].classList.remove('page-break-after');
           if ((k+1) % perPage === 0 && (k+1) < allCards.length) allCards[k].classList.add('page-break-after');
         }
-        /* 페이지 번호: CSS counter(page) 방식 — 매 페이지 자동 */
-        var styleEl = document.getElementById('pgPageStyle');
-        if(!styleEl){ styleEl=document.createElement('style'); styleEl.id='pgPageStyle'; document.head.appendChild(styleEl); }
-        styleEl.textContent = '@media print { #pgBatchTop .ph-sub::after { content:counter(page) " / " counter(pages) "페이지"; } }';
+        /* 페이지 번호: JS로 직접 계산해서 표시 */
+        var phSub = document.querySelector('#pgBatchTop .ph-sub');
+        if(phSub) phSub.textContent = '1 / ' + totalPages + '페이지';
         setTimeout(function(){
           var pb=document.getElementById('pgProgress');
           var pt=document.getElementById('pgProgressTxt');
