@@ -2653,9 +2653,9 @@ window.addEventListener('load', function(){
       cards[k].classList.remove('page-break-after');
       if ((k+1) % perPage === 0 && (k+1) < cards.length) cards[k].classList.add('page-break-after');
     }
-    /* 페이지 번호: 화면=JS텍스트, 인쇄=CSS counter + data-total */
+    /* 페이지 번호: JS로 직접 계산해서 표시 */
     var phSub = document.querySelector('#pgBatchTop .ph-sub');
-    if(phSub) { phSub.textContent = '1 / ' + totalPages + '페이지'; phSub.setAttribute('data-total', totalPages); }
+    if(phSub) phSub.textContent = '1 / ' + totalPages + '페이지';
 
     if (n === 6) {
       grid.style.setProperty('grid-template-columns', 'repeat(2,minmax(0,1fr))', 'important');
@@ -2719,8 +2719,8 @@ window.addEventListener('load', function(){
 
 /* ══ 인쇄 전용 ══ */
 @media print {
-  /* 브라우저 인쇄 헤더/푸터 포함 여백 확보 */
-  @page { size:A4 portrait; margin:18mm 5mm 12mm 5mm; }
+  /* ★ margin-top:12mm → fixed 헤더(10mm) 공간 확보, 모든 페이지에 반복 */
+  @page { size:A4 portrait; margin:12mm 5mm 5mm 5mm; }
 
   body * { visibility:hidden !important; }
   #pgBatchOv, #pgBatchOv * { visibility:visible !important; }
@@ -2730,7 +2730,7 @@ window.addEventListener('load', function(){
   /* ★ 헤더: position:fixed → 모든 페이지 상단에 반복 출력 */
   #pgBatchTop {
     display:flex !important; visibility:visible !important;
-    position:fixed !important; top:-16mm !important; left:0 !important; right:0 !important;
+    position:fixed !important; top:0mm !important; left:0 !important; right:0 !important;
     align-items:center !important; justify-content:space-between !important;
     padding:1.5mm 4mm !important; margin:0 !important;
     height:10mm !important; box-sizing:border-box !important;
@@ -2745,38 +2745,37 @@ window.addEventListener('load', function(){
   #pgBatchTop .ph-sub {
     display:inline !important;
     white-space:nowrap !important;
-    font-size:0 !important;
+    font-size:0 !important; /* JS 텍스트 숨김 */
     color:transparent !important;
   }
   #pgBatchTop .ph-sub::after {
     display:inline !important;
-    font-size:8pt !important;
-    color:#666 !important;
-    content:counter(page) " / " attr(data-total) "페이지" !important;
+    font-size:8pt !important; color:#666 !important;
+    content:counter(page) " / " counter(pages) "페이지" !important;
   }
   #pgBatchTop .bt-btns, #pgBatchTop .btn-close,
   #pgBatchTop .btn-print, #pgBatchTop .btn-layout { display:none !important; }
   #pgProgress, #pgProgressTxt { display:none !important; }
 
   /* ══ 12장/페이지 (3×4) ══
-     가용높이: 297-18(top)-12(bot) = 267mm
-     4행×63mm + gap4mm×3 + pad2mm = 252+12+2 = 266mm ✅ */
+     가용높이: 297-12(top)-5(bot) = 280mm
+     4행×65mm + gap4mm×3 + pad2mm = 260+12+2 = 274mm ✅ */
   #pgBatchGrid {
     display:grid !important;
     grid-template-columns:repeat(3,1fr) !important;
     column-gap:3mm !important;
     row-gap:4mm !important;
-    padding:2mm 2mm 0 !important;
+    padding:12mm 2mm 0 !important;
     width:100% !important; box-sizing:border-box !important;
     align-content:start !important;
   }
   #pgBatchGrid:not([style*="repeat(2"]) .pgCard {
-    height:63mm !important;
+    height:65mm !important;
     overflow:hidden !important; box-sizing:border-box !important;
   }
 
   /* ══ 6장/페이지 (2×3) ══
-     3행×85mm + gap4mm×2 + pad2mm = 255+8+2 = 265mm ✅ */
+     3행×88mm + gap4mm×2 + pad2mm = 264+8+2 = 274mm ✅ */
   #pgBatchGrid[style*="repeat(2"] {
     grid-template-columns:repeat(2,1fr) !important;
     column-gap:5mm !important;
@@ -2785,7 +2784,7 @@ window.addEventListener('load', function(){
     align-content:start !important;
   }
   #pgBatchGrid[style*="repeat(2"] .pgCard {
-    height:85mm !important;
+    height:88mm !important;
     overflow:hidden !important; box-sizing:border-box !important;
   }
 
@@ -3079,9 +3078,9 @@ window.addEventListener('load', function(){
           allCards[k].classList.remove('page-break-after');
           if ((k+1) % perPage === 0 && (k+1) < allCards.length) allCards[k].classList.add('page-break-after');
         }
-        /* 페이지 번호: 화면=JS텍스트, 인쇄=CSS counter + data-total */
+        /* 페이지 번호: JS로 직접 계산해서 표시 */
         var phSub = document.querySelector('#pgBatchTop .ph-sub');
-        if(phSub) { phSub.textContent = '1 / ' + totalPages + '페이지'; phSub.setAttribute('data-total', totalPages); }
+        if(phSub) phSub.textContent = '1 / ' + totalPages + '페이지';
         setTimeout(function(){
           var pb=document.getElementById('pgProgress');
           var pt=document.getElementById('pgProgressTxt');
