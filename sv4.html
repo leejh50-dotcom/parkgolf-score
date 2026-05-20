@@ -2874,6 +2874,45 @@ window.addEventListener('load', function(){
   #pgBatchGrid[style*="repeat(2"] .pgCard-footer { font-size:8pt !important; }
 }
 
+/* ══ 모바일 인쇄 전용 ══ */
+@media print and (max-width:200mm) {
+  /* 12장: 모바일에서 3열 유지 → 카드 높이 자동, QR 크기 비율로 */
+  #pgBatchGrid {
+    grid-template-columns:repeat(3,1fr) !important;
+    column-gap:1mm !important;
+    row-gap:2mm !important;
+    padding:1mm !important;
+  }
+  #pgBatchGrid:not([style*="repeat(2"]) .pgCard {
+    height:auto !important;
+    min-height:40mm !important;
+  }
+  /* 6장: 모바일 2열 */
+  #pgBatchGrid[style*="repeat(2"] {
+    grid-template-columns:repeat(2,1fr) !important;
+    column-gap:2mm !important;
+    row-gap:2mm !important;
+    padding:1mm !important;
+  }
+  #pgBatchGrid[style*="repeat(2"] .pgCard {
+    height:auto !important;
+    min-height:60mm !important;
+  }
+  /* QR: mm 고정 대신 카드 폭에 비례 */
+  .pgCard-qr canvas {
+    width:28mm !important; height:28mm !important;
+  }
+  #pgBatchGrid[style*="repeat(2"] .pgCard-qr canvas {
+    width:42mm !important; height:42mm !important;
+  }
+  /* 글자 크기 축소 */
+  .pgCard-title { font-size:6pt !important; }
+  .pgCard-pname { font-size:7.5pt !important; }
+  #pgBatchGrid[style*="repeat(2"] .pgCard-pname { font-size:10pt !important; }
+  .pgCard-pgender, .pgCard-paffil { font-size:5.5pt !important; }
+  .pgCard-footer { font-size:4.5pt !important; }
+}
+
 /* ══ 공통 카드 ══ */
 #pgBatchTop .bt-title { font-size:15px; font-weight:900; }
 #pgBatchTop .bt-btns { display:flex; gap:8px; }
