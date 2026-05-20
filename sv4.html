@@ -2749,6 +2749,34 @@ window.addEventListener('load', function(){
 })();
 </script>
 
+<script>
+/* batchQrOverlay 그리드 강제 수정 */
+(function(){
+  var mo = new MutationObserver(function(){
+    var ov = document.getElementById('batchQrOverlay');
+    if(!ov) return;
+    /* 그리드 div: batchQrOverlay의 직접 자식 중 display:grid인 것 */
+    var children = ov.children;
+    for(var i=0;i<children.length;i++){
+      var el = children[i];
+      if(el.style && el.style.display === 'grid'){
+        el.style.setProperty('grid-template-columns','repeat(3,minmax(0,1fr))','important');
+        el.style.setProperty('width','100%','important');
+        el.style.setProperty('box-sizing','border-box','important');
+      }
+    }
+    /* bqr-card canvas 크기 고정 */
+    var canvases = ov.querySelectorAll('.bqr-card canvas');
+    for(var j=0;j<canvases.length;j++){
+      canvases[j].style.setProperty('width','100%','important');
+      canvases[j].style.setProperty('height','auto','important');
+      canvases[j].style.setProperty('display','block','important');
+      canvases[j].style.setProperty('max-width','100%','important');
+    }
+  });
+  mo.observe(document.body, {childList:true, subtree:true, attributes:true});
+})();
+</script>
 <!-- ═══ PASIS SV4.0 최종패치 ═══ -->
 <style>
 /* ══ 화면 전용 ══ */
