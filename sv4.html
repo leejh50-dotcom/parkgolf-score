@@ -2707,28 +2707,15 @@ window.addEventListener('load', function(){
     margin:0 auto !important;
     align-items:start !important;
   }
-  /* ★ 화면: QR 크기를 카드 폭에 맞게 제한 (aspect-ratio 트릭 제거) */
+  /* ★ 화면: QR 크기 제한 (padding-top 트릭 제거) */
   .pgCard-qr { width:100%; position:relative; overflow:hidden; }
   .pgCard-qr::before { display:none !important; }
   .pgCard-qr > div { position:static !important; display:flex; align-items:center; justify-content:center; }
   /* ★ 화면에서만 canvas 숨김 (인쇄에서는 canvas 표시) */
   .pgCard-qr canvas { display:none !important; }
-  /* ★ QR 이미지: 카드 폭을 넘지 않도록 제한 */
-  .pgCard-qr img {
-    width:100% !important;
-    max-width:100% !important;
-    height:auto !important;
-    display:block !important;
-    max-height:200px !important;
-    object-fit:contain !important;
-  }
-  /* ★ pgCard: 높이 자동, 내용이 그리드를 밀어내지 않도록 */
-  .pgCard {
-    min-height:0 !important;
-    overflow:hidden !important;
-    display:flex !important;
-    flex-direction:column !important;
-  }
+  .pgCard-qr img { width:100% !important; max-width:100% !important; height:auto !important; display:block !important; max-height:200px !important; object-fit:contain !important; }
+  /* ★ pgCard: 높이 자동, 그리드 이탈 방지 */
+  .pgCard { min-height:0 !important; overflow:hidden !important; }
 }
 
 /* ══ 인쇄 전용 ══ */
