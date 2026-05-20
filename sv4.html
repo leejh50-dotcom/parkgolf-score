@@ -2745,7 +2745,7 @@ window.addEventListener('load', function(){
   .pgCard-qr > div { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
   /* ★ 화면에서만 canvas 숨김 (인쇄에서는 canvas 표시) */
   .pgCard-qr canvas { display:none !important; }
-  .pgCard-qr img { width:100% !important; height:auto !important; display:block !important; }
+  .pgCard-qr img { width:100% !important; height:100% !important; display:block !important; object-fit:contain !important; }
   /* ★ 2페이지~ 화면 3열 그리드 */
   .pgBatchGridPage { display:grid !important; grid-template-columns:repeat(3,minmax(0,1fr)) !important; gap:8px !important; padding:10px !important; max-width:1200px !important; margin:0 auto !important; }
   .pgBatchGridPage .pgCard { height:auto !important; }
