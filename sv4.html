@@ -40,6 +40,7 @@ if('caches' in window){
 
 
 
+<style>#batchQrOverlay img,#pgBatchOv img{display:none!important}</style>
 </head>
 <body style="margin:0;padding:0;background:#f0fff4;">
 
@@ -2732,35 +2733,6 @@ window.addEventListener('load', function(){
 </script>
 
 <!-- ═══ PASIS SV4.0 최종패치 ═══ -->
-<!-- ★ QR 미리보기: img 완전 숨김, canvas만 표시 (전역 적용) -->
-<script>
-(function(){
-  function hideQrImgs(root){
-    (root||document).querySelectorAll('canvas+img, img+canvas').forEach(function(el){
-      if(el.tagName==='IMG') el.style.cssText='display:none!important;';
-    });
-    // QRCode.js가 생성하는 구조: div > (canvas + img)
-    (root||document).querySelectorAll('div > canvas').forEach(function(canvas){
-      var img = canvas.parentNode.querySelector('img');
-      if(img) img.style.cssText='display:none!important;';
-      canvas.style.cssText='display:block!important;max-width:100%;';
-    });
-  }
-  var mo = new MutationObserver(function(muts){
-    muts.forEach(function(m){
-      m.addedNodes.forEach(function(n){
-        if(n.nodeType===1) setTimeout(function(){ hideQrImgs(n); },50);
-      });
-    });
-  });
-  function init(){
-    mo.observe(document.body,{childList:true,subtree:true});
-    hideQrImgs(document);
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
-  else init();
-})();
-</script>
 <style>
 /* ══ 화면 전용 ══ */
 @media screen {
@@ -2772,11 +2744,9 @@ window.addEventListener('load', function(){
   .pgCard-qr { width:100%; position:relative; }
   .pgCard-qr::before { content:''; display:block; padding-top:100%; }
   .pgCard-qr > div { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
-  /* ★ 화면: canvas만 표시, img 완전 숨김 */
-  .pgCard-qr canvas { display:block !important; }
-  .pgCard-qr img { display:none !important; }
-  .pgCard-qr.qr-img-ready canvas { display:block !important; }
-  .pgCard-qr.qr-img-ready img { display:none !important; }
+  /* ★ 화면에서만 canvas 숨김 (인쇄에서는 canvas 표시) */
+  .pgCard-qr canvas { display:none !important; }
+  .pgCard-qr img { width:100% !important; height:auto !important; display:block !important; }
 }
 
 /* ══ 인쇄 전용 ══ */
@@ -3002,9 +2972,8 @@ window.addEventListener('load', function(){
 .pgCard-qr { position:static !important; padding-top:0 !important; flex-shrink:0; }
 .pgCard-qr::before { display:none !important; }
 .pgCard-qr > div { position:static !important; display:block !important; }
-/* QR 캔버스: vw 기준으로 열 수에 맞게, img는 화면에서 완전 숨김 */
+/* QR 캔버스: vw 기준으로 열 수에 맞게 */
 .pgCard-qr canvas { display:block !important; width:17vw !important; height:17vw !important; }
-.pgCard-qr img { display:none !important; }
 /* 6장 모드: QR 더 크게 */
 #pgBatchGrid.is6 .pgCard-qr canvas,
 .pgBatchGridPage.is6 .pgCard-qr canvas { width:26vw !important; height:26vw !important; }
