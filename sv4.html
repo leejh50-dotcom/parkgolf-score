@@ -3002,12 +3002,11 @@ window.addEventListener('load', function(){
 .pgCard-footer { margin-top:4px; font-size:8px; color:#9ca3af; text-align:center; width:100%; }
 
 /* ★ batchQrOverlay(난독화) 카드도 동일 레이아웃 */
-.bqr-card { background:#fff; border-radius:8px; border:1px solid #ddd; padding:8px; display:flex !important; flex-direction:column !important; align-items:stretch !important; box-sizing:border-box; min-width:0 !important; overflow:hidden !important; }
+#batchQrGrid { display:grid !important; grid-template-columns:repeat(3,1fr) !important; gap:8px !important; padding:12px !important; max-width:1100px !important; margin:0 auto !important; box-sizing:border-box !important; }
+.bqr-card { background:#fff; border-radius:8px; border:1px solid #ddd; padding:8px; display:flex !important; flex-direction:column !important; align-items:stretch !important; box-sizing:border-box !important; min-width:0 !important; overflow:hidden !important; }
 .bqr-card > div:nth-child(1) { font-size:12px; font-weight:900; color:#c8860a; text-align:center; margin-bottom:4px; }
 .bqr-card > div:nth-child(2) { display:flex !important; flex-direction:column !important; width:100% !important; min-width:0 !important; }
 .bqr-card canvas { display:block !important; width:100% !important; height:auto !important; min-width:0 !important; }
-#batchQrOverlay > div:last-child { min-width:0 !important; }
-#batchQrOverlay > div:last-child > div { min-width:0 !important; }
 
 /* ══ 모바일 화면 전용 (max-width:600px) ══ */
 @media screen and (max-width:600px) {
