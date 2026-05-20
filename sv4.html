@@ -2981,29 +2981,33 @@ window.addEventListener('load', function(){
 }
 /* 화면: 카드 */
 .pgCard { background:#fff; border-radius:10px; border:1px solid #e5e7eb; box-shadow:0 1px 4px rgba(0,0,0,.08); padding:8px 6px 6px; display:flex; flex-direction:column; align-items:stretch; break-inside:avoid; page-break-inside:avoid; }
-/* 화면: body-print → flex 가로 배열 (QR 좌 + 이름 우) */
-.pgCard-body-print { display:flex; align-items:center; justify-content:center; gap:6px; flex:1; min-height:0; }
+/* 화면: body-print → QR 위, 선수 아래 (세로 배열) */
+.pgCard-body-print { display:flex; flex-direction:column; align-items:stretch; flex:1; min-height:0; }
 /* 제목: 1줄 말줄임 */
-.pgCard-title { font-size:11px; font-weight:900; color:#c8860a; margin-bottom:4px; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width:100%; }
-/* QR */
-.pgCard-qr { position:static !important; padding-top:0 !important; flex-shrink:0; }
+.pgCard-title { font-size:12px; font-weight:900; color:#c8860a; margin-bottom:4px; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width:100%; }
+/* QR: 카드 폭 꽉 채움 */
+.pgCard-qr { position:static !important; padding-top:0 !important; width:100% !important; }
 .pgCard-qr::before { display:none !important; }
-.pgCard-qr > div { position:static !important; display:block !important; }
-/* QR 캔버스: vw 기준으로 열 수에 맞게, batchQrOverlay 포함 */
-.pgCard-qr canvas { display:block !important; width:17vw !important; height:17vw !important; }
-#batchQrOverlay canvas { display:block !important; width:25vw !important; height:25vw !important; max-width:100% !important; }
-/* 6장 모드: QR 더 크게 */
-#pgBatchGrid.is6 .pgCard-qr canvas,
-.pgBatchGridPage.is6 .pgCard-qr canvas { width:26vw !important; height:26vw !important; }
-/* 선수 목록: 세로 1열 */
-.pgCard-players { width:fit-content; display:flex; flex-direction:column; gap:1px; margin-top:0; flex-shrink:0; }
+.pgCard-qr > div { position:static !important; display:block !important; width:100% !important; }
+/* QR 캔버스: 카드 폭 100% */
+.pgCard-qr canvas { display:block !important; width:100% !important; height:auto !important; }
+/* 선수 목록: 2×2 그리드 */
+.pgCard-players { display:grid !important; grid-template-columns:1fr 1fr !important; gap:2px 6px; margin-top:5px; width:100%; }
 .pgCard-player { display:flex; flex-direction:column; min-width:0; }
 .pgCard-pline { display:flex; align-items:baseline; gap:2px; }
-.pgCard-num { font-size:8px; font-weight:900; color:#c8860a; flex-shrink:0; min-width:8px; }
-.pgCard-pname { font-size:9px; font-weight:800; color:#1e3c72; white-space:nowrap; }
-.pgCard-pgender { font-size:7px; color:#888; padding-left:10px; }
-.pgCard-paffil { font-size:7px; color:#aaa; padding-left:10px; }
-.pgCard-footer { margin-top:3px; font-size:7px; color:#9ca3af; text-align:center; width:100%; }
+.pgCard-num { font-size:10px; font-weight:900; color:#c8860a; flex-shrink:0; min-width:10px; }
+.pgCard-pname { font-size:11px; font-weight:800; color:#1e3c72; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pgCard-pgender { font-size:9px; color:#888; padding-left:12px; }
+.pgCard-paffil { font-size:9px; color:#aaa; padding-left:12px; }
+.pgCard-footer { margin-top:4px; font-size:8px; color:#9ca3af; text-align:center; width:100%; }
+
+/* ★ batchQrOverlay(난독화) 카드도 동일 레이아웃 */
+.bqr-card { background:#fff; border-radius:8px; border:1px solid #ddd; padding:8px; display:flex !important; flex-direction:column !important; align-items:stretch !important; box-sizing:border-box; }
+.bqr-card > div:nth-child(1) { font-size:12px; font-weight:900; color:#c8860a; text-align:center; margin-bottom:4px; }
+.bqr-card > div:nth-child(2) { display:flex !important; flex-direction:column !important; width:100% !important; }
+.bqr-card canvas { display:block !important; width:100% !important; height:auto !important; }
+#pgBatchGrid.is6 .pgCard-qr canvas,
+.pgBatchGridPage.is6 .pgCard-qr canvas { width:100% !important; height:auto !important; }
 
 /* ══ 모바일 화면 전용 (max-width:600px) ══ */
 @media screen and (max-width:600px) {
