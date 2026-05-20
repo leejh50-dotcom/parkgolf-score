@@ -2737,15 +2737,18 @@ window.addEventListener('load', function(){
 @media screen {
   #pgBatchOv { position:fixed; inset:0; z-index:100000; overflow-y:auto; background:#f3f4f6; font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif; }
   #pgBatchTop { position:sticky; top:0; z-index:5; background:linear-gradient(135deg,#c8860a,#7a4f00); color:#fff; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 8px rgba(0,0,0,.25); }
-  /* 화면: 모바일 3열 → 카드당 폭이 좁으므로 글자·간격 최적화 */
   #pgBatchGrid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; padding:10px; max-width:1200px; margin:0 auto; }
-  /* 화면: QR 정사각형 */
-  .pgCard-qr { width:100%; position:relative; }
-  .pgCard-qr::before { content:''; display:block; padding-top:100%; }
-  .pgCard-qr > div { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
-  /* ★ 화면에서만 canvas 숨김 (인쇄에서는 canvas 표시) */
+  /* ★ 화면: QR 고정 크기 */
+  .pgCard-qr { width:60px !important; flex-shrink:0 !important; position:relative; overflow:hidden; }
+  .pgCard-qr::before { display:none !important; }
+  .pgCard-qr > div { position:static !important; display:block !important; width:60px !important; height:60px !important; }
   .pgCard-qr canvas { display:none !important; }
-  .pgCard-qr img { width:100% !important; height:auto !important; display:block !important; }
+  .pgCard-qr img { width:60px !important; height:60px !important; max-height:60px !important; display:block !important; object-fit:contain !important; }
+  /* 6장: QR 더 크게 */
+  #pgBatchGrid[style*="repeat(2"] .pgCard-qr,
+  #pgBatchGrid[style*="repeat(2"] .pgCard-qr > div { width:90px !important; height:90px !important; }
+  #pgBatchGrid[style*="repeat(2"] .pgCard-qr img { width:90px !important; height:90px !important; max-height:90px !important; }
+  .pgCard { min-height:0 !important; overflow:hidden !important; }
 }
 
 /* ══ 인쇄 전용 ══ */
