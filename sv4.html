@@ -2794,9 +2794,9 @@ window.addEventListener('load', function(){
   .pgCard-qr { width:100%; position:relative; }
   .pgCard-qr::before { content:''; display:block; padding-top:100%; }
   .pgCard-qr > div { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
-  /* ★ 화면: canvas만 표시, img는 숨김 (img 로드 후 JS로 전환) */
-  .pgCard-qr canvas { display:block !important; width:100% !important; height:auto !important; }
-  .pgCard-qr img { display:none !important; width:100% !important; height:auto !important; }
+  /* ★ 화면: canvas만 표시, img 숨김 — absolute 컨테이너 안에서 정사각형 유지 */
+  .pgCard-qr canvas { display:block !important; width:100% !important; height:100% !important; object-fit:contain !important; }
+  .pgCard-qr img { display:none !important; width:100% !important; height:100% !important; object-fit:contain !important; }
   .pgCard-qr.qr-img-ready canvas { display:none !important; }
   .pgCard-qr.qr-img-ready img { display:block !important; }
 }
