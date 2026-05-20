@@ -2702,6 +2702,7 @@ window.addEventListener('load', function(){
     grid-template-columns:repeat(3,minmax(0,1fr)) !important;
     gap:8px !important;
     padding:10px !important;
+    padding-top:14px !important;
     max-width:1200px !important;
     margin:0 auto !important;
     align-items:start !important;
@@ -2744,11 +2745,12 @@ window.addEventListener('load', function(){
   }
   #pgBatchTop .ph-sub {
     display:inline !important;
-    font-size:8pt !important; color:#666 !important;
     white-space:nowrap !important;
     font-size:0 !important; /* JS 텍스트 숨김 */
+    color:transparent !important;
   }
   #pgBatchTop .ph-sub::after {
+    display:inline !important;
     font-size:8pt !important; color:#666 !important;
     content:counter(page) " / " counter(pages) "페이지" !important;
   }
@@ -2876,36 +2878,40 @@ window.addEventListener('load', function(){
 
 /* ══ 모바일 인쇄 전용 ══ */
 @media print and (max-width:200mm) {
-  /* 12장: 모바일에서 3열 유지 → 카드 높이 자동, QR 크기 비율로 */
+  /* 12장: 3열 4행, A4 세로 꽉 채움 */
   #pgBatchGrid {
     grid-template-columns:repeat(3,1fr) !important;
-    column-gap:1mm !important;
-    row-gap:2mm !important;
+    column-gap:1.5mm !important;
+    row-gap:0 !important;
     padding:1mm !important;
+    height:calc(100vh - 12mm) !important;
+    align-content:space-between !important;
   }
   #pgBatchGrid:not([style*="repeat(2"]) .pgCard {
     height:auto !important;
-    min-height:40mm !important;
+    min-height:0 !important;
   }
-  /* 6장: 모바일 2열 */
+  /* 6장: 2열 3행, A4 세로 꽉 채움 */
   #pgBatchGrid[style*="repeat(2"] {
     grid-template-columns:repeat(2,1fr) !important;
     column-gap:2mm !important;
-    row-gap:2mm !important;
+    row-gap:0 !important;
     padding:1mm !important;
+    height:calc(100vh - 12mm) !important;
+    align-content:space-between !important;
   }
   #pgBatchGrid[style*="repeat(2"] .pgCard {
     height:auto !important;
-    min-height:60mm !important;
+    min-height:0 !important;
   }
-  /* QR: mm 고정 대신 카드 폭에 비례 */
+  /* QR: 카드 폭에 비례 */
   .pgCard-qr canvas {
-    width:28mm !important; height:28mm !important;
+    width:26mm !important; height:26mm !important;
   }
   #pgBatchGrid[style*="repeat(2"] .pgCard-qr canvas {
-    width:42mm !important; height:42mm !important;
+    width:40mm !important; height:40mm !important;
   }
-  /* 글자 크기 축소 */
+  /* 글자 크기 */
   .pgCard-title { font-size:6pt !important; }
   .pgCard-pname { font-size:7.5pt !important; }
   #pgBatchGrid[style*="repeat(2"] .pgCard-pname { font-size:10pt !important; }
