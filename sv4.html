@@ -2761,9 +2761,9 @@ window.addEventListener('load', function(){
   .pgCard-qr { width:100%; position:relative; }
   .pgCard-qr::before { content:''; display:block; padding-top:100%; }
   .pgCard-qr > div { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
-  /* ★ 화면에서만 canvas 숨김 (인쇄에서는 canvas 표시) */
-  .pgCard-qr canvas { display:none !important; }
-  .pgCard-qr img { width:100% !important; height:auto !important; display:block !important; }
+  /* ★ 화면: canvas 표시 (img는 JS로 이미 제거됨) */
+  .pgCard-qr canvas { display:block !important; width:100% !important; height:auto !important; }
+  .pgCard-qr img { display:none !important; }
 }
 
 /* ══ 인쇄 전용 ══ */
@@ -2989,8 +2989,9 @@ window.addEventListener('load', function(){
 .pgCard-qr { position:static !important; padding-top:0 !important; flex-shrink:0; }
 .pgCard-qr::before { display:none !important; }
 .pgCard-qr > div { position:static !important; display:block !important; }
-/* QR 캔버스: vw 기준으로 열 수에 맞게 */
+/* QR 캔버스: vw 기준으로 열 수에 맞게, batchQrOverlay 포함 */
 .pgCard-qr canvas { display:block !important; width:17vw !important; height:17vw !important; }
+#batchQrOverlay canvas { display:block !important; width:25vw !important; height:25vw !important; max-width:100% !important; }
 /* 6장 모드: QR 더 크게 */
 #pgBatchGrid.is6 .pgCard-qr canvas,
 .pgBatchGridPage.is6 .pgCard-qr canvas { width:26vw !important; height:26vw !important; }
