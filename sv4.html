@@ -2984,37 +2984,62 @@ window.addEventListener('load', function(){
 
 /* ══ 모바일 화면 전용 (max-width:600px) ══ */
 @media screen and (max-width:600px) {
-  /* 12장/6장 모드 모두: 1열, JS setProperty로 덮어씌워지므로 CSS는 백업 역할 */
+  /* 1열 그리드 */
   #pgBatchGrid, .pgBatchGridPage {
     grid-template-columns:repeat(1,minmax(0,1fr)) !important;
     gap:10px !important;
     padding:8px !important;
   }
-  /* 카드 높이 강제 auto */
+  /* 카드 높이 auto */
   #pgBatchGrid .pgCard,
   .pgBatchGridPage .pgCard {
-    height:auto !important;
-    min-height:0 !important;
+    height:auto !important; min-height:0 !important;
+    padding:10px 10px 8px !important;
   }
-  /* 제목 줄바꿈 허용 */
+  /* 제목 줄바꿈 */
   .pgCard-title {
     font-size:14px !important;
     white-space:normal !important;
-    text-overflow:unset !important;
     overflow:visible !important;
+    text-overflow:unset !important;
   }
-  /* QR: 카드 전폭 */
-  .pgCard-qr { width:100% !important; }
-  .pgCard-qr canvas { width:100% !important; height:auto !important; }
-  /* 선수: 2×2 그리드 */
+  /* ★ 모바일에서도 QR 좌 + 이름 우 가로 배열 */
+  .pgCard-body-print {
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    gap:10px !important;
+    flex:unset !important;
+    min-height:0 !important;
+  }
+  /* QR 고정 크기 */
+  .pgCard-qr {
+    flex-shrink:0 !important;
+    width:120px !important; height:120px !important;
+    position:static !important; padding-top:0 !important;
+  }
+  .pgCard-qr canvas {
+    width:120px !important; height:120px !important;
+    display:block !important;
+  }
+  .pgCard-qr::before { display:none !important; }
+  .pgCard-qr > div { position:static !important; display:block !important; }
+  /* 선수: 1열 세로 (이름 + 성별소속 한 줄) */
   .pgCard-players {
-    grid-template-columns:1fr 1fr !important;
-    gap:4px 8px !important;
-    margin-top:8px !important;
+    display:flex !important; flex-direction:column !important;
+    gap:3px !important; width:fit-content !important;
+    margin-top:0 !important;
   }
-  .pgCard-player { overflow:hidden !important; }
-  .pgCard-pname { font-size:13px !important; }
-  .pgCard-pgender, .pgCard-paffil { font-size:10px !important; }
+  .pgCard-player {
+    display:flex !important; flex-direction:row !important;
+    align-items:baseline !important; gap:4px !important;
+    flex-wrap:nowrap !important;
+  }
+  .pgCard-player > div:last-child { display:inline !important; }
+  .pgCard-pname { font-size:14px !important; font-weight:800 !important; white-space:nowrap !important; }
+  .pgCard-num { font-size:12px !important; font-weight:900 !important; color:#c8860a !important; }
+  .pgCard-pgender { font-size:11px !important; color:#888 !important; }
+  .pgCard-paffil { font-size:11px !important; color:#aaa !important; }
 }
 #pasisSendOv { position:fixed; inset:0; z-index:200000; background:rgba(0,0,0,.55); display:flex; align-items:center; justify-content:center; font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif; }
 #pasisSendBox { background:#fff; border-radius:16px; width:min(400px,94vw); max-height:96vh; overflow-y:auto; box-shadow:0 24px 64px rgba(0,0,0,.3); }
