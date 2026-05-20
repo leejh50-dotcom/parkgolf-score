@@ -2659,6 +2659,7 @@ window.addEventListener('load', function(){
 
     if (n === 6) {
       grid.style.setProperty('grid-template-columns', 'repeat(2,minmax(0,1fr))', 'important');
+      void grid.offsetWidth; /* 강제 reflow → 인쇄 1페이지에서 셀렉터 확실히 적용 */
       if (btn6) { btn6.style.background='#fff'; btn6.style.color='#7a4f00'; btn6.style.border='none'; btn6.textContent='6개/장 ✓'; }
       if (btn9) { btn9.style.background='rgba(255,255,255,.2)'; btn9.style.color='#fff'; btn9.style.border='1px solid rgba(255,255,255,.5)'; btn9.textContent='12개/장'; }
     } else {
@@ -2744,12 +2745,11 @@ window.addEventListener('load', function(){
   }
   #pgBatchTop .ph-sub {
     display:inline !important;
+    font-size:8pt !important; color:#666 !important;
     white-space:nowrap !important;
     font-size:0 !important; /* JS 텍스트 숨김 */
-    color:transparent !important;
   }
   #pgBatchTop .ph-sub::after {
-    display:inline !important;
     font-size:8pt !important; color:#666 !important;
     content:counter(page) " / " counter(pages) "페이지" !important;
   }
@@ -2765,7 +2765,7 @@ window.addEventListener('load', function(){
     grid-template-columns:repeat(3,1fr) !important;
     column-gap:3mm !important;
     row-gap:4mm !important;
-    padding:12mm 2mm 0 !important;
+    padding:2mm 2mm 0 !important;
     width:100% !important; box-sizing:border-box !important;
     align-content:start !important;
   }
