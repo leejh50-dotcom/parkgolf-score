@@ -40,6 +40,8 @@ if('caches' in window){
 
 
 
+<!-- 모바일 인쇄 전용 스타일: JS가 활성화 -->
+<style id="pgMobileStyle">/* 비활성 */</style>
 </head>
 <body style="margin:0;padding:0;background:#f0fff4;">
 
@@ -2693,60 +2695,46 @@ window.addEventListener('load', function(){
     }
   })();
 
-  /* ★ 인쇄 버튼 함수: 모바일이면 스타일 적용 후 딜레이 인쇄 */
+  /* ★ 인쇄 버튼 함수: 모바일이면 스타일 주입 후 인쇄 */
   window.pgMobilePrint = function() {
     var mob = (window.innerWidth <= 600) ||
               (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
     if (!mob) { window.print(); return; }
 
-    /* 모바일: @page margin이 무시되므로 실제 가용높이 ~260mm 기준
-       12장: (260-12헤더-2pad-12gap)/4 = 55mm
-       6장:  (260-12헤더-2pad-8gap)/3  = 75mm */
-    /* ★ @page margin:0 → 가용높이 297mm
-       12장: (297-12헤더-2pad-12gap)/4 = 65mm
-       6장:  (297-12헤더-2pad-8gap)/3  = 88mm */
+    /* 모바일: head의 #pgMobileStyle에 오버라이드 주입
+       @page margin:0 → 가용 297mm
+       12장: (297-12-2-9)/4 = 68 → 58mm (여유 40mm)
+       6장:  (297-12-2-6)/3 = 92 → 78mm (여유 42mm) */
     var grid = document.getElementById('pgBatchGrid');
-    var is6 = grid && grid.classList.contains('is6');
-    var cardH = is6 ? '88mm' : '65mm';
-    var qrW   = is6 ? '62mm' : '44mm';
+    var is6  = grid && grid.classList.contains('is6');
+    var cH12 = '58mm', cH6 = '78mm', qR12 = '36mm', qR6 = '52mm';
 
-    /* ★ @page margin 강제 0 → iOS Safari 자체 여백 제거 */
-    var styleTag = document.getElementById('pgMobilePrintStyle');
-    if (!styleTag) {
-      styleTag = document.createElement('style');
-      styleTag.id = 'pgMobilePrintStyle';
-      document.head.appendChild(styleTag);
+    var mStyle = document.getElementById('pgMobileStyle');
+    if (!mStyle) {
+      mStyle = document.createElement('style');
+      mStyle.id = 'pgMobileStyle';
+      document.head.appendChild(mStyle);
     }
-    styleTag.textContent = '@media print { @page { margin:0mm !important; } }';
+    mStyle.textContent = [
+      '@media print {',
+      '  @page { size:A4 portrait; margin:0mm !important; }',
+      '  #pgBatchGrid:not(.is6) .pgCard,',
+      '  .pgBatchGridPage:not(.is6) .pgCard { height:'+cH12+' !important; }',
+      '  #pgBatchGrid.is6 .pgCard,',
+      '  .pgBatchGridPage.is6 .pgCard { height:'+cH6+' !important; }',
+      '  .pgCard-qr canvas { width:'+qR12+' !important; height:'+qR12+' !important; }',
+      '  #pgBatchGrid.is6 .pgCard-qr canvas,',
+      '  .pgBatchGridPage.is6 .pgCard-qr canvas { width:'+qR6+' !important; height:'+qR6+' !important; }',
+      '  #pgBatchGrid, .pgBatchGridPage { row-gap:3mm !important; }',
+      '}'
+    ].join('\n');
 
-    var cards    = document.querySelectorAll('#pgBatchOv .pgCard');
-    var canvases = document.querySelectorAll('#pgBatchOv .pgCard-qr canvas');
-    var saved    = [];
-
-    for (var i=0; i<cards.length; i++) {
-      saved.push({el:cards[i], prop:'height', val:cards[i].style.height});
-      cards[i].style.setProperty('height', cardH, 'important');
-    }
-    for (var j=0; j<canvases.length; j++) {
-      saved.push({el:canvases[j], prop:'width',  val:canvases[j].style.width});
-      saved.push({el:canvases[j], prop:'height', val:canvases[j].style.height});
-      canvases[j].style.setProperty('width',  qrW, 'important');
-      canvases[j].style.setProperty('height', qrW, 'important');
-    }
-
-    /* 레이아웃 반영 후 인쇄 */
     setTimeout(function() {
       window.print();
-      /* 인쇄 다이얼로그 닫힌 후 복원 */
       setTimeout(function() {
-        for (var k=0; k<saved.length; k++) {
-          saved[k].el.style.setProperty(saved[k].prop, saved[k].val);
-        }
-        /* @page margin 복원 */
-        var st = document.getElementById('pgMobilePrintStyle');
-        if (st) st.textContent = '';
-      }, 1000);
-    }, 300);
+        mStyle.textContent = '/* 비활성 */';
+      }, 1500);
+    }, 350);
   };
 
   window.setPrintLayout = function(n) {
@@ -2880,7 +2868,7 @@ window.addEventListener('load', function(){
 @media print {
   /* margin:5mm 균등 — JS 헤더 삽입 방식
      가용높이: 287mm - 헤더10mm - padding2mm - gap4mm×3 = 263mm */
-  @page { size:A4 portrait; margin:0mm; }
+  @page { size:A4 portrait; margin:5mm; }
 
   body * { visibility:hidden !important; }
   #pgBatchOv, #pgBatchOv * { visibility:visible !important; }
@@ -2933,13 +2921,13 @@ window.addEventListener('load', function(){
     display:grid !important;
     grid-template-columns:repeat(3,1fr) !important;
     column-gap:3mm !important;
-    row-gap:3mm !important;
+    row-gap:4mm !important;
     padding:2mm 2mm 0 !important;
     width:100% !important; box-sizing:border-box !important;
     align-content:start !important;
   }
   #pgBatchGrid:not(.is6) .pgCard {
-    height:55mm !important;
+    height:62mm !important;
     overflow:hidden !important; box-sizing:border-box !important;
   }
 
@@ -2948,12 +2936,12 @@ window.addEventListener('load', function(){
   #pgBatchGrid.is6 {
     grid-template-columns:repeat(2,1fr) !important;
     column-gap:5mm !important;
-    row-gap:3mm !important;
+    row-gap:4mm !important;
     padding:2mm 3mm 0 !important;
     align-content:start !important;
   }
   #pgBatchGrid.is6 .pgCard {
-    height:75mm !important;
+    height:85mm !important;
     overflow:hidden !important; box-sizing:border-box !important;
   }
 
@@ -2993,11 +2981,11 @@ window.addEventListener('load', function(){
   /* 12장 QR: 65-title11-footer7-pad3 = 44mm */
   .pgCard-qr canvas {
     display:block !important;
-    width:34mm !important; height:34mm !important; margin:0 !important;
+    width:42mm !important; height:42mm !important; margin:0 !important;
   }
   /* 6장 QR: 88-title13-footer8-pad3 = 64mm */
   #pgBatchGrid.is6 .pgCard-qr canvas {
-    width:50mm !important; height:50mm !important;
+    width:62mm !important; height:62mm !important;
   }
   .pgCard-qr img { display:none !important; }
 
@@ -3052,13 +3040,13 @@ window.addEventListener('load', function(){
     display:grid !important;
     grid-template-columns:repeat(3,1fr) !important;
     column-gap:3mm !important;
-    row-gap:3mm !important;
+    row-gap:4mm !important;
     padding:2mm 2mm 0 !important;
     width:100% !important; box-sizing:border-box !important;
     align-content:start !important;
   }
   .pgBatchGridPage .pgCard {
-    height:55mm !important;
+    height:62mm !important;
     overflow:hidden !important; box-sizing:border-box !important;
   }
   /* 6장 모드: .is6 클래스로 명확하게 구분 */
@@ -3067,10 +3055,10 @@ window.addEventListener('load', function(){
     column-gap:5mm !important;
   }
   .pgBatchGridPage.is6 .pgCard {
-    height:75mm !important;
+    height:85mm !important;
   }
   .pgBatchGridPage.is6 .pgCard-qr canvas {
-    width:50mm !important; height:50mm !important;
+    width:62mm !important; height:62mm !important;
   }
 }
 
