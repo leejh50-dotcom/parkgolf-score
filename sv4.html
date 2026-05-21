@@ -2594,7 +2594,7 @@ window.addEventListener('load', function(){
   .pgCard-qr::before { display:none !important; }
   .pgCard-qr > div { position:static !important; display:block !important; width:18vw !important; height:18vw !important; }
   .pgCard-qr canvas { display:none !important; }
-  .pgCard-qr img { display:none !important; }
+  .pgCard-qr img { width:18vw !important; height:18vw !important; max-height:18vw !important; display:block !important; object-fit:contain !important; }
 
   .pgCard { min-height:0 !important; overflow:hidden !important; }
 }
@@ -2791,27 +2791,22 @@ window.addEventListener('load', function(){
 .pgCard-qr { position:static !important; padding-top:0 !important; flex-shrink:0; }
 .pgCard-qr::before { display:none !important; }
 .pgCard-qr > div { position:static !important; display:block !important; }
-.pgCard-qr canvas { display:block; }
+.pgCard-qr canvas { display:block !important; width:42vw !important; height:42vw !important; }
 /* 선수 목록: 세로 1열 */
 .pgCard-players { display:flex; flex-direction:column; gap:4px; margin-top:0; width:fit-content; }
 .pgCard-player { display:flex; flex-direction:column; min-width:0; }
 .pgCard-pline { display:flex; align-items:baseline; gap:3px; }
-.pgCard-num { font-size:11px; font-weight:900; color:#c8860a; flex-shrink:0; min-width:12px; }
-.pgCard-pname { font-size:13px; font-weight:800; color:#1e3c72; white-space:nowrap; }
-.pgCard-pgender { font-size:10px; color:#888; padding-left:13px; }
-.pgCard-paffil { font-size:10px; color:#aaa; padding-left:13px; }
+.pgCard-num { font-size:12px; font-weight:900; color:#c8860a; flex-shrink:0; min-width:12px; }
+.pgCard-pname { font-size:15px; font-weight:800; color:#1e3c72; white-space:nowrap; }
+.pgCard-pgender { font-size:11px; color:#888; padding-left:14px; }
+.pgCard-paffil { font-size:11px; color:#aaa; padding-left:14px; }
 .pgCard-footer { margin-top:4px; font-size:9px; color:#9ca3af; text-align:center; width:100%; }
 
 /* ══ 모바일 화면 전용 (max-width:600px) ══ */
 @media screen and (max-width:600px) {
+  /* 카드 높이 auto (인쇄용 mm 고정값 무효화) */
   #pgBatchGrid .pgCard,
   .pgBatchGridPage .pgCard { height:auto !important; min-height:0 !important; }
-}
-
-@media screen {
-  /* 화면: canvas 숨기고 img 표시 - 스캔 가독성을 위해 크게 */
-  .pgCard-qr canvas { display:none !important; }
-  .pgCard-qr img { display:block !important; width:42vw !important; height:42vw !important; object-fit:contain !important; }
 }
 #pasisSendOv { position:fixed; inset:0; z-index:200000; background:rgba(0,0,0,.55); display:flex; align-items:center; justify-content:center; font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif; }
 #pasisSendBox { background:#fff; border-radius:16px; width:min(400px,94vw); max-height:96vh; overflow-y:auto; box-shadow:0 24px 64px rgba(0,0,0,.3); }
@@ -2953,25 +2948,6 @@ window.addEventListener('load', function(){
         +'</div>'
         +'<div class="pgCard-footer">'+esc(code)+' · '+esc(qrDate)+' · '+dateStr+'</div>';
       grid.appendChild(card);
-      /* ★ 클릭 시 QR 확대 */
-      card.style.cursor = 'pointer';
-      card.addEventListener('click', function(e) {
-        var img = this.querySelector('.pgCard-qr img');
-        var title = this.querySelector('.pgCard-title');
-        if (!img) return;
-        var ov = document.createElement('div');
-        ov.style.cssText = 'position:fixed;inset:0;z-index:999999;background:rgba(0,0,0,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;';
-        var t = document.createElement('div');
-        t.style.cssText = 'color:#fff;font-size:14px;font-weight:900;margin-bottom:12px;text-align:center;';
-        t.textContent = title ? title.textContent : '';
-        var i = document.createElement('img');
-        i.src = img.src;
-        i.style.cssText = 'width:min(90vw,90vh);height:min(90vw,90vh);object-fit:contain;border-radius:8px;background:#fff;padding:8px;';
-        ov.appendChild(t);
-        ov.appendChild(i);
-        ov.addEventListener('click', function() { ov.remove(); });
-        document.body.appendChild(ov);
-      });
       /* ★ QRCode 생성 오류 시 오류 표시 (조명 포함) */
       try{ new QRCode(card.querySelector('#'+bid),{text:qrText,width:256,height:256,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M}); }
       catch(e){ card.querySelector('#'+bid).innerHTML='<div style="padding:8px;font-size:11px;color:red;text-align:center;">QR생성오류<br>'+esc(teamObj.team||'')+'</div>'; }
