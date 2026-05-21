@@ -2640,6 +2640,59 @@ window.addEventListener('load', function(){
 
     ov.addEventListener('click', function(e) { if (e.target === ov) ov.remove(); });
   };
+  /* ══ 모바일 인쇄 최적화: beforeprint/afterprint 훅 ══
+     iOS Safari는 @media print and (max-width) 미지원
+     → JS로 인쇄 직전 모바일 감지 후 카드 높이 조정 */
+  (function(){
+    var _origStyles = [];
+
+    function isMobilePrint() {
+      return window.innerWidth <= 600 || (navigator.userAgent.indexOf('iPhone') > -1) || (navigator.userAgent.indexOf('iPad') > -1) || (navigator.userAgent.indexOf('Android') > -1 && navigator.userAgent.indexOf('Mobile') > -1);
+    }
+
+    function applyMobilePrint() {
+      if (!isMobilePrint()) return;
+      _origStyles = [];
+      /* 12장: 58mm / 6장: 80mm */
+      var cards = document.querySelectorAll('.pgCard');
+      var ov = document.getElementById('pgBatchOv');
+      var is6 = ov && (document.getElementById('pgBatchGrid') || {classList:{contains:function(){return false;}}}).classList.contains('is6');
+      var cardH = is6 ? '80mm' : '58mm';
+      var qrW   = is6 ? '56mm' : '38mm';
+      for (var i=0; i<cards.length; i++) {
+        _origStyles.push({el:cards[i], h:cards[i].style.height});
+        cards[i].style.setProperty('height', cardH, 'important');
+      }
+      var canvases = document.querySelectorAll('.pgCard-qr canvas');
+      for (var j=0; j<canvases.length; j++) {
+        _origStyles.push({el:canvases[j], h:canvases[j].style.width, w:canvases[j].style.height, isCanvas:true});
+        canvases[j].style.setProperty('width',  qrW, 'important');
+        canvases[j].style.setProperty('height', qrW, 'important');
+      }
+    }
+
+    function restorePrint() {
+      for (var i=0; i<_origStyles.length; i++) {
+        var s = _origStyles[i];
+        if (s.isCanvas) {
+          s.el.style.removeProperty('width');
+          s.el.style.removeProperty('height');
+        } else {
+          s.el.style.removeProperty('height');
+        }
+      }
+      _origStyles = [];
+    }
+
+    window.addEventListener('beforeprint', applyMobilePrint);
+    window.addEventListener('afterprint',  restorePrint);
+    /* iOS Safari 폴백: matchMedia */
+    if (window.matchMedia) {
+      var mql = window.matchMedia('print');
+      mql.addListener(function(m){ if(m.matches) applyMobilePrint(); else restorePrint(); });
+    }
+  })();
+
   window.setPrintLayout = function(n) {
     var ov = document.getElementById('pgBatchOv');
     var grid = document.getElementById('pgBatchGrid');
@@ -2961,36 +3014,11 @@ window.addEventListener('load', function(){
     height:85mm !important;
   }
   .pgBatchGridPage.is6 .pgCard-qr canvas {
-    width:65mm !important; height:62mm !important;
+    width:62mm !important; height:62mm !important;
   }
 }
 
-/* ══ 모바일 인쇄 전용 오버라이드 ══ */
-@media print and (max-width:600px) {
-  /* 12장: 카드 높이 축소 → 4행이 1페이지에 */
-  #pgBatchGrid:not(.is6) .pgCard,
-  .pgBatchGridPage:not(.is6) .pgCard {
-    height:58mm !important;
-  }
-  /* 12장 QR 크기 */
-  .pgCard-qr canvas {
-    width:38mm !important; height:38mm !important;
-  }
-  /* 6장: 카드 높이 축소 → 3행이 1페이지에 */
-  #pgBatchGrid.is6 .pgCard,
-  .pgBatchGridPage.is6 .pgCard {
-    height:80mm !important;
-  }
-  /* 6장 QR 크기 */
-  #pgBatchGrid.is6 .pgCard-qr canvas,
-  .pgBatchGridPage.is6 .pgCard-qr canvas {
-    width:56mm !important; height:56mm !important;
-  }
-  /* row-gap 축소 */
-  #pgBatchGrid, .pgBatchGridPage {
-    row-gap:3mm !important;
-  }
-}
+
 #pgBatchTop .bt-title { font-size:15px; font-weight:900; }
 #pgBatchTop .bt-btns { display:flex; gap:8px; }
 #pgBatchTop button { border:0; border-radius:8px; padding:8px 14px; font-size:14px; font-weight:800; cursor:pointer; }
