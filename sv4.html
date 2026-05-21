@@ -41,20 +41,6 @@ if('caches' in window){
 
 
 <!-- 모바일 인쇄 전용 스타일: JS가 활성화 -->
-<style id="pgMobileStyle">/* 비활성 */</style>
-<script>
-if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-  document.getElementById('pgMobileStyle').textContent =
-    '@media print {' +
-    '  @page { size:A4 portrait; margin:0mm; }' +
-    '  #pgBatchOv * { visibility:hidden !important; }' +
-    '  #pgMobWrapper, #pgMobWrapper * { visibility:visible !important; }' +
-    '  #pgMobWrapper { position:absolute; top:0; left:0; width:100%; }' +
-    '  #pgMobWrapper .pgCard { height:auto !important; overflow:visible !important; }' +
-    '  #pgMobWrapper .pgCard-qr canvas { width:38mm !important; height:38mm !important; }' +
-    '}';
-}
-</script>
 </head>
 <body style="margin:0;padding:0;background:#f0fff4;">
 
@@ -2741,10 +2727,13 @@ window.addEventListener('load', function(){
     for (var i=0; i<allCards.length; i++) {
       /* 새 페이지 시작 */
       if (i % (perRow * rowsPerPage) === 0) {
+        /* 이전 페이지에 page-break-after 설정 */
+        if (pageDiv) {
+          pageDiv.style.pageBreakAfter = 'always';
+          pageDiv.style.breakAfter = 'page';
+        }
         pageDiv = document.createElement('div');
-        pageDiv.style.cssText = i > 0
-          ? 'page-break-before:always; break-before:page;'
-          : '';
+        pageDiv.style.cssText = 'display:block;';
         /* 페이지 헤더 */
         var ph = document.createElement('div');
         ph.style.cssText = 'display:flex;justify-content:space-between;padding:3mm 2mm 2mm;border-bottom:1.5pt solid #222;margin-bottom:2mm;font-family:sans-serif;';
@@ -3773,5 +3762,20 @@ window.addEventListener('load', function(){
 </script>
 
 
+<!-- 모바일 인쇄 스타일: 모든 CSS 뒤에 선언하여 우선순위 확보 -->
+<style id="pgMobileStyle">/* 비활성 */</style>
+<script>
+if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+  document.getElementById('pgMobileStyle').textContent =
+    '@media print {' +
+    '  @page { size:A4 portrait; margin:0mm; }' +
+    '  body * { visibility:hidden !important; }' +
+    '  #pgMobWrapper { visibility:visible !important; position:fixed; top:0; left:0; width:100%; }' +
+    '  #pgMobWrapper * { visibility:visible !important; }' +
+    '  #pgMobWrapper .pgCard { height:82mm !important; overflow:hidden !important; box-sizing:border-box !important; }' +
+    '  #pgMobWrapper .pgCard-qr canvas { width:38mm !important; height:38mm !important; }' +
+    '}';
+}
+</script>
 </body>
 </html>
