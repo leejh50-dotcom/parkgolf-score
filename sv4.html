@@ -2965,7 +2965,32 @@ window.addEventListener('load', function(){
   }
 }
 
-/* ══ 공통 카드 ══ */
+/* ══ 모바일 인쇄 전용 오버라이드 ══ */
+@media print and (max-width:600px) {
+  /* 12장: 카드 높이 축소 → 4행이 1페이지에 */
+  #pgBatchGrid:not(.is6) .pgCard,
+  .pgBatchGridPage:not(.is6) .pgCard {
+    height:58mm !important;
+  }
+  /* 12장 QR 크기 */
+  .pgCard-qr canvas {
+    width:38mm !important; height:38mm !important;
+  }
+  /* 6장: 카드 높이 축소 → 3행이 1페이지에 */
+  #pgBatchGrid.is6 .pgCard,
+  .pgBatchGridPage.is6 .pgCard {
+    height:80mm !important;
+  }
+  /* 6장 QR 크기 */
+  #pgBatchGrid.is6 .pgCard-qr canvas,
+  .pgBatchGridPage.is6 .pgCard-qr canvas {
+    width:56mm !important; height:56mm !important;
+  }
+  /* row-gap 축소 */
+  #pgBatchGrid, .pgBatchGridPage {
+    row-gap:3mm !important;
+  }
+}
 #pgBatchTop .bt-title { font-size:15px; font-weight:900; }
 #pgBatchTop .bt-btns { display:flex; gap:8px; }
 #pgBatchTop button { border:0; border-radius:8px; padding:8px 14px; font-size:14px; font-weight:800; cursor:pointer; }
