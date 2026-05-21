@@ -42,6 +42,18 @@ if('caches' in window){
 
 <!-- 모바일 인쇄 전용 스타일: JS가 활성화 -->
 <style id="pgMobileStyle">/* 비활성 */</style>
+<script>
+/* iOS/Android면 모바일 인쇄 스타일 즉시 활성화 */
+if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+  document.getElementById('pgMobileStyle').textContent = [
+    '@media print {',
+    '  @page { size:A4 portrait; margin:0mm; }',
+    '  #pgBatchGrid .pgCard, .pgBatchGridPage .pgCard { height:auto !important; min-height:60mm !important; }',
+    '  .pgCard-qr canvas { width:40mm !important; height:40mm !important; }',
+    '}'
+  ].join('\n');
+}
+</script>
 </head>
 <body style="margin:0;padding:0;background:#f0fff4;">
 
@@ -2700,80 +2712,22 @@ window.addEventListener('load', function(){
     var mob = (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
     if (!mob) { window.print(); return; }
 
-    /* 모바일: DOM 재구성 방식
-       카드 6개(2×3)씩 page-break div로 묶기
-       → PASS 앱 PDF에도 반영됨 */
-    var ov = document.getElementById('pgBatchOv');
-    if (!ov) { window.print(); return; }
-
-    /* 이미 재구성된 경우 복원 후 재구성 */
-    var oldWrap = ov.querySelectorAll('.pgMobPage');
-    if (oldWrap.length) {
-      /* 복원: 카드들을 원래 그리드로 되돌리기 */
-      var origGrid = document.getElementById('pgBatchGrid');
-      for (var r=0; r<oldWrap.length; r++) {
-        var rc = oldWrap[r].querySelectorAll('.pgCard');
-        for (var ri=0; ri<rc.length; ri++) origGrid.appendChild(rc[ri]);
-        oldWrap[r].remove();
-      }
-      var oldBlocks = ov.querySelectorAll('.pgPageBlock');
-      for (var b=0; b<oldBlocks.length; b++) {
-        var bc = oldBlocks[b].querySelectorAll('.pgCard');
-        for (var bi=0; bi<bc.length; bi++) origGrid.appendChild(bc[bi]);
-        oldBlocks[b].remove();
-      }
-    }
-
-    /* 전체 카드 수집 */
-    var allCards = Array.prototype.slice.call(ov.querySelectorAll('.pgCard'));
-    var perPage = 6; /* 2×3 */
-    var totalPages = Math.ceil(allCards.length / perPage);
-
-    /* 헤더 텍스트 */
-    var hdrTop = document.getElementById('pgBatchTop');
-    var titleText = hdrTop ? (hdrTop.querySelector('.bt-title')||{}).textContent||'' : '';
-
-    /* 기존 그리드/블록 숨기기 */
-    var existGrids = ov.querySelectorAll('#pgBatchGrid, .pgPageBlock');
-    for (var g=0; g<existGrids.length; g++) existGrids[g].style.display='none';
-
-    /* 페이지별 div 생성 */
-    for (var p=0; p<totalPages; p++) {
-      var pageCards = allCards.slice(p*perPage, (p+1)*perPage);
-      
-      var wrap = document.createElement('div');
-      wrap.className = 'pgMobPage';
-      wrap.style.cssText = p>0 ? 'page-break-before:always;break-before:page;' : '';
-
-      /* 헤더 */
-      var ph = document.createElement('div');
-      ph.className = 'pgPageHeader';
-      ph.innerHTML = '<span class="ph-title">'+titleText+'</span>'
-        +'<span class="ph-num">'+(p+1)+' / '+totalPages+'페이지</span>';
-      wrap.appendChild(ph);
-
-      /* 2×3 그리드 */
-      var grid = document.createElement('div');
-      grid.style.cssText = 'display:grid;grid-template-columns:repeat(2,1fr);column-gap:5mm;row-gap:5mm;padding:3mm 3mm 0;width:100%;box-sizing:border-box;';
-      pageCards.forEach(function(c){ grid.appendChild(c); });
-      wrap.appendChild(grid);
-      ov.appendChild(wrap);
+    /* 모바일: 6번째 카드마다 page-break 삽입 후 인쇄 */
+    var cards = document.querySelectorAll('#pgBatchOv .pgCard');
+    var saved = [];
+    for (var i=0; i<cards.length; i++) {
+      saved.push(cards[i].style.pageBreakAfter || '');
+      cards[i].style.pageBreakAfter = ((i+1) % 6 === 0) ? 'always' : '';
     }
 
     setTimeout(function() {
       window.print();
-      /* 인쇄 후 원복 */
       setTimeout(function() {
-        var mobPages = ov.querySelectorAll('.pgMobPage');
-        var origGrid = document.getElementById('pgBatchGrid');
-        for (var i=0; i<mobPages.length; i++) {
-          var mc = mobPages[i].querySelectorAll('.pgCard');
-          for (var j=0; j<mc.length; j++) origGrid.appendChild(mc[j]);
-          mobPages[i].remove();
+        for (var i=0; i<cards.length; i++) {
+          cards[i].style.pageBreakAfter = saved[i];
         }
-        for (var g2=0; g2<existGrids.length; g2++) existGrids[g2].style.display='';
-      }, 2000);
-    }, 400);
+      }, 1500);
+    }, 300);
   };
 
   window.setPrintLayout = function(n) {
