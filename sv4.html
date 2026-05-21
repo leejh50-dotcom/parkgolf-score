@@ -2695,46 +2695,30 @@ window.addEventListener('load', function(){
     }
   })();
 
-  /* ★ 인쇄 버튼 함수: 모바일이면 스타일 주입 후 인쇄 */
+  /* ★ 인쇄 버튼 함수 */
   window.pgMobilePrint = function() {
-    var mob = (window.innerWidth <= 600) ||
-              (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
+    var mob = (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
     if (!mob) { window.print(); return; }
 
-    /* 모바일: head의 #pgMobileStyle에 오버라이드 주입
-       @page margin:0 → 가용 297mm
-       12장: (297-12-2-9)/4 = 68 → 58mm (여유 40mm)
-       6장:  (297-12-2-6)/3 = 92 → 78mm (여유 42mm) */
-    var grid = document.getElementById('pgBatchGrid');
-    var is6  = grid && grid.classList.contains('is6');
-    var cH12 = '58mm', cH6 = '78mm', qR12 = '36mm', qR6 = '52mm';
-
-    var mStyle = document.getElementById('pgMobileStyle');
-    if (!mStyle) {
-      mStyle = document.createElement('style');
-      mStyle.id = 'pgMobileStyle';
-      document.head.appendChild(mStyle);
-    }
-    mStyle.textContent = [
-      '@media print {',
-      '  @page { size:A4 portrait; margin:0mm !important; }',
-      '  #pgBatchGrid:not(.is6) .pgCard,',
-      '  .pgBatchGridPage:not(.is6) .pgCard { height:'+cH12+' !important; }',
-      '  #pgBatchGrid.is6 .pgCard,',
-      '  .pgBatchGridPage.is6 .pgCard { height:'+cH6+' !important; }',
-      '  .pgCard-qr canvas { width:'+qR12+' !important; height:'+qR12+' !important; }',
-      '  #pgBatchGrid.is6 .pgCard-qr canvas,',
-      '  .pgBatchGridPage.is6 .pgCard-qr canvas { width:'+qR6+' !important; height:'+qR6+' !important; }',
-      '  #pgBatchGrid, .pgBatchGridPage { row-gap:3mm !important; }',
-      '}'
-    ].join('\n');
-
-    setTimeout(function() {
-      window.print();
-      setTimeout(function() {
-        mStyle.textContent = '/* 비활성 */';
-      }, 1500);
-    }, 350);
+    /* 모바일: Safari 직접 인쇄 안내 */
+    var old = document.getElementById('pgPrintGuide');
+    if (old) old.remove();
+    var guide = document.createElement('div');
+    guide.id = 'pgPrintGuide';
+    guide.style.cssText = 'position:fixed;inset:0;z-index:999999;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;';
+    guide.innerHTML = '<div style="background:#fff;border-radius:14px;padding:24px 20px;max-width:300px;text-align:center;">'
+      +'<div style="font-size:15px;font-weight:900;color:#c8860a;margin-bottom:14px;">📱 모바일 인쇄 안내</div>'
+      +'<div style="font-size:13px;color:#333;line-height:1.8;margin-bottom:18px;">'
+      +'PASS 앱 내 인쇄는<br>레이아웃이 깨질 수 있습니다.<br><br>'
+      +'<b>Safari → 하단 공유버튼 →<br>인쇄</b> 를 이용하시면<br>정상 출력됩니다.'
+      +'</div>'
+      +'<div style="display:flex;gap:8px;justify-content:center;">'
+      +'<button onclick="document.getElementById(\'pgPrintGuide\').remove();window.print();" '
+      +'style="padding:10px 16px;background:#c8860a;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">그래도 인쇄</button>'
+      +'<button onclick="document.getElementById(\'pgPrintGuide\').remove();" '
+      +'style="padding:10px 16px;background:#e5e7eb;color:#333;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">닫기</button>'
+      +'</div></div>';
+    document.body.appendChild(guide);
   };
 
   window.setPrintLayout = function(n) {
@@ -2927,7 +2911,7 @@ window.addEventListener('load', function(){
     align-content:start !important;
   }
   #pgBatchGrid:not(.is6) .pgCard {
-    height:55mm !important;
+    height:50mm !important;
     overflow:hidden !important; box-sizing:border-box !important;
   }
 
@@ -2941,7 +2925,7 @@ window.addEventListener('load', function(){
     align-content:start !important;
   }
   #pgBatchGrid.is6 .pgCard {
-    height:73mm !important;
+    height:68mm !important;
     overflow:hidden !important; box-sizing:border-box !important;
   }
 
@@ -2981,11 +2965,11 @@ window.addEventListener('load', function(){
   /* 12장 QR: 65-title11-footer7-pad3 = 44mm */
   .pgCard-qr canvas {
     display:block !important;
-    width:35mm !important; height:35mm !important; margin:0 !important;
+    width:30mm !important; height:30mm !important; margin:0 !important;
   }
   /* 6장 QR: 88-title13-footer8-pad3 = 64mm */
   #pgBatchGrid.is6 .pgCard-qr canvas {
-    width:50mm !important; height:50mm !important;
+    width:43mm !important; height:43mm !important;
   }
   .pgCard-qr img { display:none !important; }
 
@@ -3046,7 +3030,7 @@ window.addEventListener('load', function(){
     align-content:start !important;
   }
   .pgBatchGridPage .pgCard {
-    height:55mm !important;
+    height:50mm !important;
     overflow:hidden !important; box-sizing:border-box !important;
   }
   /* 6장 모드: .is6 클래스로 명확하게 구분 */
@@ -3055,10 +3039,10 @@ window.addEventListener('load', function(){
     column-gap:5mm !important;
   }
   .pgBatchGridPage.is6 .pgCard {
-    height:73mm !important;
+    height:68mm !important;
   }
   .pgBatchGridPage.is6 .pgCard-qr canvas {
-    width:50mm !important; height:50mm !important;
+    width:43mm !important; height:43mm !important;
   }
 }
 
