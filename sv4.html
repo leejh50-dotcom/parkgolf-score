@@ -2696,7 +2696,43 @@ window.addEventListener('load', function(){
   })();
 
   /* ★ 인쇄 버튼 함수 */
-  window.pgMobilePrint = function() { window.print(); };
+  window.pgMobilePrint = function() {
+    var mob = (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
+    if (!mob) { window.print(); return; }
+
+    /* 모바일: min-height 제거 + 카드 높이 축소 후 인쇄
+       iOS 자체여백 약 20mm → 가용 277mm
+       헤더12 + pad8 + 카드H×4 + gap×3 ≤ 277
+       H=48mm, gap=auto: 12+8+192 = 212, gap여유 = 65mm, 3gap = 21mm each
+    */
+    var mStyle = document.getElementById('pgMobileStyle');
+    if (!mStyle) {
+      mStyle = document.createElement('style');
+      mStyle.id = 'pgMobileStyle';
+      document.head.appendChild(mStyle);
+    }
+    mStyle.textContent = [
+      '@media print {',
+      '  @page { size:A4 portrait; margin:0mm !important; }',
+      '  #pgBatchGrid, .pgBatchGridPage {',
+      '    min-height:0 !important;',
+      '    align-content:space-between !important;',
+      '    height:calc(297mm - 22mm) !important;',
+      '    box-sizing:border-box !important;',
+      '  }',
+      '  #pgBatchGrid .pgCard,',
+      '  .pgBatchGridPage .pgCard { height:48mm !important; }',
+      '  .pgCard-qr canvas { width:28mm !important; height:28mm !important; }',
+      '}'
+    ].join('\n');
+
+    setTimeout(function() {
+      window.print();
+      setTimeout(function() {
+        mStyle.textContent = '';
+      }, 1500);
+    }, 300);
+  };
 
   window.setPrintLayout = function(n) {
     var ov = document.getElementById('pgBatchOv');
