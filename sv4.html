@@ -47,9 +47,11 @@ if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
   document.getElementById('pgMobileStyle').textContent =
     '@media print {' +
     '  @page { size:A4 portrait; margin:0mm; }' +
-    '  #pgMobWrapper .pgCard { height:auto !important; min-height:0 !important; overflow:visible !important; }' +
+    '  #pgBatchOv * { visibility:hidden !important; }' +
+    '  #pgMobWrapper, #pgMobWrapper * { visibility:visible !important; }' +
+    '  #pgMobWrapper { position:absolute; top:0; left:0; width:100%; }' +
+    '  #pgMobWrapper .pgCard { height:auto !important; overflow:visible !important; }' +
     '  #pgMobWrapper .pgCard-qr canvas { width:38mm !important; height:38mm !important; }' +
-    '  #pgBatchGrid, .pgPageBlock, .pgPageHeader, #pgPageHeader1 { display:none !important; }' +
     '}';
 }
 </script>
@@ -2718,9 +2720,12 @@ window.addEventListener('load', function(){
     var allCards = Array.prototype.slice.call(ov.querySelectorAll('.pgCard'));
     if (!allCards.length) { window.print(); return; }
 
-    /* 기존 구조 숨김 */
-    var hideEls = ov.querySelectorAll('#pgBatchGrid, .pgPageBlock, .pgPageHeader, #pgPageHeader1');
-    for (var h=0; h<hideEls.length; h++) hideEls[h].style.display = 'none';
+    /* 기존 구조 숨김 - visibility로 (display:none은 @media print에서 무시됨) */
+    var hideEls = ov.querySelectorAll('#pgBatchGrid, .pgPageBlock, .pgPageHeader, #pgPageHeader1, #pgBatchTop, #pgProgress');
+    for (var h=0; h<hideEls.length; h++) {
+      hideEls[h].setAttribute('data-mob-hidden', hideEls[h].style.visibility || '');
+      hideEls[h].style.setProperty('visibility', 'hidden', 'important');
+    }
 
     /* 헤더 텍스트 */
     var hdrEl = document.getElementById('pgBatchTop');
@@ -2771,9 +2776,12 @@ window.addEventListener('load', function(){
         var mc = wrapper.querySelectorAll('.pgCard');
         for (var j=0; j<mc.length; j++) origGrid.appendChild(mc[j]);
         wrapper.remove();
-        for (var h2=0; h2<hideEls.length; h2++) hideEls[h2].style.display = '';
+        for (var h2=0; h2<hideEls.length; h2++) {
+          hideEls[h2].style.visibility = hideEls[h2].getAttribute('data-mob-hidden') || '';
+          hideEls[h2].removeAttribute('data-mob-hidden');
+        }
       }, 2000);
-    }, 400);
+    }, 800);
   };
 
   window.setPrintLayout = function(n) {
