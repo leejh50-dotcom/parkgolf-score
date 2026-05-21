@@ -2759,9 +2759,12 @@ window.addEventListener('load', function(){
       /* 새 행 시작 */
       if (i % perRow === 0) {
         var row = document.createElement('div');
-        row.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:3mm;margin-bottom:3mm;';
+        row.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:3mm;margin-bottom:4mm;';
         pageDiv.appendChild(row);
       }
+      /* 카드에 높이 제한 */
+      allCards[i].style.setProperty('height', '82mm', 'important');
+      allCards[i].style.setProperty('overflow', 'hidden', 'important');
       /* 카드 삽입 */
       pageDiv.lastElementChild.appendChild(allCards[i]);
     }
@@ -2774,7 +2777,11 @@ window.addEventListener('load', function(){
         /* 복원 */
         var origGrid = document.getElementById('pgBatchGrid');
         var mc = wrapper.querySelectorAll('.pgCard');
-        for (var j=0; j<mc.length; j++) origGrid.appendChild(mc[j]);
+        for (var j=0; j<mc.length; j++) {
+          mc[j].style.removeProperty('height');
+          mc[j].style.removeProperty('overflow');
+          origGrid.appendChild(mc[j]);
+        }
         wrapper.remove();
         for (var h2=0; h2<hideEls.length; h2++) {
           hideEls[h2].style.visibility = hideEls[h2].getAttribute('data-mob-hidden') || '';
