@@ -2868,7 +2868,7 @@ window.addEventListener('load', function(){
 @media print {
   /* margin:5mm 균등 — JS 헤더 삽입 방식
      가용높이: 287mm - 헤더10mm - padding2mm - gap4mm×3 = 263mm */
-  @page { size:A4 portrait; margin:5mm; }
+  @page { size:A4 portrait; margin:0mm; }
 
   body * { visibility:hidden !important; }
   #pgBatchOv, #pgBatchOv * { visibility:visible !important; }
@@ -2921,13 +2921,13 @@ window.addEventListener('load', function(){
     display:grid !important;
     grid-template-columns:repeat(3,1fr) !important;
     column-gap:3mm !important;
-    row-gap:4mm !important;
+    row-gap:3mm !important;
     padding:2mm 2mm 0 !important;
     width:100% !important; box-sizing:border-box !important;
     align-content:start !important;
   }
   #pgBatchGrid:not(.is6) .pgCard {
-    height:62mm !important;
+    height:55mm !important;
     overflow:hidden !important; box-sizing:border-box !important;
   }
 
@@ -2936,12 +2936,12 @@ window.addEventListener('load', function(){
   #pgBatchGrid.is6 {
     grid-template-columns:repeat(2,1fr) !important;
     column-gap:5mm !important;
-    row-gap:4mm !important;
+    row-gap:3mm !important;
     padding:2mm 3mm 0 !important;
     align-content:start !important;
   }
   #pgBatchGrid.is6 .pgCard {
-    height:85mm !important;
+    height:73mm !important;
     overflow:hidden !important; box-sizing:border-box !important;
   }
 
@@ -2981,11 +2981,11 @@ window.addEventListener('load', function(){
   /* 12장 QR: 65-title11-footer7-pad3 = 44mm */
   .pgCard-qr canvas {
     display:block !important;
-    width:42mm !important; height:42mm !important; margin:0 !important;
+    width:35mm !important; height:35mm !important; margin:0 !important;
   }
   /* 6장 QR: 88-title13-footer8-pad3 = 64mm */
   #pgBatchGrid.is6 .pgCard-qr canvas {
-    width:62mm !important; height:62mm !important;
+    width:50mm !important; height:50mm !important;
   }
   .pgCard-qr img { display:none !important; }
 
@@ -3040,13 +3040,13 @@ window.addEventListener('load', function(){
     display:grid !important;
     grid-template-columns:repeat(3,1fr) !important;
     column-gap:3mm !important;
-    row-gap:4mm !important;
+    row-gap:3mm !important;
     padding:2mm 2mm 0 !important;
     width:100% !important; box-sizing:border-box !important;
     align-content:start !important;
   }
   .pgBatchGridPage .pgCard {
-    height:62mm !important;
+    height:55mm !important;
     overflow:hidden !important; box-sizing:border-box !important;
   }
   /* 6장 모드: .is6 클래스로 명확하게 구분 */
@@ -3055,10 +3055,10 @@ window.addEventListener('load', function(){
     column-gap:5mm !important;
   }
   .pgBatchGridPage.is6 .pgCard {
-    height:85mm !important;
+    height:73mm !important;
   }
   .pgBatchGridPage.is6 .pgCard-qr canvas {
-    width:62mm !important; height:62mm !important;
+    width:50mm !important; height:50mm !important;
   }
 }
 
