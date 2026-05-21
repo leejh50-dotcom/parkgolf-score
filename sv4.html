@@ -2672,10 +2672,6 @@ window.addEventListener('load', function(){
     var hdrSub = hdrTop ? hdrTop.querySelector('.ph-sub') : null;
     if(hdrSub) hdrSub.textContent = '1 / ' + totalPages + '페이지';
 
-    /* ★ 1페이지 노란 띠 헤더 갱신 */
-    var ph1 = document.getElementById('pgPageHeader1');
-    if(ph1) ph1.querySelector('.ph-num').textContent = '1 / '+totalPages+'페이지';
-
     /* 화면 열: PC와 동일하게 유지 */
     grid.style.setProperty('grid-template-columns', cols, 'important');
 
@@ -3188,16 +3184,6 @@ window.addEventListener('load', function(){
         var titleText = hdrTop ? (hdrTop.querySelector('.bt-title')||{}).textContent || '' : '';
         var hdrSub = hdrTop ? hdrTop.querySelector('.ph-sub') : null;
         if(hdrSub) hdrSub.textContent = '1 / ' + totalPages + '페이지';
-
-        /* ★ 1페이지 노란 띠 헤더 삽입 (grid 바로 앞) */
-        var oldPh1 = document.getElementById('pgPageHeader1');
-        if(oldPh1) oldPh1.remove();
-        var ph1 = document.createElement('div');
-        ph1.id = 'pgPageHeader1';
-        ph1.className = 'pgPageHeader';
-        ph1.innerHTML = '<span class="ph-title">'+titleText+'</span>'
-          +'<span class="ph-num">1 / '+totalPages+'페이지</span>';
-        if(grid && grid.parentNode) grid.parentNode.insertBefore(ph1, grid);
 
         /* 1페이지 그리드 열 */
         if(grid) grid.style.setProperty('grid-template-columns', cols, 'important');
