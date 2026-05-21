@@ -43,15 +43,14 @@ if('caches' in window){
 <!-- 모바일 인쇄 전용 스타일: JS가 활성화 -->
 <style id="pgMobileStyle">/* 비활성 */</style>
 <script>
-/* iOS/Android면 모바일 인쇄 스타일 즉시 활성화 */
 if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-  document.getElementById('pgMobileStyle').textContent = [
-    '@media print {',
-    '  @page { size:A4 portrait; margin:0mm; }',
-    '  #pgBatchGrid .pgCard, .pgBatchGridPage .pgCard { height:auto !important; min-height:60mm !important; }',
-    '  .pgCard-qr canvas { width:40mm !important; height:40mm !important; }',
-    '}'
-  ].join('\n');
+  document.getElementById('pgMobileStyle').textContent =
+    '@media print {' +
+    '  @page { size:A4 portrait; margin:0mm; }' +
+    '  #pgMobWrapper .pgCard { height:auto !important; min-height:0 !important; overflow:visible !important; }' +
+    '  #pgMobWrapper .pgCard-qr canvas { width:38mm !important; height:38mm !important; }' +
+    '  #pgBatchGrid, .pgPageBlock, .pgPageHeader, #pgPageHeader1 { display:none !important; }' +
+    '}';
 }
 </script>
 </head>
@@ -2712,22 +2711,69 @@ window.addEventListener('load', function(){
     var mob = (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
     if (!mob) { window.print(); return; }
 
-    /* 모바일: 6번째 카드마다 page-break 삽입 후 인쇄 */
-    var cards = document.querySelectorAll('#pgBatchOv .pgCard');
-    var saved = [];
-    for (var i=0; i<cards.length; i++) {
-      saved.push(cards[i].style.pageBreakAfter || '');
-      cards[i].style.pageBreakAfter = ((i+1) % 6 === 0) ? 'always' : '';
+    var ov = document.getElementById('pgBatchOv');
+    if (!ov) { window.print(); return; }
+
+    /* 전체 카드 수집 */
+    var allCards = Array.prototype.slice.call(ov.querySelectorAll('.pgCard'));
+    if (!allCards.length) { window.print(); return; }
+
+    /* 기존 구조 숨김 */
+    var hideEls = ov.querySelectorAll('#pgBatchGrid, .pgPageBlock, .pgPageHeader, #pgPageHeader1');
+    for (var h=0; h<hideEls.length; h++) hideEls[h].style.display = 'none';
+
+    /* 헤더 텍스트 */
+    var hdrEl = document.getElementById('pgBatchTop');
+    var titleTxt = hdrEl ? (hdrEl.querySelector('.bt-title')||{}).textContent||'' : '';
+
+    /* 2개씩 행(row) 생성, 3행마다 페이지 break */
+    var perRow = 2, rowsPerPage = 3;
+    var wrapper = document.createElement('div');
+    wrapper.id = 'pgMobWrapper';
+
+    var pageDiv = null, rowCount = 0;
+
+    for (var i=0; i<allCards.length; i++) {
+      /* 새 페이지 시작 */
+      if (i % (perRow * rowsPerPage) === 0) {
+        pageDiv = document.createElement('div');
+        pageDiv.style.cssText = i > 0
+          ? 'page-break-before:always; break-before:page;'
+          : '';
+        /* 페이지 헤더 */
+        var ph = document.createElement('div');
+        ph.style.cssText = 'display:flex;justify-content:space-between;padding:3mm 2mm 2mm;border-bottom:1.5pt solid #222;margin-bottom:2mm;font-family:sans-serif;';
+        var pageNum = Math.floor(i/(perRow*rowsPerPage)) + 1;
+        var totalPages = Math.ceil(allCards.length/(perRow*rowsPerPage));
+        ph.innerHTML = '<span style="font-size:9pt;font-weight:900;color:#111;">'+titleTxt+'</span>'
+          +'<span style="font-size:8pt;color:#666;">'+pageNum+' / '+totalPages+'페이지</span>';
+        pageDiv.appendChild(ph);
+        rowCount = 0;
+        wrapper.appendChild(pageDiv);
+      }
+      /* 새 행 시작 */
+      if (i % perRow === 0) {
+        var row = document.createElement('div');
+        row.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:3mm;margin-bottom:3mm;';
+        pageDiv.appendChild(row);
+      }
+      /* 카드 삽입 */
+      pageDiv.lastElementChild.appendChild(allCards[i]);
     }
+
+    ov.appendChild(wrapper);
 
     setTimeout(function() {
       window.print();
       setTimeout(function() {
-        for (var i=0; i<cards.length; i++) {
-          cards[i].style.pageBreakAfter = saved[i];
-        }
-      }, 1500);
-    }, 300);
+        /* 복원 */
+        var origGrid = document.getElementById('pgBatchGrid');
+        var mc = wrapper.querySelectorAll('.pgCard');
+        for (var j=0; j<mc.length; j++) origGrid.appendChild(mc[j]);
+        wrapper.remove();
+        for (var h2=0; h2<hideEls.length; h2++) hideEls[h2].style.display = '';
+      }, 2000);
+    }, 400);
   };
 
   window.setPrintLayout = function(n) {
