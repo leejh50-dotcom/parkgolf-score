@@ -2699,16 +2699,29 @@ window.addEventListener('load', function(){
               (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
     if (!mob) { window.print(); return; }
 
-    /* 모바일: 카드/QR 축소 후 인쇄 */
-    var ov = document.getElementById('pgBatchOv');
+    /* 모바일: @page margin이 무시되므로 실제 가용높이 ~260mm 기준
+       12장: (260-12헤더-2pad-12gap)/4 = 55mm
+       6장:  (260-12헤더-2pad-8gap)/3  = 75mm */
+    /* ★ @page margin:0 → 가용높이 297mm
+       12장: (297-12헤더-2pad-12gap)/4 = 65mm
+       6장:  (297-12헤더-2pad-8gap)/3  = 88mm */
     var grid = document.getElementById('pgBatchGrid');
     var is6 = grid && grid.classList.contains('is6');
-    var cardH = is6 ? '80mm' : '58mm';
-    var qrW   = is6 ? '56mm' : '38mm';
+    var cardH = is6 ? '88mm' : '65mm';
+    var qrW   = is6 ? '62mm' : '44mm';
 
-    var cards   = document.querySelectorAll('#pgBatchOv .pgCard');
-    var canvases= document.querySelectorAll('#pgBatchOv .pgCard-qr canvas');
-    var saved   = [];
+    /* ★ @page margin 강제 0 → iOS Safari 자체 여백 제거 */
+    var styleTag = document.getElementById('pgMobilePrintStyle');
+    if (!styleTag) {
+      styleTag = document.createElement('style');
+      styleTag.id = 'pgMobilePrintStyle';
+      document.head.appendChild(styleTag);
+    }
+    styleTag.textContent = '@media print { @page { margin:0mm !important; } }';
+
+    var cards    = document.querySelectorAll('#pgBatchOv .pgCard');
+    var canvases = document.querySelectorAll('#pgBatchOv .pgCard-qr canvas');
+    var saved    = [];
 
     for (var i=0; i<cards.length; i++) {
       saved.push({el:cards[i], prop:'height', val:cards[i].style.height});
@@ -2729,6 +2742,9 @@ window.addEventListener('load', function(){
         for (var k=0; k<saved.length; k++) {
           saved[k].el.style.setProperty(saved[k].prop, saved[k].val);
         }
+        /* @page margin 복원 */
+        var st = document.getElementById('pgMobilePrintStyle');
+        if (st) st.textContent = '';
       }, 1000);
     }, 300);
   };
