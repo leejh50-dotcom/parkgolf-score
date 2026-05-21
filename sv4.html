@@ -2925,7 +2925,7 @@ window.addEventListener('load', function(){
     align-content:start !important;
   }
   #pgBatchGrid.is6 .pgCard {
-    height:68mm !important;
+    height:60mm !important;
     overflow:hidden !important; box-sizing:border-box !important;
   }
 
@@ -2949,7 +2949,8 @@ window.addEventListener('load', function(){
     display:-webkit-box !important; -webkit-line-clamp:2 !important;
     -webkit-box-orient:vertical !important; width:100% !important;
   }
-  #pgBatchGrid.is6 .pgCard-title { font-size:11pt !important; }
+  #pgBatchGrid.is6 .pgCard-title { font-size:11pt !important; margin-bottom:5mm !important; }
+  .pgBatchGridPage.is6 .pgCard-title { font-size:11pt !important; margin-bottom:5mm !important; }
 
   /* 카드 본문: QR 좌 + 선수 우 */
   .pgCard-body-print {
@@ -2969,7 +2970,7 @@ window.addEventListener('load', function(){
   }
   /* 6장 QR: 88-title13-footer8-pad3 = 64mm */
   #pgBatchGrid.is6 .pgCard-qr canvas {
-    width:43mm !important; height:43mm !important;
+    width:38mm !important; height:38mm !important;
   }
   .pgCard-qr img { display:none !important; }
 
@@ -3037,10 +3038,10 @@ window.addEventListener('load', function(){
   .pgBatchGridPage.is6 {
     grid-template-columns:repeat(2,1fr) !important;
     column-gap:5mm !important;
-    row-gap:18mm !important;
+    row-gap:12mm !important;
   }
   .pgBatchGridPage.is6 .pgCard {
-    height:68mm !important;
+    height:60mm !important;
   }
   .pgBatchGridPage.is6 .pgCard-qr canvas {
     width:43mm !important; height:43mm !important;
