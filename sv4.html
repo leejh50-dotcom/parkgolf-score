@@ -2782,25 +2782,26 @@ window.addEventListener('load', function(){
   -webkit-tap-highlight-color:transparent;
 }
 /* 화면: 카드 */
-.pgCard { background:#fff; border-radius:10px; border:1px solid #e5e7eb; box-shadow:0 1px 4px rgba(0,0,0,.08); padding:8px 6px 6px; display:flex; flex-direction:column; align-items:stretch; break-inside:avoid; page-break-inside:avoid; }
-/* 화면: body-print → QR 좌 + 이름 우, 중앙 정렬 */
-.pgCard-body-print { display:flex; flex-direction:row; align-items:center; justify-content:center; gap:8px; }
-/* 제목 */
-.pgCard-title { font-size:13px; font-weight:900; color:#c8860a; margin-bottom:4px; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width:100%; }
-/* QR: 정사각형 고정 */
+.pgCard { background:#fff; border-radius:10px; border:1px solid #e5e7eb; box-shadow:0 1px 4px rgba(0,0,0,.08); padding:10px 8px 8px; display:flex; flex-direction:column; align-items:stretch; break-inside:avoid; page-break-inside:avoid; }
+/* 화면: body-print → flex 가로 배열 (QR 좌 + 이름 우) */
+.pgCard-body-print { display:flex; align-items:center; justify-content:center; gap:8px; flex:1; min-height:0; }
+/* 제목: 크게 명확하게 */
+.pgCard-title { font-size:13px; font-weight:900; color:#c8860a; margin-bottom:6px; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width:100%; }
+/* QR */
 .pgCard-qr { position:static !important; padding-top:0 !important; flex-shrink:0; }
 .pgCard-qr::before { display:none !important; }
 .pgCard-qr > div { position:static !important; display:block !important; }
-.pgCard-qr canvas { display:block !important; width:42vw !important; height:42vw !important; }
+/* QR 캔버스: vw 기준 */
+.pgCard-qr canvas { display:block !important; width:18vw !important; height:18vw !important; }
 /* 선수 목록: 세로 1열 */
-.pgCard-players { display:flex; flex-direction:column; gap:4px; margin-top:0; width:fit-content; }
+.pgCard-players { width:fit-content; display:flex; flex-direction:column; gap:3px; margin-top:0; flex-shrink:0; }
 .pgCard-player { display:flex; flex-direction:column; min-width:0; }
 .pgCard-pline { display:flex; align-items:baseline; gap:3px; }
-.pgCard-num { font-size:12px; font-weight:900; color:#c8860a; flex-shrink:0; min-width:12px; }
-.pgCard-pname { font-size:15px; font-weight:800; color:#1e3c72; white-space:nowrap; }
-.pgCard-pgender { font-size:11px; color:#888; padding-left:14px; }
-.pgCard-paffil { font-size:11px; color:#aaa; padding-left:14px; }
-.pgCard-footer { margin-top:4px; font-size:9px; color:#9ca3af; text-align:center; width:100%; }
+.pgCard-num { font-size:11px; font-weight:900; color:#c8860a; flex-shrink:0; min-width:10px; }
+.pgCard-pname { font-size:14px; font-weight:800; color:#1e3c72; white-space:nowrap; }
+.pgCard-pgender { font-size:11px; color:#888; padding-left:13px; }
+.pgCard-paffil { font-size:11px; color:#aaa; padding-left:13px; }
+.pgCard-footer { margin-top:5px; font-size:9px; color:#9ca3af; text-align:center; width:100%; }
 
 /* ══ 모바일 화면 전용 (max-width:600px) ══ */
 @media screen and (max-width:600px) {
