@@ -2693,6 +2693,46 @@ window.addEventListener('load', function(){
     }
   })();
 
+  /* ★ 인쇄 버튼 함수: 모바일이면 스타일 적용 후 딜레이 인쇄 */
+  window.pgMobilePrint = function() {
+    var mob = (window.innerWidth <= 600) ||
+              (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
+    if (!mob) { window.print(); return; }
+
+    /* 모바일: 카드/QR 축소 후 인쇄 */
+    var ov = document.getElementById('pgBatchOv');
+    var grid = document.getElementById('pgBatchGrid');
+    var is6 = grid && grid.classList.contains('is6');
+    var cardH = is6 ? '80mm' : '58mm';
+    var qrW   = is6 ? '56mm' : '38mm';
+
+    var cards   = document.querySelectorAll('#pgBatchOv .pgCard');
+    var canvases= document.querySelectorAll('#pgBatchOv .pgCard-qr canvas');
+    var saved   = [];
+
+    for (var i=0; i<cards.length; i++) {
+      saved.push({el:cards[i], prop:'height', val:cards[i].style.height});
+      cards[i].style.setProperty('height', cardH, 'important');
+    }
+    for (var j=0; j<canvases.length; j++) {
+      saved.push({el:canvases[j], prop:'width',  val:canvases[j].style.width});
+      saved.push({el:canvases[j], prop:'height', val:canvases[j].style.height});
+      canvases[j].style.setProperty('width',  qrW, 'important');
+      canvases[j].style.setProperty('height', qrW, 'important');
+    }
+
+    /* 레이아웃 반영 후 인쇄 */
+    setTimeout(function() {
+      window.print();
+      /* 인쇄 다이얼로그 닫힌 후 복원 */
+      setTimeout(function() {
+        for (var k=0; k<saved.length; k++) {
+          saved[k].el.style.setProperty(saved[k].prop, saved[k].val);
+        }
+      }, 1000);
+    }, 300);
+  };
+
   window.setPrintLayout = function(n) {
     var ov = document.getElementById('pgBatchOv');
     var grid = document.getElementById('pgBatchGrid');
@@ -3139,7 +3179,7 @@ window.addEventListener('load', function(){
       +'<div class="bt-btns">'
       +'<button class="btn-layout" id="pgLayout6Btn" onclick="setPrintLayout(6)" title="6개/장" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.5);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer;">6개/장</button>'
       +'<button class="btn-layout" id="pgLayout9Btn" onclick="setPrintLayout(9)" title="12개/장" style="background:#fff;color:#7a4f00;border:none;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;cursor:pointer;">12개/장 ✓</button>'
-      +'<button class="btn-print" id="pgPrintBtn" onclick="window.print()" disabled style="opacity:.4;cursor:not-allowed;">🖨 인쇄하기</button>'
+      +'<button class="btn-print" id="pgPrintBtn" onclick="pgMobilePrint()" disabled style="opacity:.4;cursor:not-allowed;">🖨 인쇄하기</button>'
       +'<button class="btn-close" onclick="document.getElementById(\'pgBatchOv\').remove()">✕</button>'
       +'</div></div>'
       /* ★ 진행률 바 */
