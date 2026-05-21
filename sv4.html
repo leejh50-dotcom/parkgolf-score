@@ -2953,6 +2953,25 @@ window.addEventListener('load', function(){
         +'</div>'
         +'<div class="pgCard-footer">'+esc(code)+' · '+esc(qrDate)+' · '+dateStr+'</div>';
       grid.appendChild(card);
+      /* ★ 클릭 시 QR 확대 */
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', function(e) {
+        var img = this.querySelector('.pgCard-qr img');
+        var title = this.querySelector('.pgCard-title');
+        if (!img) return;
+        var ov = document.createElement('div');
+        ov.style.cssText = 'position:fixed;inset:0;z-index:999999;background:rgba(0,0,0,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;';
+        var t = document.createElement('div');
+        t.style.cssText = 'color:#fff;font-size:14px;font-weight:900;margin-bottom:12px;text-align:center;';
+        t.textContent = title ? title.textContent : '';
+        var i = document.createElement('img');
+        i.src = img.src;
+        i.style.cssText = 'width:min(90vw,90vh);height:min(90vw,90vh);object-fit:contain;border-radius:8px;background:#fff;padding:8px;';
+        ov.appendChild(t);
+        ov.appendChild(i);
+        ov.addEventListener('click', function() { ov.remove(); });
+        document.body.appendChild(ov);
+      });
       /* ★ QRCode 생성 오류 시 오류 표시 (조명 포함) */
       try{ new QRCode(card.querySelector('#'+bid),{text:qrText,width:256,height:256,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M}); }
       catch(e){ card.querySelector('#'+bid).innerHTML='<div style="padding:8px;font-size:11px;color:red;text-align:center;">QR생성오류<br>'+esc(teamObj.team||'')+'</div>'; }
