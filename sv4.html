@@ -2711,18 +2711,19 @@ window.addEventListener('load', function(){
       mStyle.id = 'pgMobileStyle';
       document.head.appendChild(mStyle);
     }
+    /* iOS 자체여백 ~20mm → 가용 277mm
+       헤더12 + pad8 + 카드46×4 + gap9×3 = 12+8+184+27 = 231mm → 여유 46mm */
     mStyle.textContent = [
       '@media print {',
       '  @page { size:A4 portrait; margin:0mm !important; }',
       '  #pgBatchGrid, .pgBatchGridPage {',
+      '    row-gap:9mm !important;',
+      '    align-content:start !important;',
       '    min-height:0 !important;',
-      '    align-content:space-between !important;',
-      '    height:calc(297mm - 22mm) !important;',
-      '    box-sizing:border-box !important;',
       '  }',
       '  #pgBatchGrid .pgCard,',
-      '  .pgBatchGridPage .pgCard { height:48mm !important; }',
-      '  .pgCard-qr canvas { width:28mm !important; height:28mm !important; }',
+      '  .pgBatchGridPage .pgCard { height:46mm !important; }',
+      '  .pgCard-qr canvas { width:26mm !important; height:26mm !important; }',
       '}'
     ].join('\n');
 
@@ -2918,11 +2919,10 @@ window.addEventListener('load', function(){
     display:grid !important;
     grid-template-columns:repeat(2,1fr) !important;
     column-gap:5mm !important;
-    row-gap:0 !important;
+    row-gap:12mm !important;
     padding:8mm 3mm 0 !important;
     width:100% !important; box-sizing:border-box !important;
-    align-content:space-between !important;
-    min-height:calc(100vh - 20mm) !important;
+    align-content:start !important;
   }
   #pgBatchGrid .pgCard {
     height:55mm !important;
@@ -3035,11 +3035,10 @@ window.addEventListener('load', function(){
     display:grid !important;
     grid-template-columns:repeat(2,1fr) !important;
     column-gap:5mm !important;
-    row-gap:0 !important;
+    row-gap:12mm !important;
     padding:8mm 3mm 0 !important;
     width:100% !important; box-sizing:border-box !important;
-    align-content:space-between !important;
-    min-height:calc(100vh - 20mm) !important;
+    align-content:start !important;
   }
   .pgBatchGridPage .pgCard {
     height:55mm !important;
