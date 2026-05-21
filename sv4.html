@@ -2,9 +2,6 @@
 <!-- © 2026 송근 / PASIS SV4.0 Pro - 무단 복제·상업적 이용 금지 / Unauthorized copying or commercial use is strictly prohibited. -->
 <html lang="ko">
 <head>
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="mobile-web-app-capable" content="yes">
@@ -2022,7 +2019,7 @@ if(_0x16519b['courses']&&_0x16519b['courses'].length){_0x5eb4ca+='&co='+encodeUR
   };
 })();
 
-
+/* ── QR 생성 URL 강제 설정: sv4.html 대신 pasis4-send.html로 고정 ── */
 window.addEventListener('load', function(){
   setTimeout(function(){
     var el = document.getElementById('qrUrl');
@@ -2597,7 +2594,7 @@ window.addEventListener('load', function(){
   .pgCard-qr::before { display:none !important; }
   .pgCard-qr > div { position:static !important; display:block !important; width:18vw !important; height:18vw !important; }
   .pgCard-qr canvas { display:none !important; }
-  .pgCard-qr img { display:none !important; }
+  .pgCard-qr img { width:18vw !important; height:18vw !important; max-height:18vw !important; display:block !important; object-fit:contain !important; }
 
   .pgCard { min-height:0 !important; overflow:hidden !important; }
 }
@@ -2683,7 +2680,7 @@ window.addEventListener('load', function(){
 
   /* 제목: 검정 굵게 중앙 */
   .pgCard-title {
-    font-size:8pt !important; font-weight:900 !important; color:#111 !important;
+    font-size:8.5pt !important; font-weight:900 !important; color:#111 !important;
     text-align:center !important; line-height:1.25 !important;
     margin-bottom:3mm !important; flex-shrink:0 !important;
     white-space:normal !important; overflow:hidden !important;
@@ -2705,7 +2702,7 @@ window.addEventListener('load', function(){
   /* 12장 QR: 65-title11-footer7-pad3 = 44mm */
   .pgCard-qr canvas {
     display:block !important;
-    width:38mm !important; height:38mm !important; margin:0 !important;
+    width:34mm !important; height:34mm !important; margin:0 !important;
   }
 
   .pgCard-qr img { display:none !important; }
@@ -2733,7 +2730,7 @@ window.addEventListener('load', function(){
     background:none !important; flex-shrink:0 !important;
     min-width:3mm !important; font-weight:400 !important;
   }
-  .pgCard-pname { font-size:9pt !important; font-weight:800 !important; color:#111 !important; }
+  .pgCard-pname { font-size:10.5pt !important; font-weight:800 !important; color:#111 !important; }
 
   /* 성별·소속: 이름 바로 아래 한 줄 */
   .pgCard-pgender, .pgCard-paffil {
@@ -2814,7 +2811,7 @@ window.addEventListener('load', function(){
 @media screen {
   /* 화면: canvas 숨기고 img 표시 - 스캔 가독성을 위해 크게 */
   .pgCard-qr canvas { display:none !important; }
-  .pgCard-qr img { display:block !important; width:42vw !important; height:42vw !important; object-fit:contain !important; }
+  .pgCard-qr img { display:block !important; width:48vw !important; height:48vw !important; object-fit:contain !important; }
 }
 #pasisSendOv { position:fixed; inset:0; z-index:200000; background:rgba(0,0,0,.55); display:flex; align-items:center; justify-content:center; font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif; }
 #pasisSendBox { background:#fff; border-radius:16px; width:min(400px,94vw); max-height:96vh; overflow-y:auto; box-shadow:0 24px 64px rgba(0,0,0,.3); }
@@ -2976,7 +2973,7 @@ window.addEventListener('load', function(){
         document.body.appendChild(ov);
       });
       /* ★ QRCode 생성 오류 시 오류 표시 (조명 포함) */
-      try{ new QRCode(card.querySelector('#'+bid),{text:qrText,width:256,height:256,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.L}); }
+      try{ new QRCode(card.querySelector('#'+bid),{text:qrText,width:400,height:400,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.L}); }
       catch(e){ card.querySelector('#'+bid).innerHTML='<div style="padding:8px;font-size:11px;color:red;text-align:center;">QR생성오류<br>'+esc(teamObj.team||'')+'</div>'; }
     }
 
