@@ -2,6 +2,9 @@
 <!-- © 2026 송근 / PASIS SV4.0 Pro - 무단 복제·상업적 이용 금지 / Unauthorized copying or commercial use is strictly prohibited. -->
 <html lang="ko">
 <head>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="mobile-web-app-capable" content="yes">
@@ -2019,25 +2022,7 @@ if(_0x16519b['courses']&&_0x16519b['courses'].length){_0x5eb4ca+='&co='+encodeUR
   };
 })();
 
-/* ★ 캐시 무력화: 날짜+시간 기반 버전 파라미터 자동 갱신 */
-(function(){
-  try {
-    var now = (function(){
-      var d = new Date();
-      return d.getFullYear().toString() +
-        String(d.getMonth()+1).padStart(2,'0') +
-        String(d.getDate()).padStart(2,'0') +
-        String(d.getHours()).padStart(2,'0');
-    })();
-    var params = new URLSearchParams(window.location.search);
-    var curV = params.get('v');
-    if (curV !== now) {
-      params.set('v', now);
-      var newUrl = window.location.pathname + '?' + params.toString() + window.location.hash;
-      window.location.replace(newUrl);
-    }
-  } catch(e) {}
-})();
+
 window.addEventListener('load', function(){
   setTimeout(function(){
     var el = document.getElementById('qrUrl');
