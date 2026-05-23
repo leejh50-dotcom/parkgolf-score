@@ -2800,7 +2800,12 @@ window.addEventListener('load', function(){
 .pgCard-pname { font-size:13px; font-weight:800; color:#1e3c72; white-space:nowrap; }
 .pgCard-pgender { font-size:10px; color:#888; padding-left:13px; }
 .pgCard-paffil { font-size:10px; color:#aaa; padding-left:13px; }
-.pgCard-footer { margin-top:4px; font-size:9px; color:#9ca3af; text-align:center; width:100%; }
+.pgCard-seq { display:flex; flex-direction:column; align-items:center; justify-content:center; min-width:28px; flex-shrink:0; gap:1px; }
+.pgCard-seq-n { font-size:18px; font-weight:700; color:#1e3c72; line-height:1; }
+.pgCard-seq-div { width:16px; height:0.5px; background:#ccc; margin:2px 0; }
+.pgCard-seq-t { font-size:10px; color:#888; }
+.pgCard-players-fill { flex:1; min-width:0; }
+
 
 /* ══ 모바일 화면 전용 (max-width:600px) ══ */
 @media screen and (max-width:600px) {
@@ -2909,7 +2914,7 @@ window.addEventListener('load', function(){
     var BATCH = total > 100 ? 10 : 20;
     var idx = 0;
 
-    function makeCard(teamObj){
+    function makeCard(teamObj, cardIdx, cardTotal){
       var coParam=(teamObj.courses&&teamObj.courses.length)?'&co='+encodeURIComponent(teamObj.courses.join(',')):'';
       var qrText=appUrl+'?c='+encodeURIComponent(code)+'&u='+encodeURIComponent(webappUrl)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam;
       (teamObj.players||[]).forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||'')); });
@@ -2943,13 +2948,19 @@ window.addEventListener('load', function(){
           +sub
           +'</div>';
       }).join('');
+      var seqNum = cardIdx + 1;
+      var seqBadge = '<div class="pgCard-seq"><span class="pgCard-seq-n">'
+        + seqNum + '</span><div class="pgCard-seq-div"></div><span class="pgCard-seq-t">'
+        + cardTotal + '</span></div>';
+
       var card=document.createElement('div');card.className='pgCard';
       var bid='pgqr'+Math.random().toString(36).slice(2,8);
       card.innerHTML='<div class="pgCard-title">'+esc(teamObj.team||'')+'</div>'
         +courseBadge
         +'<div class="pgCard-body-print">'
+        + seqBadge
         +'<div class="pgCard-qr"><div id="'+bid+'"></div></div>'
-        +'<div class="pgCard-players">'+ph+'</div>'
+        +'<div class="pgCard-players pgCard-players-fill">'+ph+'</div>'
         +'</div>'
         +'<div class="pgCard-footer">'+esc(code)+' · '+esc(qrDate)+' · '+dateStr+'</div>';
       grid.appendChild(card);
@@ -2979,7 +2990,7 @@ window.addEventListener('load', function(){
 
     function nextBatch(){
       var end=Math.min(idx+BATCH, total);
-      for(var i=idx;i<end;i++){ makeCard(teams[i]); }
+      for(var i=idx;i<end;i++){ makeCard(teams[i], i, total); }
       idx=end;
 
       /* 진행률 업데이트 */
