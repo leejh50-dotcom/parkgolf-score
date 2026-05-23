@@ -2786,7 +2786,7 @@ window.addEventListener('load', function(){
 /* 화면: body-print → QR 좌 + 이름 우, 중앙 정렬 */
 .pgCard-body-print { display:flex; flex-direction:row; align-items:center; justify-content:center; gap:8px; }
 /* 제목 */
-.pgCard-title { font-size:13px; font-weight:900; color:#c8860a; margin-bottom:4px; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width:100%; }
+.pgCard-title { font-size:16px; font-weight:900; color:#c8860a; margin-bottom:4px; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width:100%; }
 /* QR: 정사각형 고정 */
 .pgCard-qr { position:static !important; padding-top:0 !important; flex-shrink:0; }
 .pgCard-qr::before { display:none !important; }
@@ -2801,7 +2801,7 @@ window.addEventListener('load', function(){
 .pgCard-pgender { font-size:10px; color:#888; padding-left:13px; }
 .pgCard-paffil { font-size:10px; color:#aaa; padding-left:13px; }
 .pgCard-seq { display:flex; flex-direction:column; align-items:center; justify-content:center; min-width:28px; flex-shrink:0; gap:1px; }
-.pgCard-seq-n { font-size:18px; font-weight:700; color:#1e3c72; line-height:1; }
+.pgCard-seq-n { font-size:26px; font-weight:700; color:#1e3c72; line-height:1; }
 .pgCard-seq-div { width:16px; height:0.5px; background:#ccc; margin:2px 0; }
 .pgCard-seq-t { font-size:10px; color:#888; }
 .pgCard-players-fill { flex:1; min-width:0; }
@@ -2939,13 +2939,13 @@ window.addEventListener('load', function(){
         var gStr=p.gender?esc(p.gender.charAt(0)):'';
         var affClean=(p.affil||'').replace(/^(남|여)\s+/,'').trim();
         var aStr=affClean?esc(affClean):'';
-        var sub=(gStr||aStr)?'<div class="pgCard-pgender pgCard-paffil">'+(gStr?'('+gStr+')&nbsp;':'')+aStr+'</div>':'';
+        var sub=(gStr||aStr)?' <span class="pgCard-pgender pgCard-paffil">'+(gStr?'('+gStr+')&nbsp;':'')+aStr+'</span>':'';
         return '<div class="pgCard-player">'
           +'<div class="pgCard-pline">'
           +'<span class="pgCard-num">'+(i+1)+'</span>'
           +'<span class="pgCard-pname">'+esc(p.name||'')+'</span>'
-          +'</div>'
           +sub
+          +'</div>'
           +'</div>';
       }).join('');
       var seqNum = cardIdx + 1;
@@ -3048,6 +3048,36 @@ window.addEventListener('load', function(){
           wrapper.appendChild(newGrid);
           if(ov2) ov2.appendChild(wrapper);
         }
+
+        /* ★ 마지막 페이지: 배부 확인 목록 */
+        var listWrapper = document.createElement('div');
+        listWrapper.className = 'pgPageBlock';
+        listWrapper.style.cssText = 'break-before:page; page-break-before:always; padding:20px;';
+        var listHtml = '<div style="font-size:15px;font-weight:900;color:#1e3c72;margin-bottom:12px;text-align:center;">📋 QR카드 배부 확인 목록 · '+esc(code)+' · '+today+'</div>';
+        listHtml += '<table style="width:100%;border-collapse:collapse;font-size:12px;">';
+        listHtml += '<thead><tr style="background:#1a4a2e;color:#fff;">'
+          +'<th style="padding:6px 8px;text-align:center;width:36px;">No</th>'
+          +'<th style="padding:6px 8px;text-align:left;">조명</th>'
+          +'<th style="padding:6px 8px;text-align:left;">선수명</th>'
+          +'<th style="padding:6px 8px;text-align:left;">심판명</th>'
+          +'<th style="padding:6px 8px;text-align:left;">비고</th>'
+          +'</tr></thead><tbody>';
+        teams.forEach(function(t, ti){
+          var firstPlayer = (t.players&&t.players[0]) ? esc(t.players[0].name||'') : '';
+          var extraCount = (t.players||[]).length - 1;
+          var playerCell = firstPlayer + (extraCount > 0 ? ' 외 '+extraCount : '');
+          var bg = ti % 2 === 0 ? '' : 'background:#f9f9f9;';
+          listHtml += '<tr style="'+bg+'">'
+            +'<td style="padding:6px 8px;text-align:center;border-bottom:0.5px solid #e5e7eb;color:#888;">'+(ti+1)+'</td>'
+            +'<td style="padding:6px 8px;border-bottom:0.5px solid #e5e7eb;font-weight:700;">'+esc(t.team||'')+'</td>'
+            +'<td style="padding:6px 8px;border-bottom:0.5px solid #e5e7eb;">'+playerCell+'</td>'
+            +'<td style="padding:6px 8px;border-bottom:0.5px solid #e5e7eb;"><div style="border-bottom:0.5px solid #bbb;min-width:60px;">&nbsp;</div></td>'
+            +'<td style="padding:6px 8px;border-bottom:0.5px solid #e5e7eb;"><div style="border-bottom:0.5px solid #bbb;min-width:50px;">&nbsp;</div></td>'
+            +'</tr>';
+        });
+        listHtml += '</tbody></table>';
+        listWrapper.innerHTML = listHtml;
+        if(ov2) ov2.appendChild(listWrapper);
 
         setTimeout(function(){
           var pb=document.getElementById('pgProgress');
