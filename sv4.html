@@ -2694,6 +2694,10 @@ window.addEventListener('load', function(){
     align-items:center !important; justify-content:space-between !important;
     gap:3mm !important;
   }
+  .pgCard-right {
+    display:flex !important; flex-direction:row !important; align-items:center !important;
+    gap:3mm !important; flex:1 !important; justify-content:flex-end !important;
+  }
 
   /* QR */
   .pgCard-qr { position:static !important; padding-top:0 !important; flex-shrink:0 !important; }
@@ -2785,6 +2789,7 @@ window.addEventListener('load', function(){
 .pgCard { background:#fff; border-radius:10px; border:1px solid #e5e7eb; box-shadow:0 1px 4px rgba(0,0,0,.08); padding:8px 6px 6px; display:flex; flex-direction:column; align-items:stretch; break-inside:avoid; page-break-inside:avoid; }
 /* 화면: body-print → QR 좌 + 이름 우, 중앙 정렬 */
 .pgCard-body-print { display:flex; flex-direction:row; align-items:center; justify-content:space-between; gap:8px; }
+.pgCard-right { display:flex; flex-direction:row; align-items:center; gap:8px; flex:1; justify-content:flex-end; }
 /* 제목 */
 .pgCard-title { font-size:16px; font-weight:900; color:#c8860a; margin-bottom:4px; text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width:100%; }
 /* QR: 정사각형 고정 */
@@ -2959,8 +2964,10 @@ window.addEventListener('load', function(){
         +courseBadge
         +'<div class="pgCard-body-print">'
         + seqBadge
+        +'<div class="pgCard-right">'
         +'<div class="pgCard-qr"><div id="'+bid+'"></div></div>'
         +'<div class="pgCard-players pgCard-players-fill">'+ph+'</div>'
+        +'</div>'
         +'</div>'
         +'<div class="pgCard-footer">'+esc(code)+' · '+esc(qrDate)+' · '+dateStr+'</div>';
       grid.appendChild(card);
