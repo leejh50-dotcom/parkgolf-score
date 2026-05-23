@@ -2821,9 +2821,8 @@ window.addEventListener('load', function(){
   /* 화면: canvas 숨기고 img 표시 */
   .pgCard-qr canvas { display:none !important; }
   .pgCard-qr img { display:block !important; width:28vw !important; height:28vw !important; object-fit:contain !important; }
-  /* 화면 전용: 이름 세로 상단 정렬 — 위아래 공간 줄이기 */
-  .pgCard-body-print { align-items:flex-start !important; }
-  .pgCard-right { align-items:flex-start !important; padding-top:4px; }
+  .pgCard-body-print { align-items:center !important; }
+  .pgCard-right { align-items:center !important; }
 }
 #pasisSendOv { position:fixed; inset:0; z-index:200000; background:rgba(0,0,0,.55); display:flex; align-items:center; justify-content:center; font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif; }
 #pasisSendBox { background:#fff; border-radius:16px; width:min(400px,94vw); max-height:96vh; overflow-y:auto; box-shadow:0 24px 64px rgba(0,0,0,.3); }
@@ -2946,13 +2945,13 @@ window.addEventListener('load', function(){
         var gStr=p.gender?esc(p.gender.charAt(0)):'';
         var affClean=(p.affil||'').replace(/^(남|여)\s+/,'').trim();
         var aStr=affClean?esc(affClean):'';
-        var sub=(gStr||aStr)?' <span class="pgCard-pgender pgCard-paffil">'+(gStr?'('+gStr+')&nbsp;':'')+aStr+'</span>':'';
+        var sub=(gStr||aStr)?'<div class="pgCard-pgender pgCard-paffil">'+(gStr?'('+gStr+')&nbsp;':'')+aStr+'</div>':'';
         return '<div class="pgCard-player">'
           +'<div class="pgCard-pline">'
           +'<span class="pgCard-num">'+(i+1)+'</span>'
           +'<span class="pgCard-pname">'+esc(p.name||'')+'</span>'
-          +sub
           +'</div>'
+          +sub
           +'</div>';
       }).join('');
       var seqNum = cardIdx + 1;
