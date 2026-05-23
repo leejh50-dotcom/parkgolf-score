@@ -3055,35 +3055,47 @@ window.addEventListener('load', function(){
           if(ov2) ov2.appendChild(wrapper);
         }
 
-        /* ★ 마지막 페이지: 배부 확인 목록 */
-        var listWrapper = document.createElement('div');
-        listWrapper.className = 'pgPageBlock';
-        listWrapper.style.cssText = 'break-before:page; page-break-before:always; padding:20px;';
-        var listHtml = '<div style="font-size:15px;font-weight:900;color:#1e3c72;margin-bottom:12px;text-align:center;">📋 QR카드 배부 확인 목록 · '+esc(code)+' · '+today+'</div>';
-        listHtml += '<table style="width:100%;border-collapse:collapse;font-size:12px;">';
-        listHtml += '<thead><tr style="background:#1a4a2e;color:#fff;">'
-          +'<th style="padding:6px 8px;text-align:center;width:36px;">No</th>'
-          +'<th style="padding:6px 8px;text-align:left;">조명</th>'
-          +'<th style="padding:6px 8px;text-align:left;">선수명</th>'
-          +'<th style="padding:6px 8px;text-align:left;">심판명</th>'
-          +'<th style="padding:6px 8px;text-align:left;">비고</th>'
-          +'</tr></thead><tbody>';
-        teams.forEach(function(t, ti){
-          var firstPlayer = (t.players&&t.players[0]) ? esc(t.players[0].name||'') : '';
-          var extraCount = (t.players||[]).length - 1;
-          var playerCell = firstPlayer + (extraCount > 0 ? ' 외 '+extraCount : '');
-          var bg = ti % 2 === 0 ? '' : 'background:#f9f9f9;';
-          listHtml += '<tr style="'+bg+'">'
-            +'<td style="padding:6px 8px;text-align:center;border-bottom:0.5px solid #e5e7eb;color:#888;">'+(ti+1)+'</td>'
-            +'<td style="padding:6px 8px;border-bottom:0.5px solid #e5e7eb;font-weight:700;">'+esc(t.team||'')+'</td>'
-            +'<td style="padding:6px 8px;border-bottom:0.5px solid #e5e7eb;">'+playerCell+'</td>'
-            +'<td style="padding:6px 8px;border-bottom:0.5px solid #e5e7eb;"><div style="border-bottom:0.5px solid #bbb;min-width:60px;">&nbsp;</div></td>'
-            +'<td style="padding:6px 8px;border-bottom:0.5px solid #e5e7eb;"><div style="border-bottom:0.5px solid #bbb;min-width:50px;">&nbsp;</div></td>'
-            +'</tr>';
-        });
-        listHtml += '</tbody></table>';
-        listWrapper.innerHTML = listHtml;
-        if(ov2) ov2.appendChild(listWrapper);
+        /* ★ 마지막 페이지: 배부 확인 목록 (25행/페이지, 헤더 반복, 페이지 번호) */
+        var listPerPage = 25;
+        var listTotalPages = Math.ceil(teams.length / listPerPage);
+        var headerHtml = '<thead><tr style="background:#1a4a2e;color:#fff;">'
+          +'<th style="padding:8px 10px;text-align:center;width:40px;font-size:14px;">No</th>'
+          +'<th style="padding:8px 10px;text-align:left;font-size:14px;">조명</th>'
+          +'<th style="padding:8px 10px;text-align:left;font-size:14px;">선수명</th>'
+          +'<th style="padding:8px 10px;text-align:left;font-size:14px;">심판명</th>'
+          +'<th style="padding:8px 10px;text-align:left;font-size:14px;">비고</th>'
+          +'</tr></thead>';
+
+        for(var lp=0; lp<listTotalPages; lp++){
+          var listWrapper = document.createElement('div');
+          listWrapper.className = 'pgPageBlock';
+          listWrapper.style.cssText = 'break-before:page; page-break-before:always; padding:20px;';
+
+          var pageTeams = teams.slice(lp * listPerPage, (lp+1) * listPerPage);
+          var listHtml = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">'
+            +'<div style="font-size:16px;font-weight:900;color:#1e3c72;">📋 QR카드 배부 확인 목록 · '+esc(code)+' · '+today+'</div>'
+            +'<div style="font-size:14px;font-weight:700;color:#555;">'+(lp+1)+' / '+listTotalPages+'</div>'
+            +'</div>';
+          listHtml += '<table style="width:100%;border-collapse:collapse;font-size:14px;">';
+          listHtml += headerHtml + '<tbody>';
+          pageTeams.forEach(function(t, ti){
+            var rowNum = lp * listPerPage + ti + 1;
+            var firstPlayer = (t.players&&t.players[0]) ? esc(t.players[0].name||'') : '';
+            var extraCount = (t.players||[]).length - 1;
+            var playerCell = firstPlayer + (extraCount > 0 ? ' 외 '+extraCount : '');
+            var bg = ti % 2 === 0 ? '' : 'background:#f9f9f9;';
+            listHtml += '<tr style="'+bg+'">'
+              +'<td style="padding:8px 10px;text-align:center;border-bottom:0.5px solid #e5e7eb;color:#888;font-size:14px;">'+rowNum+'</td>'
+              +'<td style="padding:8px 10px;border-bottom:0.5px solid #e5e7eb;font-weight:700;font-size:14px;">'+esc(t.team||'')+'</td>'
+              +'<td style="padding:8px 10px;border-bottom:0.5px solid #e5e7eb;font-size:14px;">'+playerCell+'</td>'
+              +'<td style="padding:8px 10px;border-bottom:0.5px solid #e5e7eb;"><div style="border-bottom:0.5px solid #bbb;min-width:70px;">&nbsp;</div></td>'
+              +'<td style="padding:8px 10px;border-bottom:0.5px solid #e5e7eb;"><div style="border-bottom:0.5px solid #bbb;min-width:60px;">&nbsp;</div></td>'
+              +'</tr>';
+          });
+          listHtml += '</tbody></table>';
+          listWrapper.innerHTML = listHtml;
+          if(ov2) ov2.appendChild(listWrapper);
+        }
 
         setTimeout(function(){
           var pb=document.getElementById('pgProgress');
