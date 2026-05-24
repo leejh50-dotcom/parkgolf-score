@@ -2749,6 +2749,31 @@ window.addEventListener('load', function(){
     padding-top:1mm !important; margin-top:auto !important;
   }
 
+  /* ══ 모바일 전용: 6개/A4 (2×3) ══
+     A4 257mm(iOS여백 후) - 헤더10 - 패딩6 = 241mm
+     3행×62mm + 2간격×10mm = 206mm < 241mm ✅ 35mm 여유 */
+  .pgMobilePrint #pgBatchGrid {
+    row-gap:10mm !important;
+    padding:6mm 3mm 0 !important;
+  }
+  .pgMobilePrint #pgBatchGrid .pgCard {
+    height:62mm !important;
+  }
+  .pgMobilePrint .pgBatchGridPage {
+    row-gap:10mm !important;
+    padding:6mm 3mm 0 !important;
+  }
+  .pgMobilePrint .pgBatchGridPage .pgCard {
+    height:62mm !important;
+  }
+  /* 모바일: QR 크기 키우기 (카드 62mm → 여유 38mm) */
+  .pgMobilePrint .pgCard-qr canvas {
+    width:38mm !important; height:38mm !important;
+  }
+  /* 모바일: 이름 폰트 약간 크게 */
+  .pgMobilePrint .pgCard-pname { font-size:11.5pt !important; }
+  .pgMobilePrint .pgCard-title { font-size:9.5pt !important; }
+
   /* ★ 2페이지~ 페이지 블록 */
   .pgPageBlock {
     break-before:page !important; page-break-before:always !important;
@@ -2886,6 +2911,8 @@ window.addEventListener('load', function(){
     var appUrl='https://leejh50-dotcom.github.io/parkgolf-score/pasis4-send.html';
     var dateStr=new Date().toLocaleDateString('ko-KR');
     var total=teams.length;
+    /* ★ 모바일 감지: iOS/Android → 6개/A4 */
+    var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth <= 900;
 
     var today = (function(){
       var d=new Date(); var yy=d.getFullYear(); var mm=String(d.getMonth()+1).padStart(2,'0'); var dd=String(d.getDate()).padStart(2,'0');
@@ -2893,11 +2920,12 @@ window.addEventListener('load', function(){
     })();
 
     var ov=document.createElement('div');ov.id='pgBatchOv';
+    if(isMobile) ov.classList.add('pgMobilePrint');
     ov.innerHTML='<div id="pgBatchTop">'
       +'<div class="bt-title">📋 조별 QR · '+esc(code)+' · '+esc(qrDate)+' · '+total+'개 조 · '+today+'</div>'
       +'<span class="ph-sub"></span>'
       +'<div class="bt-btns">'
-      +'<button class="btn-layout" style="background:#fff;color:#7a4f00;border:none;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;">8개/장 ✓</button>'
+      +'<button class="btn-layout" style="background:#fff;color:#7a4f00;border:none;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;">'+(isMobile?'6개/장 ✓':'8개/장 ✓')+'</button>'
       +'<button class="btn-print" id="pgPrintBtn" onclick="window.print()" disabled style="opacity:.4;cursor:not-allowed;">🖨 인쇄하기</button>'
       +'<button class="btn-close" onclick="document.getElementById(\'pgBatchOv\').remove()">✕</button>'
       +'</div></div>'
@@ -3015,7 +3043,7 @@ window.addEventListener('load', function(){
         if(printBtn){ printBtn.disabled=false; printBtn.style.opacity=''; printBtn.style.cursor=''; }
 
         var allCards = Array.prototype.slice.call(grid ? grid.querySelectorAll('.pgCard') : []);
-        var perPage = 8;
+        var perPage = isMobile ? 6 : 8;
         var cols = 'repeat(2,minmax(0,1fr))';
         var totalPages = Math.ceil(allCards.length / perPage);
 
