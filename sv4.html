@@ -3098,7 +3098,7 @@ window.addEventListener('load', function(){
         }
 
         /* ★ 마지막 페이지: 배부 확인 목록 (25행/페이지, 헤더 반복, 페이지 번호) */
-        var listPerPage = 25;
+        var listPerPage = isMobile ? 22 : 25;
         var listTotalPages = Math.ceil(teams.length / listPerPage);
         var headerHtml = '<thead><tr style="background:#1a4a2e;color:#fff;">'
           +'<th style="padding:9px 8px;text-align:center;width:40px;font-size:14px;">No</th>'
