@@ -2843,11 +2843,23 @@ window.addEventListener('load', function(){
 }
 
 @media screen {
-  /* 화면: canvas 숨기고 img 표시 */
+  /* 화면: canvas 숨기고 img 표시 — PC 원래대로 28vw */
   .pgCard-qr canvas { display:none !important; }
-  .pgCard-qr img { display:block !important; width:18vw !important; height:18vw !important; object-fit:contain !important; }
+  .pgCard-qr img { display:block !important; width:28vw !important; height:28vw !important; object-fit:contain !important; }
   .pgCard-body-print { align-items:center !important; }
-  .pgCard-right { align-items:center !important; margin-left:8px !important; }
+  .pgCard-right { align-items:center !important; }
+
+  /* ★ 모바일 화면 전용: QR 위, 이름 아래 세로 배치 */
+  .pgMobilePrint .pgCard-body-print { align-items:flex-start !important; }
+  .pgMobilePrint .pgCard-right {
+    flex-direction:column !important;
+    align-items:flex-start !important;
+    margin-left:6px !important;
+    flex:1 !important;
+    gap:3px !important;
+  }
+  .pgMobilePrint .pgCard-qr img { width:26vw !important; height:26vw !important; }
+  .pgMobilePrint .pgCard-players { width:100% !important; }
 }
 #pasisSendOv { position:fixed; inset:0; z-index:200000; background:rgba(0,0,0,.55); display:flex; align-items:center; justify-content:center; font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif; }
 #pasisSendBox { background:#fff; border-radius:16px; width:min(400px,94vw); max-height:96vh; overflow-y:auto; box-shadow:0 24px 64px rgba(0,0,0,.3); }
@@ -3102,12 +3114,13 @@ window.addEventListener('load', function(){
           listWrapper.style.cssText = 'break-before:page; page-break-before:always; padding:20px;';
 
           var pageTeams = teams.slice(lp * listPerPage, (lp+1) * listPerPage);
-          var listHtml = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">'
+          var listHtml = '<div style="break-inside:avoid;page-break-inside:avoid;">'
+            +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">'
             +'<div style="font-size:16px;font-weight:900;color:#1e3c72;">📋 QR카드 배부 확인 목록 · '+esc(code)+' · '+today+'</div>'
             +'<div style="font-size:14px;font-weight:700;color:#555;">'+(lp+1)+' / '+listTotalPages+'</div>'
-            +'</div>';
-          listHtml += '<table style="width:100%;border-collapse:collapse;font-size:14px;">';
-          listHtml += headerHtml + '<tbody>';
+            +'</div>'
+            +'<table style="width:100%;border-collapse:collapse;font-size:14px;">'
+            + headerHtml + '<tbody>';
           pageTeams.forEach(function(t, ti){
             var rowNum = lp * listPerPage + ti + 1;
             var firstPlayer = (t.players&&t.players[0]) ? esc(t.players[0].name||'') : '';
@@ -3122,7 +3135,7 @@ window.addEventListener('load', function(){
               +'<td style="padding:5px 8px;border-bottom:0.5px solid #e5e7eb;"><div style="border-bottom:0.5px solid #bbb;min-width:60px;">&nbsp;</div></td>'
               +'</tr>';
           });
-          listHtml += '</tbody></table>';
+          listHtml += '</tbody></table></div>';
           listWrapper.innerHTML = listHtml;
           if(ov2) ov2.appendChild(listWrapper);
         }
