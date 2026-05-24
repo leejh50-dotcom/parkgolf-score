@@ -3101,11 +3101,11 @@ window.addEventListener('load', function(){
         var listPerPage = 25;
         var listTotalPages = Math.ceil(teams.length / listPerPage);
         var headerHtml = '<thead><tr style="background:#1a4a2e;color:#fff;">'
-          +'<th style="padding:5px 8px;text-align:center;width:40px;font-size:14px;">No</th>'
-          +'<th style="padding:5px 8px;text-align:left;font-size:14px;">조명</th>'
-          +'<th style="padding:5px 8px;text-align:left;font-size:14px;">선수명</th>'
-          +'<th style="padding:5px 8px;text-align:left;font-size:14px;">심판명</th>'
-          +'<th style="padding:5px 8px;text-align:left;font-size:14px;">비고</th>'
+          +'<th style="padding:9px 8px;text-align:center;width:40px;font-size:14px;">No</th>'
+          +'<th style="padding:9px 8px;text-align:left;font-size:14px;">조명</th>'
+          +'<th style="padding:9px 8px;text-align:left;font-size:14px;">선수명</th>'
+          +'<th style="padding:9px 8px;text-align:left;font-size:14px;">심판명</th>'
+          +'<th style="padding:9px 8px;text-align:left;font-size:14px;">비고</th>'
           +'</tr></thead>';
 
         for(var lp=0; lp<listTotalPages; lp++){
@@ -3128,11 +3128,11 @@ window.addEventListener('load', function(){
             var playerCell = firstPlayer + (extraCount > 0 ? ' 외 '+extraCount : '');
             var bg = ti % 2 === 0 ? '' : 'background:#f9f9f9;';
             listHtml += '<tr style="'+bg+'">'
-              +'<td style="padding:5px 8px;text-align:center;border-bottom:0.5px solid #e5e7eb;color:#888;font-size:14px;">'+rowNum+'</td>'
-              +'<td style="padding:5px 8px;border-bottom:0.5px solid #e5e7eb;font-weight:700;font-size:14px;">'+esc(t.team||'')+'</td>'
-              +'<td style="padding:5px 8px;border-bottom:0.5px solid #e5e7eb;font-size:14px;">'+playerCell+'</td>'
-              +'<td style="padding:5px 8px;border-bottom:0.5px solid #e5e7eb;"><div style="border-bottom:0.5px solid #bbb;min-width:70px;">&nbsp;</div></td>'
-              +'<td style="padding:5px 8px;border-bottom:0.5px solid #e5e7eb;"><div style="border-bottom:0.5px solid #bbb;min-width:60px;">&nbsp;</div></td>'
+              +'<td style="padding:9px 8px;text-align:center;border-bottom:0.5px solid #e5e7eb;color:#888;font-size:14px;">'+rowNum+'</td>'
+              +'<td style="padding:9px 8px;border-bottom:0.5px solid #e5e7eb;font-weight:700;font-size:14px;">'+esc(t.team||'')+'</td>'
+              +'<td style="padding:9px 8px;border-bottom:0.5px solid #e5e7eb;font-size:14px;">'+playerCell+'</td>'
+              +'<td style="padding:9px 8px;border-bottom:0.5px solid #e5e7eb;"><div style="border-bottom:0.5px solid #bbb;min-width:70px;">&nbsp;</div></td>'
+              +'<td style="padding:9px 8px;border-bottom:0.5px solid #e5e7eb;"><div style="border-bottom:0.5px solid #bbb;min-width:60px;">&nbsp;</div></td>'
               +'</tr>';
           });
           listHtml += '</tbody></table></div>';
