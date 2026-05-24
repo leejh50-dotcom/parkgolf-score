@@ -2845,9 +2845,9 @@ window.addEventListener('load', function(){
 @media screen {
   /* 화면: canvas 숨기고 img 표시 */
   .pgCard-qr canvas { display:none !important; }
-  .pgCard-qr img { display:block !important; width:28vw !important; height:28vw !important; object-fit:contain !important; }
+  .pgCard-qr img { display:block !important; width:18vw !important; height:18vw !important; object-fit:contain !important; }
   .pgCard-body-print { align-items:center !important; }
-  .pgCard-right { align-items:center !important; }
+  .pgCard-right { align-items:center !important; margin-left:8px !important; }
 }
 #pasisSendOv { position:fixed; inset:0; z-index:200000; background:rgba(0,0,0,.55); display:flex; align-items:center; justify-content:center; font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif; }
 #pasisSendBox { background:#fff; border-radius:16px; width:min(400px,94vw); max-height:96vh; overflow-y:auto; box-shadow:0 24px 64px rgba(0,0,0,.3); }
@@ -3089,11 +3089,11 @@ window.addEventListener('load', function(){
         var listPerPage = 25;
         var listTotalPages = Math.ceil(teams.length / listPerPage);
         var headerHtml = '<thead><tr style="background:#1a4a2e;color:#fff;">'
-          +'<th style="padding:8px 10px;text-align:center;width:40px;font-size:14px;">No</th>'
-          +'<th style="padding:8px 10px;text-align:left;font-size:14px;">조명</th>'
-          +'<th style="padding:8px 10px;text-align:left;font-size:14px;">선수명</th>'
-          +'<th style="padding:8px 10px;text-align:left;font-size:14px;">심판명</th>'
-          +'<th style="padding:8px 10px;text-align:left;font-size:14px;">비고</th>'
+          +'<th style="padding:5px 8px;text-align:center;width:40px;font-size:14px;">No</th>'
+          +'<th style="padding:5px 8px;text-align:left;font-size:14px;">조명</th>'
+          +'<th style="padding:5px 8px;text-align:left;font-size:14px;">선수명</th>'
+          +'<th style="padding:5px 8px;text-align:left;font-size:14px;">심판명</th>'
+          +'<th style="padding:5px 8px;text-align:left;font-size:14px;">비고</th>'
           +'</tr></thead>';
 
         for(var lp=0; lp<listTotalPages; lp++){
@@ -3115,11 +3115,11 @@ window.addEventListener('load', function(){
             var playerCell = firstPlayer + (extraCount > 0 ? ' 외 '+extraCount : '');
             var bg = ti % 2 === 0 ? '' : 'background:#f9f9f9;';
             listHtml += '<tr style="'+bg+'">'
-              +'<td style="padding:8px 10px;text-align:center;border-bottom:0.5px solid #e5e7eb;color:#888;font-size:14px;">'+rowNum+'</td>'
-              +'<td style="padding:8px 10px;border-bottom:0.5px solid #e5e7eb;font-weight:700;font-size:14px;">'+esc(t.team||'')+'</td>'
-              +'<td style="padding:8px 10px;border-bottom:0.5px solid #e5e7eb;font-size:14px;">'+playerCell+'</td>'
-              +'<td style="padding:8px 10px;border-bottom:0.5px solid #e5e7eb;"><div style="border-bottom:0.5px solid #bbb;min-width:70px;">&nbsp;</div></td>'
-              +'<td style="padding:8px 10px;border-bottom:0.5px solid #e5e7eb;"><div style="border-bottom:0.5px solid #bbb;min-width:60px;">&nbsp;</div></td>'
+              +'<td style="padding:5px 8px;text-align:center;border-bottom:0.5px solid #e5e7eb;color:#888;font-size:14px;">'+rowNum+'</td>'
+              +'<td style="padding:5px 8px;border-bottom:0.5px solid #e5e7eb;font-weight:700;font-size:14px;">'+esc(t.team||'')+'</td>'
+              +'<td style="padding:5px 8px;border-bottom:0.5px solid #e5e7eb;font-size:14px;">'+playerCell+'</td>'
+              +'<td style="padding:5px 8px;border-bottom:0.5px solid #e5e7eb;"><div style="border-bottom:0.5px solid #bbb;min-width:70px;">&nbsp;</div></td>'
+              +'<td style="padding:5px 8px;border-bottom:0.5px solid #e5e7eb;"><div style="border-bottom:0.5px solid #bbb;min-width:60px;">&nbsp;</div></td>'
               +'</tr>';
           });
           listHtml += '</tbody></table>';
