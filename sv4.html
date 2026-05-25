@@ -2976,6 +2976,28 @@ window.addEventListener('load', function(){
     /* ★ 모바일 감지: iOS/Android → 6개/A4 */
     var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth <= 900;
 
+    /* ★ 장/페이지 선택 버튼 이벤트 — QR 생성 전에 선택 */
+    setTimeout(function(){
+      var lb = document.getElementById('pgLayoutBtn');
+      var l4b = document.getElementById('pgLayout4Btn');
+      function setLayout(n){
+        selectedPerPage = n;
+        if(n===4){
+          if(l4b){l4b.style.background='#fff';l4b.style.color='#7a4f00';l4b.textContent='4개/장 ✓';}
+          if(lb){lb.style.background='rgba(255,255,255,0.25)';lb.style.color='#fff';lb.textContent=(isMobile?'6개/장':'8개/장');}
+        } else {
+          if(lb){lb.style.background='#fff';lb.style.color='#7a4f00';lb.textContent=(isMobile?'6개/장 ✓':'8개/장 ✓');}
+          if(l4b){l4b.style.background='rgba(255,255,255,0.25)';l4b.style.color='#fff';l4b.textContent='4개/장';}
+        }
+      }
+      if(lb) lb.addEventListener('click', function(){
+        if(selectedPerPage !== (isMobile?6:8)) setLayout(isMobile?6:8);
+      });
+      if(l4b) l4b.addEventListener('click', function(){
+        if(selectedPerPage !== 4) setLayout(4);
+      });
+    }, 0);
+
     var today = (function(){
       var d=new Date(); var yy=d.getFullYear(); var mm=String(d.getMonth()+1).padStart(2,'0'); var dd=String(d.getDate()).padStart(2,'0');
       return yy+'. '+mm+'. '+dd+'.';
@@ -2983,6 +3005,10 @@ window.addEventListener('load', function(){
 
     var ov=document.createElement('div');ov.id='pgBatchOv';
     if(isMobile) ov.classList.add('pgMobilePrint');
+
+    /* ★ 생성 전 장/페이지 선택 상태 (기본값) */
+    var selectedPerPage = isMobile ? 6 : 8;
+
     ov.innerHTML='<div id="pgBatchTop">'
       +'<div class="bt-title">📋 조별 QR · '+esc(code)+' · '+esc(qrDate)+' · '+total+'개 조 · '+today+'</div>'
       +'<span class="ph-sub"></span>'
@@ -3106,32 +3132,9 @@ window.addEventListener('load', function(){
         if(printBtn){ printBtn.disabled=false; printBtn.style.opacity=''; printBtn.style.cursor=''; }
 
         var allCards = Array.prototype.slice.call(grid ? grid.querySelectorAll('.pgCard') : []);
-        var perPage = isMobile ? 6 : 8;
+        var perPage = selectedPerPage; /* ★ 생성 전 선택한 값 사용 */
         var cols = 'repeat(2,minmax(0,1fr))';
-
-        /* ★ 4개/장 버튼 이벤트 */
-        var layout4Btn = document.getElementById('pgLayout4Btn');
-        var layoutBtn  = document.getElementById('pgLayoutBtn');
-        if(layout4Btn){
-          layout4Btn.addEventListener('click', function(){
-            var ov3 = document.getElementById('pgBatchOv');
-            if(!ov3) return;
-            /* 토글 */
-            if(ov3.classList.contains('pg4Layout')){
-              ov3.classList.remove('pg4Layout');
-              layout4Btn.style.background='rgba(255,255,255,0.25)';
-              layout4Btn.style.color='#fff';
-              layout4Btn.textContent='4개/장';
-              if(layoutBtn) { layoutBtn.style.background='#fff'; layoutBtn.style.color='#7a4f00'; layoutBtn.textContent=(isMobile?'6개/장 ✓':'8개/장 ✓'); }
-            } else {
-              ov3.classList.add('pg4Layout');
-              layout4Btn.style.background='#fff';
-              layout4Btn.style.color='#7a4f00';
-              layout4Btn.textContent='4개/장 ✓';
-              if(layoutBtn) { layoutBtn.style.background='rgba(255,255,255,0.25)'; layoutBtn.style.color='#fff'; layoutBtn.textContent=(isMobile?'6개/장':'8개/장'); }
-            }
-          });
-        }
+        if(perPage === 4) ov.classList.add('pg4Layout');
         var totalPages = Math.ceil(allCards.length / perPage);
 
         var hdrTop = document.getElementById('pgBatchTop');
@@ -3139,20 +3142,25 @@ window.addEventListener('load', function(){
         var hdrSub = hdrTop ? hdrTop.querySelector('.ph-sub') : null;
         if(hdrSub) hdrSub.textContent = '1 / ' + totalPages + '페이지';
 
-        /* 1페이지 그리드 열 */
+        /* 1페이지 그리드 열 설정 */
         if(grid) grid.style.setProperty('grid-template-columns', cols, 'important');
+
+        /* ★ 1페이지 카드를 perPage만큼만 남기고 나머지는 뒤로 이동 */
+        var firstPageCards = allCards.slice(0, perPage);
+        var restCards = allCards.slice(perPage);
+        /* grid에서 perPage 초과 카드 제거 (뒤에서 새 페이지로 붙임) */
+        restCards.forEach(function(c){ if(c.parentNode===grid) grid.removeChild(c); });
 
         /* 모바일: 카드 높이 auto */
         if(window.innerWidth <= 600) {
-          var mCards = document.querySelectorAll('.pgCard');
-          for(var m=0; m<mCards.length; m++) mCards[m].style.height='auto';
+          firstPageCards.forEach(function(c){ c.style.height='auto'; });
         }
 
         var ov2 = document.getElementById('pgBatchOv');
 
         /* 2페이지~: 카드를 새 그리드+헤더로 분리 */
         for (var p=1; p < totalPages; p++) {
-          var pageCards = allCards.slice(p * perPage, (p+1) * perPage);
+          var pageCards = restCards.slice((p-1) * perPage, p * perPage);
           if (!pageCards.length) break;
 
           var phDiv = document.createElement('div');
