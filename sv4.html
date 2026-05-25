@@ -2951,21 +2951,25 @@ window.addEventListener('load', function(){
     if(!code){alert('대회코드를 먼저 저장해 주세요.');return;}
     if(!webappUrl){alert('웹앱 URL을 먼저 저장해 주세요.');return;}
     if(!webappUrl.includes('script.google.com')){alert('웹앱 URL 형식이 올바르지 않습니다.');return;}
-    if(!confirm('📋 조별 QR 일괄생성을 시작합니다.\n\n구글시트 조편성이 완료된 경우 확인을 누르세요.')) return;
+
     var btn=document.querySelector('button[onclick*="generateBatchQR"]');
     var oldText=btn?btn.textContent:'';
-    if(btn) btn.textContent='⏳ 조편성 불러오는 중...';
     var isMobileGen = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth <= 900;
     var defaultPer = isMobileGen ? 6 : 8;
     var chosenPerPage = defaultPer;
 
-    /* ★ 레이아웃 선택 (fetch 전) */
+    /* ★ 레이아웃 + 생성 확인 — confirm 1회 */
     var layoutChoice = confirm(
-      '📋 인쇄 레이아웃을 선택하세요.\n\n'
-      +'확인(OK) = 4개/장  (QR 아래 이름 배치, 크게)\n'
-      +'취소(Cancel) = '+defaultPer+'개/장  (현재 기본값)'
+      '📋 조별 QR 일괄생성\n\n'
+      +'⚠️ 구글시트 조편성이 완료된 후 선택하세요.\n\n'
+      +'확인(OK) = 4개/장  (QR+이름 세로 배치, 크게)\n'
+      +'취소(Cancel) = '+defaultPer+'개/장  (기본값)'
     );
-    if(layoutChoice) chosenPerPage = 4;
+    /* layoutChoice: true=4개, false=기본(6/8개) */
+    /* false=취소이므로 기본값 유지, true=4개 */
+    chosenPerPage = layoutChoice ? 4 : defaultPer;
+
+    if(btn) btn.textContent='⏳ 조편성 불러오는 중...';
 
     fetch(webappUrl,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'getteams',code:code,mode:mode})})
     .then(function(r){return r.json();})
