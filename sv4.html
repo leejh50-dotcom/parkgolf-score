@@ -2955,11 +2955,23 @@ window.addEventListener('load', function(){
     var btn=document.querySelector('button[onclick*="generateBatchQR"]');
     var oldText=btn?btn.textContent:'';
     if(btn) btn.textContent='⏳ 조편성 불러오는 중...';
+    var isMobileGen = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth <= 900;
+    var defaultPer = isMobileGen ? 6 : 8;
+    var chosenPerPage = defaultPer;
+
+    /* ★ 레이아웃 선택 (fetch 전) */
+    var layoutChoice = confirm(
+      '📋 인쇄 레이아웃을 선택하세요.\n\n'
+      +'확인(OK) = 4개/장  (QR 아래 이름 배치, 크게)\n'
+      +'취소(Cancel) = '+defaultPer+'개/장  (현재 기본값)'
+    );
+    if(layoutChoice) chosenPerPage = 4;
+
     fetch(webappUrl,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'getteams',code:code,mode:mode})})
     .then(function(r){return r.json();})
     .then(function(data){
       if(!data.success||!Array.isArray(data.teams)||!data.teams.length) throw new Error((data&&data.message)||'조편성 데이터가 없습니다.');
-      buildQrOv(data.teams,code,qrDate,webappUrl);
+      buildQrOv(data.teams,code,qrDate,webappUrl,chosenPerPage);
       if(btn) btn.textContent='✅ '+data.teams.length+'개 조 QR 생성 완료';
     })
     .catch(function(err){
@@ -2968,35 +2980,13 @@ window.addEventListener('load', function(){
     });
   };
 
-  function buildQrOv(teams,code,qrDate,webappUrl){
+  function buildQrOv(teams,code,qrDate,webappUrl,chosenPerPage){
     var old=document.getElementById('pgBatchOv');if(old)old.remove();
     var appUrl='https://leejh50-dotcom.github.io/parkgolf-score/pasis4-send.html';
     var dateStr=new Date().toLocaleDateString('ko-KR');
     var total=teams.length;
-    /* ★ 모바일 감지: iOS/Android → 6개/A4 */
     var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth <= 900;
-
-    /* ★ 장/페이지 선택 버튼 이벤트 — QR 생성 전에 선택 */
-    setTimeout(function(){
-      var lb = document.getElementById('pgLayoutBtn');
-      var l4b = document.getElementById('pgLayout4Btn');
-      function setLayout(n){
-        selectedPerPage = n;
-        if(n===4){
-          if(l4b){l4b.style.background='#fff';l4b.style.color='#7a4f00';l4b.textContent='4개/장 ✓';}
-          if(lb){lb.style.background='rgba(255,255,255,0.25)';lb.style.color='#fff';lb.textContent=(isMobile?'6개/장':'8개/장');}
-        } else {
-          if(lb){lb.style.background='#fff';lb.style.color='#7a4f00';lb.textContent=(isMobile?'6개/장 ✓':'8개/장 ✓');}
-          if(l4b){l4b.style.background='rgba(255,255,255,0.25)';l4b.style.color='#fff';l4b.textContent='4개/장';}
-        }
-      }
-      if(lb) lb.addEventListener('click', function(){
-        if(selectedPerPage !== (isMobile?6:8)) setLayout(isMobile?6:8);
-      });
-      if(l4b) l4b.addEventListener('click', function(){
-        if(selectedPerPage !== 4) setLayout(4);
-      });
-    }, 0);
+    var selectedPerPage = chosenPerPage || (isMobile ? 6 : 8);
 
     var today = (function(){
       var d=new Date(); var yy=d.getFullYear(); var mm=String(d.getMonth()+1).padStart(2,'0'); var dd=String(d.getDate()).padStart(2,'0');
@@ -3013,8 +3003,8 @@ window.addEventListener('load', function(){
       +'<div class="bt-title">📋 조별 QR · '+esc(code)+' · '+esc(qrDate)+' · '+total+'개 조 · '+today+'</div>'
       +'<span class="ph-sub"></span>'
       +'<div class="bt-btns">'
-      +'<button class="btn-layout" id="pgLayoutBtn" style="background:#fff;color:#7a4f00;border:none;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;">'+(isMobile?'6개/장 ✓':'8개/장 ✓')+'</button>'
-      +'<button class="btn-layout4" id="pgLayout4Btn" style="background:rgba(255,255,255,0.25);color:#fff;border:1.5px solid rgba(255,255,255,0.6);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;">4개/장</button>'
+      +'<button class="btn-layout" id="pgLayoutBtn" style="background:'+(selectedPerPage!==4?'#fff':'rgba(255,255,255,0.25)')+';color:'+(selectedPerPage!==4?'#7a4f00':'#fff')+';border:'+(selectedPerPage!==4?'none':'1.5px solid rgba(255,255,255,0.6)')+';border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;">'+(selectedPerPage!==4?(isMobile?'6개/장 ✓':'8개/장 ✓'):(isMobile?'6개/장':'8개/장'))+'</button>'
+      +'<button class="btn-layout4" id="pgLayout4Btn" style="background:'+(selectedPerPage===4?'#fff':'rgba(255,255,255,0.25)')+';color:'+(selectedPerPage===4?'#7a4f00':'#fff')+';border:1.5px solid rgba(255,255,255,0.6);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;">'+(selectedPerPage===4?'4개/장 ✓':'4개/장')+'</button>'
       +'<button class="btn-print" id="pgPrintBtn" onclick="window.print()" disabled style="opacity:.4;cursor:not-allowed;">🖨 인쇄하기</button>'
       +'<button class="btn-close" onclick="document.getElementById(\'pgBatchOv\').remove()">✕</button>'
       +'</div></div>'
