@@ -2801,31 +2801,41 @@ window.addEventListener('load', function(){
   .pg4Layout .pgCard-footer { font-size:8pt !important; margin-top:3mm !important; }
 
   /* ══ 4개/장 전용: 카드 세로 레이아웃, 이름 2×2 ══ */
+  /* ══ 4개/장: 2행×2열, 카드 세로, 이름 2×2 ══
+     A4(iOS) 257mm - 헤더8mm - 패딩8mm = 241mm
+     2행×108mm + 간격14mm = 230mm ✅ */
   .pg4per #pgBatchGrid,
   .pg4per .pgBatchGridPage {
-    row-gap:16mm !important;
-    padding:4mm 5mm 0 !important;
+    row-gap:14mm !important;
+    column-gap:6mm !important;
+    padding:4mm 4mm 0 !important;
   }
   .pg4per #pgBatchGrid .pgCard,
   .pg4per .pgBatchGridPage .pgCard {
-    height:120mm !important;
+    height:108mm !important;
+    min-height:0 !important;
     flex-direction:column !important;
     align-items:stretch !important;
-    padding:3mm 4mm 2mm !important;
+    padding:2mm 3mm 2mm !important;
+    overflow:visible !important;
   }
-  .pg4per .pgCard-title { font-size:13pt !important; text-align:center !important; margin-bottom:2mm !important; }
-  .pg4per .pgCard-body-print { flex-direction:column !important; align-items:center !important; flex:1 !important; gap:2mm !important; }
+  .pg4per .pgCard-title { font-size:11pt !important; text-align:center !important; margin-bottom:1mm !important; white-space:nowrap !important; overflow:hidden !important; text-overflow:ellipsis !important; }
+  .pg4per .pgCard-body-print { flex-direction:column !important; align-items:center !important; flex:1 !important; gap:1mm !important; }
   .pg4per .pgCard-seq { flex-direction:row !important; gap:2mm !important; justify-content:center !important; min-width:auto !important; }
-  .pg4per .pgCard-seq-n { font-size:18pt !important; }
-  .pg4per .pgCard-seq-div { width:0 !important; display:none !important; }
-  .pg4per .pgCard-seq-t { font-size:10pt !important; }
+  .pg4per .pgCard-seq-n { font-size:15pt !important; }
+  .pg4per .pgCard-seq-div { display:none !important; }
+  .pg4per .pgCard-seq-t { font-size:9pt !important; }
   .pg4per .pgCard-right { flex-direction:column !important; align-items:center !important; width:100% !important; margin-left:0 !important; }
-  .pg4per .pgCard-qr { width:52mm !important; height:52mm !important; margin:0 auto 2mm !important; }
-  .pg4per .pgCard-qr canvas { width:52mm !important; height:52mm !important; }
-  .pg4per .pgCard-players { display:grid !important; grid-template-columns:1fr 1fr !important; gap:1mm 3mm !important; width:100% !important; }
-  .pg4per .pgCard-pname { font-size:11pt !important; }
-  .pg4per .pgCard-pgender, .pg4per .pgCard-paffil { font-size:8.5pt !important; }
+  /* QR 크기: 108mm카드 - 제목8mm - 순번6mm - 이름30mm - 푸터5mm - 여백 = 약 50mm */
+  .pg4per .pgCard-qr { width:48mm !important; height:48mm !important; margin:0 auto 1mm !important; }
+  .pg4per .pgCard-qr canvas { width:48mm !important; height:48mm !important; }
+  .pg4per .pgCard-qr img { width:48mm !important; height:48mm !important; }
+  /* 이름 2×2 그리드 */
+  .pg4per .pgCard-players { display:grid !important; grid-template-columns:1fr 1fr !important; gap:0.5mm 2mm !important; width:100% !important; }
   .pg4per .pgCard-player { margin-bottom:0 !important; }
+  .pg4per .pgCard-pname { font-size:10pt !important; font-weight:800 !important; }
+  .pg4per .pgCard-pgender, .pg4per .pgCard-paffil { font-size:8pt !important; }
+  .pg4per .pgCard-footer { font-size:8pt !important; margin-top:1mm !important; }
 
      A4 257mm(iOS여백 후) - 헤더10 - 패딩6 = 241mm
      3행×62mm + 2간격×10mm = 206mm < 241mm ✅ 35mm 여유 */
