@@ -27,6 +27,70 @@ if('caches' in window){
     keys.forEach(function(k){ caches.delete(k); });
   });
 }
+
+  /* === 4개/장 별도 빌드 함수 === */
+  function pg4Build(){
+    var p=window._pg4;
+    if(!p){alert('먼저 QR을 생성해 주세요.');return;}
+    var ov=document.getElementById('pgBatchOv');
+    if(!ov) return;
+
+    // pg4 클래스 토글
+    if(ov.classList.contains('pg4')){
+      ov.classList.remove('pg4');
+      var b=document.getElementById('pgLayout4Btn');
+      if(b){b.style.background='rgba(255,255,255,0.25)';b.style.color='#fff';b.textContent='4개/장';}
+      return;
+    }
+    ov.classList.add('pg4');
+    var b=document.getElementById('pgLayout4Btn');
+    if(b){b.style.background='#fff';b.style.color='#7a4f00';b.textContent='4개/장 ✓';}
+
+    // 카드 4개씩 재분배
+    var isMob=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    var perPage=4;
+    var today=(function(){var d=new Date();return d.getFullYear()+'. '+(d.getMonth()+1<10?'0':'')+(d.getMonth()+1)+'. '+(d.getDate()<10?'0':'')+d.getDate()+'.';}());
+    var grid=document.getElementById('pgBatchGrid');
+    if(!grid) return;
+
+    // 기존 2페이지~ 블록 제거
+    var blocks=document.querySelectorAll('.pgPageBlock');
+    blocks.forEach(function(b){b.remove();});
+
+    // 1페이지 카드
+    var allCards=Array.prototype.slice.call(grid.querySelectorAll('.pgCard'));
+    var total=allCards.length;
+    var totalPages=Math.ceil(total/perPage);
+
+    // 1페이지: 4개만 남기기
+    allCards.slice(perPage).forEach(function(c){if(c.parentNode===grid)grid.removeChild(c);});
+    grid.style.setProperty('grid-template-columns','repeat(2,1fr)','important');
+
+    // 헤더 페이지 표시 업데이트
+    var sub=document.querySelector('#pgBatchTop .ph-sub');
+    if(sub) sub.textContent='1 / '+totalPages+'페이지';
+
+    // 2페이지~
+    var rest=allCards.slice(perPage);
+    for(var p2=1;p2<totalPages;p2++){
+      var chunk=rest.slice((p2-1)*perPage, p2*perPage);
+      if(!chunk.length) break;
+      var wrapper=document.createElement('div');
+      wrapper.className='pgPageBlock';
+      // 헤더
+      var hdr=document.createElement('div');
+      hdr.className='pgPageHeader';
+      hdr.innerHTML='<span class="pgPageHeader-title">'+p.c+'</span><span class="pgPageHeader-sub">'+(p2+1)+' / '+totalPages+'페이지</span>';
+      wrapper.appendChild(hdr);
+      var newGrid=document.createElement('div');
+      newGrid.className='pgBatchGridPage';
+      newGrid.style.setProperty('grid-template-columns','repeat(2,1fr)','important');
+      chunk.forEach(function(c){newGrid.appendChild(c);});
+      wrapper.appendChild(newGrid);
+      ov.appendChild(wrapper);
+    }
+  }
+
 </script>
 
 <style>
@@ -36,6 +100,42 @@ if('caches' in window){
 .parkgolf-app #tournamentCode,
 .parkgolf-app #teamName { font-size:20px!important; font-weight:700!important; }
 .parkgolf-app .code-display, .parkgolf-app .team-display { font-size:20px!important; }
+
+  /* === 4개/장 전용 CSS === */
+  #pgBatchOv.pg4 #pgBatchGrid,
+  #pgBatchOv.pg4 .pgBatchGridPage{
+    row-gap:20mm!important;column-gap:6mm!important;padding:8mm 4mm 0!important;
+  }
+  #pgBatchOv.pg4 .pgCard{
+    height:110mm!important;min-height:0!important;
+    flex-direction:column!important;align-items:stretch!important;
+    padding:2mm 3mm!important;overflow:visible!important;
+  }
+  @media only screen and (max-width:900px){
+    #pgBatchOv.pg4 #pgBatchGrid,
+    #pgBatchOv.pg4 .pgBatchGridPage{
+      row-gap:6mm!important;padding:3mm 3mm 0!important;
+    }
+    #pgBatchOv.pg4 .pgCard{height:86mm!important;}
+    #pgBatchOv.pg4 .pgCard-qr{width:36mm!important;height:36mm!important;margin:0 auto 1mm!important;}
+    #pgBatchOv.pg4 .pgCard-qr canvas{width:36mm!important;height:36mm!important;}
+  }
+  #pgBatchOv.pg4 .pgCard-title{font-size:11pt!important;text-align:center!important;margin-bottom:1mm!important;}
+  #pgBatchOv.pg4 .pgCard-body-print{flex-direction:column!important;align-items:center!important;flex:1!important;gap:1mm!important;}
+  #pgBatchOv.pg4 .pgCard-seq{flex-direction:row!important;gap:2mm!important;justify-content:center!important;min-width:auto!important;}
+  #pgBatchOv.pg4 .pgCard-seq-n{font-size:16pt!important;}
+  #pgBatchOv.pg4 .pgCard-seq-div{display:none!important;}
+  #pgBatchOv.pg4 .pgCard-right{flex-direction:column!important;align-items:center!important;width:100%!important;margin-left:0!important;}
+  #pgBatchOv.pg4 .pgCard-qr{width:50mm!important;height:50mm!important;margin:0 auto 1mm!important;}
+  #pgBatchOv.pg4 .pgCard-qr canvas{width:50mm!important;height:50mm!important;}
+  #pgBatchOv.pg4 .pgCard-qr img{width:40mm!important;height:40mm!important;}
+  #pgBatchOv.pg4 .pgCard-players{display:grid!important;grid-template-columns:1fr 1fr!important;gap:1mm 2mm!important;width:100%!important;}
+  #pgBatchOv.pg4 .pgCard-player{display:flex!important;flex-direction:column!important;align-items:center!important;text-align:center!important;margin-bottom:0!important;}
+  #pgBatchOv.pg4 .pgCard-pline{display:flex!important;align-items:baseline!important;justify-content:center!important;gap:3px!important;white-space:nowrap!important;}
+  #pgBatchOv.pg4 .pgCard-num{font-size:8pt!important;color:#c8860a!important;}
+  #pgBatchOv.pg4 .pgCard-pname{font-size:10pt!important;font-weight:800!important;}
+  #pgBatchOv.pg4 .pgCard-pgender,#pgBatchOv.pg4 .pgCard-paffil{font-size:8pt!important;color:#666!important;}
+  #pgBatchOv.pg4 .pgCard-footer{font-size:8pt!important;margin-top:1mm!important;}
 </style>
 
 <!-- 모바일 인쇄 전용 스타일: JS가 활성화 -->
@@ -2802,28 +2902,6 @@ window.addEventListener('load', function(){
 
      A4 257mm(iOS여백 후) - 헤더10 - 패딩6 = 241mm
      3행×62mm + 2간격×10mm = 206mm < 241mm ✅ 35mm 여유 */
-  /* 4개/장 전용 */
-  .pg4per #pgBatchGrid,.pg4per .pgBatchGridPage{row-gap:18mm!important;column-gap:6mm!important;padding:8mm 4mm 0!important;}
-  .pg4per #pgBatchGrid .pgCard,.pg4per .pgBatchGridPage .pgCard{height:110mm!important;min-height:0!important;flex-direction:column!important;align-items:stretch!important;padding:2mm 3mm!important;overflow:visible!important;}
-  .pg4per.pgMobilePrint #pgBatchGrid,.pg4per.pgMobilePrint .pgBatchGridPage{row-gap:6mm!important;padding:3mm 3mm 0!important;}
-  .pg4per.pgMobilePrint #pgBatchGrid .pgCard,.pg4per.pgMobilePrint .pgBatchGridPage .pgCard{height:88mm!important;}
-  .pg4per .pgCard-title{font-size:11pt!important;text-align:center!important;margin-bottom:1mm!important;}
-  .pg4per .pgCard-body-print{flex-direction:column!important;align-items:center!important;flex:1!important;gap:1mm!important;}
-  .pg4per .pgCard-seq{flex-direction:row!important;gap:2mm!important;justify-content:center!important;min-width:auto!important;}
-  .pg4per .pgCard-seq-n{font-size:16pt!important;}.pg4per .pgCard-seq-div{display:none!important;}.pg4per .pgCard-seq-t{font-size:9pt!important;}
-  .pg4per .pgCard-right{flex-direction:column!important;align-items:center!important;width:100%!important;margin-left:0!important;}
-  .pg4per:not(.pgMobilePrint) .pgCard-qr{width:50mm!important;height:50mm!important;margin:0 auto 1mm!important;}
-  .pg4per:not(.pgMobilePrint) .pgCard-qr canvas{width:50mm!important;height:50mm!important;}
-  .pg4per.pgMobilePrint .pgCard-qr{width:38mm!important;height:38mm!important;margin:0 auto 1mm!important;}
-  .pg4per.pgMobilePrint .pgCard-qr canvas{width:38mm!important;height:38mm!important;}
-  .pg4per .pgCard-qr img{width:38mm!important;height:38mm!important;}
-  .pg4per .pgCard-players{display:grid!important;grid-template-columns:1fr 1fr!important;gap:1mm 2mm!important;width:100%!important;}
-  .pg4per .pgCard-player{display:flex!important;flex-direction:column!important;align-items:center!important;text-align:center!important;margin-bottom:0!important;}
-  .pg4per .pgCard-pline{display:flex!important;align-items:baseline!important;justify-content:center!important;gap:3px!important;white-space:nowrap!important;}
-  .pg4per .pgCard-num{font-size:8pt!important;color:#c8860a!important;}.pg4per .pgCard-pname{font-size:10pt!important;font-weight:800!important;}
-  .pg4per .pgCard-pgender,.pg4per .pgCard-paffil{font-size:8pt!important;color:#666!important;}
-  .pg4per .pgCard-footer{font-size:8pt!important;margin-top:1mm!important;}
-
   .pgMobilePrint #pgBatchGrid {
     row-gap:10mm !important;
     padding:6mm 3mm 0 !important;
@@ -2982,7 +3060,7 @@ window.addEventListener('load', function(){
     .then(function(data){
       if(!data.success||!Array.isArray(data.teams)||!data.teams.length) throw new Error((data&&data.message)||'조편성 데이터가 없습니다.');
       window._pg4={t:data.teams,c:code,q:qrDate,u:webappUrl};
-      buildQrOv(data.teams,code,qrDate,webappUrl,0);
+      buildQrOv(data.teams,code,qrDate,webappUrl);
       if(btn) btn.textContent='✅ '+data.teams.length+'개 조 QR 생성 완료';
     })
     .catch(function(err){
@@ -2991,8 +3069,7 @@ window.addEventListener('load', function(){
     });
   };
 
-  window.pgSw=function(n){var p=window._pg4;if(p)buildQrOv(p.t,p.c,p.q,p.u,n);};
-  function buildQrOv(teams,code,qrDate,webappUrl,n4){
+  function buildQrOv(teams,code,qrDate,webappUrl){
     var old=document.getElementById('pgBatchOv');if(old)old.remove();
     var appUrl='https://leejh50-dotcom.github.io/parkgolf-score/pasis4-send.html';
     var dateStr=new Date().toLocaleDateString('ko-KR');
@@ -3007,13 +3084,12 @@ window.addEventListener('load', function(){
 
     var ov=document.createElement('div');ov.id='pgBatchOv';
     if(isMobile) ov.classList.add('pgMobilePrint');
-    if(n4===4) ov.classList.add('pg4per');
     ov.innerHTML='<div id="pgBatchTop">'
       +'<div class="bt-title">📋 조별 QR · '+esc(code)+' · '+esc(qrDate)+' · '+total+'개 조 · '+today+'</div>'
       +'<span class="ph-sub"></span>'
       +'<div class="bt-btns">'
-      +'<button onclick="pgSw(0)" style="background:'+(n4!==4?'#fff':'rgba(255,255,255,0.25)')+';color:'+(n4!==4?'#7a4f00':'#fff')+';border:none;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;">'+(n4!==4?(isMobile?'6개/장 ✓':'8개/장 ✓'):(isMobile?'6개/장':'8개/장'))+'</button>'
-      +'<button onclick="pgSw(4)" style="background:'+(n4===4?'#fff':'rgba(255,255,255,0.25)')+';color:'+(n4===4?'#7a4f00':'#fff')+';border:1.5px solid rgba(255,255,255,0.6);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;">'+(n4===4?'4개/장 ✓':'4개/장')+'</button>'
+      +'<button class="btn-layout" id="pgLayoutBtn" style="background:#fff;color:#7a4f00;border:none;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;">'+(isMobile?'6개/장 ✓':'8개/장 ✓')+'</button>'
+      +'<button onclick="pg4Build()" id="pgLayout4Btn" style="background:rgba(255,255,255,0.25);color:#fff;border:1.5px solid rgba(255,255,255,0.6);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;">4개/장</button>'
       +'<button class="btn-print" id="pgPrintBtn" onclick="window.print()" disabled style="opacity:.4;cursor:not-allowed;">🖨 인쇄하기</button>'
       +'<button class="btn-close" onclick="document.getElementById(\'pgBatchOv\').remove()">✕</button>'
       +'</div></div>'
@@ -3131,9 +3207,7 @@ window.addEventListener('load', function(){
         if(printBtn){ printBtn.disabled=false; printBtn.style.opacity=''; printBtn.style.cursor=''; }
 
         var allCards = Array.prototype.slice.call(grid ? grid.querySelectorAll('.pgCard') : []);
-        var perPage = n4===4 ? 4 : (isMobile ? 6 : 8);
-        var allFirst = n4===4 ? allCards.slice(0,perPage) : allCards;
-        if(n4===4){ allCards.slice(perPage).forEach(function(c){if(c.parentNode===grid)grid.removeChild(c);}); }
+        var perPage = isMobile ? 6 : 8;
         var cols = 'repeat(2,minmax(0,1fr))';
 
         /* ★ 4개/장 버튼 이벤트 */
@@ -3179,7 +3253,7 @@ window.addEventListener('load', function(){
 
         /* 2페이지~: 카드를 새 그리드+헤더로 분리 */
         for (var p=1; p < totalPages; p++) {
-          var pageCards = (n4===4?allCards.slice(perPage):allCards).slice((p-1)*perPage, p*perPage);
+          var pageCards = allCards.slice(p * perPage, (p+1) * perPage);
           if (!pageCards.length) break;
 
           var phDiv = document.createElement('div');
