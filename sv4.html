@@ -2831,10 +2831,12 @@ window.addEventListener('load', function(){
   .pg4per .pgCard-qr canvas { width:44mm !important; height:44mm !important; }
   .pg4per .pgCard-qr img { width:44mm !important; height:44mm !important; }
   /* 이름 2×2 그리드 */
-  .pg4per .pgCard-players { display:grid !important; grid-template-columns:1fr 1fr !important; gap:0.5mm 2mm !important; width:100% !important; }
-  .pg4per .pgCard-player { margin-bottom:0 !important; }
+  .pg4per .pgCard-players { display:grid !important; grid-template-columns:1fr 1fr !important; gap:1mm 2mm !important; width:100% !important; }
+  .pg4per .pgCard-player { margin-bottom:0 !important; display:flex !important; flex-direction:column !important; align-items:center !important; text-align:center !important; }
+  .pg4per .pgCard-pline { display:flex !important; align-items:baseline !important; justify-content:center !important; gap:3px !important; white-space:nowrap !important; }
+  .pg4per .pgCard-num { font-size:8pt !important; font-weight:500 !important; color:#c8860a !important; }
   .pg4per .pgCard-pname { font-size:10pt !important; font-weight:800 !important; }
-  .pg4per .pgCard-pgender, .pg4per .pgCard-paffil { font-size:8pt !important; }
+  .pg4per .pgCard-pgender, .pg4per .pgCard-paffil { font-size:8pt !important; color:#666 !important; }
   .pg4per .pgCard-footer { font-size:8pt !important; margin-top:1mm !important; }
 
      A4 257mm(iOS여백 후) - 헤더10 - 패딩6 = 241mm
