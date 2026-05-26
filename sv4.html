@@ -2873,7 +2873,7 @@ window.addEventListener('load', function(){
 }
 
 #pgBatchTop .bt-title { font-size:15px; font-weight:900; }
-#pgBatchTop .bt-btns { display:flex; gap:8px; }
+#pgBatchTop .bt-btns { display:flex; gap:12px; align-items:center; }
 #pgBatchTop button { border:0; border-radius:8px; padding:8px 14px; font-size:14px; font-weight:800; cursor:pointer; }
 #pgBatchTop .btn-print { background:#fff; color:#7a4f00; }
 #pgBatchTop .btn-close {
@@ -3016,8 +3016,8 @@ window.addEventListener('load', function(){
       +'<div class="bt-title">📋 조별 QR · '+esc(code)+' · '+esc(qrDate)+' · '+total+'개 조 · '+today+'</div>'
       +'<span class="ph-sub"></span>'
       +'<div class="bt-btns">'
-      +'<button class="btn-layout" id="pgLayoutBtn" style="background:'+(chosenPer!==4?'#fff':'rgba(255,255,255,0.25)')+';color:'+(chosenPer!==4?'#7a4f00':'#fff')+';border:none;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;">'+(chosenPer!==4?(isMobile?'6개/장 ✓':'8개/장 ✓'):(isMobile?'6개/장':'8개/장'))+'</button>'
-      +'<button class="btn-layout4" id="pgLayout4Btn" style="background:rgba(255,255,255,0.25);color:#fff;border:1.5px solid rgba(255,255,255,0.6);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;">4개/장</button>'
+      +'<button class="btn-layout" id="pgLayoutBtn" style="background:'+(chosenPer!==4?'#fff':'rgba(255,255,255,0.25)')+';color:'+(chosenPer!==4?'#7a4f00':'#fff')+';border:none;border-radius:10px;padding:12px 22px;font-size:16px;font-weight:800;min-width:90px;min-height:48px;-webkit-tap-highlight-color:transparent;">'+(chosenPer!==4?(isMobile?'6개/장 ✓':'8개/장 ✓'):(isMobile?'6개/장':'8개/장'))+'</button>'
+      +'<button class="btn-layout4" id="pgLayout4Btn" style="background:'+(chosenPer===4?'#fff':'rgba(255,255,255,0.25)')+';color:'+(chosenPer===4?'#7a4f00':'#fff')+';border:2px solid rgba(255,255,255,0.8);border-radius:10px;padding:12px 22px;font-size:16px;font-weight:800;min-width:90px;min-height:48px;-webkit-tap-highlight-color:transparent;">'+(chosenPer===4?'4개/장 ✓':'4개/장')+'</button>'
       +'<button class="btn-print" id="pgPrintBtn" onclick="window.print()" disabled style="opacity:.4;cursor:not-allowed;">🖨 인쇄하기</button>'
       +'<button class="btn-close" onclick="document.getElementById(\'pgBatchOv\').remove()">✕</button>'
       +'</div></div>'
