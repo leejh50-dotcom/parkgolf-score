@@ -2806,13 +2806,13 @@ window.addEventListener('load', function(){
      2행×108mm + 간격14mm = 230mm ✅ */
   .pg4per #pgBatchGrid,
   .pg4per .pgBatchGridPage {
-    row-gap:14mm !important;
+    row-gap:10mm !important;
     column-gap:6mm !important;
-    padding:4mm 4mm 0 !important;
+    padding:3mm 4mm 0 !important;
   }
   .pg4per #pgBatchGrid .pgCard,
   .pg4per .pgBatchGridPage .pgCard {
-    height:108mm !important;
+    height:100mm !important;
     min-height:0 !important;
     flex-direction:column !important;
     align-items:stretch !important;
@@ -2827,9 +2827,9 @@ window.addEventListener('load', function(){
   .pg4per .pgCard-seq-t { font-size:9pt !important; }
   .pg4per .pgCard-right { flex-direction:column !important; align-items:center !important; width:100% !important; margin-left:0 !important; }
   /* QR 크기: 108mm카드 - 제목8mm - 순번6mm - 이름30mm - 푸터5mm - 여백 = 약 50mm */
-  .pg4per .pgCard-qr { width:48mm !important; height:48mm !important; margin:0 auto 1mm !important; }
-  .pg4per .pgCard-qr canvas { width:48mm !important; height:48mm !important; }
-  .pg4per .pgCard-qr img { width:48mm !important; height:48mm !important; }
+  .pg4per .pgCard-qr { width:44mm !important; height:44mm !important; margin:0 auto 1mm !important; }
+  .pg4per .pgCard-qr canvas { width:44mm !important; height:44mm !important; }
+  .pg4per .pgCard-qr img { width:44mm !important; height:44mm !important; }
   /* 이름 2×2 그리드 */
   .pg4per .pgCard-players { display:grid !important; grid-template-columns:1fr 1fr !important; gap:0.5mm 2mm !important; width:100% !important; }
   .pg4per .pgCard-player { margin-bottom:0 !important; }
