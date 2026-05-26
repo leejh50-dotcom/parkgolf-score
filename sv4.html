@@ -2633,8 +2633,8 @@ window.addEventListener('load', function(){
     display:flex !important; visibility:visible !important;
     position:static !important;
     align-items:center !important; justify-content:space-between !important;
-    padding:1.5mm 3mm !important; margin:0 0 2mm !important;
-    height:10mm !important; box-sizing:border-box !important;
+    padding:1mm 3mm !important; margin:0 0 1mm !important;
+    height:8mm !important; box-sizing:border-box !important;
     background:#fff !important;
     border-bottom:1.5pt solid #222 !important;
   }
@@ -2657,18 +2657,49 @@ window.addEventListener('load', function(){
     display:grid !important;
     grid-template-columns:repeat(2,1fr) !important;
     column-gap:5mm !important;
-    row-gap:12mm !important;
-    padding:8mm 3mm 0 !important;
+    row-gap:8mm !important;
+    padding:3mm 3mm 0 !important;
     width:100% !important; box-sizing:border-box !important;
     align-content:start !important;
   }
   #pgBatchGrid .pgCard {
-    height:55mm !important;
+    height:60mm !important;
     overflow:hidden !important; box-sizing:border-box !important;
   }
 
-  /* 카드 공통 */
-  .pgCard {
+  /* ══ 카드 내부: QR 왼쪽 + 이름 오른쪽 2×2 ══ */
+  .pgCard-body-print {
+    display:flex !important; flex-direction:row !important;
+    align-items:flex-start !important; gap:3mm !important; flex:1 !important;
+  }
+  .pgCard-seq {
+    display:flex !important; flex-direction:column !important;
+    align-items:center !important; justify-content:center !important;
+    min-width:8mm !important; flex-shrink:0 !important;
+  }
+  .pgCard-seq-n { font-size:18pt !important; font-weight:700 !important; line-height:1 !important; }
+  .pgCard-seq-div { width:10mm !important; height:0.3mm !important; background:#ccc !important; margin:1mm 0 !important; }
+  .pgCard-seq-t { font-size:8pt !important; color:#888 !important; }
+  .pgCard-right {
+    display:flex !important; flex-direction:column !important;
+    align-items:flex-start !important; gap:1mm !important; flex:1 !important;
+  }
+  /* QR */
+  .pgCard-qr { width:28mm !important; height:28mm !important; flex-shrink:0 !important; }
+  .pgCard-qr canvas { width:28mm !important; height:28mm !important; }
+  /* 이름 2×2 그리드 */
+  .pgCard-players {
+    display:grid !important;
+    grid-template-columns:1fr 1fr !important;
+    gap:1mm 2mm !important;
+    width:100% !important;
+    margin-top:1mm !important;
+  }
+  .pgCard-player { display:flex !important; flex-direction:column !important; min-width:0 !important; }
+  .pgCard-pline { display:flex !important; align-items:baseline !important; gap:2px !important; white-space:nowrap !important; }
+  .pgCard-num { font-size:8pt !important; font-weight:900 !important; color:#c8860a !important; }
+  .pgCard-pname { font-size:10pt !important; font-weight:800 !important; white-space:nowrap !important; }
+  .pgCard-pgender, .pgCard-paffil { font-size:7.5pt !important; color:#666 !important; }
     border:1.5px solid #999 !important; border-radius:2mm !important;
     box-shadow:none !important; background:#fff !important;
     break-inside:avoid !important; page-break-inside:avoid !important;
@@ -2829,18 +2860,18 @@ window.addEventListener('load', function(){
     break-before:page !important; page-break-before:always !important;
     display:block !important;
   }
-  /* 2페이지~ 그리드: 8장(2×4) */
+  /* 2페이지~ 그리드: 4장(2×2) — 헤더포함 */
   .pgBatchGridPage {
     display:grid !important;
     grid-template-columns:repeat(2,1fr) !important;
     column-gap:5mm !important;
-    row-gap:12mm !important;
-    padding:8mm 3mm 0 !important;
+    row-gap:8mm !important;
+    padding:3mm 3mm 0 !important;
     width:100% !important; box-sizing:border-box !important;
     align-content:start !important;
   }
   .pgBatchGridPage .pgCard {
-    height:55mm !important;
+    height:60mm !important;
     overflow:hidden !important; box-sizing:border-box !important;
   }
 }
@@ -2987,7 +3018,7 @@ window.addEventListener('load', function(){
       +'<div class="bt-title">📋 조별 QR · '+esc(code)+' · '+esc(qrDate)+' · '+total+'개 조 · '+today+'</div>'
       +'<span class="ph-sub"></span>'
       +'<div class="bt-btns">'
-      +'<button class="btn-layout" id="pgLayoutBtn" style="background:#fff;color:#7a4f00;border:none;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;">'+(isMobile?'6개/장 ✓':'8개/장 ✓')+'</button>'
+      +'<button class="btn-layout" id="pgLayoutBtn" style="background:#fff;color:#7a4f00;border:none;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;">4개/장 ✓</button>'
       +'<button class="btn-layout4" id="pgLayout4Btn" style="background:rgba(255,255,255,0.25);color:#fff;border:1.5px solid rgba(255,255,255,0.6);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;">4개/장</button>'
       +'<button class="btn-print" id="pgPrintBtn" onclick="window.print()" disabled style="opacity:.4;cursor:not-allowed;">🖨 인쇄하기</button>'
       +'<button class="btn-close" onclick="document.getElementById(\'pgBatchOv\').remove()">✕</button>'
@@ -3106,53 +3137,29 @@ window.addEventListener('load', function(){
         if(printBtn){ printBtn.disabled=false; printBtn.style.opacity=''; printBtn.style.cursor=''; }
 
         var allCards = Array.prototype.slice.call(grid ? grid.querySelectorAll('.pgCard') : []);
-        var perPage = isMobile ? 6 : 8;
+        var perPage = 4; /* ★ 4개/장 고정 */
         var cols = 'repeat(2,minmax(0,1fr))';
-
-        /* ★ 4개/장 버튼 이벤트 */
-        var layout4Btn = document.getElementById('pgLayout4Btn');
-        var layoutBtn  = document.getElementById('pgLayoutBtn');
-        if(layout4Btn){
-          layout4Btn.addEventListener('click', function(){
-            var ov3 = document.getElementById('pgBatchOv');
-            if(!ov3) return;
-            /* 토글 */
-            if(ov3.classList.contains('pg4Layout')){
-              ov3.classList.remove('pg4Layout');
-              layout4Btn.style.background='rgba(255,255,255,0.25)';
-              layout4Btn.style.color='#fff';
-              layout4Btn.textContent='4개/장';
-              if(layoutBtn) { layoutBtn.style.background='#fff'; layoutBtn.style.color='#7a4f00'; layoutBtn.textContent=(isMobile?'6개/장 ✓':'8개/장 ✓'); }
-            } else {
-              ov3.classList.add('pg4Layout');
-              layout4Btn.style.background='#fff';
-              layout4Btn.style.color='#7a4f00';
-              layout4Btn.textContent='4개/장 ✓';
-              if(layoutBtn) { layoutBtn.style.background='rgba(255,255,255,0.25)'; layoutBtn.style.color='#fff'; layoutBtn.textContent=(isMobile?'6개/장':'8개/장'); }
-            }
-          });
-        }
         var totalPages = Math.ceil(allCards.length / perPage);
-
         var hdrTop = document.getElementById('pgBatchTop');
         var titleText = hdrTop ? (hdrTop.querySelector('.bt-title')||{}).textContent || '' : '';
         var hdrSub = hdrTop ? hdrTop.querySelector('.ph-sub') : null;
         if(hdrSub) hdrSub.textContent = '1 / ' + totalPages + '페이지';
 
-        /* 1페이지 그리드 열 */
-        if(grid) grid.style.setProperty('grid-template-columns', cols, 'important');
+        /* ★ 1페이지: perPage(4)개만 남기고 나머지 grid에서 제거 */
+        var firstCards = allCards.slice(0, perPage);
+        var restCards  = allCards.slice(perPage);
+        restCards.forEach(function(c){ if(c.parentNode===grid) grid.removeChild(c); });
 
-        /* 모바일: 카드 높이 auto */
+        if(grid) grid.style.setProperty('grid-template-columns', cols, 'important');
         if(window.innerWidth <= 600) {
-          var mCards = document.querySelectorAll('.pgCard');
-          for(var m=0; m<mCards.length; m++) mCards[m].style.height='auto';
+          firstCards.forEach(function(c){ c.style.height='auto'; });
         }
 
         var ov2 = document.getElementById('pgBatchOv');
 
-        /* 2페이지~: 카드를 새 그리드+헤더로 분리 */
+        /* 2페이지~: 헤더 + 카드 4개씩 분리 */
         for (var p=1; p < totalPages; p++) {
-          var pageCards = allCards.slice(p * perPage, (p+1) * perPage);
+          var pageCards = restCards.slice((p-1) * perPage, p * perPage);
           if (!pageCards.length) break;
 
           var phDiv = document.createElement('div');
