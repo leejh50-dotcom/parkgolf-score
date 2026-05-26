@@ -2863,7 +2863,12 @@ window.addEventListener('load', function(){
   .pgMobilePrint .pgCard-pname { font-size:11.5pt !important; }
   .pgMobilePrint .pgCard-title { font-size:9.5pt !important; }
 
-  /* ★ 2페이지~ 페이지 블록 */
+  /* ★ 모바일 4개/장: row-gap 줄이기 */
+  .pgMobilePrint.pg4per #pgBatchGrid,
+  .pgMobilePrint.pg4per .pgBatchGridPage {
+    row-gap:8mm !important;
+    padding:4mm 4mm 0 !important;
+  }
   .pgPageBlock {
     break-before:page !important; page-break-before:always !important;
     display:block !important;
@@ -3645,4 +3650,17 @@ window.addEventListener('load', function(){
   }
   function repeat(){
     bind();
-    [50,200,500,1000,2000,3500,5000,8000].forEach(function
+    [50,200,500,1000,2000,3500,5000,8000].forEach(function(ms){setTimeout(bind,ms);});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',repeat);
+  else repeat();
+  window.addEventListener('load',repeat);
+  try{
+    new MutationObserver(function(){ setTimeout(bind,0); }).observe(document.documentElement,{childList:true,subtree:true});
+  }catch(e){}
+  window.collectPlayersForSendDetailedV2=collectPlayers;
+})();
+</script>
+
+</body>
+</html>
