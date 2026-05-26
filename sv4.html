@@ -2810,11 +2810,17 @@ window.addEventListener('load', function(){
   .pg4Layout .pgCard-qr canvas { width:58mm !important; height:58mm !important; }
   .pg4Layout .pgCard-qr img { width:58mm !important; height:58mm !important; }
   /* 4개/장: 이름 크게 */
-  .pg4Layout .pgCard-players { width:100% !important; }
-  .pg4Layout .pgCard-player { margin-bottom:2mm !important; }
-  .pg4Layout .pgCard-pname { font-size:13pt !important; }
+  /* 4개/장: 이름 2×2 그리드 */
+  .pg4Layout .pgCard-players {
+    width:100% !important;
+    display:grid !important;
+    grid-template-columns:1fr 1fr !important;
+    gap:2mm 3mm !important;
+  }
+  .pg4Layout .pgCard-player { margin-bottom:0 !important; }
+  .pg4Layout .pgCard-pname { font-size:12pt !important; }
   .pg4Layout .pgCard-pgender,
-  .pg4Layout .pgCard-paffil { font-size:10pt !important; }
+  .pg4Layout .pgCard-paffil { font-size:9pt !important; }
   .pg4Layout .pgCard-footer { font-size:9pt !important; margin-top:3mm !important; }
 
      A4 257mm(iOS여백 후) - 헤더10 - 패딩6 = 241mm
@@ -2971,7 +2977,7 @@ window.addEventListener('load', function(){
     if(!confirm('📋 조별 QR 일괄생성을 시작합니다.\n\n⚠️ 구글시트 조편성이 완료된 경우 확인을 누르세요.')) return;
     var btn=document.querySelector('button[onclick*="generateBatchQR"]');
     var oldText=btn?btn.textContent:'';
-    var isMobileGen=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)||window.innerWidth<=900;
+    var isMobileGen=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     var chosenPerPage=isMobileGen?6:8;
     if(btn) btn.textContent='⏳ 조편성 불러오는 중...';
     fetch(webappUrl,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'getteams',code:code,mode:mode})})
@@ -2994,7 +3000,7 @@ window.addEventListener('load', function(){
     var appUrl='https://leejh50-dotcom.github.io/parkgolf-score/pasis4-send.html';
     var dateStr=new Date().toLocaleDateString('ko-KR');
     var total=teams.length;
-    var isMobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)||window.innerWidth<=900;
+    var isMobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     var selectedPerPage=chosenPerPage||(isMobile?6:8);
 
     var today = (function(){
