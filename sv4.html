@@ -2607,7 +2607,7 @@ window.addEventListener('load', function(){
 
   body * { visibility:hidden !important; }
   #pgBatchOv, #pgBatchOv * { visibility:visible !important; }
-  #pgBatchOv { position:fixed !important; left:0 !important; top:0 !important;
+  #pgBatchOv { position:absolute !important; left:0 !important; top:0 !important;
     width:100% !important; background:#fff !important; overflow:visible !important; }
 
   /* ★ 헤더: static — JS가 각 페이지 시작마다 삽입 */
@@ -2826,15 +2826,15 @@ window.addEventListener('load', function(){
   /* ★ 모바일 4개/장 전용 — pgMobilePrint 모든 값 재정의 */
   .pgMobilePrint.pg4Layout #pgBatchGrid,
   .pgMobilePrint.pg4Layout .pgBatchGridPage {
-    row-gap:15mm !important;
+    row-gap:8mm !important;
     column-gap:5mm !important;
     padding:4mm 3mm 0 !important;
   }
   .pgMobilePrint.pg4Layout #pgBatchGrid .pgCard,
   .pgMobilePrint.pg4Layout .pgBatchGridPage .pgCard {
-    height:100mm !important;
+    height:108mm !important;
     min-height:0 !important;
-    max-height:100mm !important;
+    max-height:108mm !important;
     flex-direction:column !important;
     align-items:center !important;
     padding:2mm 3mm !important;
@@ -3198,6 +3198,30 @@ window.addEventListener('load', function(){
           /* 버튼 */
           if(layout4Btn){layout4Btn.style.background=use4?'#fff':'rgba(255,255,255,0.25)';layout4Btn.style.color=use4?'#7a4f00':'#fff';layout4Btn.textContent=use4?'4개/장 ✓':'4개/장';}
           if(layoutBtn){layoutBtn.style.background=use4?'rgba(255,255,255,0.25)':'#fff';layoutBtn.style.color=use4?'#fff':'#7a4f00';layoutBtn.textContent=use4?(isMobile?'6개/장':'8개/장'):(isMobile?'6개/장 ✓':'8개/장 ✓');}
+
+          /* ★ 4개/장: 실제 화면 높이로 카드 높이 자동 계산 */
+          if(use4 && isMobile){
+            /* 인쇄 가용 높이 = 실제 화면 높이 (iOS는 window.screen.height가 물리 해상도)
+               A4 mm환산: 1px ≈ 0.2646mm (96dpi 기준) */
+            var pageH_mm = window.innerHeight * 0.2646;
+            /* 헤더8mm + 패딩8mm + gap8mm = 24mm */
+            var overhead = 24;
+            /* 카드 2개: (가용-overhead)/2, 최소80 최대115 */
+            var cardH = Math.min(115, Math.max(80, Math.floor((pageH_mm - overhead) / 2)));
+            var g2=document.getElementById('pgBatchGrid');
+            if(g2){
+              g2.style.setProperty('--card4h', cardH+'mm');
+            }
+            /* CSS 변수로 카드 높이 적용 */
+            var styleId='pg4StyleDyn';
+            var old=document.getElementById(styleId); if(old) old.remove();
+            var st=document.createElement('style'); st.id=styleId;
+            st.textContent='.pgMobilePrint.pg4Layout #pgBatchGrid .pgCard,'
+              +'.pgMobilePrint.pg4Layout .pgBatchGridPage .pgCard'
+              +'{height:'+cardH+'mm!important;max-height:'+cardH+'mm!important;}';
+            document.head.appendChild(st);
+          }
+
           /* 기존 2페이지~ 제거 */
           var blocks=ov3.querySelectorAll('.pgPageBlock'); blocks.forEach(function(b){b.remove();});
           /* 1페이지 그리드 복구 */
