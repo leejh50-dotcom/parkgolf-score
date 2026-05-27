@@ -2607,7 +2607,7 @@ window.addEventListener('load', function(){
 
   body * { visibility:hidden !important; }
   #pgBatchOv, #pgBatchOv * { visibility:visible !important; }
-  #pgBatchOv { position:static !important; left:auto !important; top:auto !important;
+  #pgBatchOv { position:absolute !important; left:0 !important; top:0 !important;
     width:100% !important; background:#fff !important; overflow:visible !important; }
 
   /* ★ 헤더: static — JS가 각 페이지 시작마다 삽입 */
@@ -2823,82 +2823,6 @@ window.addEventListener('load', function(){
   /* 모바일: 이름 폰트 약간 크게 */
   .pgMobilePrint .pgCard-pname { font-size:11.5pt !important; }
   .pgMobilePrint .pgCard-title { font-size:9.5pt !important; }
-  /* ★ 모바일 4개/장 전용 — pgMobilePrint 모든 값 재정의 */
-  .pgMobilePrint.pg4Layout #pgBatchGrid,
-  .pgMobilePrint.pg4Layout .pgBatchGridPage {
-    row-gap:25mm !important;
-    column-gap:5mm !important;
-    padding:4mm 3mm 0 !important;
-  }
-  .pgMobilePrint.pg4Layout #pgBatchGrid .pgCard,
-  .pgMobilePrint.pg4Layout .pgBatchGridPage .pgCard {
-    height:80mm !important;
-    min-height:0 !important;
-    max-height:80mm !important;
-    flex-direction:column !important;
-    align-items:center !important;
-    padding:2mm 3mm !important;
-    overflow:hidden !important;
-  }
-  .pgMobilePrint.pg4Layout .pgCard-title {
-    font-size:10pt !important;
-    text-align:center !important;
-    margin-bottom:1mm !important;
-    width:100% !important;
-  }
-  .pgMobilePrint.pg4Layout .pgCard-body-print {
-    flex-direction:column !important;
-    align-items:center !important;
-    width:100% !important;
-    gap:0 !important;
-    flex:1 !important;
-  }
-  .pgMobilePrint.pg4Layout .pgCard-seq {
-    flex-direction:row !important;
-    justify-content:center !important;
-    min-width:auto !important;
-    gap:2mm !important;
-    margin-bottom:1mm !important;
-  }
-  .pgMobilePrint.pg4Layout .pgCard-seq-n { font-size:16pt !important; }
-  .pgMobilePrint.pg4Layout .pgCard-seq-div { display:none !important; }
-  .pgMobilePrint.pg4Layout .pgCard-right {
-    flex-direction:column !important;
-    align-items:center !important;
-    width:100% !important;
-    margin-left:0 !important;
-  }
-  /* QR 크기 */
-  .pgMobilePrint.pg4Layout .pgCard-qr { width:38mm !important; height:38mm !important; margin:0 auto 0 !important; }
-  .pgMobilePrint.pg4Layout .pgCard-qr canvas { width:38mm !important; height:38mm !important; }
-  .pgMobilePrint.pg4Layout .pgCard-qr img { width:38mm !important; height:38mm !important; }
-  /* QR↔이름 여백 */
-  .pgMobilePrint.pg4Layout .pgCard-players {
-    display:grid !important;
-    grid-template-columns:1fr 1fr !important;
-    gap:2mm 2mm !important;
-    width:100% !important;
-    margin-top:3mm !important;
-  }
-  /* 이름 1행·2행 사이 추가 간격 */
-  .pgMobilePrint.pg4Layout .pgCard-player:nth-child(3),
-  .pgMobilePrint.pg4Layout .pgCard-player:nth-child(4) {
-    margin-top:2mm !important;
-  }
-  .pgMobilePrint.pg4Layout .pgCard-player {
-    display:flex !important; flex-direction:column !important;
-    align-items:center !important; text-align:center !important;
-    margin-bottom:0 !important;
-  }
-  .pgMobilePrint.pg4Layout .pgCard-pline {
-    display:flex !important; align-items:baseline !important;
-    justify-content:center !important; gap:2px !important; white-space:nowrap !important;
-  }
-  .pgMobilePrint.pg4Layout .pgCard-num { font-size:8pt !important; color:#c8860a !important; }
-  .pgMobilePrint.pg4Layout .pgCard-pname { font-size:10pt !important; font-weight:800 !important; }
-  .pgMobilePrint.pg4Layout .pgCard-pgender,
-  .pgMobilePrint.pg4Layout .pgCard-paffil { font-size:8pt !important; color:#666 !important; }
-  .pgMobilePrint.pg4Layout .pgCard-footer { font-size:8pt !important; margin-top:auto !important; padding-top:1mm !important; }
 
   /* ★ 2페이지~ 페이지 블록 */
   .pgPageBlock {
@@ -3182,72 +3106,32 @@ window.addEventListener('load', function(){
         if(printBtn){ printBtn.disabled=false; printBtn.style.opacity=''; printBtn.style.cursor=''; }
 
         var allCards = Array.prototype.slice.call(grid ? grid.querySelectorAll('.pgCard') : []);
-        window._allCards = allCards.slice(); /* ★ 전체 카드 캐시 */
         var perPage = isMobile ? 6 : 8;
         var cols = 'repeat(2,minmax(0,1fr))';
 
-        /* ★ 4개/장 버튼 이벤트 — 카드 재분배 */
+        /* ★ 4개/장 버튼 이벤트 */
         var layout4Btn = document.getElementById('pgLayout4Btn');
         var layoutBtn  = document.getElementById('pgLayoutBtn');
-        function pgRebuild(use4){
-          var ov3=document.getElementById('pgBatchOv'); if(!ov3) return;
-          var cards=window._allCards; if(!cards||!cards.length) return;
-          var pp=use4?4:(isMobile?6:8);
-          /* 클래스 */
-          if(use4){ov3.classList.add('pg4Layout');}else{ov3.classList.remove('pg4Layout');}
-          /* 버튼 */
-          if(layout4Btn){layout4Btn.style.background=use4?'#fff':'rgba(255,255,255,0.25)';layout4Btn.style.color=use4?'#7a4f00':'#fff';layout4Btn.textContent=use4?'4개/장 ✓':'4개/장';}
-          if(layoutBtn){layoutBtn.style.background=use4?'rgba(255,255,255,0.25)':'#fff';layoutBtn.style.color=use4?'#fff':'#7a4f00';layoutBtn.textContent=use4?(isMobile?'6개/장':'8개/장'):(isMobile?'6개/장 ✓':'8개/장 ✓');}
-
-          /* ★ 4개/장: 실제 화면 높이로 카드 높이 자동 계산 */
-          if(use4 && isMobile){
-            /* 인쇄 가용 높이 = 실제 화면 높이 (iOS는 window.screen.height가 물리 해상도)
-               A4 mm환산: 1px ≈ 0.2646mm (96dpi 기준) */
-            var pageH_mm = window.innerHeight * 0.2646;
-            /* 헤더8mm + 패딩8mm + gap8mm = 24mm */
-            var overhead = 24;
-            /* 카드 2개: (가용-overhead)/2, 최소80 최대115 */
-            var cardH = Math.min(115, Math.max(80, Math.floor((pageH_mm - overhead) / 2)));
-            var g2=document.getElementById('pgBatchGrid');
-            if(g2){
-              g2.style.setProperty('--card4h', cardH+'mm');
+        if(layout4Btn){
+          layout4Btn.addEventListener('click', function(){
+            var ov3 = document.getElementById('pgBatchOv');
+            if(!ov3) return;
+            /* 토글 */
+            if(ov3.classList.contains('pg4Layout')){
+              ov3.classList.remove('pg4Layout');
+              layout4Btn.style.background='rgba(255,255,255,0.25)';
+              layout4Btn.style.color='#fff';
+              layout4Btn.textContent='4개/장';
+              if(layoutBtn) { layoutBtn.style.background='#fff'; layoutBtn.style.color='#7a4f00'; layoutBtn.textContent=(isMobile?'6개/장 ✓':'8개/장 ✓'); }
+            } else {
+              ov3.classList.add('pg4Layout');
+              layout4Btn.style.background='#fff';
+              layout4Btn.style.color='#7a4f00';
+              layout4Btn.textContent='4개/장 ✓';
+              if(layoutBtn) { layoutBtn.style.background='rgba(255,255,255,0.25)'; layoutBtn.style.color='#fff'; layoutBtn.textContent=(isMobile?'6개/장':'8개/장'); }
             }
-            /* CSS 변수로 카드 높이 적용 */
-            var styleId='pg4StyleDyn';
-            var old=document.getElementById(styleId); if(old) old.remove();
-            var st=document.createElement('style'); st.id=styleId;
-            st.textContent='.pgMobilePrint.pg4Layout #pgBatchGrid .pgCard,'
-              +'.pgMobilePrint.pg4Layout .pgBatchGridPage .pgCard'
-              +'{height:'+cardH+'mm!important;max-height:'+cardH+'mm!important;}';
-            document.head.appendChild(st);
-          }
-
-          /* 기존 2페이지~ 제거 */
-          var blocks=ov3.querySelectorAll('.pgPageBlock'); blocks.forEach(function(b){b.remove();});
-          /* 1페이지 그리드 복구 */
-          var g=document.getElementById('pgBatchGrid'); if(!g) return;
-          cards.forEach(function(c){if(!c.parentNode||c.parentNode!==g) g.appendChild(c);});
-          var totalP=Math.ceil(cards.length/pp);
-          var sub=document.querySelector('#pgBatchTop .ph-sub'); if(sub) sub.textContent='1 / '+totalP+'페이지';
-          /* 1페이지: pp개만 남기기 */
-          cards.slice(pp).forEach(function(c){if(c.parentNode===g)g.removeChild(c);});
-          /* 2페이지~: 재분배 */
-          var rest=cards.slice(pp);
-          var titleText=document.querySelector('#pgBatchTop .bt-title'); var tt=titleText?titleText.textContent:'';
-          for(var pi=1;pi<totalP;pi++){
-            var chunk=rest.slice((pi-1)*pp,pi*pp); if(!chunk.length) break;
-            var phDiv=document.createElement('div'); phDiv.className='pgPageHeader';
-            phDiv.innerHTML='<span class="ph-title">'+tt+'</span><span class="ph-num">'+(pi+1)+' / '+totalP+'페이지</span>';
-            var newGrid=document.createElement('div'); newGrid.className='pgBatchGridPage';
-            chunk.forEach(function(c){newGrid.appendChild(c);});
-            var wrapper=document.createElement('div'); wrapper.className='pgPageBlock';
-            wrapper.style.cssText='break-before:page;page-break-before:always;';
-            wrapper.appendChild(phDiv); wrapper.appendChild(newGrid);
-            ov3.appendChild(wrapper);
-          }
+          });
         }
-        if(layout4Btn) layout4Btn.addEventListener('click',function(){pgRebuild(true);});
-        if(layoutBtn)  layoutBtn.addEventListener('click', function(){pgRebuild(false);});
         var totalPages = Math.ceil(allCards.length / perPage);
 
         var hdrTop = document.getElementById('pgBatchTop');
