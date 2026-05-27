@@ -2826,19 +2826,19 @@ window.addEventListener('load', function(){
   /* ★ 모바일 4개/장 전용 — pgMobilePrint 모든 값 재정의 */
   .pgMobilePrint.pg4Layout #pgBatchGrid,
   .pgMobilePrint.pg4Layout .pgBatchGridPage {
-    row-gap:8mm !important;
+    row-gap:6mm !important;
     column-gap:5mm !important;
     padding:4mm 3mm 0 !important;
   }
   .pgMobilePrint.pg4Layout #pgBatchGrid .pgCard,
   .pgMobilePrint.pg4Layout .pgBatchGridPage .pgCard {
-    height:auto !important;
-    min-height:95mm !important;
-    max-height:108mm !important;
+    height:110mm !important;
+    min-height:0 !important;
+    max-height:110mm !important;
     flex-direction:column !important;
     align-items:center !important;
     padding:2mm 3mm !important;
-    overflow:visible !important;
+    overflow:hidden !important;
   }
   .pgMobilePrint.pg4Layout .pgCard-title {
     font-size:10pt !important;
@@ -2850,13 +2850,15 @@ window.addEventListener('load', function(){
     flex-direction:column !important;
     align-items:center !important;
     width:100% !important;
-    gap:1mm !important;
+    gap:0 !important;
+    flex:1 !important;
   }
   .pgMobilePrint.pg4Layout .pgCard-seq {
     flex-direction:row !important;
     justify-content:center !important;
     min-width:auto !important;
     gap:2mm !important;
+    margin-bottom:1mm !important;
   }
   .pgMobilePrint.pg4Layout .pgCard-seq-n { font-size:16pt !important; }
   .pgMobilePrint.pg4Layout .pgCard-seq-div { display:none !important; }
@@ -2866,14 +2868,22 @@ window.addEventListener('load', function(){
     width:100% !important;
     margin-left:0 !important;
   }
-  .pgMobilePrint.pg4Layout .pgCard-qr { width:38mm !important; height:38mm !important; margin:0 auto 1mm !important; }
+  /* QR 크기 */
+  .pgMobilePrint.pg4Layout .pgCard-qr { width:38mm !important; height:38mm !important; margin:0 auto 0 !important; }
   .pgMobilePrint.pg4Layout .pgCard-qr canvas { width:38mm !important; height:38mm !important; }
   .pgMobilePrint.pg4Layout .pgCard-qr img { width:38mm !important; height:38mm !important; }
+  /* QR↔이름 여백 */
   .pgMobilePrint.pg4Layout .pgCard-players {
     display:grid !important;
     grid-template-columns:1fr 1fr !important;
-    gap:1mm 2mm !important;
+    gap:2mm 2mm !important;
     width:100% !important;
+    margin-top:3mm !important;
+  }
+  /* 이름 1행·2행 사이 추가 간격 */
+  .pgMobilePrint.pg4Layout .pgCard-player:nth-child(3),
+  .pgMobilePrint.pg4Layout .pgCard-player:nth-child(4) {
+    margin-top:2mm !important;
   }
   .pgMobilePrint.pg4Layout .pgCard-player {
     display:flex !important; flex-direction:column !important;
@@ -2888,7 +2898,7 @@ window.addEventListener('load', function(){
   .pgMobilePrint.pg4Layout .pgCard-pname { font-size:10pt !important; font-weight:800 !important; }
   .pgMobilePrint.pg4Layout .pgCard-pgender,
   .pgMobilePrint.pg4Layout .pgCard-paffil { font-size:8pt !important; color:#666 !important; }
-  .pgMobilePrint.pg4Layout .pgCard-footer { font-size:8pt !important; margin-top:1mm !important; }
+  .pgMobilePrint.pg4Layout .pgCard-footer { font-size:8pt !important; margin-top:auto !important; padding-top:1mm !important; }
 
   /* ★ 2페이지~ 페이지 블록 */
   .pgPageBlock {
@@ -3640,4 +3650,76 @@ window.addEventListener('load', function(){
     }).join('');
     var ov=document.createElement('div');
     ov.id='pasisSendOv_v2';
-    ov.style.cssText='position:fixed;inset:0;z-index:2147483604;backg
+    ov.style.cssText='position:fixed;inset:0;z-index:2147483604;background:rgba(0,0,0,.58);display:flex;align-items:center;justify-content:center;padding:14px;font-family:"Malgun Gothic",sans-serif;';
+    ov.innerHTML='<div style="width:min(360px,94vw);max-height:92vh;background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.35);">'
+      +'<div style="background:linear-gradient(135deg,#c8860a 0%,#9b6400 100%);padding:16px 18px 14px;color:#fff;"><div style="font-size:22px;font-weight:900;">📋 전송 전 확인</div><div style="font-size:15px;font-weight:700;margin-top:3px;">'+esc(team)+' · '+players.length+'명</div></div>'
+      +'<div style="padding:14px 14px 6px;max-height:calc(92vh - 220px);overflow-y:auto;background:#fffaf0;">'+rows+'</div>'
+      +'<div style="background:#fef3c7;border-top:1px solid #fcd34d;padding:11px 16px;font-size:13px;color:#92400e;line-height:1.55;text-align:center;">⚠️ <strong>전송 후 수정은 불가합니다.</strong><br>오류 발견 시 관리자에게 직접 문의하세요.</div>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px;background:#fff;"><button id="pasisBack_v2" style="padding:14px;border:none;border-radius:16px;background:#e5e7eb;color:#374151;font-size:20px;font-weight:900;line-height:1.25;">← 뒤로<br>(수정)</button><button id="pasisGo_v2" style="padding:14px;border:none;border-radius:16px;background:#c8860a;color:#fff;font-size:20px;font-weight:900;line-height:1.25;">✅ 확인·<br>전송</button></div></div>';
+    document.body.appendChild(ov);
+    document.getElementById('pasisBack_v2').onclick=function(){remove('pasisSendOv_v2');};
+    document.getElementById('pasisGo_v2').onclick=function(){
+      remove('pasisSendOv_v2');
+      doRealSend(players, team);
+    };
+    ov.onclick=function(e){if(e.target===ov)remove('pasisSendOv_v2');};
+  }
+  function doRealSend(players, team){
+    var ov=sending(), cleaned=false, timer;
+    var oldToast=window.showToast, oldAlert=window.alert;
+    function cleanup(){
+      if(cleaned) return;
+      cleaned=true; clearTimeout(timer); remove('pasisSendingOv_v2');
+      window.showToast=oldToast; window.alert=oldAlert;
+    }
+    timer=setTimeout(cleanup,10000);
+    window.showToast=function(msg){
+      cleanup();
+      if(String(msg).indexOf('완료')>-1 || String(msg).indexOf('전송')>-1) done(team,players);
+      if(typeof oldToast==='function') return oldToast.apply(this,arguments);
+    };
+    window.alert=function(msg){ cleanup(); return oldAlert.apply(this,arguments); };
+    var fn = realSendFn || window.sendToGoogleSheetPatchedV4 || window.sendToGoogleSheet;
+    if(typeof fn==='function') fn();
+    else { cleanup(); oldAlert('❌ 전송 함수를 찾을 수 없습니다.'); }
+  }
+  function onClick(ev){
+    if(ev){ ev.preventDefault(); ev.stopPropagation(); ev.stopImmediatePropagation && ev.stopImmediatePropagation(); }
+    var team=text('teamName') || '팀명', players;
+    try{ players=collectPlayers(); }
+    catch(e){ alert(e.message||String(e)); return false; }
+    if(!players.length){
+      setTimeout(function(){
+        try{ var ps=collectPlayers(); if(ps.length) showConfirm(ps,team); else alert('전송할 선수 정보를 아직 불러오지 못했습니다. 잠시 후 다시 눌러주세요.'); }
+        catch(e){ alert(e.message||String(e)); }
+      },150);
+      return false;
+    }
+    showConfirm(players,team);
+    return false;
+  }
+  function bind(){
+    var btn=document.getElementById('autoSendBtn');
+    if(!btn || btn.__pasisDetailV2Bound) return;
+    btn.__pasisDetailV2Bound=true;
+    btn.onclick=null;
+    btn.style.background='linear-gradient(135deg,#c8860a 0%,#7a4f00 100%)';
+    btn.style.boxShadow='0 5px 10px rgba(122,79,0,.4)';
+    btn.addEventListener('click',onClick,true);
+  }
+  function repeat(){
+    bind();
+    [50,200,500,1000,2000,3500,5000,8000].forEach(function(ms){setTimeout(bind,ms);});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',repeat);
+  else repeat();
+  window.addEventListener('load',repeat);
+  try{
+    new MutationObserver(function(){ setTimeout(bind,0); }).observe(document.documentElement,{childList:true,subtree:true});
+  }catch(e){}
+  window.collectPlayersForSendDetailedV2=collectPlayers;
+})();
+</script>
+
+</body>
+</html>
