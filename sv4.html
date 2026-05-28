@@ -2947,6 +2947,18 @@ window.addEventListener('load', function(){
   .pgCard-body-print { align-items:center !important; }
   .pgCard-right { align-items:center !important; }
 
+  /* ★ PC 화면: 이름 줄 / (성별) 소속 줄 — 두 줄 표시 */
+  .pgCard-pline { flex-wrap:wrap !important; }
+  .pgCard-pmeta {
+    display:block !important;
+    flex-basis:100% !important;
+    width:100% !important;
+    margin-left:12px !important;
+    font-size:10px !important;
+    color:#888 !important;
+    line-height:1.3 !important;
+  }
+
   /* ★ 모바일 화면 전용: QR 위, 이름 아래 세로 배치 */
   .pgMobilePrint .pgCard-body-print { align-items:flex-start !important; }
   .pgMobilePrint .pgCard-right {
