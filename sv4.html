@@ -2812,7 +2812,7 @@ window.addEventListener('load', function(){
      2행×108mm + 간격14mm = 230mm ✅ */
   .pg4per #pgBatchGrid,
   .pg4per .pgBatchGridPage {
-    row-gap:10mm !important;
+    row-gap:22mm !important;
     column-gap:6mm !important;
     padding:3mm 4mm 0 !important;
   }
@@ -2892,8 +2892,8 @@ window.addEventListener('load', function(){
 }
 
 #pgBatchTop .bt-title { font-size:15px; font-weight:900; }
-#pgBatchTop .bt-btns { display:flex; gap:12px; align-items:center; }
-#pgBatchTop button { border:0; border-radius:8px; padding:8px 14px; font-size:14px; font-weight:800; cursor:pointer; }
+#pgBatchTop .bt-btns { display:flex; gap:12px; align-items:center; touch-action:manipulation; }
+#pgBatchTop button { border:0; border-radius:8px; padding:8px 14px; font-size:14px; font-weight:800; cursor:pointer; touch-action:manipulation; -webkit-tap-highlight-color:transparent; min-height:44px; user-select:none; }
 #pgBatchTop .btn-print { background:#fff; color:#7a4f00; }
 #pgBatchTop .btn-close {
   position:fixed; top:12px; right:12px; z-index:999999;
@@ -2904,6 +2904,7 @@ window.addEventListener('load', function(){
   box-shadow:0 2px 8px rgba(0,0,0,.3);
   display:flex; align-items:center; justify-content:center;
   -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
 }
 /* 화면: 카드 */
 .pgCard { background:#fff; border-radius:10px; border:1px solid #e5e7eb; box-shadow:0 1px 4px rgba(0,0,0,.08); padding:8px 6px 6px; display:flex; flex-direction:column; align-items:stretch; break-inside:avoid; page-break-inside:avoid; }
@@ -3043,8 +3044,8 @@ window.addEventListener('load', function(){
       +'<div class="bt-title">📋 조별 QR · '+esc(code)+' · '+esc(qrDate)+' · '+total+'개 조 · '+today+'</div>'
       +'<span class="ph-sub"></span>'
       +'<div class="bt-btns">'
-      +'<button onclick="pgSwitchLayout('+(isMobile?6:8)+')" id="pgLayoutBtn" style="background:'+(chosenPer!==4?'#fff':'rgba(255,255,255,0.25)')+';color:'+(chosenPer!==4?'#7a4f00':'#fff')+';border:none;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;">'+(chosenPer!==4?(isMobile?'6개/장 ✓':'8개/장 ✓'):(isMobile?'6개/장':'8개/장'))+'</button>'
-      +'<button onclick="pgSwitchLayout(4)" id="pgLayout4Btn" style="background:'+(chosenPer===4?'#fff':'rgba(255,255,255,0.25)')+';color:'+(chosenPer===4?'#7a4f00':'#fff')+';border:1.5px solid rgba(255,255,255,0.6);border-radius:8px;padding:6px 10px;font-size:12px;font-weight:800;">'+(chosenPer===4?'4개/장 ✓':'4개/장')+'</button>'
+      +'<button onclick="pgSwitchLayout('+(isMobile?6:8)+')" id="pgLayoutBtn" style="background:'+(chosenPer!==4?'#fff':'rgba(255,255,255,0.25)')+';color:'+(chosenPer!==4?'#7a4f00':'#fff')+';border:none;border-radius:8px;padding:10px 14px;font-size:13px;font-weight:800;min-height:44px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;">'+(chosenPer!==4?(isMobile?'6개/장 ✓':'8개/장 ✓'):(isMobile?'6개/장':'8개/장'))+'</button>'
+      +'<button onclick="pgSwitchLayout(4)" id="pgLayout4Btn" style="background:'+(chosenPer===4?'#fff':'rgba(255,255,255,0.25)')+';color:'+(chosenPer===4?'#7a4f00':'#fff')+';border:1.5px solid rgba(255,255,255,0.6);border-radius:8px;padding:10px 14px;font-size:13px;font-weight:800;min-height:44px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;">'+(chosenPer===4?'4개/장 ✓':'4개/장')+'</button>'
       +'<button class="btn-print" id="pgPrintBtn" onclick="window.print()" disabled style="opacity:.4;cursor:not-allowed;">🖨 인쇄하기</button>'
       +'<button class="btn-close" onclick="document.getElementById(\'pgBatchOv\').remove()">✕</button>'
       +'</div></div>'
