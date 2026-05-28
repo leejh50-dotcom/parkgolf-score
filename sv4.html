@@ -2814,7 +2814,7 @@ window.addEventListener('load', function(){
   .pg4per .pgBatchGridPage {
     row-gap:22mm !important;
     column-gap:6mm !important;
-    padding:3mm 4mm 0 !important;
+    padding:18mm 4mm 0 !important;
   }
   .pg4per #pgBatchGrid .pgCard,
   .pg4per .pgBatchGridPage .pgCard {
@@ -3017,11 +3017,79 @@ window.addEventListener('load', function(){
     });
   };
 
-  /* ★ 전역 레이아웃 전환 함수 */
+  /* ★ 전환 함수: QR 재생성 없이 CSS 토글 + 재페이지네이션만 */
   window.pgSwitchLayout = function(n){
-    var p=window._pg;
+    var p = window._pg;
     if(!p){ return; }
-    buildQrOv(p.teams,p.code,p.qrDate,p.webappUrl,n);
+    var ov = document.getElementById('pgBatchOv');
+    /* 아직 카드가 캐시되지 않았으면(첫 생성 전) buildQrOv로 폴백 */
+    if(!ov || !p.allCards || !p.allCards.length){
+      buildQrOv(p.teams,p.code,p.qrDate,p.webappUrl,n);
+      return;
+    }
+    var isMobile = p.isMobile || (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth <= 900);
+    var perPage = (n===4) ? 4 : (isMobile ? 6 : 8);
+
+    /* 1) CSS 클래스 즉시 토글 → 화면 즉각 반영 */
+    if(n===4) ov.classList.add('pg4per');
+    else      ov.classList.remove('pg4per');
+
+    /* 2) 버튼 상태 갱신 */
+    var btn8 = document.getElementById('pgLayoutBtn');
+    var btn4 = document.getElementById('pgLayout4Btn');
+    if(btn8){
+      btn8.style.background = (n!==4)?'#fff':'rgba(255,255,255,0.25)';
+      btn8.style.color       = (n!==4)?'#7a4f00':'#fff';
+      btn8.textContent = (n!==4)?(isMobile?'6개/장 ✓':'8개/장 ✓'):(isMobile?'6개/장':'8개/장');
+    }
+    if(btn4){
+      btn4.style.background = (n===4)?'#fff':'rgba(255,255,255,0.25)';
+      btn4.style.color       = (n===4)?'#7a4f00':'#fff';
+      btn4.textContent = (n===4)?'4개/장 ✓':'4개/장';
+    }
+
+    /* 3) 기존 QR 전용 페이지 블록 제거 */
+    var qrBlocks = ov.querySelectorAll('.pgPageBlock[data-qr]');
+    qrBlocks.forEach(function(b){ b.remove(); });
+
+    /* 4) 모든 카드를 메인 그리드로 복원 */
+    var grid = document.getElementById('pgBatchGrid');
+    var allCards = p.allCards;
+    allCards.forEach(function(c){ grid.appendChild(c); });
+    grid.style.setProperty('grid-template-columns','repeat(2,minmax(0,1fr))','important');
+
+    /* 5) 재페이지네이션 */
+    var totalPages = Math.ceil(allCards.length / perPage);
+    var hdrTop = document.getElementById('pgBatchTop');
+    var hdrSub = hdrTop ? hdrTop.querySelector('.ph-sub') : null;
+    if(hdrSub) hdrSub.textContent = '1 / ' + totalPages + '페이지';
+
+    var restCards = allCards.slice(perPage);
+    restCards.forEach(function(c){ if(c.parentNode===grid) grid.removeChild(c); });
+
+    var titleText = p.titleText || '';
+    for(var pg=1; pg<totalPages; pg++){
+      var pageCards = restCards.slice((pg-1)*perPage, pg*perPage);
+      if(!pageCards.length) break;
+      var phDiv = document.createElement('div');
+      phDiv.className = 'pgPageHeader';
+      phDiv.innerHTML = '<span class="ph-title">'+titleText+'</span>'
+        +'<span class="ph-num">'+(pg+1)+' / '+totalPages+'페이지</span>';
+      var newGrid = document.createElement('div');
+      newGrid.className = 'pgBatchGridPage';
+      pageCards.forEach(function(c){ newGrid.appendChild(c); });
+      var wrapper = document.createElement('div');
+      wrapper.className = 'pgPageBlock';
+      wrapper.setAttribute('data-qr','1');
+      wrapper.style.cssText = 'break-before:page; page-break-before:always;';
+      wrapper.appendChild(phDiv);
+      wrapper.appendChild(newGrid);
+      /* 목록 페이지(data-qr 없는 pgPageBlock) 앞에 삽입 */
+      var firstList = ov.querySelector('.pgPageBlock:not([data-qr])');
+      if(firstList) ov.insertBefore(wrapper, firstList);
+      else ov.appendChild(wrapper);
+    }
+    p.chosenPer = n;
   };
 
   function buildQrOv(teams,code,qrDate,webappUrl,chosenPer){
@@ -3167,11 +3235,14 @@ window.addEventListener('load', function(){
         if(chosenPer===4) perPage=4; /* 4개/장은 모바일도 4개 */
         var cols = 'repeat(2,minmax(0,1fr))';
 
+        /* ★ 전환용 캐시 저장 */
+        if(window._pg){ window._pg.allCards=allCards; window._pg.isMobile=isMobile; }
 
         var totalPages = Math.ceil(allCards.length / perPage);
 
         var hdrTop = document.getElementById('pgBatchTop');
         var titleText = hdrTop ? (hdrTop.querySelector('.bt-title')||{}).textContent || '' : '';
+        if(window._pg) window._pg.titleText = titleText;
         var hdrSub = hdrTop ? hdrTop.querySelector('.ph-sub') : null;
         if(hdrSub) hdrSub.textContent = '1 / ' + totalPages + '페이지';
 
@@ -3203,6 +3274,7 @@ window.addEventListener('load', function(){
 
           var wrapper = document.createElement('div');
           wrapper.className = 'pgPageBlock';
+          wrapper.setAttribute('data-qr','1');  /* ★ QR 페이지 마킹 */
           wrapper.style.cssText = 'break-before:page; page-break-before:always;';
           wrapper.appendChild(phDiv);
           wrapper.appendChild(newGrid);
