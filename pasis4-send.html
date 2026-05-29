@@ -305,15 +305,15 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
   display:none;min-height:100vh;
   background:linear-gradient(160deg,var(--green),#0d4d24);
   flex-direction:column;align-items:center;
-  text-align:center;padding:20px 20px 24px;
+  text-align:center;padding:10px 20px 20px;
 }
 #doneScreen.show{display:flex;}
 .done-top{width:100%;max-width:320px;}
-.done-icon{font-size:48px;margin-bottom:2px;animation:dBounce .6s ease;display:block;}
+.done-icon{font-size:30px;margin-bottom:0;animation:dBounce .6s ease;display:block;}
 @keyframes dBounce{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
-.done-title{font-size:28px;font-weight:900;color:#fff;margin-top:0;}
-.done-team{font-size:16px;font-weight:800;color:rgba(255,255,255,.85);margin-top:2px;}
-.done-sub{font-size:13px;color:rgba(255,255,255,.65);margin-top:8px;line-height:1.8;background:rgba(0,0,0,.2);border-radius:12px;padding:9px 14px;}
+.done-title{font-size:24px;font-weight:900;color:#fff;margin-top:2px;}
+.done-team{font-size:14px;font-weight:800;color:rgba(255,255,255,.85);margin-top:2px;}
+.done-sub{font-size:12px;color:rgba(255,255,255,.65);margin-top:6px;line-height:1.6;background:rgba(0,0,0,.2);border-radius:10px;padding:6px 12px;}
 .done-players{margin-top:6px;width:100%;max-width:400px;display:flex;flex-direction:column;gap:4px;}
 .done-row{background:rgba(255,255,255,.12);border-radius:10px;padding:6px 16px;display:flex;justify-content:space-between;align-items:center;}
 .done-name{font-size:20px;font-weight:800;color:#fff;}
@@ -788,7 +788,7 @@ function openConfirm() {
     var det = COURSES.map(function(c) { return c + ':' + (p[c] === '' ? '미입력' : p[c]); }).join(' ');
 
     return '<div class="cf-row ' + (st !== 'present' ? st : '') + '">'
-      + '<div><div class="cf-name">' + esc(p.name) + '</div><div class="cf-detail">' + det + '</div></div>'
+      + '<div><div class="cf-name">' + esc(p.name) + '</div></div>'
       + '<div class="cf-right">' + totHtml + (badge ? '<br>' + badge : '') + '</div>'
       + '</div>';
   }).join('');
@@ -819,11 +819,7 @@ function doSend() {
     };
   });
 
-  // ★ 전송완료 화면 즉시 표시 (GAS 응답 대기 없음)
-  document.getElementById('sendingOv').classList.add('hidden');
-  showDone();
-
-  // 백그라운드로 GAS 전송 — 실패 시에만 완료 화면에 경고 표시
+  // ★ GAS 응답을 기다린 후 결과에 따라 완료/에러 화면 분기
   fetch(APP.url, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain' },
@@ -835,22 +831,45 @@ function doSend() {
   })
   .then(function(r) { return r.json(); })
   .then(function(res) {
-    if (!res.success) {
-      // 전송 실패 시 완료 화면에 경고 추가
-      var warn = document.getElementById('doneWarn');
-      if (warn) {
-        warn.textContent = '⚠️ 시트 저장 오류: ' + (res.message || '관리자에게 문의하세요.');
-        warn.style.display = 'block';
-      }
+    document.getElementById('sendingOv').classList.add('hidden');
+    if (res.success) {
+      // 정상 전송 → 완료 화면
+      document.getElementById('doneWarn').style.display = 'none';
+      showDone();
+    } else {
+      // GAS 에서 success:false 반환 (이중전송 포함)
+      document.getElementById('sendBtn').disabled = false;
+      showSendError('⚠️ ' + (res.message || '전송 실패. 관리자에게 문의하세요.'));
     }
   })
   .catch(function(e) {
-    var warn = document.getElementById('doneWarn');
-    if (warn) {
-      warn.textContent = '⚠️ 네트워크 오류 — 재전송 필요: ' + e.message;
-      warn.style.display = 'block';
-    }
+    document.getElementById('sendingOv').classList.add('hidden');
+    document.getElementById('sendBtn').disabled = false;
+    showSendError('⚠️ 네트워크 오류 — 재전송 필요\n' + e.message);
   });
+}
+
+// ★ 전송 에러 전용 오버레이
+function showSendError(msg) {
+  var ov = document.getElementById('sendErrOv');
+  if (!ov) {
+    ov = document.createElement('div');
+    ov.id = 'sendErrOv';
+    ov.style.cssText = 'position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;padding:20px;';
+    ov.innerHTML =
+      '<div style="background:#fff;border-radius:18px;width:100%;max-width:420px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.35);animation:slideUp .22s ease;">'
+      + '<div style="background:linear-gradient(135deg,#c0392b,#e74c3c);color:#fff;padding:14px 18px;font-size:17px;font-weight:900;">❌ 전송 실패</div>'
+      + '<div id="sendErrMsg" style="padding:18px 16px;font-size:15px;font-weight:700;color:#c0392b;line-height:1.7;white-space:pre-wrap;word-break:keep-all;"></div>'
+      + '<div style="padding:8px 14px 16px;">'
+      + '<button onclick="document.getElementById(\'sendErrOv\').style.display=\'none\'" '
+      + 'style="width:100%;padding:14px;background:linear-gradient(135deg,#7a4f00,#c8860a);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:900;cursor:pointer;font-family:inherit;">'
+      + '← 돌아가서 수정</button>'
+      + '</div>'
+      + '</div>';
+    document.body.appendChild(ov);
+  }
+  document.getElementById('sendErrMsg').textContent = msg;
+  ov.style.display = 'flex';
 }
 
 function showErr(msg) {
