@@ -2581,7 +2581,9 @@ window.addEventListener('load', function(){
   #pgBatchTop { position:sticky; top:0; z-index:5; background:linear-gradient(135deg,#c8860a,#7a4f00); color:#fff; padding:5px 8px; display:flex; justify-content:space-between; align-items:center; gap:6px; box-shadow:0 2px 8px rgba(0,0,0,.25); flex-wrap:nowrap; overflow:hidden; }
   #pgBatchTop .bt-left { flex:1; min-width:0; overflow:hidden; display:flex; flex-direction:column; justify-content:center; gap:0; }
   #pgBatchTop .bt-title { font-size:10px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3; }
-  #pgBatchTop .ph-sub { font-size:10px; color:rgba(255,255,255,.9); white-space:nowrap; display:block; line-height:1.3; }
+  #pgBatchTop .bt-date { font-size:10px; color:rgba(255,255,255,.9); white-space:nowrap; line-height:1.3; display:flex; gap:4px; align-items:center; }
+  #pgBatchTop .bt-datetext { white-space:nowrap; }
+  #pgBatchTop .ph-sub { font-size:10px; color:rgba(255,255,255,.85); white-space:nowrap; display:inline; }
   #pgBatchTop .bt-btns { display:flex; gap:4px; align-items:center; flex-shrink:0; padding-right:38px; /* X버튼 공간 */ }
   #pgBatchTop .btn-print { background:#fff; color:#7a4f00; border:none; border-radius:7px; padding:5px 8px; font-size:11px; font-weight:800; cursor:pointer; min-height:30px; touch-action:manipulation; white-space:nowrap; flex-shrink:0; }
   #pgBatchTop .btn-close { position:fixed; top:5px; right:6px; z-index:999999; width:32px; height:32px; border-radius:50%; background:#fff; color:#7a4f00; border:2px solid #c8860a; font-size:16px; font-weight:900; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,.3); display:flex; align-items:center; justify-content:center; -webkit-tap-highlight-color:transparent; touch-action:manipulation; flex-shrink:0; }
@@ -2933,6 +2935,19 @@ window.addEventListener('load', function(){
   .pgMobileGrid4 .pgCard {
     height:90mm !important;
     overflow:hidden !important; box-sizing:border-box !important;
+    display:flex !important; flex-direction:column !important;
+  }
+  /* ★ 카드 내부: 조명은 위에 고정, QR+이름은 flex:1로 나머지 공간 채움 → 자연스럽게 하단 균형 */
+  .pgMobileGrid4 .pgCard-title {
+    flex-shrink:0 !important;
+    margin-bottom:0 !important;
+  }
+  .pgMobileGrid4 .pgCard-body-print {
+    flex:1 !important;
+    display:flex !important; flex-direction:column !important;
+    align-items:center !important; justify-content:center !important; /* ★ 세로 중앙 정렬 */
+    gap:2mm !important;
+  }
     flex-direction:column !important; align-items:stretch !important;
     padding:2mm 3mm 2mm !important;
   }
@@ -3260,7 +3275,8 @@ window.addEventListener('load', function(){
     if(chosenPer===4) ov.classList.add('pg4per');
     ov.innerHTML='<div id="pgBatchTop">'
       +'<div class="bt-left">'
-      +'<div class="bt-title">📋 조별 QR · '+esc(code)+' · '+esc(qrDate)+' · '+today+' <span class="ph-sub"></span></div>'
+      +'<div class="bt-title">📋 조별 QR · '+esc(code)+' · '+esc(qrDate)+'</div>'
+      +'<div class="bt-date"><span class="bt-datetext">'+today+'</span> <span class="ph-sub"></span></div>'
       +'</div>'
       +'<div class="bt-btns">'
       +'<button onclick="pgSwitchLayout('+(isMobile?6:8)+')" id="pgLayoutBtn" style="background:'+(chosenPer!==4?'#fff':'rgba(255,255,255,0.25)')+';color:'+(chosenPer!==4?'#7a4f00':'#fff')+';border:none;border-radius:8px;padding:7px 12px;font-size:13px;font-weight:800;min-height:36px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;white-space:nowrap;">'+(isMobile?'6개/장':'8개/장')+'</button>'
