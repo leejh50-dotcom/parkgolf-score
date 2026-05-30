@@ -3145,7 +3145,6 @@ window.addEventListener('load', function(){
       /* pgBatchTop·pgBatchGrid 숨김 유지 */
       var hdrTop = document.getElementById('pgBatchTop');
       var grid   = document.getElementById('pgBatchGrid');
-      if(hdrTop) hdrTop.style.display = 'none';
       if(grid)   grid.style.display   = 'none';
 
       var titleText = p.titleText || '';
@@ -3382,10 +3381,8 @@ window.addEventListener('load', function(){
         if(isMobile) {
           /* 모든 카드를 grid에서 분리 */
           allCards.forEach(function(c){ if(c.parentNode) c.parentNode.removeChild(c); });
-          /* 기존 grid 숨김 */
+          /* 기존 grid만 숨김 (pgBatchTop 버튼은 유지) */
           if(grid) grid.style.display = 'none';
-          /* pgBatchTop도 숨김 (각 페이지 wrapper 안에 헤더 직접 삽입) */
-          if(hdrTop) hdrTop.style.display = 'none';
 
           /* 페이지 높이: 인쇄 시 @page size에 맞게, 화면에선 auto */
           var pgH = (chosenPer===4) ? '95vw' : '66vw'; /* 화면 미리보기용 */
