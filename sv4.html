@@ -2937,28 +2937,17 @@ window.addEventListener('load', function(){
     overflow:hidden !important; box-sizing:border-box !important;
     display:flex !important; flex-direction:column !important;
   }
-  /* ★ 카드 내부: 조명은 위에 고정, QR+이름은 flex:1로 나머지 공간 채움 → 자연스럽게 하단 균형 */
+  /* ★ 카드 내부: 조명은 위에 고정, QR+이름은 flex:1로 나머지 공간 채움 */
   .pgMobileGrid4 .pgCard-title {
     flex-shrink:0 !important;
-    margin-bottom:0 !important;
-  }
-  .pgMobileGrid4 .pgCard-body-print {
-    flex:1 !important;
-    display:flex !important; flex-direction:column !important;
-    align-items:center !important; justify-content:center !important; /* ★ 세로 중앙 정렬 */
-    gap:2mm !important;
-  }
-    flex-direction:column !important; align-items:stretch !important;
-    padding:2mm 3mm 2mm !important;
-  }
-  /* 4/장 모바일: 카드 내부 세로 배치 */
-  .pgMobileGrid4 .pgCard-title {
     font-size:18pt !important; font-weight:900 !important; color:#000 !important;
     text-align:center !important; margin-bottom:1mm !important;
   }
   .pgMobileGrid4 .pgCard-body-print {
-    flex-direction:column !important; align-items:center !important;
-    flex:1 !important; gap:2mm !important;
+    flex:1 !important;
+    display:flex !important; flex-direction:column !important;
+    align-items:center !important; justify-content:center !important;
+    gap:2mm !important;
   }
   .pgMobileGrid4 .pgCard-seq {
     flex-direction:row !important; gap:2mm !important;
@@ -2982,8 +2971,8 @@ window.addEventListener('load', function(){
   }
   .pgMobileGrid4 .pgCard-pname { font-size:10pt !important; font-weight:800 !important; }
   .pgMobileGrid4 .pgCard-pmeta { font-size:8pt !important; color:#555 !important; margin-left:0 !important; }
-  /* 모바일 공통 폰트 */
-  .pgMobileGrid .pgCard-title { font-size:8.5pt !important; }
+  /* 모바일 공통 폰트 — pgMobileGrid4 제외 */
+  .pgMobileGrid:not(.pgMobileGrid4) .pgCard-title { font-size:8.5pt !important; }
   .pgMobileGrid .pgCard-pname { font-size:10pt !important; }
   .pgMobileGrid .pgCard-pmeta { font-size:7pt !important; }
 
