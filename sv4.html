@@ -2792,6 +2792,28 @@ window.addEventListener('load', function(){
     padding-top:1mm !important; margin-top:auto !important;
   }
 
+  /* ══ PC 6개/장 전용 인쇄 CSS ══
+     A4(257mm) - 헤더8mm - 패딩5mm = 244mm
+     3행×70mm + 2간격×12mm = 234mm ✅ (10mm 여유 = 가위질 충분) */
+  .pg6pc #pgBatchGrid,
+  .pg6pc .pgBatchGridPage {
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    row-gap:12mm !important;
+    column-gap:6mm !important;
+    padding:5mm 5mm 0 !important;
+  }
+  .pg6pc #pgBatchGrid .pgCard,
+  .pg6pc .pgBatchGridPage .pgCard {
+    height:70mm !important;
+    overflow:hidden !important;
+    box-sizing:border-box !important;
+  }
+  .pg6pc .pgCard-title {
+    font-size:14pt !important; font-weight:900 !important;
+    color:#000 !important; text-align:left !important;
+    margin-bottom:2mm !important;
+  }
+
   /* ══ 4개/A4 공통 (PC·모바일 동일) ══ */
   .pg4Layout #pgBatchGrid,
   .pg4Layout .pgBatchGridPage {
@@ -3145,24 +3167,27 @@ window.addEventListener('load', function(){
       return;
     }
     var isMobile = p.isMobile || (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth <= 900);
-    var perPage = (n===4) ? 4 : (isMobile ? 6 : 8);
+    var perPage = isMobile ? (n===4 ? 4 : 6) : (n===6 ? 6 : 8);
 
     /* 1) CSS 클래스 즉시 토글 */
     if(n===4) ov.classList.add('pg4per');
     else      ov.classList.remove('pg4per');
+    if(!isMobile && n===6) ov.classList.add('pg6pc');
+    else                   ov.classList.remove('pg6pc');
 
     /* 2) 버튼 상태 갱신 */
     var btn8 = document.getElementById('pgLayoutBtn');
     var btn4 = document.getElementById('pgLayout4Btn');
+    var isSecond = isMobile ? (n===4) : (n===6);
     if(btn8){
-      btn8.style.background = (n!==4)?'#fff':'rgba(255,255,255,0.25)';
-      btn8.style.color       = (n!==4)?'#7a4f00':'#fff';
-      btn8.textContent = (isMobile?'6개/장':'8개/장');
+      btn8.style.background = !isSecond ? '#fff' : 'rgba(255,255,255,0.25)';
+      btn8.style.color       = !isSecond ? '#7a4f00' : '#fff';
+      btn8.textContent = isMobile ? '6개/장' : '8개/장';
     }
     if(btn4){
-      btn4.style.background = (n===4)?'#fff':'rgba(255,255,255,0.25)';
-      btn4.style.color       = (n===4)?'#7a4f00':'#fff';
-      btn4.textContent = '4개/장';
+      btn4.style.background = isSecond ? '#fff' : 'rgba(255,255,255,0.25)';
+      btn4.style.color       = isSecond ? '#7a4f00' : '#fff';
+      btn4.textContent = isMobile ? '4개/장' : '6개/장';
     }
 
     /* 3) 모바일: 기존 모바일 페이지 wrapper 전체 제거 후 재생성 */
@@ -3262,6 +3287,7 @@ window.addEventListener('load', function(){
     var ov=document.createElement('div');ov.id='pgBatchOv';
     if(isMobile) ov.classList.add('pgMobilePrint');
     if(chosenPer===4) ov.classList.add('pg4per');
+    if(!isMobile && chosenPer===6) ov.classList.add('pg6pc');
     ov.innerHTML='<div id="pgBatchTop">'
       +'<div class="bt-left">'
       +'<div class="bt-title">📋 조별 QR · '+esc(code)+' · '+esc(qrDate)+'</div>'
@@ -3269,7 +3295,7 @@ window.addEventListener('load', function(){
       +'</div>'
       +'<div class="bt-btns">'
       +'<button onclick="pgSwitchLayout('+(isMobile?6:8)+')" id="pgLayoutBtn" style="background:'+(chosenPer!==4?'#fff':'rgba(255,255,255,0.25)')+';color:'+(chosenPer!==4?'#7a4f00':'#fff')+';border:none;border-radius:8px;padding:7px 12px;font-size:13px;font-weight:800;min-height:36px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;white-space:nowrap;">'+(isMobile?'6개/장':'8개/장')+'</button>'
-      +'<button onclick="pgSwitchLayout(4)" id="pgLayout4Btn" style="background:'+(chosenPer===4?'#fff':'rgba(255,255,255,0.25)')+';color:'+(chosenPer===4?'#7a4f00':'#fff')+';border:1.5px solid rgba(255,255,255,0.6);border-radius:8px;padding:7px 12px;font-size:13px;font-weight:800;min-height:36px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;white-space:nowrap;">4개/장</button>'
+      +'<button onclick="pgSwitchLayout('+(isMobile?4:6)+')" id="pgLayout4Btn" style="background:'+(chosenPer===4||(!isMobile&&chosenPer===6)?'#fff':'rgba(255,255,255,0.25)')+';color:'+(chosenPer===4||(!isMobile&&chosenPer===6)?'#7a4f00':'#fff')+';border:1.5px solid rgba(255,255,255,0.6);border-radius:8px;padding:7px 12px;font-size:13px;font-weight:800;min-height:36px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;white-space:nowrap;">'+(isMobile?'4개/장':'6개/장')+'</button>'
       +'<button class="btn-print" id="pgPrintBtn" onclick="window.print()" disabled style="opacity:.4;cursor:not-allowed;white-space:nowrap;">인쇄하기</button>'
       +'<button class="btn-close" onclick="document.getElementById(\'pgBatchOv\').remove()">✕</button>'
       +'</div></div>'
