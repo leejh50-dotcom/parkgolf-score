@@ -2943,13 +2943,21 @@ window.addEventListener('load', function(){
     height:66mm !important;
     overflow:hidden !important; box-sizing:border-box !important;
   }
-  /* ★ 모바일 6/장: 이름·소속 잘림 방지 */
-  .pgMobileGrid .pgCard-body-print { min-width:0 !important; overflow:hidden !important; }
-  .pgMobileGrid .pgCard-right { min-width:0 !important; flex:1 !important; overflow:hidden !important; }
-  .pgMobileGrid .pgCard-players { width:auto !important; min-width:0 !important; overflow:hidden !important; }
-  .pgMobileGrid .pgCard-player { min-width:0 !important; overflow:hidden !important; }
-  .pgMobileGrid .pgCard-pline { min-width:0 !important; overflow:hidden !important; }
-  .pgMobileGrid .pgCard-pmeta { overflow:hidden !important; text-overflow:ellipsis !important; max-width:100% !important; }
+  /* ★ 모바일 6/장: 성별·소속을 이름 아래 줄로 */
+  .pgMobileGrid .pgCard-pline {
+    flex-wrap:wrap !important;
+    white-space:normal !important;
+  }
+  .pgMobileGrid .pgCard-pmeta {
+    display:block !important;
+    flex-basis:100% !important;
+    width:100% !important;
+    margin-left:4mm !important;
+    font-size:7.5pt !important;
+    color:#666 !important;
+    line-height:1.2 !important;
+    white-space:nowrap !important;
+  }
   .pgMobileGrid .pgCard-qr canvas {
     width:38mm !important; height:38mm !important;
   }
