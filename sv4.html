@@ -2689,19 +2689,19 @@ window.addEventListener('load', function(){
   .pgMobilePrint #pgBatchTop { display:none !important; visibility:hidden !important; }
 
   /* ══ 8장/페이지 (2×4) ══
-     @page margin:0, 카드55mm×4 + 헤더12mm + pad8mm = 264mm
-     align-content:space-between → 나머지 33mm(PC)/13mm(iOS)를 3gap에 자동 배분 */
+     @page margin:0, 카드60mm×4 + 헤더12mm + pad8mm + gap24mm = 268mm
+     align-content:start → row-gap 8mm으로 줄여 QR 크기 확보 */
   #pgBatchGrid {
     display:grid !important;
     grid-template-columns:repeat(2,1fr) !important;
     column-gap:5mm !important;
-    row-gap:12mm !important;
+    row-gap:8mm !important;
     padding:8mm 3mm 0 !important;
     width:100% !important; box-sizing:border-box !important;
     align-content:start !important;
   }
   #pgBatchGrid .pgCard {
-    height:55mm !important;
+    height:60mm !important;
     overflow:hidden !important; box-sizing:border-box !important;
   }
 
@@ -2743,7 +2743,7 @@ window.addEventListener('load', function(){
   /* 12장 QR: 65-title11-footer7-pad3 = 44mm */
   .pgCard-qr canvas {
     display:block !important;
-    width:34mm !important; height:34mm !important; margin:0 !important;
+    width:42mm !important; height:42mm !important; margin:0 !important;
   }
 
   .pgCard-qr img { display:none !important; }
@@ -2943,6 +2943,13 @@ window.addEventListener('load', function(){
     height:66mm !important;
     overflow:hidden !important; box-sizing:border-box !important;
   }
+  /* ★ 모바일 6/장: 이름·소속 잘림 방지 */
+  .pgMobileGrid .pgCard-body-print { min-width:0 !important; overflow:hidden !important; }
+  .pgMobileGrid .pgCard-right { min-width:0 !important; flex:1 !important; overflow:hidden !important; }
+  .pgMobileGrid .pgCard-players { width:auto !important; min-width:0 !important; overflow:hidden !important; }
+  .pgMobileGrid .pgCard-player { min-width:0 !important; overflow:hidden !important; }
+  .pgMobileGrid .pgCard-pline { min-width:0 !important; overflow:hidden !important; }
+  .pgMobileGrid .pgCard-pmeta { overflow:hidden !important; text-overflow:ellipsis !important; max-width:100% !important; }
   .pgMobileGrid .pgCard-qr canvas {
     width:38mm !important; height:38mm !important;
   }
@@ -3394,7 +3401,7 @@ window.addEventListener('load', function(){
         document.body.appendChild(ov);
       });
       /* ★ QRCode 생성 오류 시 오류 표시 (조명 포함) */
-      try{ new QRCode(card.querySelector('#'+bid),{text:qrText,width:500,height:500,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M}); }
+      try{ new QRCode(card.querySelector('#'+bid),{text:qrText,width:1000,height:1000,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M}); }
       catch(e){ card.querySelector('#'+bid).innerHTML='<div style="padding:8px;font-size:11px;color:red;text-align:center;">QR생성오류<br>'+esc(teamObj.team||'')+'</div>'; }
     }
 
