@@ -3166,6 +3166,10 @@ window.addEventListener('load', function(){
     .then(function(r){return r.json();})
     .then(function(data){
       if(!data.success||!Array.isArray(data.teams)||!data.teams.length) throw new Error((data&&data.message)||'조편성 데이터가 없습니다.');
+      /* ★ 자연수 정렬: 남1조→남2조→...→남10조 (시트 저장 순서 무관) */
+      data.teams.sort(function(a,b){
+        return (a.team||'').localeCompare(b.team||'','ko',{numeric:true,sensitivity:'base'});
+      });
       window._pg={teams:data.teams,code:code,qrDate:qrDate,webappUrl:webappUrl};
       buildQrOv(data.teams,code,qrDate,webappUrl,8);
       if(btn) btn.textContent='✅ '+data.teams.length+'개 조 QR 생성 완료';
