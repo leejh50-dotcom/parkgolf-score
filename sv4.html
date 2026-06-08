@@ -2693,12 +2693,19 @@ window.addEventListener('load', function(){
   #pgProgress, #pgProgressTxt { display:none !important; }
   /* ── A4 기록지 인쇄 전용 ── */
   #pgA4SheetOv #pgA4Top { display:none !important; }
-  #pgA4Pages > div {
+  /* a4-print-mode: 메인 페이지 전체 숨기고 A4 오버레이만 출력 */
+  body.a4-print-mode > *:not(#pgA4SheetOv) { display:none !important; }
+  body.a4-print-mode #pgA4SheetOv {
+    position:static !important; overflow:visible !important;
+    height:auto !important; background:transparent !important;
+  }
+  body.a4-print-mode #pgA4Pages { padding:0 !important; }
+  body.a4-print-mode #pgA4Pages > div {
     break-after:page !important; page-break-after:always !important;
     box-shadow:none !important; border-radius:0 !important;
-    margin-bottom:0 !important;
+    margin-bottom:0 !important; padding:8mm !important;
   }
-  #pgA4Pages > div:last-child { break-after:auto !important; page-break-after:auto !important; }
+  body.a4-print-mode #pgA4Pages > div:last-child { break-after:auto !important; page-break-after:auto !important; }
   #pgBatchOv { display:none !important; }
   .pgMobilePrint #pgBatchGrid { display:none !important; visibility:hidden !important; }
   /* ★ 모바일: pgBatchTop도 인쇄에서 숨김 (페이지 헤더는 pgPageHeader가 담당) */
@@ -3242,7 +3249,8 @@ window.addEventListener('load', function(){
       +'<div style="'+_hcBase()+'border-right:1.5px solid #555;">홀(파)</div>';
     for(var pi=0;pi<4;pi++){
       var isLast=(pi===3);
-      nameRow+='<div style="'+_nameBase()+(isLast?'border-right:0.5px solid #aaa;':'border-right:1.5px solid #555;')+'grid-column:span 2;">경기자 '+(pi+1)+'</div>';
+      /* ★ 실제 선수명 표시 */
+      nameRow+='<div style="'+_nameBase()+(isLast?'border-right:0.5px solid #aaa;':'border-right:1.5px solid #555;')+'grid-column:span 2;text-align:left;padding-left:3px;">'+esc(pLabels[pi])+'</div>';
     }
     nameRow+='<div style="'+_hcBase()+'border-right:none;">심판</div></div>';
     var subHdr='<div style="display:grid;grid-template-columns:'+_cols()+';font-size:6pt;">'
@@ -3285,9 +3293,10 @@ window.addEventListener('load', function(){
     ov.innerHTML='<div id="pgA4Top" style="position:sticky;top:0;z-index:5;background:linear-gradient(135deg,#1565c0,#0d47a1);color:#fff;padding:6px 48px 6px 12px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 8px rgba(0,0,0,.3);">'
       +'<div style="flex:1;font-size:11px;font-weight:700;">📄 A4 기록지 · '+esc(code)+' · '+teams.length+'개 조</div>'
       +'<button onclick="window.print()" style="background:#fff;color:#1565c0;border:none;border-radius:7px;padding:5px 12px;font-size:12px;font-weight:800;cursor:pointer;">🖨 인쇄하기</button>'
-      +'<button onclick="document.getElementById(\'pgA4SheetOv\').remove()" style="position:fixed;top:5px;right:6px;z-index:999999;width:32px;height:32px;border-radius:50%;background:#fff;color:#1565c0;border:2px solid #42a5f5;font-size:16px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>'
+      +'<button onclick="document.body.classList.remove(\'a4-print-mode\');document.getElementById(\'pgA4SheetOv\').remove()" style="position:fixed;top:5px;right:6px;z-index:999999;width:32px;height:32px;border-radius:50%;background:#fff;color:#1565c0;border:2px solid #42a5f5;font-size:16px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>'
       +'</div>'
       +'<div id="pgA4Pages" style="padding:10px 6px;"></div>';
+    document.body.classList.add('a4-print-mode'); /* ★ 인쇄 시 A4 전용 모드 */
     document.body.appendChild(ov);
     var container=document.getElementById('pgA4Pages');
 
@@ -3307,8 +3316,12 @@ window.addEventListener('load', function(){
       for(var pi=0;pi<4;pi++){
         var isLast=(pi===3);
         totalRow+='<div style="background:#ede8df;border-right:0.5px solid #ddd;"></div>';
+        /* ★ 이름 좌측 + 우측 점수 여백 */
         totalRow+='<div style="background:#e8e0d0;'+(isLast?'border-right:0.5px solid #aaa;':'border-right:1.5px solid #555;')
-          +'display:flex;align-items:center;padding:0 3px;font-size:6.5pt;font-weight:700;color:#7a4f00;overflow:hidden;">'+esc(pLabels[pi])+'</div>';
+          +'display:flex;align-items:center;justify-content:space-between;padding:0 4px;font-size:6.5pt;font-weight:700;color:#7a4f00;overflow:hidden;">'
+          +'<span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:65%;">'+esc(pLabels[pi])+'</span>'
+          +'<span style="color:#bbb;font-size:6pt;font-weight:400;flex-shrink:0;">점수</span>'
+          +'</div>';
       }
       totalRow+='<div style="background:#f0ece4;"></div></div>';
       var sigRow='<div style="display:grid;grid-template-columns:50px repeat(4,1fr);height:20px;font-size:7pt;margin-top:2px;">'
