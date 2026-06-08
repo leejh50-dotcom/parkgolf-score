@@ -3261,17 +3261,18 @@ window.addEventListener('load', function(){
       subHdr+='<div style="background:#f5f0e8;padding:1px;text-align:center;border-bottom:0.5px solid #ccc;'+(isLast?'border-right:0.5px solid #aaa;':'border-right:1.5px solid #555;')+'color:#888;">점수</div>';
     }
     subHdr+='<div style="'+_shBase()+'border-right:none;color:#999;font-size:6pt;">서명</div></div>';
-    var rows='';
+    var rows='<div class="a4hole-rows">';
     for(var h=1;h<=9;h++){
-      rows+='<div style="display:grid;grid-template-columns:'+_cols()+';min-height:14px;">'
+      rows+='<div style="display:grid;grid-template-columns:'+_cols()+';min-height:0;">'
         +'<div style="padding:1px 2px;text-align:center;border-bottom:0.5px solid #eee;border-right:1.5px solid #555;background:#f9f6f0;font-size:7pt;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.3;">'+c+'-'+h+'<span style="color:#c8860a;font-weight:700;font-size:6pt;">&nbsp;(  )</span></div>';
       for(var pi=0;pi<4;pi++){
         var isLast=(pi===3);
-        rows+='<div style="border-bottom:0.5px solid #eee;border-right:0.5px solid #e8e0cc;background:#fffcf5;min-height:14px;"></div>';
-        rows+='<div style="border-bottom:0.5px solid #eee;'+(isLast?'border-right:0.5px solid #aaa;':'border-right:1.5px solid #555;')+'min-height:14px;"></div>';
+        rows+='<div style="border-bottom:0.5px solid #eee;border-right:0.5px solid #e8e0cc;background:#fffcf5;min-height:0;"></div>';
+        rows+='<div style="border-bottom:0.5px solid #eee;'+(isLast?'border-right:0.5px solid #aaa;':'border-right:1.5px solid #555;')+'min-height:0;"></div>';
       }
-      rows+='<div style="border-bottom:0.5px solid #eee;background:#f9f6f0;min-height:14px;"></div></div>';
+      rows+='<div style="border-bottom:0.5px solid #eee;background:#f9f6f0;min-height:0;"></div></div>';
     }
+    rows+='</div>';
     var sub='<div style="display:grid;grid-template-columns:'+_cols()+';height:16px;">'
       +'<div style="background:#ddd4c0;font-size:7pt;font-weight:700;text-align:center;border-right:1.5px solid #555;display:flex;align-items:center;justify-content:center;">'+c+' 소계</div>';
     for(var pi=0;pi<4;pi++){
@@ -3304,10 +3305,8 @@ window.addEventListener('load', function(){
       var pages = document.getElementById('pgA4Pages');
       if(!pages) return;
       var bodyHtml = '';
-      /* ★ 직계 자식만 (중첩 div 오선택 방지) */
       Array.from(pages.children).forEach(function(pageDiv){
         var clone = pageDiv.cloneNode(true);
-        /* QR canvas → base64 img 교체 */
         var origCanvases = pageDiv.querySelectorAll('canvas');
         var cloneCanvases = clone.querySelectorAll('canvas');
         origCanvases.forEach(function(c,i){
@@ -3320,14 +3319,43 @@ window.addEventListener('load', function(){
         });
         bodyHtml += '<div class="a4page">' + clone.innerHTML + '</div>';
       });
+
+      /* ★ A4 꽉 채우는 CSS: flexbox로 course grid가 남은 공간 모두 차지 */
+      var css = [
+        '*{box-sizing:border-box;margin:0;padding:0}',
+        'body{font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;background:#fff;}',
+        '@page{size:A4 portrait;margin:0;}',
+        '.a4page{width:210mm;height:297mm;padding:5mm 6mm;display:flex;flex-direction:column;break-after:page;page-break-after:always;overflow:hidden;}',
+        '.a4page:last-child{break-after:auto;page-break-after:auto;}',
+        /* 헤더 고정 높이 */
+        '.a4page > div:first-child{flex-shrink:0;}',
+        /* course 2×2 그리드: 남은 공간 모두 */
+        '.a4course-grid{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;}',
+        /* 각 코스 블록: 세로 flex */
+        '.a4course-grid > div{display:flex;flex-direction:column;overflow:hidden;}',
+        /* 코스 내 hole-rows: 남은 공간 채움 */
+        '.a4hole-rows{flex:1;min-height:0;display:flex;flex-direction:column;}',
+        /* 각 홀 행: 균등 분배 */
+        '.a4hole-rows > div{flex:1;min-height:0;}',
+        /* 하단 고정 */
+        '.a4bottom{flex-shrink:0;}'
+      ].join('');
+
+      /* course grid wrapper에 클래스 추가 */
+      bodyHtml = bodyHtml
+        .replace(/style="display:grid;grid-template-columns:1fr 1fr;border:0\.5px solid #999;"/g,
+          'class="a4course-grid" style="display:grid;grid-template-columns:1fr 1fr;border:0.5px solid #999;"')
+        /* hole rows 영역에 클래스 추가: 코스헤더+이름행+서브헤더 다음의 반복 홀 div들을 감싸는 wrapper */
+        ;
+
+      /* 더 직접적인 방법: hole row에 flex:1 강제 적용 */
+      /* 각 홀 행은 grid row로 표현됨 - min-height:14px를 flex:1로 교체 */
+      bodyHtml = bodyHtml.replace(/min-height:14px/g, 'flex:1;min-height:0');
+
+      /* course 내부 grid를 flex column으로 변환하기 위해 직접 수정 */
       var fullHtml = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>A4 기록지 인쇄</title>'
-        + '<style>'
-        + '*{box-sizing:border-box;margin:0;padding:0}'
-        + 'body{font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;background:#fff;}'
-        + '.a4page{padding:6mm;background:#fff;break-after:page;page-break-after:always;}'
-        + '.a4page:last-child{break-after:auto;page-break-after:auto;}'
-        + '@page{size:A4 portrait;margin:0;}'
-        + '</style></head><body>' + bodyHtml + '</body></html>';
+        + '<style>' + css + '</style></head><body>' + bodyHtml + '</body></html>';
+
       var pw = window.open('', '_blank', 'width=900,height=1000');
       if(!pw){ alert('팝업이 차단되었습니다.\n주소창의 팝업 차단 아이콘 → 허용 후 재시도하세요.'); return; }
       pw.document.open();
@@ -3372,23 +3400,24 @@ window.addEventListener('load', function(){
       var page=document.createElement('div');
       page.style.cssText='background:#fff;margin-bottom:12px;border-radius:8px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.12);padding:10px;';
       page.innerHTML=
-        '<div style="text-align:center;margin-bottom:5px;">'
+        '<div style="text-align:center;margin-bottom:4px;flex-shrink:0;">'
         +'<div style="font-size:12pt;font-weight:700;color:#222;margin-bottom:1px;">'+esc(code)+' 파크골프대회</div>'
         +'<div style="font-size:9pt;color:#555;display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">'
         +'<span><b style="color:#333;">조명:</b> '+esc(teamObj.team||'')+'</span>'
         +'<span><b style="color:#333;">일시:</b> '+esc(dateStr)+'</span>'
         +'</div></div>'
-        +'<div style="display:grid;grid-template-columns:1fr 1fr;border:0.5px solid #999;">'
+        /* ★ a4course-grid 클래스 추가 */
+        +'<div class="a4course-grid" style="border:0.5px solid #999;">'
         +'<div style="border-right:0.5px solid #999;">'+_courseBlock('A',pLabels)+'</div>'
         +'<div>'+_courseBlock('B',pLabels)+'</div>'
         +'<div style="border-right:0.5px solid #999;border-top:0.5px solid #999;">'+_courseBlock('C',pLabels)+'</div>'
         +'<div style="border-top:0.5px solid #999;">'+_courseBlock('D',pLabels)+'</div>'
         +'</div>'
-        +'<div style="display:grid;grid-template-columns:1fr 70px;border:0.5px solid #999;border-top:none;">'
-        +'<div style="padding:4px;">'+totalRow+sigRow
-        +'<div style="font-size:6pt;color:#bbb;margin-top:3px;">합계 기록 후 우측 QR 스캔 → 점수 전송</div>'
+        +'<div class="a4bottom" style="display:grid;grid-template-columns:1fr 70px;border:0.5px solid #999;border-top:none;">'
+        +'<div style="padding:3px;">'+totalRow+sigRow
+        +'<div style="font-size:6pt;color:#bbb;margin-top:2px;">합계 기록 후 우측 QR 스캔 → 점수 전송</div>'
         +'</div>'
-        +'<div style="border-left:0.5px solid #ccc;background:#fafaf8;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px;gap:3px;">'
+        +'<div style="border-left:0.5px solid #ccc;background:#fafaf8;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3px;gap:2px;">'
         +'<div id="'+qrId+'" style="width:56px;height:56px;"></div>'
         +'<div style="font-size:6.5pt;color:#888;text-align:center;line-height:1.3;">QR 스캔<br>점수 전송</div>'
         +'</div></div>';
