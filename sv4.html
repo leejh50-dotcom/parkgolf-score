@@ -3292,12 +3292,48 @@ window.addEventListener('load', function(){
     ov.style.cssText='position:fixed;inset:0;z-index:100001;overflow-y:auto;background:#e8e8e8;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;';
     ov.innerHTML='<div id="pgA4Top" style="position:sticky;top:0;z-index:5;background:linear-gradient(135deg,#1565c0,#0d47a1);color:#fff;padding:6px 48px 6px 12px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 8px rgba(0,0,0,.3);">'
       +'<div style="flex:1;font-size:11px;font-weight:700;">📄 A4 기록지 · '+esc(code)+' · '+teams.length+'개 조</div>'
-      +'<button onclick="window.print()" style="background:#fff;color:#1565c0;border:none;border-radius:7px;padding:5px 12px;font-size:12px;font-weight:800;cursor:pointer;">🖨 인쇄하기</button>'
+      +'<button onclick="_printA4NewWindow()" style="background:#fff;color:#1565c0;border:none;border-radius:7px;padding:5px 12px;font-size:12px;font-weight:800;cursor:pointer;touch-action:manipulation;">🖨 인쇄하기</button>'
       +'<button onclick="document.body.classList.remove(\'a4-print-mode\');document.getElementById(\'pgA4SheetOv\').remove()" style="position:fixed;top:5px;right:6px;z-index:999999;width:32px;height:32px;border-radius:50%;background:#fff;color:#1565c0;border:2px solid #42a5f5;font-size:16px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>'
       +'</div>'
       +'<div id="pgA4Pages" style="padding:10px 6px;"></div>';
-    document.body.classList.add('a4-print-mode'); /* ★ 인쇄 시 A4 전용 모드 */
+    document.body.classList.add('a4-print-mode');
     document.body.appendChild(ov);
+
+    /* ★ 새 창에서 인쇄 — position:fixed 오버레이 인쇄 문제 완전 해결 */
+    window._printA4NewWindow = function(){
+      var pages = document.getElementById('pgA4Pages');
+      if(!pages) return;
+      /* QR canvas를 base64 img로 교체한 HTML 수집 */
+      var pagesClone = pages.cloneNode(true);
+      var origCanvases = pages.querySelectorAll('canvas');
+      var cloneCanvases = pagesClone.querySelectorAll('canvas');
+      origCanvases.forEach(function(c,i){
+        try{
+          var img = document.createElement('img');
+          img.src = c.toDataURL('image/png');
+          img.style.cssText = 'width:56px;height:56px;display:block;';
+          if(cloneCanvases[i]) cloneCanvases[i].parentNode.replaceChild(img, cloneCanvases[i]);
+        }catch(e){}
+      });
+      var pageDivs = pagesClone.querySelectorAll('div[style*="margin-bottom"]');
+      var bodyHtml = '';
+      pageDivs.forEach(function(d){
+        bodyHtml += '<div style="background:#fff;padding:6mm;break-after:page;page-break-after:always;">' + d.innerHTML + '</div>';
+      });
+      var fullHtml = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>A4 기록지 인쇄</title>'
+        + '<style>*{box-sizing:border-box;margin:0;padding:0}'
+        + 'body{font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;background:#fff;}'
+        + '@page{size:A4 portrait;margin:6mm;}'
+        + '@media print{body{margin:0;}div{break-inside:avoid;}}'
+        + '</style></head><body>' + bodyHtml + '</body></html>';
+      var pw = window.open('', '_blank', 'width=900,height=1000');
+      if(!pw){ alert('팝업이 차단되었습니다.\n브라우저 팝업 허용 후 다시 눌러주세요.'); return; }
+      pw.document.open();
+      pw.document.write(fullHtml);
+      pw.document.close();
+      pw.focus();
+      setTimeout(function(){ pw.print(); }, 1000);
+    };
     var container=document.getElementById('pgA4Pages');
 
     teams.forEach(function(teamObj,ti){
