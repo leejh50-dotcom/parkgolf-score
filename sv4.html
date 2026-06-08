@@ -3313,7 +3313,7 @@ window.addEventListener('load', function(){
           try{
             var img = document.createElement('img');
             img.src = c.toDataURL('image/png');
-            img.style.cssText = 'width:56px;height:56px;display:block;';
+            img.style.cssText = 'width:72px;height:72px;display:block;';
             if(cloneCanvases[i]) cloneCanvases[i].parentNode.replaceChild(img, cloneCanvases[i]);
           }catch(e){}
         });
@@ -3376,26 +3376,25 @@ window.addEventListener('load', function(){
       var qrText=appUrl+'?c='+encodeURIComponent(code)+'&u='+encodeURIComponent(webappUrl)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam;
       players.forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||'')); });
 
-      /* 합계+서명 */
-      var totalRow='<div style="display:grid;grid-template-columns:50px repeat(8,minmax(0,1fr)) 28px;height:24px;font-size:7pt;">'
-        +'<div style="background:#e8e0d0;font-weight:700;border-right:1.5px solid #555;display:flex;align-items:center;justify-content:center;text-align:center;font-size:6.5pt;line-height:1.3;">4코스<br>합계</div>';
+      /* ★ 합계 박스: 독립 테두리, 이름 좌측 + 우측 점수 여백, QR 우측 */
+      var totalRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);border-bottom:0.5px solid #ccc;height:22px;font-size:7pt;">'
+        +'<div style="background:#e8e0d0;font-weight:700;border-right:1.5px solid #555;display:flex;align-items:center;justify-content:center;text-align:center;font-size:6pt;line-height:1.3;">4코스<br>합계</div>';
       for(var pi=0;pi<4;pi++){
         var isLast=(pi===3);
-        totalRow+='<div style="background:#ede8df;border-right:0.5px solid #ddd;"></div>';
-        /* ★ 이름 좌측 + 우측 점수 여백 */
-        totalRow+='<div style="background:#e8e0d0;'+(isLast?'border-right:0.5px solid #aaa;':'border-right:1.5px solid #555;')
-          +'display:flex;align-items:center;justify-content:space-between;padding:0 4px;font-size:6.5pt;font-weight:700;color:#7a4f00;overflow:hidden;">'
-          +'<span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:65%;">'+esc(pLabels[pi])+'</span>'
-          +'<span style="color:#bbb;font-size:6pt;font-weight:400;flex-shrink:0;">점수</span>'
+        totalRow+='<div style="background:#e8e0d0;'+(isLast?'border-right:none;':'border-right:1.5px solid #555;')
+          +'display:flex;align-items:center;padding:0 4px;font-size:6.5pt;font-weight:700;color:#7a4f00;">'
+          +'<span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0;max-width:55%;">'+esc(pLabels[pi])+'</span>'
+          +'<span style="flex:1;"></span>'
           +'</div>';
       }
-      totalRow+='<div style="background:#f0ece4;"></div></div>';
-      var sigRow='<div style="display:grid;grid-template-columns:50px repeat(4,1fr);height:20px;font-size:7pt;margin-top:2px;">'
-        +'<div style="background:#e8e0d0;font-weight:700;border:0.5px solid #ccc;display:flex;align-items:center;justify-content:center;font-size:6.5pt;">선수 서명</div>'
-        +'<div style="border:0.5px solid #ccc;margin-left:-0.5px;"></div>'
-        +'<div style="border:0.5px solid #ccc;margin-left:-0.5px;"></div>'
-        +'<div style="border:0.5px solid #ccc;margin-left:-0.5px;"></div>'
-        +'<div style="border:0.5px solid #ccc;margin-left:-0.5px;"></div></div>';
+      totalRow+='</div>';
+      var sigRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);height:20px;font-size:7pt;">'
+        +'<div style="background:#e8e0d0;font-weight:700;border-right:1.5px solid #555;display:flex;align-items:center;justify-content:center;font-size:6.5pt;">서명</div>'
+        +'<div style="border-right:1.5px solid #555;"></div>'
+        +'<div style="border-right:1.5px solid #555;"></div>'
+        +'<div style="border-right:1.5px solid #555;"></div>'
+        +'<div></div>'
+        +'</div>';
       var qrId='a4qr'+ti;
       var page=document.createElement('div');
       page.style.cssText='background:#fff;margin-bottom:12px;border-radius:8px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.12);padding:10px;';
@@ -3406,26 +3405,35 @@ window.addEventListener('load', function(){
         +'<span><b style="color:#333;">조명:</b> '+esc(teamObj.team||'')+'</span>'
         +'<span><b style="color:#333;">일시:</b> '+esc(dateStr)+'</span>'
         +'</div></div>'
-        /* ★ a4course-grid 클래스 추가 */
         +'<div class="a4course-grid" style="border:0.5px solid #999;">'
         +'<div style="border-right:0.5px solid #999;">'+_courseBlock('A',pLabels)+'</div>'
         +'<div>'+_courseBlock('B',pLabels)+'</div>'
         +'<div style="border-right:0.5px solid #999;border-top:0.5px solid #999;">'+_courseBlock('C',pLabels)+'</div>'
         +'<div style="border-top:0.5px solid #999;">'+_courseBlock('D',pLabels)+'</div>'
         +'</div>'
-        +'<div class="a4bottom" style="display:grid;grid-template-columns:1fr 70px;border:0.5px solid #999;border-top:none;">'
-        +'<div style="padding:3px;">'+totalRow+sigRow
-        +'<div style="font-size:6pt;color:#bbb;margin-top:2px;">합계 기록 후 우측 QR 스캔 → 점수 전송</div>'
+        /* ★ 합계+QR 독립 박스 */
+        +'<div class="a4bottom" style="display:flex;border:1.5px solid #555;border-top:0.5px solid #999;margin-top:0;">'
+        +'<div style="flex:1;min-width:0;">'
+        +totalRow+sigRow
+        +'<div style="font-size:6pt;color:#bbb;padding:2px 4px;">합계 기록 후 우측 QR 스캔 → 점수 전송</div>'
         +'</div>'
-        +'<div style="border-left:0.5px solid #ccc;background:#fafaf8;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3px;gap:2px;">'
-        +'<div id="'+qrId+'" style="width:56px;height:56px;"></div>'
-        +'<div style="font-size:6.5pt;color:#888;text-align:center;line-height:1.3;">QR 스캔<br>점수 전송</div>'
+        /* QR: 80×80px 표시, 실제 200px 생성 */
+        +'<div style="width:80px;flex-shrink:0;border-left:1.5px solid #555;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2px;gap:1px;">'
+        +'<div id="'+qrId+'" style="width:72px;height:72px;overflow:hidden;display:flex;align-items:center;justify-content:center;"></div>'
+        +'<div style="font-size:6pt;color:#888;text-align:center;line-height:1.3;">QR 스캔</div>'
         +'</div></div>';
       container.appendChild(page);
+      /* ★ QR 200px 생성 → CSS로 72px 축소 표시 (고해상도) */
       setTimeout(function(qid,qt){ return function(){
         var el=document.getElementById(qid);
         if(el&&typeof QRCode!=='undefined')
-          try{new QRCode(el,{text:qt,width:56,height:56,colorDark:'#000',colorLight:'#fff',correctLevel:QRCode.CorrectLevel.M});}catch(e){}
+          try{
+            new QRCode(el,{text:qt,width:200,height:200,colorDark:'#000',colorLight:'#fff',correctLevel:QRCode.CorrectLevel.M});
+            var canvas=el.querySelector('canvas');
+            if(canvas){ canvas.style.cssText='width:72px;height:72px;display:block;'; }
+            var img=el.querySelector('img');
+            if(img){ img.style.cssText='width:72px;height:72px;display:block;'; }
+          }catch(e){}
       };}(qrId,qrText), ti*25);
     });
   }
