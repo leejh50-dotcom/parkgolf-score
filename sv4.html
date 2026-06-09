@@ -3276,7 +3276,7 @@ window.addEventListener('load', function(){
     for(var h=1;h<=9;h++){
       var rb=(h===9)?'':'border-bottom:1px solid #333;';
       /* ★ border-bottom은 셀이 아닌 행 컨테이너에만 → 픽셀 오차 없는 균일 선 */
-      rows+='<div style="display:grid;grid-template-columns:'+_cols()+';min-height:0;'+rb+'">'
+      rows+='<div style="display:grid;grid-template-columns:'+_cols()+';height:9mm;box-sizing:border-box;'+rb+'">'
         +'<div style="text-align:center;'+bC+'background:#f9f6f0;font-size:9pt;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2;">'+c+'-'+h+'<span style="color:#c8860a;font-size:8pt;">(  )</span></div>';
       for(var pi=0;pi<4;pi++){
         var bR=(pi===3)?bE:bC;
@@ -4273,7 +4273,4 @@ window.addEventListener('load', function(){
   }catch(e){}
   window.collectPlayersForSendDetailedV2=collectPlayers;
 })();
-</script>
-
-</body>
-</html>
+</scrip
