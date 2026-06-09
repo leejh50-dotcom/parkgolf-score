@@ -3349,7 +3349,7 @@ window.addEventListener('load', function(){
         /* 코스 내 hole-rows: flex → grid repeat(9,1fr) 로 교체 → 픽셀 균등분배 */
         '.a4hole-rows{flex:1;min-height:0;display:block;overflow:hidden;}',
         /* 각 홀 행 */
-        '.a4hole-rows > div{display:grid;overflow:hidden;}',
+        '.a4hole-rows > div{display:grid;overflow:hidden;height:9mm;min-height:9mm;box-sizing:border-box;}',
         /* 하단 고정 */
         '.a4bottom{flex-shrink:0;}'
       ].join('');
@@ -3362,12 +3362,27 @@ window.addEventListener('load', function(){
         ;
 
       /* 더 직접적인 방법: hole row에 flex:1 강제 적용 */
-      /* 각 홀 행은 grid row로 표현됨 - min-height:14px를 flex:1로 교체 */
-      bodyHtml = bodyHtml.replace(/min-height:14px/g, 'flex:1;min-height:0');
-
-      /* course 내부 grid를 flex column으로 변환하기 위해 직접 수정 */
       var fullHtml = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>A4 기록지 인쇄</title>'
-        + '<style>' + css + '</style></head><body>' + bodyHtml + '</body></html>';
+        + '<style>' + css + '</style></head><body>' + bodyHtml
+        /* ★ JS 균등화: HTML 내부에 삽입, window.onload 후 실행 */
+        + '<script>'
+        + 'window.onload=function(){'
+        + '  setTimeout(function(){'
+        + '    document.querySelectorAll(".a4hole-rows").forEach(function(c){'
+        + '      var h=c.clientHeight;'
+        + '      if(h<20)return;'
+        + '      var rh=Math.floor(h/9);'
+        + '      Array.from(c.children).forEach(function(r,i){'
+        + '        r.style.height=(i===8?(h-rh*8):rh)+"px";'
+        + '        r.style.minHeight="0";'
+        + '        r.style.boxSizing="border-box";'
+        + '      });'
+        + '    });'
+        + '    setTimeout(function(){window.print();},700);'
+        + '  },400);'
+        + '};'
+        + '<\/script>'
+        + '</body></html>';
 
       var pw = window.open('', '_blank', 'width=900,height=1000');
       if(!pw){ alert('팝업이 차단되었습니다.\n주소창의 팝업 차단 아이콘 → 허용 후 재시도하세요.'); return; }
@@ -3375,21 +3390,6 @@ window.addEventListener('load', function(){
       pw.document.write(fullHtml);
       pw.document.close();
       pw.focus();
-      /* ★ 로드 후 홀 행 높이 강제 균등화 → 픽셀 반올림 오차 제거 */
-      pw.addEventListener('load', function(){
-        try{
-          pw.document.querySelectorAll('.a4hole-rows').forEach(function(container){
-            var totalH = container.clientHeight;
-            var rowH = Math.floor(totalH / 9);
-            Array.from(container.children).forEach(function(row, i){
-              /* 마지막 행은 남은 픽셀 흡수 */
-              row.style.height = (i === 8 ? (totalH - rowH * 8) : rowH) + 'px';
-              row.style.boxSizing = 'border-box';
-            });
-          });
-        }catch(e){}
-        setTimeout(function(){ pw.print(); }, 600);
-      });
     };
     var container=document.getElementById('pgA4Pages');
 
