@@ -3251,7 +3251,7 @@ window.addEventListener('load', function(){
     var bC='border-right:2px solid #000;';
     var bI='border-right:1px solid #aaa;';
     var bE='border-right:1px solid #777;';
-    var hdr='<div style="background:#000;color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact;text-align:center;font-size:11pt;font-weight:900;padding:3px 0 4px;letter-spacing:2px;border-bottom:2px solid #000;">'+c+' 코 스</div>';
+    var hdr='<div style="background:#fff;color:#000;text-align:center;font-size:11pt;font-weight:900;padding:3px 0 4px;letter-spacing:2px;border-bottom:2px solid #000;border-top:1px solid #000;">'+c+' 코 스</div>';
     var nameRow='<div style="display:grid;grid-template-columns:'+_cols()+';border-bottom:2px solid #000;">'
       +'<div style="background:#e8e0d0;text-align:center;'+bC+'font-weight:700;font-size:8pt;display:flex;align-items:center;justify-content:center;padding:2px;">홀<br>(파)</div>';
     for(var pi=0;pi<4;pi++){
@@ -3375,7 +3375,21 @@ window.addEventListener('load', function(){
       pw.document.write(fullHtml);
       pw.document.close();
       pw.focus();
-      setTimeout(function(){ pw.print(); }, 1000);
+      /* ★ 로드 후 홀 행 높이 강제 균등화 → 픽셀 반올림 오차 제거 */
+      pw.addEventListener('load', function(){
+        try{
+          pw.document.querySelectorAll('.a4hole-rows').forEach(function(container){
+            var totalH = container.clientHeight;
+            var rowH = Math.floor(totalH / 9);
+            Array.from(container.children).forEach(function(row, i){
+              /* 마지막 행은 남은 픽셀 흡수 */
+              row.style.height = (i === 8 ? (totalH - rowH * 8) : rowH) + 'px';
+              row.style.boxSizing = 'border-box';
+            });
+          });
+        }catch(e){}
+        setTimeout(function(){ pw.print(); }, 600);
+      });
     };
     var container=document.getElementById('pgA4Pages');
 
