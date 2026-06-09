@@ -2934,10 +2934,11 @@ window.addEventListener('load', function(){
   .pg4per .pgCard-footer { font-size:8pt !important; margin-top:1mm !important; }
 
   /* ══ 모바일 페이지 wrapper 인쇄 CSS ══
-     각 페이지를 A4 고정높이(230mm)로 가두어 iOS Safari 블리드 완전 차단 */
+     각 페이지를 A4 고정높이(218mm)로 가두어 iOS Safari 블리드 완전 차단
+     230mm→218mm: 기기별 여백 차이 흡수 → 내용 잘림·2페이지 방지 */
   .pgMobilePageWrap {
     width:100% !important;
-    height:230mm !important;
+    height:218mm !important;
     overflow:hidden !important;
     box-sizing:border-box !important;
     display:flex !important; flex-direction:column !important;
@@ -3297,6 +3298,90 @@ window.addEventListener('load', function(){
     return hdr+nameRow+subHdr+rows+sub;
   }
 
+  /* ══ QR 일괄 인쇄 — 새 창 방식 (PC/모바일 공통, position:fixed 문제 해결) ══ */
+  window._printQrNewWindow = function(){
+    var ov = document.getElementById('pgBatchOv');
+    if(!ov) return;
+    var isMobile = ov.classList.contains('pgMobilePrint');
+
+    /* 캔버스 → base64 변환 */
+    function canvasToImg(clone, orig){
+      var oc = orig.querySelectorAll('canvas');
+      var cc = clone.querySelectorAll('canvas');
+      oc.forEach(function(c,i){
+        try{
+          var img = document.createElement('img');
+          img.src = c.toDataURL('image/png');
+          img.style.cssText = c.style.cssText || 'display:block;';
+          if(cc[i]) cc[i].parentNode.replaceChild(img, cc[i]);
+        }catch(e){}
+      });
+    }
+
+    var bodyHtml = '';
+    if(isMobile){
+      /* 모바일: pgMobilePageWrap 각각 → 한 페이지 */
+      var wraps = ov.querySelectorAll('.pgMobilePageWrap');
+      wraps.forEach(function(wrap){
+        var cl = wrap.cloneNode(true);
+        canvasToImg(cl, wrap);
+        bodyHtml += '<div class="qr-page">' + cl.innerHTML + '</div>';
+      });
+    } else {
+      /* PC: 1페이지(pgBatchGrid+헤더) + 2페이지~(pgPageBlock) */
+      var hdrTop = document.getElementById('pgBatchTop');
+      var grid   = document.getElementById('pgBatchGrid');
+      if(hdrTop && grid){
+        var hdrCl = hdrTop.cloneNode(true);
+        var gridCl = grid.cloneNode(true);
+        canvasToImg(gridCl, grid);
+        bodyHtml += '<div class="qr-page">' + hdrCl.outerHTML + gridCl.outerHTML + '</div>';
+      }
+      ov.querySelectorAll('.pgPageBlock').forEach(function(blk){
+        var cl = blk.cloneNode(true);
+        canvasToImg(cl, blk);
+        bodyHtml += '<div class="qr-page">' + cl.innerHTML + '</div>';
+      });
+    }
+
+    /* 인라인 CSS 수집 (pgBatchOv 관련 스타일) */
+    var styleText = '';
+    Array.from(document.styleSheets).forEach(function(ss){
+      try{
+        Array.from(ss.cssRules||[]).forEach(function(r){
+          var t = r.cssText||'';
+          if(t.indexOf('pgCard')>-1 || t.indexOf('pgBatch')>-1 ||
+             t.indexOf('pgPage')>-1 || t.indexOf('pgMobile')>-1 ||
+             t.indexOf('pgLayout')>-1 || t.indexOf('@media print')>-1){
+            styleText += t + '\n';
+          }
+        });
+      }catch(e){}
+    });
+
+    var fullHtml = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>조별 QR 인쇄</title>'
+      + '<style>'
+      + '*{box-sizing:border-box;margin:0;padding:0}'
+      + 'body{font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;background:#fff;}'
+      + styleText
+      + '.qr-page{break-after:page;page-break-after:always;}'
+      + '.qr-page:last-child{break-after:auto;page-break-after:auto;}'
+      + '#pgBatchTop{position:static!important;}'
+      + '@page{margin:8mm;}'
+      + '</style></head><body>' + bodyHtml + '</body></html>';
+
+    var pw = window.open('','_blank','width=1000,height=900');
+    if(!pw){
+      alert('팝업이 차단되었습니다.\n주소창 팝업 차단 아이콘 → 허용 후 재시도하세요.');
+      return;
+    }
+    pw.document.open();
+    pw.document.write(fullHtml);
+    pw.document.close();
+    pw.focus();
+    setTimeout(function(){ pw.print(); }, 800);
+  };
+
   function _openA4SheetOv(teams,code,qrDate,webappUrl){
     var appUrl='https://leejh50-dotcom.github.io/parkgolf-score/pasis4-send.html';
     var dateStr=new Date().toLocaleDateString('ko-KR');
@@ -3422,8 +3507,10 @@ window.addEventListener('load', function(){
         +'</div>';
       /* 안내문 */
       var noticeRow='<div style="border-top:1px solid #333;padding:7px 12px;text-align:center;font-size:9pt;font-weight:700;color:#111;line-height:1.7;">'
-        +'코스별 소계를 QR 스캔 앱에 입력하면 합계가 자동 계산됩니다.<br>'
-        +'전송 후 수정은 본부로 직접 문의 바랍니다.'
+        +'경기 종료 후 심판 안내<br>'
+        +'코스별 소계를 확인하고 휴대폰 카메라로 QR코드를 비추세요.<br>'
+        +'연결 창이 나타나면 눌러 접속 → 코스별 소계 입력 → 전송하면 합계가 자동 계산됩니다.<br>'
+        +'<span style="font-size:8.5pt;font-weight:500;color:#555;">전송 후 수정은 본부로 직접 문의 바랍니다.</span>'
         +'</div>';
       var qrId='a4qr'+ti;
       var page=document.createElement('div');
@@ -3605,7 +3692,7 @@ window.addEventListener('load', function(){
       +'<div class="bt-btns">'
       +'<button onclick="pgSwitchLayout('+(isMobile?6:8)+')" id="pgLayoutBtn" style="background:'+(chosenPer!==4?'#fff':'rgba(255,255,255,0.25)')+';color:'+(chosenPer!==4?'#7a4f00':'#fff')+';border:none;border-radius:8px;padding:7px 12px;font-size:13px;font-weight:800;min-height:36px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;white-space:nowrap;">'+(isMobile?'6개/장':'8개/장')+'</button>'
       +'<button onclick="pgSwitchLayout('+(isMobile?4:6)+')" id="pgLayout4Btn" style="background:'+(chosenPer===4||(!isMobile&&chosenPer===6)?'#fff':'rgba(255,255,255,0.25)')+';color:'+(chosenPer===4||(!isMobile&&chosenPer===6)?'#7a4f00':'#fff')+';border:1.5px solid rgba(255,255,255,0.6);border-radius:8px;padding:7px 12px;font-size:13px;font-weight:800;min-height:36px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;white-space:nowrap;">'+(isMobile?'4개/장':'6개/장')+'</button>'
-      +'<button class="btn-print" id="pgPrintBtn" onclick="window.print()" disabled style="opacity:.4;cursor:not-allowed;white-space:nowrap;">인쇄하기</button>'
+      +'<button class="btn-print" id="pgPrintBtn" onclick="_printQrNewWindow()" disabled style="opacity:.4;cursor:not-allowed;white-space:nowrap;">인쇄하기</button>'
       +'<button class="btn-close" onclick="document.getElementById(\'pgBatchOv\').remove()">✕</button>'
       +'</div></div>'
       /* ★ 진행률 바 */
@@ -4193,72 +4280,4 @@ window.addEventListener('load', function(){
     ov.innerHTML='<div style="width:min(360px,94vw);max-height:92vh;background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.35);">'
       +'<div style="background:linear-gradient(135deg,#c8860a 0%,#9b6400 100%);padding:16px 18px 14px;color:#fff;"><div style="font-size:22px;font-weight:900;">📋 전송 전 확인</div><div style="font-size:15px;font-weight:700;margin-top:3px;">'+esc(team)+' · '+players.length+'명</div></div>'
       +'<div style="padding:14px 14px 6px;max-height:calc(92vh - 220px);overflow-y:auto;background:#fffaf0;">'+rows+'</div>'
-      +'<div style="background:#fef3c7;border-top:1px solid #fcd34d;padding:11px 16px;font-size:13px;color:#92400e;line-height:1.55;text-align:center;">⚠️ <strong>전송 후 수정은 불가합니다.</strong><br>오류 발견 시 관리자에게 직접 문의하세요.</div>'
-      +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px;background:#fff;"><button id="pasisBack_v2" style="padding:14px;border:none;border-radius:16px;background:#e5e7eb;color:#374151;font-size:20px;font-weight:900;line-height:1.25;">← 뒤로<br>(수정)</button><button id="pasisGo_v2" style="padding:14px;border:none;border-radius:16px;background:#c8860a;color:#fff;font-size:20px;font-weight:900;line-height:1.25;">✅ 확인·<br>전송</button></div></div>';
-    document.body.appendChild(ov);
-    document.getElementById('pasisBack_v2').onclick=function(){remove('pasisSendOv_v2');};
-    document.getElementById('pasisGo_v2').onclick=function(){
-      remove('pasisSendOv_v2');
-      doRealSend(players, team);
-    };
-    ov.onclick=function(e){if(e.target===ov)remove('pasisSendOv_v2');};
-  }
-  function doRealSend(players, team){
-    var ov=sending(), cleaned=false, timer;
-    var oldToast=window.showToast, oldAlert=window.alert;
-    function cleanup(){
-      if(cleaned) return;
-      cleaned=true; clearTimeout(timer); remove('pasisSendingOv_v2');
-      window.showToast=oldToast; window.alert=oldAlert;
-    }
-    timer=setTimeout(cleanup,10000);
-    window.showToast=function(msg){
-      cleanup();
-      if(String(msg).indexOf('완료')>-1 || String(msg).indexOf('전송')>-1) done(team,players);
-      if(typeof oldToast==='function') return oldToast.apply(this,arguments);
-    };
-    window.alert=function(msg){ cleanup(); return oldAlert.apply(this,arguments); };
-    var fn = realSendFn || window.sendToGoogleSheetPatchedV4 || window.sendToGoogleSheet;
-    if(typeof fn==='function') fn();
-    else { cleanup(); oldAlert('❌ 전송 함수를 찾을 수 없습니다.'); }
-  }
-  function onClick(ev){
-    if(ev){ ev.preventDefault(); ev.stopPropagation(); ev.stopImmediatePropagation && ev.stopImmediatePropagation(); }
-    var team=text('teamName') || '팀명', players;
-    try{ players=collectPlayers(); }
-    catch(e){ alert(e.message||String(e)); return false; }
-    if(!players.length){
-      setTimeout(function(){
-        try{ var ps=collectPlayers(); if(ps.length) showConfirm(ps,team); else alert('전송할 선수 정보를 아직 불러오지 못했습니다. 잠시 후 다시 눌러주세요.'); }
-        catch(e){ alert(e.message||String(e)); }
-      },150);
-      return false;
-    }
-    showConfirm(players,team);
-    return false;
-  }
-  function bind(){
-    var btn=document.getElementById('autoSendBtn');
-    if(!btn || btn.__pasisDetailV2Bound) return;
-    btn.__pasisDetailV2Bound=true;
-    btn.onclick=null;
-    btn.style.background='linear-gradient(135deg,#c8860a 0%,#7a4f00 100%)';
-    btn.style.boxShadow='0 5px 10px rgba(122,79,0,.4)';
-    btn.addEventListener('click',onClick,true);
-  }
-  function repeat(){
-    bind();
-    [50,200,500,1000,2000,3500,5000,8000].forEach(function(ms){setTimeout(bind,ms);});
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',repeat);
-  else repeat();
-  window.addEventListener('load',repeat);
-  try{
-    new MutationObserver(function(){ setTimeout(bind,0); }).observe(document.documentElement,{childList:true,subtree:true});
-  }catch(e){}
-  window.collectPlayersForSendDetailedV2=collectPlayers;
-})();
-</script>
-
-</body>
-</html>
+      +'<div style="background:#fef3c7;border-top:1px solid #fcd34d;padding:11px 16px;font-size
