@@ -3386,6 +3386,7 @@ window.addEventListener('load', function(){
       players.forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||'')); });
 
       /* ★ 합계/서명 같은 높이, 이름 크게, 여백 없이 */
+      var rowH2='30px';
       var bLbl='border-right:1px solid #555;';  /* 레이블 우측 */
       var bCol='border-right:1px solid #555;';  /* 선수칸 구분 */
       /* 행1: 이름 헤더 — border-top 없음 (박스 상단이 외곽선) */
