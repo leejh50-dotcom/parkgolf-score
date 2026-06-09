@@ -3386,10 +3386,11 @@ window.addEventListener('load', function(){
       players.forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||'')); });
 
       /* ★ 합계/서명 같은 높이, 이름 크게, 여백 없이 */
-      var rowH2='30px';
-      /* ★ 행1: 이름 헤더 */
-      var totalRow='<div style="display:grid;grid-template-columns:52px repeat(4,1fr);border-bottom:1px solid #333;">'
-        +'<div style="background:#e8e0d0;font-weight:900;border-right:2px solid #000;display:flex;align-items:center;justify-content:center;text-align:center;font-size:8.5pt;line-height:1.35;padding:4px;">4코스<br>합계</div>';
+      var bLbl='border-right:1px solid #555;';  /* 레이블 우측 */
+      var bCol='border-right:1px solid #555;';  /* 선수칸 구분 */
+      /* 행1: 이름 헤더 — border-top 없음 (박스 상단이 외곽선) */
+      var totalRow='<div style="display:grid;grid-template-columns:52px repeat(4,1fr);">'
+        +'<div style="background:#e8e0d0;font-weight:900;'+bLbl+'display:flex;align-items:center;justify-content:center;text-align:center;font-size:8.5pt;line-height:1.35;padding:4px;">4코스<br>합계</div>';
       for(var pi=0;pi<4;pi++){
         var isLast=(pi===3);
         var nm2=pLabels[pi]||('경기자 '+(pi+1));
@@ -3397,28 +3398,29 @@ window.addEventListener('load', function(){
         var nhtml2=p2
           ?'<div style="font-size:11pt;font-weight:900;text-align:center;">'+esc(p2[1])+'</div><div style="font-size:8.5pt;font-weight:500;color:#444;text-align:center;">('+esc(p2[2])+')</div>'
           :'<div style="font-size:11pt;font-weight:900;text-align:center;">'+esc(nm2)+'</div>';
-        totalRow+='<div style="background:#eee6d8;'+(isLast?'border-right:1px solid #777;':'border-right:1px solid #555;')
+        totalRow+='<div style="background:#eee6d8;'+(isLast?'':'border-right:1px solid #555;')
           +'display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px 2px;overflow:hidden;">'+nhtml2+'</div>';
       }
       totalRow+='</div>';
-      /* ★ 행2: 점수 기입 */
-      var scoreRow='<div style="display:grid;grid-template-columns:52px repeat(4,1fr);border-bottom:1px solid #333;height:'+rowH2+';">'
-        +'<div style="background:#e8e0d0;font-weight:900;border-right:2px solid #000;display:flex;align-items:center;justify-content:center;font-size:8.5pt;">점수</div>'
-        +'<div style="border-right:1px solid #555;"></div>'
-        +'<div style="border-right:1px solid #555;"></div>'
-        +'<div style="border-right:1px solid #555;"></div>'
-        +'<div style="border-right:1px solid #777;"></div>'
+      /* 행2: 점수 — 모든 셀 border-top:1px */
+      var bt='border-top:1px solid #333;';
+      var scoreRow='<div style="display:grid;grid-template-columns:52px repeat(4,1fr);height:'+rowH2+';">'
+        +'<div style="background:#e8e0d0;font-weight:900;'+bLbl+bt+'display:flex;align-items:center;justify-content:center;font-size:8.5pt;">점수</div>'
+        +'<div style="border-right:1px solid #555;'+bt+'"></div>'
+        +'<div style="border-right:1px solid #555;'+bt+'"></div>'
+        +'<div style="border-right:1px solid #555;'+bt+'"></div>'
+        +'<div style="'+bt+'"></div>'
         +'</div>';
-      /* ★ 행3: 서명 */
+      /* 행3: 서명 — 모든 셀 border-top:1px */
       var sigRow='<div style="display:grid;grid-template-columns:52px repeat(4,1fr);height:'+rowH2+';">'
-        +'<div style="background:#e8e0d0;font-weight:900;border-right:2px solid #000;display:flex;align-items:center;justify-content:center;font-size:8.5pt;">서명</div>'
-        +'<div style="border-right:1px solid #555;"></div>'
-        +'<div style="border-right:1px solid #555;"></div>'
-        +'<div style="border-right:1px solid #555;"></div>'
-        +'<div style="border-right:1px solid #777;"></div>'
+        +'<div style="background:#e8e0d0;font-weight:900;'+bLbl+bt+'display:flex;align-items:center;justify-content:center;font-size:8.5pt;">서명</div>'
+        +'<div style="border-right:1px solid #555;'+bt+'"></div>'
+        +'<div style="border-right:1px solid #555;'+bt+'"></div>'
+        +'<div style="border-right:1px solid #555;'+bt+'"></div>'
+        +'<div style="'+bt+'"></div>'
         +'</div>';
-      /* ★ 안내문 */
-      var noticeRow='<div style="border-top:1px solid #777;padding:7px 12px;text-align:center;font-size:9pt;font-weight:700;color:#111;line-height:1.7;">'
+      /* 안내문 */
+      var noticeRow='<div style="border-top:1px solid #333;padding:7px 12px;text-align:center;font-size:9pt;font-weight:700;color:#111;line-height:1.7;">'
         +'코스별 소계를 QR 스캔 앱에 입력하면 합계가 자동 계산됩니다.<br>'
         +'전송 후 수정은 본부로 직접 문의 바랍니다.'
         +'</div>';
