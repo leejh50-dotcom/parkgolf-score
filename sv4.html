@@ -3264,7 +3264,7 @@ window.addEventListener('load', function(){
     var bg=_courseBg[c]||'#f0f0f0';
     var bC='border-right:2px solid #000;';
     var bI='border-right:1px solid #aaa;';
-    var bE='border-right:1px solid #777;';
+    var bE='border-right:2px solid #000;';
     var hdr='<div style="-webkit-print-color-adjust:exact;print-color-adjust:exact;background:'+bg+';color:#000;text-align:center;font-size:11pt;font-weight:900;padding:3px 0 4px;letter-spacing:2px;border-bottom:2px solid #000;border-top:1px solid #000;">'+c+' 코 스</div>';
     var nameRow='<div style="display:grid;grid-template-columns:'+_cols()+';border-bottom:2px solid #000;">'
       +'<div style="background:#e8e0d0;text-align:center;'+bC+'font-weight:700;font-size:8pt;display:flex;align-items:center;justify-content:center;padding:2px;">홀<br>(파)</div>';
@@ -3526,7 +3526,7 @@ window.addEventListener('load', function(){
         +totalRow+scoreRow+sigRow+noticeRow
         +'</div>'
         /* QR: 안내문 없이 QR만 */
-        +'<div style="width:168px;min-width:168px;max-width:168px;flex-shrink:0;align-self:flex-start;border-left:2px solid #000;background:#fff;display:flex;align-items:center;justify-content:center;padding:10px;">'
+        +'<div style="width:168px;min-width:168px;max-width:168px;flex-shrink:0;border-left:2px solid #000;background:#fff;display:flex;align-items:center;justify-content:center;padding:10px;">'
         +'<div id="'+qrId+'" style="width:148px;height:148px;overflow:hidden;line-height:0;"></div>'
         +'</div></div>';
       container.appendChild(page);
