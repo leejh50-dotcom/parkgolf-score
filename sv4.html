@@ -2690,34 +2690,8 @@ window.addEventListener('load', function(){
   }
   #pgBatchTop .bt-btns, #pgBatchTop .btn-close,
   #pgBatchTop .btn-print, #pgBatchTop .btn-layout { display:none !important; }
-  /* ══ QR 일괄인쇄 전용 ══ */
-  body.qr-print-mode #pgBatchOv {
-    position:static !important;
-    inset:auto !important;
-    height:auto !important;
-    overflow:visible !important;
-    z-index:auto !important;
-  }
-  body.qr-print-mode > *:not(#pgBatchOv) {
-    display:none !important;
-  }
   #pgProgress, #pgProgressTxt { display:none !important; }
-  /* ── A4 기록지 인쇄 전용 ── */
-  #pgA4SheetOv #pgA4Top { display:none !important; }
-  /* a4-print-mode: 메인 페이지 전체 숨기고 A4 오버레이만 출력 */
-  body.a4-print-mode > *:not(#pgA4SheetOv) { display:none !important; }
-  body.a4-print-mode #pgA4SheetOv {
-    position:static !important; overflow:visible !important;
-    height:auto !important; background:transparent !important;
-  }
-  body.a4-print-mode #pgA4Pages { padding:0 !important; }
-  body.a4-print-mode #pgA4Pages > div {
-    break-after:page !important; page-break-after:always !important;
-    box-shadow:none !important; border-radius:0 !important;
-    margin-bottom:0 !important; padding:8mm !important;
-  }
-  body.a4-print-mode #pgA4Pages > div:last-child { break-after:auto !important; page-break-after:auto !important; }
-  #pgBatchOv { display:none !important; }
+  /* ★ 모바일: pgBatchGrid는 pgMobilePageWrap으로 대체 → 인쇄 시 숨김 */
   .pgMobilePrint #pgBatchGrid { display:none !important; visibility:hidden !important; }
   /* ★ 모바일: pgBatchTop도 인쇄에서 숨김 (페이지 헤더는 pgPageHeader가 담당) */
   .pgMobilePrint #pgBatchTop { display:none !important; visibility:hidden !important; }
@@ -2945,11 +2919,10 @@ window.addEventListener('load', function(){
   .pg4per .pgCard-footer { font-size:8pt !important; margin-top:1mm !important; }
 
   /* ══ 모바일 페이지 wrapper 인쇄 CSS ══
-     각 페이지를 A4 고정높이(218mm)로 가두어 iOS Safari 블리드 완전 차단
-     230mm→218mm: 기기별 여백 차이 흡수 → 내용 잘림·2페이지 방지 */
+     각 페이지를 A4 고정높이(230mm)로 가두어 iOS Safari 블리드 완전 차단 */
   .pgMobilePageWrap {
     width:100% !important;
-    height:218mm !important;
+    height:230mm !important;
     overflow:hidden !important;
     box-sizing:border-box !important;
     display:flex !important; flex-direction:column !important;
@@ -3071,7 +3044,30 @@ window.addEventListener('load', function(){
     height:60mm !important;
     overflow:hidden !important; box-sizing:border-box !important;
   }
+
+  /* ── A4 기록지 인쇄 전용 ── */
+  #pgA4SheetOv #pgA4Top { display:none !important; }
+  /* a4-print-mode: 메인 페이지 전체 숨기고 A4 오버레이만 출력 */
+  body.a4-print-mode > *:not(#pgA4SheetOv) { display:none !important; }
+  body.a4-print-mode #pgA4SheetOv {
+    position:static !important; overflow:visible !important;
+    height:auto !important; background:transparent !important;
+  }
+  body.a4-print-mode #pgA4Pages { padding:0 !important; }
+  body.a4-print-mode #pgA4Pages > div {
+    break-after:page !important; page-break-after:always !important;
+    box-shadow:none !important; border-radius:0 !important;
+    margin-bottom:0 !important; padding:8mm !important;
+  }
+  body.a4-print-mode #pgA4Pages > div:last-child { break-after:auto !important; page-break-after:auto !important; }
+  /* ══ QR 일괄인쇄 전용 ══ */
+  body.qr-print-mode #pgBatchOv {
+    position:static !important; inset:auto !important;
+    height:auto !important; overflow:visible !important; z-index:auto !important;
+  }
+  body.qr-print-mode > *:not(#pgBatchOv) { display:none !important; }
 }
+
 
 #pgBatchTop .bt-title { font-size:15px; font-weight:900; }
 #pgBatchTop .bt-btns { display:flex; gap:12px; align-items:center; touch-action:manipulation; }
@@ -3511,47 +3507,6 @@ window.addEventListener('load', function(){
     });
   }
 
-  /* ══ QR 일괄인쇄: head 전체 복사 → 새 창 → 인쇄 ══ */
-  window._printQrBatch = function(){
-    var ov = document.getElementById('pgBatchOv');
-    if(!ov) return;
-
-    /* canvas → img 변환 (실제 표시 크기 적용) */
-    ov.querySelectorAll('canvas').forEach(function(c){
-      try{
-        var img = document.createElement('img');
-        img.src = c.toDataURL('image/png');
-        var w = c.offsetWidth  || parseInt(c.style.width)  || 400;
-        var h = c.offsetHeight || parseInt(c.style.height) || 400;
-        img.style.cssText = 'display:block;width:'+w+'px;height:'+h+'px;';
-        c.parentNode.replaceChild(img, c);
-      }catch(e){}
-    });
-
-    /* 현재 페이지 head 전체 + pgBatchOv 내용을 새 창에 복사 */
-    var headHtml = document.head.outerHTML;
-    var ovClass  = ov.className;
-    var ovHtml   = ov.innerHTML;
-
-    var fullHtml = '<!DOCTYPE html><html>'
-      + headHtml
-      + '<body style="margin:0;padding:0;">'
-      + '<div id="pgBatchOv" class="' + ovClass + '" style="position:static!important;overflow:visible!important;inset:auto!important;height:auto!important;z-index:auto!important;">'
-      + ovHtml
-      + '</div>'
-      + '<script>window.onload=function(){window.print();setTimeout(function(){window.close();},500);}<\/script>'
-      + '</body></html>';
-
-    var pw = window.open('','_blank','width=1100,height=900');
-    if(!pw){
-      alert('팝업이 차단되었습니다.\n주소창 팝업 차단 아이콘 → 허용 후 다시 누르세요.');
-      return;
-    }
-    pw.document.open();
-    pw.document.write(fullHtml);
-    pw.document.close();
-  };
-
   /* ★ 전환 함수: QR 재생성 없이 CSS 토글 + 재페이지네이션만 */
   window.pgSwitchLayout = function(n){
     var p = window._pg;
@@ -3691,7 +3646,7 @@ window.addEventListener('load', function(){
       +'<div class="bt-btns">'
       +'<button onclick="pgSwitchLayout('+(isMobile?6:8)+')" id="pgLayoutBtn" style="background:'+(chosenPer!==4?'#fff':'rgba(255,255,255,0.25)')+';color:'+(chosenPer!==4?'#7a4f00':'#fff')+';border:none;border-radius:8px;padding:7px 12px;font-size:13px;font-weight:800;min-height:36px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;white-space:nowrap;">'+(isMobile?'6개/장':'8개/장')+'</button>'
       +'<button onclick="pgSwitchLayout('+(isMobile?4:6)+')" id="pgLayout4Btn" style="background:'+(chosenPer===4||(!isMobile&&chosenPer===6)?'#fff':'rgba(255,255,255,0.25)')+';color:'+(chosenPer===4||(!isMobile&&chosenPer===6)?'#7a4f00':'#fff')+';border:1.5px solid rgba(255,255,255,0.6);border-radius:8px;padding:7px 12px;font-size:13px;font-weight:800;min-height:36px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;white-space:nowrap;">'+(isMobile?'4개/장':'6개/장')+'</button>'
-      +'<button class="btn-print" id="pgPrintBtn" onclick="_printQrBatch()" disabled style="opacity:.4;cursor:not-allowed;white-space:nowrap;">인쇄하기</button>'
+      +'<button class="btn-print" id="pgPrintBtn" onclick="window.print()" disabled style="opacity:.4;cursor:not-allowed;white-space:nowrap;">인쇄하기</button>'
       +'<button class="btn-close" onclick="document.getElementById(\'pgBatchOv\').remove()">✕</button>'
       +'</div></div>'
       /* ★ 진행률 바 */
