@@ -3511,6 +3511,46 @@ window.addEventListener('load', function(){
     });
   }
 
+  /* ══ QR 일괄인쇄: head 전체 복사 → 새 창 → 인쇄 ══ */
+  window._printQrBatch = function(){
+    var ov = document.getElementById('pgBatchOv');
+    if(!ov) return;
+
+    /* canvas → img 변환 */
+    ov.querySelectorAll('canvas').forEach(function(c){
+      try{
+        var img = document.createElement('img');
+        img.src = c.toDataURL('image/png');
+        img.style.cssText = c.style.cssText || 'display:block;';
+        c.parentNode.replaceChild(img, c);
+      }catch(e){}
+    });
+
+    /* 현재 페이지 head 전체 + pgBatchOv 내용을 새 창에 복사 */
+    var headHtml = document.head.outerHTML;
+    var ovClass  = ov.className;
+    var ovHtml   = ov.innerHTML;
+
+    var fullHtml = '<!DOCTYPE html><html>'
+      + headHtml
+      + '<body style="margin:0;padding:0;">'
+      + '<div id="pgBatchOv" class="' + ovClass + '" style="position:static;overflow:visible;">'
+      + ovHtml
+      + '</div>'
+      /* 인쇄 후 자동 닫기 */
+      + '<script>window.onload=function(){window.print();setTimeout(function(){window.close();},500);}<\/script>'
+      + '</body></html>';
+
+    var pw = window.open('','_blank','width=1100,height=900');
+    if(!pw){
+      alert('팝업이 차단되었습니다.\n주소창 팝업 차단 아이콘 → 허용 후 다시 누르세요.');
+      return;
+    }
+    pw.document.open();
+    pw.document.write(fullHtml);
+    pw.document.close();
+  };
+
   /* ★ 전환 함수: QR 재생성 없이 CSS 토글 + 재페이지네이션만 */
   window.pgSwitchLayout = function(n){
     var p = window._pg;
@@ -3650,7 +3690,7 @@ window.addEventListener('load', function(){
       +'<div class="bt-btns">'
       +'<button onclick="pgSwitchLayout('+(isMobile?6:8)+')" id="pgLayoutBtn" style="background:'+(chosenPer!==4?'#fff':'rgba(255,255,255,0.25)')+';color:'+(chosenPer!==4?'#7a4f00':'#fff')+';border:none;border-radius:8px;padding:7px 12px;font-size:13px;font-weight:800;min-height:36px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;white-space:nowrap;">'+(isMobile?'6개/장':'8개/장')+'</button>'
       +'<button onclick="pgSwitchLayout('+(isMobile?4:6)+')" id="pgLayout4Btn" style="background:'+(chosenPer===4||(!isMobile&&chosenPer===6)?'#fff':'rgba(255,255,255,0.25)')+';color:'+(chosenPer===4||(!isMobile&&chosenPer===6)?'#7a4f00':'#fff')+';border:1.5px solid rgba(255,255,255,0.6);border-radius:8px;padding:7px 12px;font-size:13px;font-weight:800;min-height:36px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;white-space:nowrap;">'+(isMobile?'4개/장':'6개/장')+'</button>'
-      +'<button class="btn-print" id="pgPrintBtn" onclick="document.body.classList.add(\'qr-print-mode\');window.onafterprint=function(){document.body.classList.remove(\'qr-print-mode\');window.onafterprint=null;};window.print();" disabled style="opacity:.4;cursor:not-allowed;white-space:nowrap;">인쇄하기</button>'
+      +'<button class="btn-print" id="pgPrintBtn" onclick="_printQrBatch()" disabled style="opacity:.4;cursor:not-allowed;white-space:nowrap;">인쇄하기</button>'
       +'<button class="btn-close" onclick="document.getElementById(\'pgBatchOv\').remove()">✕</button>'
       +'</div></div>'
       /* ★ 진행률 바 */
@@ -4264,4 +4304,46 @@ window.addEventListener('load', function(){
     };
     window.alert=function(msg){ cleanup(); return oldAlert.apply(this,arguments); };
     var fn = realSendFn || window.sendToGoogleSheetPatchedV4 || window.sendToGoogleSheet;
-    if(
+    if(typeof fn==='function') fn();
+    else { cleanup(); oldAlert('❌ 전송 함수를 찾을 수 없습니다.'); }
+  }
+  function onClick(ev){
+    if(ev){ ev.preventDefault(); ev.stopPropagation(); ev.stopImmediatePropagation && ev.stopImmediatePropagation(); }
+    var team=text('teamName') || '팀명', players;
+    try{ players=collectPlayers(); }
+    catch(e){ alert(e.message||String(e)); return false; }
+    if(!players.length){
+      setTimeout(function(){
+        try{ var ps=collectPlayers(); if(ps.length) showConfirm(ps,team); else alert('전송할 선수 정보를 아직 불러오지 못했습니다. 잠시 후 다시 눌러주세요.'); }
+        catch(e){ alert(e.message||String(e)); }
+      },150);
+      return false;
+    }
+    showConfirm(players,team);
+    return false;
+  }
+  function bind(){
+    var btn=document.getElementById('autoSendBtn');
+    if(!btn || btn.__pasisDetailV2Bound) return;
+    btn.__pasisDetailV2Bound=true;
+    btn.onclick=null;
+    btn.style.background='linear-gradient(135deg,#c8860a 0%,#7a4f00 100%)';
+    btn.style.boxShadow='0 5px 10px rgba(122,79,0,.4)';
+    btn.addEventListener('click',onClick,true);
+  }
+  function repeat(){
+    bind();
+    [50,200,500,1000,2000,3500,5000,8000].forEach(function(ms){setTimeout(bind,ms);});
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',repeat);
+  else repeat();
+  window.addEventListener('load',repeat);
+  try{
+    new MutationObserver(function(){ setTimeout(bind,0); }).observe(document.documentElement,{childList:true,subtree:true});
+  }catch(e){}
+  window.collectPlayersForSendDetailedV2=collectPlayers;
+})();
+</script>
+
+</body>
+</html>
