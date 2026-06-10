@@ -3300,12 +3300,12 @@ window.addEventListener('load', function(){
       rows+='<div style="'+bt+'background:#f9f6f0;"></div></div>';
     }
     rows+='</div>';
-    var sub='<div style="display:grid;grid-template-columns:'+_cols()+';height:28px;border-top:2px solid #000;">'
+    var pca='<-webkit-print-color-adjust:exact;print-color-adjust:exact;';
+    var sub='<div style="display:grid;grid-template-columns:36px repeat(4,1fr) 28px;height:28px;border-top:2px solid #000;">'
       +'<div style="-webkit-print-color-adjust:exact;print-color-adjust:exact;background:'+bg+';font-size:9pt;font-weight:900;text-align:center;'+bC+'display:flex;align-items:center;justify-content:center;">'+c+'소계</div>';
     for(var pi=0;pi<4;pi++){
       var bR=(pi===3)?bE:bC;
-      sub+='<div style="background:#fff;'+bI+'"></div>';
-      sub+='<div style="-webkit-print-color-adjust:exact;print-color-adjust:exact;background:'+bg+';'+bR+'"></div>';
+      sub+='<div style="-webkit-print-color-adjust:exact;print-color-adjust:exact;background:'+bg+';'+bR+'height:100%;"></div>';
     }
     sub+='<div style="background:#f9f6f0;"></div></div>';
     return hdr+nameRow+subHdr+rows+sub;
@@ -3527,7 +3527,7 @@ window.addEventListener('load', function(){
         +'</div>'
         /* QR: 안내문 없이 QR만 */
         +'<div style="width:168px;min-width:168px;max-width:168px;flex-shrink:0;align-self:flex-start;border-left:2px solid #000;background:#fff;display:flex;align-items:center;justify-content:center;padding:10px;">'
-        +'<div id="'+qrId+'" style="width:148px;height:148px;line-height:0;"></div>'
+        +'<div id="'+qrId+'" style="width:148px;height:148px;overflow:hidden;line-height:0;"></div>'
         +'</div></div>';
       container.appendChild(page);
       /* ★ QR 800px 생성 → CSS 148px 표시 (Quiet Zone 보장) */
