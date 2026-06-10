@@ -3516,12 +3516,14 @@ window.addEventListener('load', function(){
     var ov = document.getElementById('pgBatchOv');
     if(!ov) return;
 
-    /* canvas → img 변환 */
+    /* canvas → img 변환 (실제 표시 크기 적용) */
     ov.querySelectorAll('canvas').forEach(function(c){
       try{
         var img = document.createElement('img');
         img.src = c.toDataURL('image/png');
-        img.style.cssText = c.style.cssText || 'display:block;';
+        var w = c.offsetWidth  || parseInt(c.style.width)  || 400;
+        var h = c.offsetHeight || parseInt(c.style.height) || 400;
+        img.style.cssText = 'display:block;width:'+w+'px;height:'+h+'px;';
         c.parentNode.replaceChild(img, c);
       }catch(e){}
     });
@@ -3534,10 +3536,9 @@ window.addEventListener('load', function(){
     var fullHtml = '<!DOCTYPE html><html>'
       + headHtml
       + '<body style="margin:0;padding:0;">'
-      + '<div id="pgBatchOv" class="' + ovClass + '" style="position:static;overflow:visible;">'
+      + '<div id="pgBatchOv" class="' + ovClass + '" style="position:static!important;overflow:visible!important;inset:auto!important;height:auto!important;z-index:auto!important;">'
       + ovHtml
       + '</div>'
-      /* 인쇄 후 자동 닫기 */
       + '<script>window.onload=function(){window.print();setTimeout(function(){window.close();},500);}<\/script>'
       + '</body></html>';
 
