@@ -3053,7 +3053,10 @@ window.addEventListener('load', function(){
     position:static !important; overflow:visible !important;
     height:auto !important; background:transparent !important;
   }
-  body.a4-print-mode #pgA4Pages { padding:0 !important; }
+  body.a4-print-mode * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
   body.a4-print-mode #pgA4Pages > div {
     break-after:page !important; page-break-after:always !important;
     box-shadow:none !important; border-radius:0 !important;
@@ -3262,7 +3265,7 @@ window.addEventListener('load', function(){
     var bC='border-right:2px solid #000;';
     var bI='border-right:1px solid #aaa;';
     var bE='border-right:1px solid #777;';
-    var hdr='<div style="background:'+bg+';color:#000;text-align:center;font-size:11pt;font-weight:900;padding:3px 0 4px;letter-spacing:2px;border-bottom:2px solid #000;border-top:1px solid #000;">'+c+' 코 스</div>';
+    var hdr='<div style="-webkit-print-color-adjust:exact;print-color-adjust:exact;background:'+bg+';color:#000;text-align:center;font-size:11pt;font-weight:900;padding:3px 0 4px;letter-spacing:2px;border-bottom:2px solid #000;border-top:1px solid #000;">'+c+' 코 스</div>';
     var nameRow='<div style="display:grid;grid-template-columns:'+_cols()+';border-bottom:2px solid #000;">'
       +'<div style="background:#e8e0d0;text-align:center;'+bC+'font-weight:700;font-size:8pt;display:flex;align-items:center;justify-content:center;padding:2px;">홀<br>(파)</div>';
     for(var pi=0;pi<4;pi++){
@@ -3288,7 +3291,7 @@ window.addEventListener('load', function(){
       /* ★ 모든 셀에 border-top → 각 셀이 선을 직접 그림 → 완전 균일 */
       var bt='border-top:1px solid #333;';
       rows+='<div style="display:grid;grid-template-columns:'+_cols()+';height:9mm;box-sizing:border-box;">'
-        +'<div style="text-align:center;'+bC+bt+'background:'+bg+';font-size:9pt;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2;">'+c+'-'+h+'<span style="color:#c8860a;font-size:8pt;">(  )</span></div>';
+        +'<div style="-webkit-print-color-adjust:exact;print-color-adjust:exact;text-align:center;'+bC+bt+'background:'+bg+';font-size:9pt;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2;">'+c+'-'+h+'<span style="color:#c8860a;font-size:8pt;">(  )</span></div>';
       for(var pi=0;pi<4;pi++){
         var bR=(pi===3)?bE:bC;
         rows+='<div style="'+bI+bt+'background:#fffcf5;"></div>';
@@ -3298,11 +3301,11 @@ window.addEventListener('load', function(){
     }
     rows+='</div>';
     var sub='<div style="display:grid;grid-template-columns:'+_cols()+';height:28px;border-top:2px solid #000;">'
-      +'<div style="background:'+bg+';font-size:9pt;font-weight:900;text-align:center;'+bC+'display:flex;align-items:center;justify-content:center;">'+c+'소계</div>';
+      +'<div style="-webkit-print-color-adjust:exact;print-color-adjust:exact;background:'+bg+';font-size:9pt;font-weight:900;text-align:center;'+bC+'display:flex;align-items:center;justify-content:center;">'+c+'소계</div>';
     for(var pi=0;pi<4;pi++){
       var bR=(pi===3)?bE:bC;
       sub+='<div style="background:#fff;'+bI+'"></div>';
-      sub+='<div style="background:'+bg+';'+bR+'"></div>';
+      sub+='<div style="-webkit-print-color-adjust:exact;print-color-adjust:exact;background:'+bg+';'+bR+'"></div>';
     }
     sub+='<div style="background:#f9f6f0;"></div></div>';
     return hdr+nameRow+subHdr+rows+sub;
@@ -3408,6 +3411,7 @@ window.addEventListener('load', function(){
         '.a4hole-rows > div{display:grid;overflow:hidden;height:9mm;min-height:9mm;box-sizing:border-box;}',
         /* 하단 고정 */
         '.a4bottom{flex-shrink:0;}'
+        + '* {-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}'
       ].join('');
 
       /* course grid wrapper에 클래스 추가 */
@@ -3518,7 +3522,7 @@ window.addEventListener('load', function(){
         +totalRow+scoreRow+sigRow+noticeRow
         +'</div>'
         /* QR: 안내문 없이 QR만 */
-        +'<div style="width:168px;min-width:168px;max-width:168px;flex-shrink:0;border-left:2px solid #000;background:#fff;display:flex;align-items:center;justify-content:center;padding:10px;">'
+        +'<div style="width:168px;min-width:168px;max-width:168px;flex-shrink:0;align-self:flex-start;border-left:2px solid #000;background:#fff;display:flex;align-items:center;justify-content:center;padding:10px;">'
         +'<div id="'+qrId+'" style="width:148px;height:148px;line-height:0;"></div>'
         +'</div></div>';
       container.appendChild(page);
