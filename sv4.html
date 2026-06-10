@@ -2690,6 +2690,18 @@ window.addEventListener('load', function(){
   }
   #pgBatchTop .bt-btns, #pgBatchTop .btn-close,
   #pgBatchTop .btn-print, #pgBatchTop .btn-layout { display:none !important; }
+  /* ══ QR 일괄인쇄 전용: pgBatchOv를 static으로, 나머지 숨김 ══ */
+  #pgBatchOv {
+    position:static !important;
+    inset:auto !important;
+    height:auto !important;
+    overflow:visible !important;
+    z-index:auto !important;
+  }
+  /* pgBatchOv가 열려있을 때: 메인 콘텐츠 숨김 */
+  body:has(#pgBatchOv) > *:not(#pgBatchOv):not(#pgA4SheetOv) {
+    display:none !important;
+  }
   #pgProgress, #pgProgressTxt { display:none !important; }
   /* ── A4 기록지 인쇄 전용 ── */
   #pgA4SheetOv #pgA4Top { display:none !important; }
@@ -3422,7 +3434,7 @@ window.addEventListener('load', function(){
       var bLbl='border-right:1px solid #555;';  /* 레이블 우측 */
       var bCol='border-right:1px solid #555;';  /* 선수칸 구분 */
       /* 행1: 이름 헤더 — border-top 없음 (박스 상단이 외곽선) */
-      var totalRow='<div style="display:grid;grid-template-columns:52px repeat(4,1fr);">'
+      var totalRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);">'
         +'<div style="background:#e8e0d0;font-weight:900;'+bLbl+'display:flex;align-items:center;justify-content:center;text-align:center;font-size:8.5pt;line-height:1.35;padding:4px;">4코스<br>합계</div>';
       for(var pi=0;pi<4;pi++){
         var isLast=(pi===3);
@@ -3437,7 +3449,7 @@ window.addEventListener('load', function(){
       totalRow+='</div>';
       /* 행2: 점수 — 모든 셀 border-top:1px */
       var bt='border-top:1px solid #333;';
-      var scoreRow='<div style="display:grid;grid-template-columns:52px repeat(4,1fr);height:'+rowH2+';">'
+      var scoreRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);height:'+rowH2+';">'
         +'<div style="background:#e8e0d0;font-weight:900;'+bLbl+bt+'display:flex;align-items:center;justify-content:center;font-size:8.5pt;">점수</div>'
         +'<div style="border-right:1px solid #555;'+bt+'"></div>'
         +'<div style="border-right:1px solid #555;'+bt+'"></div>'
@@ -3445,7 +3457,7 @@ window.addEventListener('load', function(){
         +'<div style="'+bt+'"></div>'
         +'</div>';
       /* 행3: 서명 — 모든 셀 border-top:1px */
-      var sigRow='<div style="display:grid;grid-template-columns:52px repeat(4,1fr);height:'+rowH2+';">'
+      var sigRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);height:'+rowH2+';">'
         +'<div style="background:#e8e0d0;font-weight:900;'+bLbl+bt+'display:flex;align-items:center;justify-content:center;font-size:8.5pt;">서명</div>'
         +'<div style="border-right:1px solid #555;'+bt+'"></div>'
         +'<div style="border-right:1px solid #555;'+bt+'"></div>'
@@ -3481,7 +3493,7 @@ window.addEventListener('load', function(){
         +totalRow+scoreRow+sigRow+noticeRow
         +'</div>'
         /* QR: 안내문 없이 QR만 */
-        +'<div style="width:158px;min-width:158px;max-width:158px;flex-shrink:0;border-left:2px solid #000;background:#fff;display:flex;align-items:center;justify-content:center;padding:3px;">'
+        +'<div style="width:164px;min-width:164px;max-width:164px;flex-shrink:0;border-left:2px solid #000;background:#fff;display:flex;align-items:center;justify-content:center;padding:6px;">'
         +'<div id="'+qrId+'" style="width:152px;height:152px;overflow:hidden;"></div>'
         +'</div></div>';
       container.appendChild(page);
@@ -3639,7 +3651,7 @@ window.addEventListener('load', function(){
       +'<div class="bt-btns">'
       +'<button onclick="pgSwitchLayout('+(isMobile?6:8)+')" id="pgLayoutBtn" style="background:'+(chosenPer!==4?'#fff':'rgba(255,255,255,0.25)')+';color:'+(chosenPer!==4?'#7a4f00':'#fff')+';border:none;border-radius:8px;padding:7px 12px;font-size:13px;font-weight:800;min-height:36px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;white-space:nowrap;">'+(isMobile?'6개/장':'8개/장')+'</button>'
       +'<button onclick="pgSwitchLayout('+(isMobile?4:6)+')" id="pgLayout4Btn" style="background:'+(chosenPer===4||(!isMobile&&chosenPer===6)?'#fff':'rgba(255,255,255,0.25)')+';color:'+(chosenPer===4||(!isMobile&&chosenPer===6)?'#7a4f00':'#fff')+';border:1.5px solid rgba(255,255,255,0.6);border-radius:8px;padding:7px 12px;font-size:13px;font-weight:800;min-height:36px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none;white-space:nowrap;">'+(isMobile?'4개/장':'6개/장')+'</button>'
-      +'<button class="btn-print" id="pgPrintBtn" onclick="_printQrNewWindow()" disabled style="opacity:.4;cursor:not-allowed;white-space:nowrap;">인쇄하기</button>'
+      +'<button class="btn-print" id="pgPrintBtn" onclick="window.print()" disabled style="opacity:.4;cursor:not-allowed;white-space:nowrap;">인쇄하기</button>'
       +'<button class="btn-close" onclick="document.getElementById(\'pgBatchOv\').remove()">✕</button>'
       +'</div></div>'
       /* ★ 진행률 바 */
@@ -4255,12 +4267,4 @@ window.addEventListener('load', function(){
     var fn = realSendFn || window.sendToGoogleSheetPatchedV4 || window.sendToGoogleSheet;
     if(typeof fn==='function') fn();
     else { cleanup(); oldAlert('❌ 전송 함수를 찾을 수 없습니다.'); }
-  }
-  function onClick(ev){
-    if(ev){ ev.preventDefault(); ev.stopPropagation(); ev.stopImmediatePropagation && ev.stopImmediatePropagation(); }
-    var team=text('teamName') || '팀명', players;
-    try{ players=collectPlayers(); }
-    catch(e){ alert(e.message||String(e)); return false; }
-    if(!players.length){
-      setTimeout(function(){
-       
+  
