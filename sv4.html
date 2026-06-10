@@ -3577,11 +3577,10 @@ window.addEventListener('load', function(){
     }catch(e){}
     if(!code){alert('대회코드를 먼저 저장해 주세요.');return;}
     if(!webappUrl){alert('웹앱 URL을 먼저 저장해 주세요.');return;}
-    var sel=(window.prompt('인쇄할 두 코스를 입력하세요\n예) AB  /  AC  /  BD  /  CD','AB')||'').toUpperCase().replace(/[^ABCD]/g,'');
-    if(sel.length<2){alert('코스 두 개를 입력하세요 (예: AB, CD)');return;}
-    var c1=sel[0],c2=sel[1];
+
     var dayStr=window.prompt('일차를 입력하세요','1일차');
     if(dayStr===null) return;
+
     var btn=document.querySelector('button[onclick*="generateA4Sheet2Course"]');
     var oldTxt=btn?btn.innerHTML:'';
     if(btn) btn.innerHTML='⏳ 불러오는 중...';
@@ -3592,7 +3591,22 @@ window.addEventListener('load', function(){
       if(btn) btn.innerHTML=oldTxt;
       if(!data.success||!Array.isArray(data.teams)||!data.teams.length) throw new Error((data&&data.message)||'조편성 데이터가 없습니다.');
       data.teams.sort(function(a,b){ return (a.team||'').localeCompare(b.team||'','ko',{numeric:true,sensitivity:'base'}); });
-      _openA4Sheet2Ov(data.teams,code,qrDate,webappUrl,c1,c2,dayStr||'1일차');
+
+      /* 팀명에 일차 정보가 있으면 자동 파싱, 없으면 코스 수동 입력 */
+      var dayNum=parseInt(dayStr)||1;
+      var hasDayInfo=data.teams.some(function(t){ return _parseDayCourse(t.team||'',dayNum)!==null; });
+
+      if(hasDayInfo){
+        /* 이틀대회 조편성 → 자동 코스 감지 */
+        var valid=data.teams.filter(function(t){ return _parseDayCourse(t.team||'',dayNum)!==null; });
+        _openTwoDaySheetOv(valid,code,qrDate,webappUrl,dayNum);
+      } else {
+        /* 일반 조편성 → 코스 직접 입력 */
+        var sel=(window.prompt('인쇄할 두 코스를 입력하세요\n예) AB  /  AC  /  CD','AB')||'').toUpperCase().replace(/[^ABCD]/g,'');
+        if(sel.length<2){alert('코스 두 개를 입력하세요 (예: AB, CD)');return;}
+        var c1=sel[0],c2=sel[1];
+        _openA4Sheet2Ov(data.teams,code,qrDate,webappUrl,c1,c2,dayStr||'1일차');
+      }
     })
     .catch(function(err){ if(btn) btn.innerHTML=oldTxt; alert('2코스 기록지 생성 실패\n\n'+(err&&err.message?err.message:err)); });
   };
