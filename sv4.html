@@ -3356,6 +3356,20 @@ window.addEventListener('load', function(){
     window._printA4NewWindow = function(){
       var pages = document.getElementById('pgA4Pages');
       if(!pages) return;
+    /* ★ 모든 QR 생성 완료 대기 후 인쇄 */
+    var allQrReady = function(){
+      var pages = document.getElementById('pgA4Pages');
+      if(!pages) return true;
+      var qrDivs = pages.querySelectorAll('[id^="a4qr"]');
+      for(var i=0;i<qrDivs.length;i++){
+        if(!qrDivs[i].querySelector('canvas') && !qrDivs[i].querySelector('img')) return false;
+      }
+      return true;
+    };
+
+    var doConvertAndPrint = function(){
+      var pages = document.getElementById('pgA4Pages');
+      if(!pages) return;
       var bodyHtml = '';
       Array.from(pages.children).forEach(function(pageDiv){
         var clone = pageDiv.cloneNode(true);
@@ -3411,6 +3425,19 @@ window.addEventListener('load', function(){
       pw.document.close();
       pw.focus();
       setTimeout(function(){ pw.print(); }, 800);
+    }; // end doConvertAndPrint
+
+    /* QR 생성 완료 대기 (최대 5초, 200ms 간격 체크) */
+    var waited = 0;
+    var waitAndPrint = function(){
+      if(allQrReady() || waited >= 5000){
+        doConvertAndPrint();
+      } else {
+        waited += 200;
+        setTimeout(waitAndPrint, 200);
+      }
+    };
+    waitAndPrint();
     };
     var container=document.getElementById('pgA4Pages');
 
@@ -3503,7 +3530,7 @@ window.addEventListener('load', function(){
             var img=el.querySelector('img');
             if(img){ img.style.cssText='width:152px;height:152px;display:block;'; }
           }catch(e){}
-      };}(qrId,qrText), ti*25);
+      };}(qrId,qrText), ti*40);
     });
   }
 
