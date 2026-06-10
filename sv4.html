@@ -3651,7 +3651,7 @@ window.addEventListener('load', function(){
     teams.forEach(function(teamObj,ti){
       var players=(teamObj.players||[]).slice(0,4);
       while(players.length<4) players.push({name:'',gender:'',affil:''});
-      var pLabels=players.map(function(p,i){ return p.name?(p.name+(p.affil?' ('+p.affil+')'):''):'경기자 '+(i+1); });
+      var pLabels=players.map(function(p,i){ return p.name?(p.name+(p.affil?' ('+p.affil+')':'')):'경기자 '+(i+1); });
       var coParam='&co='+c1+','+c2;
       var qrText=appUrl+'?c='+encodeURIComponent(code)+'&u='+encodeURIComponent(webappUrl)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam;
       players.forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||'')); });
