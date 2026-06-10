@@ -3407,6 +3407,9 @@ window.addEventListener('load', function(){
         '.a4page > div:first-child{flex-shrink:0;}',
         /* course 2×2 그리드: 남은 공간 모두 */
         '.a4course-grid{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;border:2px solid #000;}',
+        /* A/B, C/D 코스 간 경계: 4px */
+        '.a4course-grid > div:nth-child(1),.a4course-grid > div:nth-child(3){border-right:4px solid #000;}',
+        '.a4course-grid > div:nth-child(3),.a4course-grid > div:nth-child(4){border-top:4px solid #000;}',
         /* 각 코스 블록: 세로 flex */
         '.a4course-grid > div{display:flex;flex-direction:column;overflow:hidden;}',
         /* 코스 내 hole-rows: flex → grid repeat(9,1fr) 로 교체 → 픽셀 균등분배 */
@@ -3515,10 +3518,10 @@ window.addEventListener('load', function(){
         +'<span style="margin-left:16px;color:#888;font-size:9pt;font-weight:500;">'+(ti+1)+' / '+teams.length+'페이지</span>'
         +'</div></div>'
         +'<div class="a4course-grid" style="border:2px solid #000;">'
-        +'<div style="border-right:2px solid #000;">'+_courseBlock('A',pLabels)+'</div>'
+        +'<div style="border-right:4px solid #000;">'+_courseBlock('A',pLabels)+'</div>'
         +'<div>'+_courseBlock('B',pLabels)+'</div>'
-        +'<div style="border-right:2px solid #000;border-top:2px solid #000;">'+_courseBlock('C',pLabels)+'</div>'
-        +'<div style="border-top:2px solid #000;">'+_courseBlock('D',pLabels)+'</div>'
+        +'<div style="border-right:4px solid #000;border-top:4px solid #000;">'+_courseBlock('C',pLabels)+'</div>'
+        +'<div style="border-top:4px solid #000;">'+_courseBlock('D',pLabels)+'</div>'
         +'</div>'
         /* ★ 하단 박스: 여백 없이, QR 우측 */
         +'<div class="a4bottom" style="display:flex;border:2px solid #000;">'
