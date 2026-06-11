@@ -3646,10 +3646,10 @@ window.addEventListener('load', function(){
       rows+='<div style="'+bt+'background:#f9f6f0;"></div></div>';
     }
     rows+='</div>';
-    var sub='<div style="display:grid;grid-template-columns:32px repeat(4,1fr) 26px;height:33px;border-top:2px solid #000;">'
+    var sub='<div style="display:grid;grid-template-columns:32px repeat(8,1fr) 36px;height:33px;border-top:2px solid #000;">'
       +'<div style="'+_pca2+'background:'+bg+';font-size:8.5pt;font-weight:900;text-align:center;'+bC+'display:flex;align-items:center;justify-content:center;">'+c+'소계</div>';
     for(var pi=0;pi<4;pi++){
-      sub+='<div style="'+_pca2+'background:'+bg+';'+(pi===3?'':'border-right:2px solid #000;')+'"></div>';
+      sub+='<div style="'+_pca2+'background:'+bg+';border-right:2px solid #000;grid-column:span 2;"></div>';
     }
     sub+='<div style="background:#f9f6f0;"></div></div>';
     return hdr+nameRow+subHdr+rows+sub;
@@ -3815,10 +3815,10 @@ window.addEventListener('load', function(){
       rows+='<div style="'+holeBorder+'background:#f9f6f0;"></div></div>';
     }
     rows+='</div>';
-    var sub='<div style="display:grid;grid-template-columns:32px repeat(4,1fr) 26px;height:33px;border-top:2px solid #000;">'
+    var sub='<div style="display:grid;grid-template-columns:32px repeat(8,1fr) 36px;height:33px;border-top:2px solid #000;">'
       +'<div style="'+_pca2+'background:'+bg+';font-size:8.5pt;font-weight:900;text-align:center;'+bC+'display:flex;align-items:center;justify-content:center;">'+c+'소계</div>';
     for(var pi=0;pi<4;pi++){
-      sub+='<div style="'+_pca2+'background:'+bg+';'+(pi===3?'':'border-right:2px solid #000;')+'"></div>';
+      sub+='<div style="'+_pca2+'background:'+bg+';border-right:2px solid #000;grid-column:span 2;"></div>';
     }
     sub+='<div style="background:#f9f6f0;"></div></div>';
     return hdr+nameRow+subHdr+rows+sub;
@@ -4050,7 +4050,7 @@ window.addEventListener('load', function(){
     var sel=(window.prompt('3코스를 입력하세요\n예) ABC  /  ABD  /  ACD  /  BCD','ABC')||'').toUpperCase().replace(/[^ABCD]/g,'');
     if(sel.length<3){alert('코스 세 개를 입력하세요 (예: ABC)');return;}
     var c1=sel[0],c2=sel[1],c3=sel[2];
-    var dayStr=window.prompt('일차를 입력하세요 (선택사항)','');
+    var dayStr=window.prompt('일차를 입력하세요 (수정 가능)','1일차');
     if(dayStr===null) return;
     var btn=document.querySelector('button[onclick*="generateA4Sheet3Course"]');
     var oldTxt=btn?btn.innerHTML:'';
