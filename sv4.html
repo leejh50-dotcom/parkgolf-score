@@ -712,6 +712,14 @@ html, body {
           </button>
         </div>
 
+        <!-- 3코스 기록지 버튼 -->
+        <div style="margin-top:8px;">
+          <button onclick="generateA4Sheet3Course()"
+            style="width:100%; padding:14px; background:linear-gradient(135deg,#e65100,#bf360c); color:#fff; border:none; border-radius:10px; font-size:15px; font-weight:900; cursor:pointer; line-height:1.5;">
+            📄 A4 기록지 인쇄<br><span style="font-size:12px;font-weight:600;opacity:.9;">(3코스 · 가로형 · 正점수 세로배치)</span>
+          </button>
+        </div>
+
         <!-- 파시스 접속 QR 생성 -->
         <div style="margin-top:10px;">
           <button onclick="generateAccessQR()"
@@ -3968,6 +3976,211 @@ window.addEventListener('load', function(){
         pw.focus(); setTimeout(function(){pw.print();},800);
       };
       var w=0,wait=function(){ if(allR()||w>=5000){doP();}else{w+=200;setTimeout(wait,200);} }; wait();
+    };
+  }
+
+  /* ══ A4 3코스 기록지 (가로형 · 正/점수 세로배치) ══ */
+  var _courseBg3={'A':'#ffe0e0','B':'#ddeeff','C':'#fff9cc','D':'#f0f0f0'};
+  var _pca3='-webkit-print-color-adjust:exact;print-color-adjust:exact;';
+
+  function _courseBlock3(c, pLabels){
+    var bg=_courseBg3[c]||'#f0f0f0';
+    var bC='border-right:2px solid #000;';
+    var cols='24px repeat(4,1fr) 18px';
+    var s='';
+    /* 코스 헤더 */
+    s+='<div style="'+_pca3+'background:'+bg+';text-align:center;font-size:9pt;font-weight:900;padding:3px 0;letter-spacing:2px;border-bottom:2px solid #000;">'+c+' 코 스</div>';
+    /* 이름 행 */
+    s+='<div style="display:grid;grid-template-columns:'+cols+';border-bottom:2px solid #000;">';
+    s+='<div style="'+_pca3+'background:#e8e0d0;'+bC+'text-align:center;font-size:5.5pt;font-weight:700;display:flex;align-items:center;justify-content:center;padding:1px;line-height:1.2;">홀<br>(파)</div>';
+    for(var pi=0;pi<4;pi++){
+      var nm=pLabels[pi]||('경기자 '+(pi+1));
+      var pt=nm.match(/^(.+?)\s*[\(（](.+?)[\)）]$/);
+      var nhtml=pt?esc(pt[1])+'<br><span style="font-size:5.5pt;font-weight:500;color:#555;">('+esc(pt[2])+')</span>':'<span>'+esc(nm)+'</span>';
+      s+='<div style="background:#fff;'+(pi<3?bC:'')+'text-align:center;font-size:7pt;font-weight:900;padding:1px 0;line-height:1.4;display:flex;flex-direction:column;align-items:center;justify-content:center;">'+nhtml+'</div>';
+    }
+    s+='<div style="'+_pca3+'background:#e8e0d0;text-align:center;font-size:5pt;display:flex;align-items:center;justify-content:center;">심판</div>';
+    s+='</div>';
+    /* 홀 행: 正(6mm) + 점수(8mm) 2줄 구조 */
+    s+='<div class="a4hole-rows3">';
+    for(var h=1;h<=9;h++){
+      var bt1='border-top:'+(h===1?'1px':'1px')+' solid #ccc;';
+      /* 正 줄 */
+      s+='<div class="a4h3r" style="display:grid;grid-template-columns:'+cols+';height:6mm;'+bt1+'">';
+      s+='<div style="'+_pca3+'background:'+bg+';'+bC+'text-align:center;font-size:7.5pt;font-weight:900;display:flex;align-items:center;justify-content:center;">'+c+'-'+h+'</div>';
+      for(var pi=0;pi<4;pi++){
+        s+='<div style="background:#fff;'+(pi<3?'border-right:1px solid #ddd;':'')+'padding-left:3px;display:flex;align-items:center;"><span style="font-size:6pt;color:#c8860a;font-weight:900;">正</span></div>';
+      }
+      s+='<div style="background:#f5f5f5;"></div>';
+      s+='</div>';
+      /* 점수 줄 */
+      s+='<div class="a4h3s" style="display:grid;grid-template-columns:'+cols+';height:8mm;border-top:1px solid #bbb;">';
+      s+='<div style="'+_pca3+'background:'+bg+';'+bC+'text-align:center;font-size:5.5pt;font-weight:700;display:flex;align-items:center;justify-content:center;color:#c8860a;">(  )</div>';
+      for(var pi=0;pi<4;pi++){
+        s+='<div style="background:#fff;'+(pi<3?'border-right:1px solid #ddd;':'')+'padding-left:3px;font-size:5.5pt;color:#555;display:flex;align-items:center;">점수</div>';
+      }
+      s+='<div style="background:#f5f5f5;"></div>';
+      s+='</div>';
+    }
+    s+='</div>';
+    /* 소계 행 */
+    s+='<div style="display:grid;grid-template-columns:'+cols+';height:14px;border-top:2px solid #000;">';
+    s+='<div style="'+_pca3+'background:'+bg+';'+bC+'font-size:6pt;font-weight:900;text-align:center;display:flex;align-items:center;justify-content:center;">'+c+'소계</div>';
+    for(var pi=0;pi<4;pi++){
+      s+='<div style="'+_pca3+'background:'+bg+';'+(pi<3?'border-right:1px solid #888;':'')+'"></div>';
+    }
+    s+='<div style="background:#f0f0f0;"></div>';
+    s+='</div>';
+    return s;
+  }
+
+  window.generateA4Sheet3Course = function(){
+    var webappUrl='',code='',qrDate='통합';
+    try{
+      var wEl=document.getElementById('adminWebappUrl'),cEl=document.getElementById('adminCodeInput');
+      var dEl=document.getElementById('modalQrDate');
+      webappUrl=((wEl&&wEl.value)||localStorage.getItem('parkgolf_webapp_url')||'').trim();
+      code=(((cEl&&cEl.value)||localStorage.getItem('parkgolf_tournament_code')||'').trim()).toUpperCase();
+      qrDate=(dEl&&dEl.value)||'통합';
+    }catch(e){}
+    if(!code){alert('대회코드를 먼저 저장해 주세요.');return;}
+    if(!webappUrl){alert('웹앱 URL을 먼저 저장해 주세요.');return;}
+    var sel=(window.prompt('3코스를 입력하세요\n예) ABC  /  ABD  /  ACD  /  BCD','ABC')||'').toUpperCase().replace(/[^ABCD]/g,'');
+    if(sel.length<3){alert('코스 세 개를 입력하세요 (예: ABC)');return;}
+    var c1=sel[0],c2=sel[1],c3=sel[2];
+    var dayStr=window.prompt('일차를 입력하세요 (선택사항)','');
+    if(dayStr===null) return;
+    var btn=document.querySelector('button[onclick*="generateA4Sheet3Course"]');
+    var oldTxt=btn?btn.innerHTML:'';
+    if(btn) btn.innerHTML='⏳ 불러오는 중...';
+    fetch(webappUrl,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify({action:'getteams',code:code,mode:'auto'})})
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(btn) btn.innerHTML=oldTxt;
+      if(!data.success||!Array.isArray(data.teams)||!data.teams.length)
+        throw new Error((data&&data.message)||'조편성 데이터가 없습니다.');
+      data.teams.sort(function(a,b){return (a.team||'').localeCompare(b.team||'','ko',{numeric:true,sensitivity:'base'});});
+      _openA4Sheet3Ov(data.teams,code,qrDate,webappUrl,c1,c2,c3,dayStr||'');
+    })
+    .catch(function(err){if(btn) btn.innerHTML=oldTxt; alert('3코스 기록지 생성 실패\n\n'+(err&&err.message?err.message:err));});
+  };
+
+  function _openA4Sheet3Ov(teams,code,qrDate,webappUrl,c1,c2,c3,dayStr){
+    var appUrl='https://leejh50-dotcom.github.io/parkgolf-score/pasis4-send.html';
+    var dateStr=new Date().toLocaleDateString('ko-KR');
+    var old=document.getElementById('pgA4Sheet3Ov'); if(old) old.remove();
+    var ov=document.createElement('div');
+    ov.id='pgA4Sheet3Ov';
+    ov.style.cssText='position:fixed;inset:0;z-index:100004;overflow-y:auto;background:#eae8e5;font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;';
+    ov.innerHTML='<div id="pgA4Top3" style="position:sticky;top:0;z-index:5;background:linear-gradient(135deg,#e65100,#bf360c);color:#fff;padding:6px 48px 6px 12px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 8px rgba(0,0,0,.3);">'
+      +'<div style="flex:1;font-size:11px;font-weight:700;">📄 3코스 기록지 · '+esc(code)+' · '+esc(c1+c2+c3)+'코스'+(dayStr?' · '+esc(dayStr):'')+'  · '+teams.length+'개 조</div>'
+      +'<button onclick="_printA4Sheet3()" style="background:#fff;color:#e65100;border:none;border-radius:7px;padding:5px 12px;font-size:12px;font-weight:800;cursor:pointer;">🖨 인쇄하기</button>'
+      +'<button onclick="document.getElementById(\'pgA4Sheet3Ov\').remove()" style="position:fixed;top:5px;right:6px;z-index:999999;width:32px;height:32px;border-radius:50%;background:#fff;color:#e65100;border:2px solid #ff8a65;font-size:16px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>'
+      +'</div><div id="pgA4Pages3" style="padding:10px 6px;"></div>';
+    document.body.appendChild(ov);
+    var container=document.getElementById('pgA4Pages3');
+
+    teams.forEach(function(teamObj,ti){
+      var players=(teamObj.players||[]).slice(0,4);
+      while(players.length<4) players.push({name:'',gender:'',affil:''});
+      var pLabels=players.map(function(p,i){return p.name?(p.name+(p.affil?' ('+p.affil+')':'')):'경기자 '+(i+1);});
+      var coParam='&co='+c1+','+c2+','+c3;
+      var qrText=appUrl+'?c='+encodeURIComponent(code)+'&u='+encodeURIComponent(webappUrl)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam;
+      players.forEach(function(p,i){qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||''));});
+
+      var bC2='border-right:2px solid #000;'; var bT='border-top:1px solid #333;';
+      var totalRow='<div style="display:grid;grid-template-columns:42px repeat(4,1fr);border-bottom:1px solid #333;">'
+        +'<div style="background:#e8e0d0;font-weight:900;'+bC2+'font-size:6.5pt;text-align:center;padding:2px;line-height:1.3;display:flex;align-items:center;justify-content:center;">3코스<br>합계</div>';
+      for(var pi=0;pi<4;pi++){
+        var nm2=pLabels[pi]; var p2=nm2.match(/^(.+?)\s*[\(（](.+?)[\)）]$/);
+        var nh2=p2?'<b style="font-size:8.5pt;">'+esc(p2[1])+'</b> <span style="font-size:6pt;color:#555;">('+esc(p2[2])+')</span>':'<b style="font-size:8.5pt;">'+esc(nm2)+'</b>';
+        totalRow+='<div style="background:#fff;'+(pi<3?bC2:'')+'display:flex;align-items:center;padding:0 4px;overflow:hidden;white-space:nowrap;">'+nh2+'</div>';
+      }
+      totalRow+='</div>';
+      var scoreRow='<div style="display:grid;grid-template-columns:42px repeat(4,1fr);height:22px;border-bottom:1px solid #333;">'
+        +'<div style="background:#e8e0d0;font-weight:900;'+bC2+'font-size:7pt;text-align:center;display:flex;align-items:center;justify-content:center;">점수</div>'
+        +'<div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bT+'"></div></div>';
+      var sigRow='<div style="display:grid;grid-template-columns:42px repeat(4,1fr);height:22px;">'
+        +'<div style="background:#e8e0d0;font-weight:900;'+bC2+'font-size:7pt;text-align:center;display:flex;align-items:center;justify-content:center;">서명</div>'
+        +'<div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bT+'"></div></div>';
+      var noticeRow='<div style="border-top:1px solid #333;padding:3px 8px;text-align:center;font-size:7.5pt;font-weight:700;color:#111;line-height:1.6;">'
+        +'경기 종료 후 심판 안내 &nbsp; 코스별 소계를 확인하고 휴대폰 카메라로 QR코드를 비추세요.<br>'
+        +'연결 창이 나타나면 눌러 접속 → 코스별 소계 입력 → 전송하면 합계가 자동 계산됩니다.'
+        +'<span style="font-size:6.5pt;font-weight:500;color:#666;"> 전송 후 수정은 본부로 직접 문의 바랍니다.</span></div>';
+
+      var qrId='a4qr4-'+ti;
+      var page=document.createElement('div');
+      page.style.cssText='background:#fff;margin-bottom:12px;border-radius:8px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.12);padding:8px;';
+      page.innerHTML=
+        '<div style="text-align:center;margin-bottom:4px;">'
+        +'<div style="font-size:12pt;font-weight:900;color:#111;margin-bottom:1px;">'+esc(code)+' 파크골프대회'+(dayStr?' &nbsp; '+esc(dayStr):'')+'</div>'
+        +'<div style="font-size:8.5pt;color:#444;display:flex;gap:16px;justify-content:center;font-weight:600;">'
+        +'<span>조명: '+esc(teamObj.team||'')+'</span><span>일시: '+esc(dateStr)+'</span>'
+        +'<span style="color:#888;font-size:7.5pt;">'+(ti+1)+' / '+teams.length+'페이지</span></div></div>'
+        +'<div style="display:grid;grid-template-columns:1fr 4px 1fr 4px 1fr;border:2px solid #000;">'
+        +'<div>'+_courseBlock3(c1,pLabels)+'</div>'
+        +'<div style="background:#000;"></div>'
+        +'<div>'+_courseBlock3(c2,pLabels)+'</div>'
+        +'<div style="background:#000;"></div>'
+        +'<div>'+_courseBlock3(c3,pLabels)+'</div>'
+        +'</div>'
+        +'<div style="display:flex;border:2px solid #000;border-top:none;">'
+        +'<div style="flex:1;min-width:0;">'+totalRow+scoreRow+sigRow+noticeRow+'</div>'
+        +'<div style="width:60px;min-width:60px;flex-shrink:0;border-left:2px solid #000;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:5px;">'
+        +'<div id="'+qrId+'" style="width:50px;height:50px;overflow:hidden;"></div>'
+        +'</div></div>';
+      container.appendChild(page);
+
+      setTimeout(function(qid,qt){ return function(){
+        var el=document.getElementById(qid);
+        if(el&&typeof QRCode!=='undefined')
+          try{
+            new QRCode(el,{text:qt,width:800,height:800,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
+            var cv=el.querySelector('canvas'); if(cv) cv.style.cssText='width:50px;height:50px;display:block;';
+            var im=el.querySelector('img'); if(im) im.style.display='none';
+          }catch(e){}
+      };}(qrId,qrText), ti*40);
+    });
+
+    window._printA4Sheet3=function(){
+      var pages=document.getElementById('pgA4Pages3'); if(!pages) return;
+      var allR=function(){ var qs=pages.querySelectorAll('[id^="a4qr4-"]'); for(var i=0;i<qs.length;i++) if(!qs[i].querySelector('canvas')&&!qs[i].querySelector('img')) return false; return true; };
+      var doP=function(){
+        var bh='';
+        Array.from(pages.children).forEach(function(pd){
+          var cl=pd.cloneNode(true);
+          pd.querySelectorAll('canvas').forEach(function(c,i){
+            try{
+              var img=document.createElement('img');
+              img.src=c.toDataURL('image/png');
+              img.style.cssText='width:50px;height:50px;display:block;';
+              var clc=cl.querySelectorAll('canvas')[i];
+              if(clc) clc.parentNode.replaceChild(img,clc);
+            }catch(e){}
+          });
+          cl.querySelectorAll('img').forEach(function(im){ if(im.style.display==='none') im.remove(); });
+          bh+='<div class="a4page">'+cl.innerHTML+'</div>';
+        });
+        var css='*{box-sizing:border-box;margin:0;padding:0}'
+          +'body{font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;background:#fff;}'
+          +'*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}'
+          +'.a4page{width:297mm;height:210mm;padding:4mm 4mm;display:flex;flex-direction:column;break-after:page;page-break-after:always;overflow:hidden;}'
+          +'.a4page:last-child{break-after:auto;page-break-after:auto;}'
+          +'.a4hole-rows3{display:block;overflow:hidden;}'
+          +'.a4h3r{height:6mm!important;box-sizing:border-box;}'
+          +'.a4h3s{height:8mm!important;box-sizing:border-box;}'
+          +'@page{size:A4 landscape;margin:0;}';
+        var pw=window.open('','_blank','width=1200,height=800');
+        if(!pw){alert('팝업 차단됨. 허용 후 다시 시도하세요.');return;}
+        pw.document.open();
+        pw.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>3코스 기록지</title><style>'+css+'</style></head><body>'+bh+'</body></html>');
+        pw.document.close();
+        pw.focus();
+        setTimeout(function(){pw.print();},800);
+      };
+      var w=0,wait=function(){if(allR()||w>=5000){doP();}else{w+=200;setTimeout(wait,200);}};
+      wait();
     };
   }
 
