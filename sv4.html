@@ -692,31 +692,31 @@ html, body {
         
 
         <button onclick="generateBatchQR()"
-          style="width:100%; padding:16px; background:linear-gradient(135deg,#c8860a 0%,#7a4f00 100%); color:#fff; border:none; border-radius:10px; font-size:16px; font-weight:900; cursor:pointer; line-height:1.5;">
-          조별 QR 일괄생성<br><span style="font-size:13px;font-weight:700;opacity:.9;">(인쇄용)</span>
+          style="width:100%; padding:14px; background:linear-gradient(135deg,#c8860a 0%,#7a4f00 100%); color:#fff; border:none; border-radius:10px; font-size:14px; font-weight:900; cursor:pointer; line-height:1.5;">
+          조별 QR 일괄 생성<br><span style="font-size:11px;font-weight:600;opacity:.9;">(점수 기록 카드 · QR 분리)</span>
         </button>
 
-        <!-- A4 기록지 인쇄 버튼 -->
-        <div style="margin-top:10px;">
+        <!-- A4 기록지: 4코스 -->
+        <div style="margin-top:7px;">
           <button onclick="generateA4ScoreSheet()"
-            style="width:100%; padding:14px; background:linear-gradient(135deg,#1565c0,#0d47a1); color:#fff; border:none; border-radius:10px; font-size:15px; font-weight:900; cursor:pointer; line-height:1.5;">
-            📄 A4 기록지 인쇄<br><span style="font-size:12px;font-weight:600;opacity:.9;">(4코스 · 세로형)</span>
+            style="width:100%; padding:12px; background:linear-gradient(135deg,#1565c0,#0d47a1); color:#fff; border:none; border-radius:10px; font-size:14px; font-weight:900; cursor:pointer; line-height:1.5;">
+            📄 A4 기록지 — 4코스<br><span style="font-size:11px;font-weight:600;opacity:.9;">(세로형)</span>
           </button>
         </div>
 
-        <!-- 이틀대회 자동분석 버튼 -->
-        <div style="margin-top:8px;">
-          <button onclick="generateA4Sheet2Course()"
-            style="width:100%; padding:14px; background:linear-gradient(135deg,#1b5e20,#2e7d32); color:#fff; border:none; border-radius:10px; font-size:15px; font-weight:900; cursor:pointer; line-height:1.5;">
-            📅 이틀대회 기록지<br><span style="font-size:12px;font-weight:600;opacity:.9;">(조편성 자동분석 · 시작홀 강조)</span>
-          </button>
-        </div>
-
-        <!-- 3코스 기록지 버튼 -->
-        <div style="margin-top:8px;">
+        <!-- A4 기록지: 3코스 -->
+        <div style="margin-top:7px;">
           <button onclick="generateA4Sheet3Course()"
-            style="width:100%; padding:14px; background:linear-gradient(135deg,#e65100,#bf360c); color:#fff; border:none; border-radius:10px; font-size:15px; font-weight:900; cursor:pointer; line-height:1.5;">
-            📄 A4 기록지 인쇄<br><span style="font-size:12px;font-weight:600;opacity:.9;">(3코스 · 가로형 · 正점수 세로배치)</span>
+            style="width:100%; padding:12px; background:linear-gradient(135deg,#6a1b9a,#4a148c); color:#fff; border:none; border-radius:10px; font-size:14px; font-weight:900; cursor:pointer; line-height:1.5;">
+            📄 A4 기록지 — 3코스<br><span style="font-size:11px;font-weight:600;opacity:.9;">(가로형 · 正점수 세로배치)</span>
+          </button>
+        </div>
+
+        <!-- A4 기록지: 2코스 -->
+        <div style="margin-top:7px;">
+          <button onclick="generateA4Sheet2Course()"
+            style="width:100%; padding:12px; background:linear-gradient(135deg,#00695c,#004d40); color:#fff; border:none; border-radius:10px; font-size:14px; font-weight:900; cursor:pointer; line-height:1.5;">
+            📄 A4 기록지 — 2코스<br><span style="font-size:11px;font-weight:600;opacity:.9;">(가로형 · 이틀대회 · 조편성 자동분석)</span>
           </button>
         </div>
 
@@ -4127,8 +4127,8 @@ window.addEventListener('load', function(){
         +'</div>'
         +'<div style="display:flex;border:2px solid #000;border-top:none;">'
         +'<div style="flex:1;min-width:0;">'+totalRow+scoreRow+sigRow+noticeRow+'</div>'
-        +'<div style="width:60px;min-width:60px;flex-shrink:0;border-left:2px solid #000;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:5px;">'
-        +'<div id="'+qrId+'" style="width:50px;height:50px;overflow:hidden;"></div>'
+        +'<div style="width:160px;min-width:160px;flex-shrink:0;border-left:2px solid #000;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px;">'
+        +'<div id="'+qrId+'" style="width:144px;height:144px;overflow:hidden;"></div>'
         +'</div></div>';
       container.appendChild(page);
 
@@ -4137,7 +4137,7 @@ window.addEventListener('load', function(){
         if(el&&typeof QRCode!=='undefined')
           try{
             new QRCode(el,{text:qt,width:800,height:800,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
-            var cv=el.querySelector('canvas'); if(cv) cv.style.cssText='width:50px;height:50px;display:block;';
+            var cv=el.querySelector('canvas'); if(cv) cv.style.cssText='width:144px;height:144px;display:block;';
             var im=el.querySelector('img'); if(im) im.style.display='none';
           }catch(e){}
       };}(qrId,qrText), ti*40);
@@ -4154,7 +4154,7 @@ window.addEventListener('load', function(){
             try{
               var img=document.createElement('img');
               img.src=c.toDataURL('image/png');
-              img.style.cssText='width:50px;height:50px;display:block;';
+              img.style.cssText='width:144px;height:144px;display:block;';
               var clc=cl.querySelectorAll('canvas')[i];
               if(clc) clc.parentNode.replaceChild(img,clc);
             }catch(e){}
