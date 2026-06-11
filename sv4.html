@@ -3988,7 +3988,7 @@ window.addEventListener('load', function(){
     var bC='border-right:2px solid #000;';   /* 선수 간 굵은 선 */
     var bH='border-right:3px solid #000;';   /* 홀열 우측 */
     var bThin='border-right:1px solid #aaa;'; /* 正/점수 내부 얇은 선 */
-    var cols='26px repeat(4,1fr) 20px';
+    var cols='26px repeat(4,1fr) 30px';
     var s='';
     /* 코스 헤더: 폰트 크게 */
     s+='<div style="'+_pca3+'background:'+bg+';text-align:center;font-size:11pt;font-weight:900;padding:4px 0;letter-spacing:3px;border-bottom:2px solid #000;">'+c+' 코 스</div>';
@@ -3999,7 +3999,7 @@ window.addEventListener('load', function(){
       var nm=pLabels[pi]||('경기자 '+(pi+1));
       var pt=nm.match(/^(.+?)\s*[\(（](.+?)[\)）]$/);
       var nhtml=pt?esc(pt[1])+'<br><span style="font-size:6pt;font-weight:500;color:#555;">('+esc(pt[2])+')</span>':'<span>'+esc(nm)+'</span>';
-      s+='<div style="background:#fff;'+(pi<3?bC:'')+'text-align:center;font-size:8pt;font-weight:900;padding:2px 0;line-height:1.4;display:flex;flex-direction:column;align-items:center;justify-content:center;">'+nhtml+'</div>';
+      s+='<div style="background:#fff;'+bC+'text-align:center;font-size:8pt;font-weight:900;padding:2px 0;line-height:1.4;display:flex;flex-direction:column;align-items:center;justify-content:center;">'+nhtml+'</div>';
     }
     s+='<div style="'+_pca3+'background:#e8e0d0;text-align:center;font-size:5pt;display:flex;align-items:center;justify-content:center;">심판</div>';
     s+='</div>';
@@ -4011,7 +4011,7 @@ window.addEventListener('load', function(){
       s+='<div class="a4h3r" style="display:grid;grid-template-columns:'+cols+';height:6mm;'+hBorder+'">';
       s+='<div style="'+_pca3+'background:'+bg+';'+bH+'text-align:center;font-size:8pt;font-weight:900;display:flex;align-items:center;justify-content:center;">'+c+'-'+h+'</div>';
       for(var pi=0;pi<4;pi++){
-        s+='<div style="background:#fff;'+(pi<3?bC:'')+'padding-left:4px;display:flex;align-items:center;"><span style="font-size:7pt;color:#c8860a;font-weight:900;">正</span></div>';
+        s+='<div style="background:#fff;'+bC+'padding-left:4px;display:flex;align-items:center;"><span style="font-size:7pt;color:#c8860a;font-weight:900;">正</span></div>';
       }
       s+='<div style="background:#f5f5f5;"></div>';
       s+='</div>';
@@ -4019,7 +4019,7 @@ window.addEventListener('load', function(){
       s+='<div class="a4h3s" style="display:grid;grid-template-columns:'+cols+';height:8mm;border-top:1px solid #ccc;">';
       s+='<div style="'+_pca3+'background:'+bg+';'+bH+'text-align:center;font-size:6pt;font-weight:700;display:flex;align-items:center;justify-content:center;color:#c8860a;">(  )</div>';
       for(var pi=0;pi<4;pi++){
-        s+='<div style="background:#fff;'+(pi<3?bThin:'')+'padding-left:4px;font-size:6pt;color:#666;display:flex;align-items:center;">점수</div>';
+        s+='<div style="background:#fff;'+bC+'padding-left:4px;font-size:6pt;color:#666;display:flex;align-items:center;">점수</div>';
       }
       s+='<div style="background:#f5f5f5;"></div>';
       s+='</div>';
@@ -4097,7 +4097,7 @@ window.addEventListener('load', function(){
       for(var pi=0;pi<4;pi++){
         var nm2=pLabels[pi]; var p2=nm2.match(/^(.+?)\s*[\(（](.+?)[\)）]$/);
         var nh2=p2?'<b style="font-size:9pt;">'+esc(p2[1])+'</b> <span style="font-size:7pt;color:#555;">('+esc(p2[2])+')</span>':'<b style="font-size:9pt;">'+esc(nm2)+'</b>';
-        totalRow+='<div style="background:#fff;'+(pi<3?bC2:'')+'display:flex;align-items:center;padding:0 6px;overflow:hidden;white-space:nowrap;">'+nh2+'</div>';
+        totalRow+='<div style="background:#fff;'+(pi<3?bC2:'')+'display:flex;align-items:center;justify-content:center;text-align:center;padding:0 4px;overflow:hidden;">'+nh2+'</div>';
       }
       totalRow+='</div>';
       var scoreRow='<div style="display:grid;grid-template-columns:42px repeat(4,1fr);height:28px;border-bottom:1px solid #333;">'
