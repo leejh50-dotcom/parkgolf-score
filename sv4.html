@@ -4100,7 +4100,9 @@ window.addEventListener('load', function(){
         totalRow+='<div style="background:#fff;'+(pi<3?bC2:'')+'display:flex;align-items:center;justify-content:center;text-align:center;padding:0 4px;overflow:hidden;">'+nh2+'</div>';
       }
       totalRow+='</div>';
-      var scoreRow='';
+      var scoreRow='<div style="display:grid;grid-template-columns:42px repeat(4,1fr);height:28px;border-bottom:1px solid #333;">'
+        +'<div style="background:#e8e0d0;font-weight:900;'+bC2+'font-size:8pt;text-align:center;display:flex;align-items:center;justify-content:center;">점수</div>'
+        +'<div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bT+'"></div></div>';
       var sigRow='<div style="display:grid;grid-template-columns:42px repeat(4,1fr);height:28px;">'
         +'<div style="background:#e8e0d0;font-weight:900;'+bC2+'font-size:8pt;text-align:center;display:flex;align-items:center;justify-content:center;">서명</div>'
         +'<div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bT+'"></div></div>';
