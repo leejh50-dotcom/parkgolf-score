@@ -3268,8 +3268,8 @@ window.addEventListener('load', function(){
   /* ── 공통 스타일 상수 ── */
   var B_COURSE  = '2px solid #000';   /* 코스 경계 */
   var B_PLAYER  = '2px solid #333';   /* 선수 경계 */
-  var B_INNER   = '1px solid #aaa';   /* 正|점수 내부 */
-  var B_ROW     = '1px solid #333';   /* 홀 가로선 */
+  var B_INNER   = '1px solid #bbb';   /* 正|점수 내부 */
+  var B_ROW     = '1px solid #555';   /* 홀 가로선 */
   var B_OUTER   = '1px solid #777';   /* 코스 우측/하단 */
 
   function _cols(){ return '36px repeat(8,1fr) 28px'; }
@@ -3279,7 +3279,7 @@ window.addEventListener('load', function(){
   function _courseBlock(c, pLabels){
     var bg=_courseBg[c]||'#f0f0f0';
     var bC='border-right:2px solid #000;';
-    var bI='border-right:1px solid #aaa;';
+    var bI='border-right:1px solid #bbb;';
     var bE='border-right:2px solid #000;';
     var hdr='<div style="-webkit-print-color-adjust:exact;print-color-adjust:exact;background:'+bg+';color:#000;text-align:center;font-size:11pt;font-weight:900;padding:3px 0 4px;letter-spacing:2px;border-bottom:2px solid #000;border-top:1px solid #000;">'+c+' 코 스</div>';
     var nameRow='<div style="display:grid;grid-template-columns:'+_cols()+';border-bottom:2px solid #000;">'
@@ -3291,7 +3291,7 @@ window.addEventListener('load', function(){
         ?'<span style="font-size:10pt;font-weight:900;">'+esc(parts[1])+'</span><br><span style="font-size:8.5pt;font-weight:600;color:#444;">('+esc(parts[2])+')</span>'
         :'<span style="font-size:10pt;font-weight:900;">'+esc(nm)+'</span>';
       var bR=(pi===3)?bE:bC;
-      nameRow+='<div style="background:#fff;padding:1px 2px;text-align:center;'+bR+'grid-column:span 2;line-height:1.3;">'+nameHtml+'</div>';
+      nameRow+='<div style="background:#fff;'+bR+'grid-column:span 2;display:flex;align-items:center;justify-content:center;padding:2px;"><div style="text-align:center;line-height:1.3;">'+nameHtml+'</div></div>';
     }
     nameRow+='<div style="background:#e8e0d0;text-align:center;font-weight:700;font-size:8pt;display:flex;align-items:center;justify-content:center;">심판</div></div>';
     var subHdr='<div style="display:grid;grid-template-columns:'+_cols()+';">'
@@ -4013,7 +4013,7 @@ window.addEventListener('load', function(){
     s+='<div class="a4hole-rows3">';
     for(var h=1;h<=9;h++){
       /* 正 줄: 위 홀과 굵은 경계 */
-      var hBorder=h===1?'border-top:2px solid #333;':'border-top:2px solid #555;';
+      var hBorder='border-top:1px solid #555;';
       s+='<div class="a4h3r" style="display:grid;grid-template-columns:'+cols+';height:6mm;'+hBorder+'">';
       s+='<div style="'+_pca3+'background:'+bg+';'+bH+'text-align:center;font-size:8pt;font-weight:900;display:flex;align-items:center;justify-content:center;">'+c+'-'+h+'</div>';
       for(var pi=0;pi<4;pi++){
