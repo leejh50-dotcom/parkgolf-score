@@ -3628,8 +3628,7 @@ window.addEventListener('load', function(){
       var nm=pLabels[pi]||('경기자 '+(pi+1));
       var pts=nm.match(/^(.+?)\s*[\(（](.+?)[\)）]$/);
       var nhtml=pts?'<span style="font-size:11pt;font-weight:900;">'+esc(pts[1])+'</span><br><span style="font-size:8.5pt;color:#333;font-weight:600;">('+esc(pts[2])+')</span>':'<span style="font-size:9.5pt;font-weight:900;">'+esc(nm)+'</span>';
-      /* ★ 경기자명 중앙정렬: flex + center */
-      nameRow+='<div style="background:#fff;'+bC+'border-bottom:2px solid #000;grid-column:span 2;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.4;padding:2px;">'+nhtml+'</div>';
+      nameRow+='<div style="background:#fff;'+bC+'border-bottom:2px solid #000;grid-column:span 2;display:flex;align-items:center;justify-content:center;padding:2px;"><div style="text-align:center;line-height:1.4;">'+nhtml+'</div></div>';
     }
     nameRow+='<div style="background:#e8e0d0;text-align:center;border-bottom:2px solid #000;font-weight:700;font-size:7.5pt;display:flex;align-items:center;justify-content:center;">심판</div></div>';
     var subHdr='<div style="display:grid;grid-template-columns:'+cols+';">'
@@ -3797,7 +3796,7 @@ window.addEventListener('load', function(){
       var nm=pLabels[pi]||('경기자 '+(pi+1));
       var pts=nm.match(/^(.+?)\s*[\(（](.+?)[\)）]$/);
       var nhtml=pts?'<span style="font-size:11pt;font-weight:900;">'+esc(pts[1])+'</span><br><span style="font-size:8.5pt;color:#333;font-weight:600;">('+esc(pts[2])+')</span>':'<span style="font-size:9.5pt;font-weight:900;">'+esc(nm)+'</span>';
-      nameRow+='<div style="background:#fff;'+bC+'border-bottom:2px solid #000;grid-column:span 2;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.4;padding:2px;">'+nhtml+'</div>';
+      nameRow+='<div style="background:#fff;'+bC+'border-bottom:2px solid #000;grid-column:span 2;display:flex;align-items:center;justify-content:center;padding:2px;"><div style="text-align:center;line-height:1.4;">'+nhtml+'</div></div>';
     }
     nameRow+='<div style="background:#e8e0d0;text-align:center;border-bottom:2px solid #000;font-weight:700;font-size:7.5pt;display:flex;align-items:center;justify-content:center;">심판</div></div>';
     var subHdr='<div style="display:grid;grid-template-columns:'+cols+';">'
