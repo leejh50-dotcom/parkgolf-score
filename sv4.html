@@ -3616,7 +3616,10 @@ window.addEventListener('load', function(){
 
   function _courseBlock2(c,pLabels){
     var bg=_courseBg2[c]||'#f0f0f0';
-    var bC='border-right:2px solid #000;'; var bI='border-right:1px solid #aaa;'; var bt='border-top:1px solid #333;';
+    /* 경계선 통일: 선수간=2px #000, 正/점수 내부=1px #bbb, 홀 가로=1px #555 */
+    var bC='border-right:2px solid #000;';
+    var bI='border-right:1px solid #bbb;';
+    var bt='border-top:1px solid #555;';
     var cols='32px repeat(8,1fr) 36px';
     var hdr='<div style="'+_pca2+'background:'+bg+';text-align:center;font-size:11pt;font-weight:900;padding:3px 0;letter-spacing:2px;border-bottom:2px solid #000;">'+c+' 코 스</div>';
     var nameRow='<div style="display:grid;grid-template-columns:'+cols+';">'
@@ -3625,16 +3628,18 @@ window.addEventListener('load', function(){
       var nm=pLabels[pi]||('경기자 '+(pi+1));
       var pts=nm.match(/^(.+?)\s*[\(（](.+?)[\)）]$/);
       var nhtml=pts?'<span style="font-size:11pt;font-weight:900;">'+esc(pts[1])+'</span><br><span style="font-size:8.5pt;color:#333;font-weight:600;">('+esc(pts[2])+')</span>':'<span style="font-size:9.5pt;font-weight:900;">'+esc(nm)+'</span>';
-      nameRow+='<div style="background:#fff;padding:1px;text-align:center;'+bC+'border-bottom:2px solid #000;grid-column:span 2;line-height:1.4;">'+nhtml+'</div>';
+      /* ★ 경기자명 중앙정렬: flex + center */
+      nameRow+='<div style="background:#fff;'+bC+'border-bottom:2px solid #000;grid-column:span 2;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.4;padding:2px;">'+nhtml+'</div>';
     }
     nameRow+='<div style="background:#e8e0d0;text-align:center;border-bottom:2px solid #000;font-weight:700;font-size:7.5pt;display:flex;align-items:center;justify-content:center;">심판</div></div>';
     var subHdr='<div style="display:grid;grid-template-columns:'+cols+';">'
-      +'<div style="background:#fff;'+bC+'border-bottom:1px solid #333;"></div>';
+      +'<div style="background:#fff;'+bC+'border-bottom:1px solid #555;"></div>';
     for(var pi=0;pi<4;pi++){
-      subHdr+='<div style="background:#fff;text-align:center;'+bI+'border-bottom:1px solid #333;font-size:7.5pt;color:#c8860a;font-weight:900;padding:1px;">正</div>';
-      subHdr+='<div style="background:#fff;text-align:center;'+bC+'border-bottom:1px solid #333;font-size:7.5pt;color:#555;padding:1px;">점수</div>';
+      /* 正/점수 내부선 bI(1px), 선수 경계 bC(2px) */
+      subHdr+='<div style="background:#fff;text-align:center;'+bI+'border-bottom:1px solid #555;font-size:7.5pt;color:#c8860a;font-weight:900;padding:1px;">正</div>';
+      subHdr+='<div style="background:#fff;text-align:center;'+bC+'border-bottom:1px solid #555;font-size:7.5pt;color:#555;padding:1px;">점수</div>';
     }
-    subHdr+='<div style="background:#fff;text-align:center;border-bottom:1px solid #333;font-size:6.5pt;color:#999;padding:1px;">서명</div></div>';
+    subHdr+='<div style="background:#fff;text-align:center;border-bottom:1px solid #555;font-size:6.5pt;color:#999;padding:1px;">서명</div></div>';
     var rows='<div class="a4hole-rows2">';
     for(var h=1;h<=9;h++){
       rows+='<div style="display:grid;grid-template-columns:'+cols+';height:11mm;box-sizing:border-box;">'
@@ -3783,7 +3788,7 @@ window.addEventListener('load', function(){
   function _courseBlock2day(c, pLabels, startHole){
     var bg=_courseBg2[c]||'#f0f0f0';
     var bgDark=_courseBgDark[c]||bg;
-    var bC='border-right:2px solid #000;'; var bI='border-right:1px solid #aaa;'; var bt='border-top:1px solid #333;';
+    var bC='border-right:2px solid #000;'; var bI='border-right:1px solid #bbb;'; var bt='border-top:1px solid #555;';
     var cols='32px repeat(8,1fr) 36px';
     var hdr='<div style="'+_pca2+'background:'+bg+';text-align:center;font-size:11pt;font-weight:900;padding:3px 0;letter-spacing:2px;border-bottom:2px solid #000;">'+c+' 코 스</div>';
     var nameRow='<div style="display:grid;grid-template-columns:'+cols+';">'
@@ -3792,16 +3797,16 @@ window.addEventListener('load', function(){
       var nm=pLabels[pi]||('경기자 '+(pi+1));
       var pts=nm.match(/^(.+?)\s*[\(（](.+?)[\)）]$/);
       var nhtml=pts?'<span style="font-size:11pt;font-weight:900;">'+esc(pts[1])+'</span><br><span style="font-size:8.5pt;color:#333;font-weight:600;">('+esc(pts[2])+')</span>':'<span style="font-size:9.5pt;font-weight:900;">'+esc(nm)+'</span>';
-      nameRow+='<div style="background:#fff;padding:1px;text-align:center;'+bC+'border-bottom:2px solid #000;grid-column:span 2;line-height:1.4;">'+nhtml+'</div>';
+      nameRow+='<div style="background:#fff;'+bC+'border-bottom:2px solid #000;grid-column:span 2;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.4;padding:2px;">'+nhtml+'</div>';
     }
     nameRow+='<div style="background:#e8e0d0;text-align:center;border-bottom:2px solid #000;font-weight:700;font-size:7.5pt;display:flex;align-items:center;justify-content:center;">심판</div></div>';
     var subHdr='<div style="display:grid;grid-template-columns:'+cols+';">'
-      +'<div style="background:#fff;'+bC+'border-bottom:1px solid #333;"></div>';
+      +'<div style="background:#fff;'+bC+'border-bottom:1px solid #555;"></div>';
     for(var pi=0;pi<4;pi++){
-      subHdr+='<div style="background:#fff;text-align:center;'+bI+'border-bottom:1px solid #333;font-size:7.5pt;color:#c8860a;font-weight:900;padding:1px;">正</div>';
-      subHdr+='<div style="background:#fff;text-align:center;'+bC+'border-bottom:1px solid #333;font-size:7.5pt;color:#555;padding:1px;">점수</div>';
+      subHdr+='<div style="background:#fff;text-align:center;'+bI+'border-bottom:1px solid #555;font-size:7.5pt;color:#c8860a;font-weight:900;padding:1px;">正</div>';
+      subHdr+='<div style="background:#fff;text-align:center;'+bC+'border-bottom:1px solid #555;font-size:7.5pt;color:#555;padding:1px;">점수</div>';
     }
-    subHdr+='<div style="background:#fff;text-align:center;border-bottom:1px solid #333;font-size:6.5pt;color:#999;padding:1px;">서명</div></div>';
+    subHdr+='<div style="background:#fff;text-align:center;border-bottom:1px solid #555;font-size:6.5pt;color:#999;padding:1px;">서명</div></div>';
     var rows='<div class="a4hole-rows2">';
     for(var h=1;h<=9;h++){
       var isStart=(h===startHole);
