@@ -3317,7 +3317,7 @@ window.addEventListener('load', function(){
     }
     rows+='</div>';
     var pca='<-webkit-print-color-adjust:exact;print-color-adjust:exact;';
-    var sub='<div style="display:grid;grid-template-columns:36px repeat(4,1fr) 28px;height:28px;border-top:2px solid #666;">'
+    var sub='<div style="display:grid;grid-template-columns:36px repeat(4,1fr) 28px;height:22px;border-top:2px solid #666;">'
       +'<div style="-webkit-print-color-adjust:exact;print-color-adjust:exact;background:'+bg+';font-size:9pt;font-weight:900;text-align:center;'+bC+'display:flex;align-items:center;justify-content:center;">'+c+'소계</div>';
     for(var pi=0;pi<4;pi++){
       var bR=(pi===3)?bE:bC;
@@ -3417,7 +3417,7 @@ window.addEventListener('load', function(){
         '*{box-sizing:border-box;margin:0;padding:0}',
         'body{font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;background:#fff;}',
         '@page{size:A4 portrait;margin:0mm;}',
-        '.a4page{width:210mm;height:297mm;padding:6mm 6mm 3mm;display:flex;flex-direction:column;break-after:page;page-break-after:always;overflow:hidden;}',
+        '.a4page{width:210mm;height:297mm;padding:5mm 6mm 1mm;display:flex;flex-direction:column;break-after:page;page-break-after:always;overflow:hidden;}',
         '.a4page:last-child{break-after:auto;page-break-after:auto;}',
         /* 헤더 고정 높이 */
         '.a4page > div:first-child{flex-shrink:0;}',
@@ -3482,7 +3482,7 @@ window.addEventListener('load', function(){
       players.forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||'')); });
 
       /* ★ 합계/서명 같은 높이, 이름 크게, 여백 없이 */
-      var rowH2='30px';
+      var rowH2='22px';
       var bLbl='border-right:1px solid #555;';  /* 레이블 우측 */
       var bCol='border-right:1px solid #555;';  /* 선수칸 구분 */
       /* 행1: 이름 헤더 — border-top 없음 (박스 상단이 외곽선) */
@@ -3620,7 +3620,7 @@ window.addEventListener('load', function(){
     var bC='border-right:2px solid #666;';
     var bI='border-right:1px solid #bbb;';
     var bt='border-top:1px solid #555;';
-    var cols='22px repeat(8,1fr) 30px';
+    var cols='32px repeat(8,minmax(0,28px)) 30px';
     var hdr='<div style="'+_pca2+'background:'+bg+';text-align:center;font-size:11pt;font-weight:900;padding:3px 0;letter-spacing:2px;border-bottom:2px solid #666;">'+c+' 코 스</div>';
     var nameRow='<div style="display:grid;grid-template-columns:'+cols+';">'
       +'<div style="background:#e8e0d0;text-align:center;'+bC+'border-bottom:2px solid #666;font-weight:700;font-size:7.5pt;display:flex;align-items:center;justify-content:center;padding:2px;">홀<br>(파)</div>';
@@ -3683,7 +3683,7 @@ window.addEventListener('load', function(){
       players.forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||'')); });
 
       var bT='border-top:1px solid #555;'; var bC2='border-right:2px solid #666;';
-      var totalRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);border-bottom:1px solid #555;height:36px;">'
+      var totalRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);border-bottom:1px solid #555;height:28px;">'
         +'<div style="background:#e8e0d0;font-weight:900;'+bC2+'display:flex;align-items:center;justify-content:center;text-align:center;font-size:7.5pt;line-height:1.3;">2코스<br>합계</div>';
       for(var pi=0;pi<4;pi++){
         var nm2=pLabels[pi]; var p2=nm2.match(/^(.+?)\s*[\(（](.+?)[\)）]$/);
@@ -3691,10 +3691,10 @@ window.addEventListener('load', function(){
         totalRow+='<div style="background:#fff;'+(pi<3?bC2:'')+'display:flex;align-items:center;justify-content:center;text-align:center;padding:2px;"><div style="text-align:center;line-height:1.4;">'+nh2+'</div></div>';
       }
       totalRow+='</div>';
-      var scoreRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);height:36px;border-bottom:1px solid #555;">'
+      var scoreRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);height:28px;border-bottom:1px solid #555;">'
         +'<div style="background:#e8e0d0;font-weight:900;'+bC2+'display:flex;align-items:center;justify-content:center;font-size:8.5pt;">점수</div>'
         +'<div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bT+'"></div></div>';
-      var sigRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);height:36px;">'
+      var sigRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);height:28px;">'
         +'<div style="background:#e8e0d0;font-weight:900;'+bC2+'display:flex;align-items:center;justify-content:center;font-size:8.5pt;">서명</div>'
         +'<div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bT+'"></div></div>';
       var noticeRow='<div style="border-top:1px solid #555;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4px 10px;font-size:8pt;font-weight:700;color:#111;line-height:1.7;"><div>'
@@ -3788,7 +3788,7 @@ window.addEventListener('load', function(){
     var bg=_courseBg2[c]||'#f0f0f0';
     var bgDark=_courseBgDark[c]||bg;
     var bC='border-right:2px solid #666;'; var bI='border-right:1px solid #bbb;'; var bt='border-top:1px solid #555;';
-    var cols='22px repeat(8,1fr) 30px';
+    var cols='32px repeat(8,minmax(0,28px)) 30px';
     var hdr='<div style="'+_pca2+'background:'+bg+';text-align:center;font-size:11pt;font-weight:900;padding:3px 0;letter-spacing:2px;border-bottom:2px solid #666;">'+c+' 코 스</div>';
     var nameRow='<div style="display:grid;grid-template-columns:'+cols+';">'
       +'<div style="background:#e8e0d0;text-align:center;'+bC+'border-bottom:2px solid #666;font-weight:700;font-size:7.5pt;display:flex;align-items:center;justify-content:center;padding:2px;">홀<br>(파)</div>';
@@ -3906,7 +3906,7 @@ window.addEventListener('load', function(){
       players.forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||'')); });
 
       var bC2='border-right:2px solid #666;'; var bT='border-top:1px solid #555;';
-      var totalRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);border-bottom:1px solid #555;height:36px;">'
+      var totalRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);border-bottom:1px solid #555;height:28px;">'
         +'<div style="background:#e8e0d0;font-weight:900;'+bC2+'display:flex;align-items:center;justify-content:center;text-align:center;font-size:7.5pt;line-height:1.3;">2코스<br>합계</div>';
       for(var pi=0;pi<4;pi++){
         var nm2=pLabels[pi]; var p2=nm2.match(/^(.+?)\s*[\(（](.+?)[\)）]$/);
@@ -3914,10 +3914,10 @@ window.addEventListener('load', function(){
         totalRow+='<div style="background:#fff;'+(pi<3?bC2:'')+'display:flex;align-items:center;justify-content:center;text-align:center;padding:2px;"><div style="text-align:center;line-height:1.4;">'+nh2+'</div></div>';
       }
       totalRow+='</div>';
-      var scoreRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);height:36px;border-bottom:1px solid #555;">'
+      var scoreRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);height:28px;border-bottom:1px solid #555;">'
         +'<div style="background:#e8e0d0;font-weight:900;'+bC2+'display:flex;align-items:center;justify-content:center;font-size:8.5pt;">점수</div>'
         +'<div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bT+'"></div></div>';
-      var sigRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);height:36px;">'
+      var sigRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);height:28px;">'
         +'<div style="background:#e8e0d0;font-weight:900;'+bC2+'display:flex;align-items:center;justify-content:center;font-size:8.5pt;">서명</div>'
         +'<div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bT+'"></div></div>';
       var noticeRow='<div style="border-top:1px solid #555;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4px 10px;font-size:8pt;font-weight:700;color:#111;line-height:1.6;"><div>'
@@ -3994,7 +3994,7 @@ window.addEventListener('load', function(){
     var bC='border-right:2px solid #666;';   /* 선수 간 굵은 선 */
     var bH='border-right:3px solid #000;';   /* 홀열 우측 */
     var bThin='border-right:1px solid #bbb;'; /* 正/점수 내부 얇은 선 */
-    var cols='18px repeat(4,1fr) 26px';
+    var cols='22px repeat(4,minmax(0,60px)) 26px';
     var s='';
     /* 코스 헤더: 폰트 크게 */
     s+='<div style="'+_pca3+'background:'+bg+';text-align:center;font-size:11pt;font-weight:900;padding:4px 0;letter-spacing:3px;border-bottom:2px solid #666;">'+c+' 코 스</div>';
