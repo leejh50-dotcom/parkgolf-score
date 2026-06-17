@@ -3655,7 +3655,7 @@ window.addEventListener('load', function(){
     for(var pi=0;pi<4;pi++){
       sub+='<div style="'+_pca2+'background:'+bg+';border-right:2px solid #666;grid-column:span 2;"></div>';
     }
-    sub+='<div style="background:#f9f6f0;"></div></div>';
+    sub+='<div style="background:#f9f6f0;border-right:2px solid #666;border-top:2px solid #666;"></div></div>';
     return hdr+nameRow+subHdr+rows+sub;
   }
 
@@ -3720,7 +3720,7 @@ window.addEventListener('load', function(){
         +'<div style="display:flex;border:2px solid #666;border-top:none;">'
         +'<div style="flex:1;min-width:0;">'+totalRow+scoreRow+sigRow+noticeRow+'</div>'
         +'<div style="width:156px;min-width:156px;flex-shrink:0;border-left:2px solid #666;background:#fff;display:flex;align-items:center;justify-content:center;padding:6px;">'
-        +'<div id="'+qrId+'" style="width:140px;height:140px;overflow:hidden;"></div>'
+        +'<div id="'+qrId+'" style="width:120px;height:120px;overflow:hidden;"></div>'
         +'</div></div>';
       container.appendChild(page);
       setTimeout(function(qid,qt){ return function(){
@@ -3943,7 +3943,7 @@ window.addEventListener('load', function(){
         +'<div style="display:flex;border:2px solid #666;border-top:none;">'
         +'<div style="flex:1;min-width:0;">'+totalRow+scoreRow+sigRow+noticeRow+'</div>'
         +'<div style="width:156px;min-width:156px;flex-shrink:0;border-left:2px solid #666;background:#fff;display:flex;align-items:center;justify-content:center;padding:6px;">'
-        +'<div id="'+qrId+'" style="width:140px;height:140px;overflow:hidden;"></div>'
+        +'<div id="'+qrId+'" style="width:120px;height:120px;overflow:hidden;"></div>'
         +'</div></div>';
       container.appendChild(page);
 
@@ -4007,7 +4007,7 @@ window.addEventListener('load', function(){
       var nhtml=pt?esc(pt[1])+'<br><span style="font-size:6pt;font-weight:500;color:#555;">('+esc(pt[2])+')</span>':'<span>'+esc(nm)+'</span>';
       s+='<div style="background:#fff;'+bC+'text-align:center;font-size:8pt;font-weight:900;padding:2px 0;line-height:1.4;display:flex;flex-direction:column;align-items:center;justify-content:center;">'+nhtml+'</div>';
     }
-    s+='<div style="'+_pca3+'background:#e8e0d0;text-align:center;font-size:8pt;font-weight:700;display:flex;align-items:center;justify-content:center;">심판</div>';
+    s+='<div style="'+_pca3+'background:#e8e0d0;border-right:2px solid #666;text-align:center;font-size:8pt;font-weight:700;display:flex;align-items:center;justify-content:center;">심판</div>';
     s+='</div>';
     /* 홀 행: 正(6mm) + 점수(8mm) */
     s+='<div class="a4hole-rows3">';
@@ -4019,7 +4019,7 @@ window.addEventListener('load', function(){
       for(var pi=0;pi<4;pi++){
         s+='<div style="background:#fff;'+bC+'padding-left:4px;display:flex;align-items:center;"><span style="font-size:7pt;color:#c8860a;font-weight:900;">正</span></div>';
       }
-      s+='<div style="background:#f5f5f5;"></div>';
+      s+='<div style="background:#f5f5f5;border-right:2px solid #666;'+hBorder+'"></div>';
       s+='</div>';
       /* 점수 줄: 正과 얇은 구분선 */
       s+='<div class="a4h3s" style="display:grid;grid-template-columns:'+cols+';height:8mm;border-top:1px solid #ccc;">';
@@ -4027,7 +4027,7 @@ window.addEventListener('load', function(){
       for(var pi=0;pi<4;pi++){
         s+='<div style="background:#fff;'+bC+'padding-left:4px;display:flex;align-items:center;"></div>';
       }
-      s+='<div style="background:#f5f5f5;"></div>';
+      s+='<div style="background:#f5f5f5;border-right:2px solid #666;border-top:1px solid #ccc;"></div>';
       s+='</div>';
     }
     s+='</div>';
@@ -4037,7 +4037,7 @@ window.addEventListener('load', function(){
     for(var pi=0;pi<4;pi++){
       s+='<div style="'+_pca3+'background:'+bg+';'+(pi<3?bC:'')+'"></div>';
     }
-    s+='<div style="background:#f0f0f0;"></div>';
+    s+='<div style="background:#f0f0f0;border-right:2px solid #666;"></div>';
     s+='</div>';
     return s;
   }
