@@ -3650,7 +3650,7 @@ window.addEventListener('load', function(){
       rows+='<div style="'+bt+'background:#f9f6f0;"></div></div>';
     }
     rows+='</div>';
-    var sub='<div style="display:grid;grid-template-columns:32px repeat(8,1fr) 36px;height:33px;border-top:2px solid #666;">'
+    var sub='<div style="display:grid;grid-template-columns:'+cols+';height:33px;border-top:2px solid #666;">'
       +'<div style="'+_pca2+'background:'+bg+';font-size:8.5pt;font-weight:900;text-align:center;'+bC+'display:flex;align-items:center;justify-content:center;">'+c+'소계</div>';
     for(var pi=0;pi<4;pi++){
       sub+='<div style="'+_pca2+'background:'+bg+';border-right:2px solid #666;grid-column:span 2;"></div>';
@@ -3821,7 +3821,7 @@ window.addEventListener('load', function(){
       rows+='<div style="'+holeBorder+'background:#f9f6f0;"></div></div>';
     }
     rows+='</div>';
-    var sub='<div style="display:grid;grid-template-columns:32px repeat(8,1fr) 36px;height:33px;border-top:2px solid #666;">'
+    var sub='<div style="display:grid;grid-template-columns:'+cols+';height:33px;border-top:2px solid #666;">'
       +'<div style="'+_pca2+'background:'+bg+';font-size:8.5pt;font-weight:900;text-align:center;'+bC+'display:flex;align-items:center;justify-content:center;">'+c+'소계</div>';
     for(var pi=0;pi<4;pi++){
       sub+='<div style="'+_pca2+'background:'+bg+';border-right:2px solid #666;grid-column:span 2;"></div>';
