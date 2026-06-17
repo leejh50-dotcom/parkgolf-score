@@ -1493,7 +1493,7 @@ if(_0x16519b['courses']&&_0x16519b['courses'].length){_0x5eb4ca+='&co='+encodeUR
       if(!el) continue;
       if(nm){
         var txt = nm;
-        if(gn||af){ txt += '  ( ' + (gn||'') + (af?'  '+af:'') + ' )'; }
+        if(gn||af){ txt += '  ( ' + (gn||'') + (af?'  '+af:'') + ' )'; }
         el.textContent = txt;
       } else {
         el.textContent = '경기자 ' + i;
@@ -3266,8 +3266,8 @@ window.addEventListener('load', function(){
   };
 
   /* ── 공통 스타일 상수 ── */
-  var B_COURSE  = '2px solid #000';   /* 코스 경계 */
-  var B_PLAYER  = '2px solid #333';   /* 선수 경계 */
+  var B_COURSE  = '2px solid #666';   /* 코스 경계 */
+  var B_PLAYER  = '1px solid #777';   /* 선수 경계 */
   var B_INNER   = '1px solid #bbb';   /* 正|점수 내부 */
   var B_ROW     = '1px solid #555';   /* 홀 가로선 */
   var B_OUTER   = '1px solid #777';   /* 코스 우측/하단 */
@@ -3281,7 +3281,7 @@ window.addEventListener('load', function(){
     var bC='border-right:2px solid #666;';
     var bI='border-right:1px solid #bbb;';
     var bE='border-right:2px solid #666;';
-    var hdr='<div style="-webkit-print-color-adjust:exact;print-color-adjust:exact;background:'+bg+';color:#000;text-align:center;font-size:11pt;font-weight:900;padding:3px 0 4px;letter-spacing:2px;border-bottom:2px solid #666;border-top:1px solid #000;">'+c+' 코 스</div>';
+    var hdr='<div style="-webkit-print-color-adjust:exact;print-color-adjust:exact;background:'+bg+';color:#000;text-align:center;font-size:11pt;font-weight:900;padding:3px 0 4px;letter-spacing:2px;border-bottom:2px solid #666;border-top:1px solid #888;">'+c+' 코 스</div>';
     var nameRow='<div style="display:grid;grid-template-columns:'+_cols()+';border-bottom:2px solid #666;">'
       +'<div style="background:#e8e0d0;text-align:center;'+bC+'font-weight:700;font-size:8pt;display:flex;align-items:center;justify-content:center;padding:2px;">홀<br>(파)</div>';
     for(var pi=0;pi<4;pi++){
@@ -3306,7 +3306,7 @@ window.addEventListener('load', function(){
     for(var h=1;h<=9;h++){
       /* ★ 모든 셀에 border-top → 각 셀이 선을 직접 그림 → 완전 균일 */
       var bt='border-top:1px solid #555;';
-      rows+='<div style="display:grid;grid-template-columns:'+_cols()+';height:7mm;box-sizing:border-box;">'
+      rows+='<div style="display:grid;grid-template-columns:'+_cols()+';height:9mm;box-sizing:border-box;">'
         +'<div style="-webkit-print-color-adjust:exact;print-color-adjust:exact;text-align:center;'+bC+bt+'background:'+bg+';font-size:9pt;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2;">'+c+'-'+h+'<span style="color:#c8860a;font-size:8pt;">(  )</span></div>';
       for(var pi=0;pi<4;pi++){
         var bR=(pi===3)?bE:bC;
@@ -3317,7 +3317,7 @@ window.addEventListener('load', function(){
     }
     rows+='</div>';
     var pca='<-webkit-print-color-adjust:exact;print-color-adjust:exact;';
-    var sub='<div style="display:grid;grid-template-columns:36px repeat(4,1fr) 28px;height:20px;border-top:2px solid #666;">'
+    var sub='<div style="display:grid;grid-template-columns:36px repeat(4,1fr) 28px;height:28px;border-top:2px solid #666;">'
       +'<div style="-webkit-print-color-adjust:exact;print-color-adjust:exact;background:'+bg+';font-size:9pt;font-weight:900;text-align:center;'+bC+'display:flex;align-items:center;justify-content:center;">'+c+'소계</div>';
     for(var pi=0;pi<4;pi++){
       var bR=(pi===3)?bE:bC;
@@ -3416,8 +3416,8 @@ window.addEventListener('load', function(){
       var css = [
         '*{box-sizing:border-box;margin:0;padding:0}',
         'body{font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;background:#fff;}',
-        '@page{size:A4 portrait;margin:0mm;}',
-        '.a4page{width:210mm;height:297mm;padding:2mm 6mm 4mm;display:flex;flex-direction:column;break-after:page;page-break-after:always;overflow:hidden;}',
+        '@page{size:A4 portrait;margin:0;}',
+        '.a4page{width:210mm;height:297mm;padding:2mm 6mm 5mm;display:flex;flex-direction:column;break-after:page;page-break-after:always;overflow:hidden;}',
         '.a4page:last-child{break-after:auto;page-break-after:auto;}',
         /* 헤더 고정 높이 */
         '.a4page > div:first-child{flex-shrink:0;}',
@@ -3431,7 +3431,7 @@ window.addEventListener('load', function(){
         /* 코스 내 hole-rows: flex → grid repeat(9,1fr) 로 교체 → 픽셀 균등분배 */
         '.a4hole-rows{flex:1;min-height:0;display:block;overflow:hidden;}',
         /* 각 홀 행 */
-        '.a4hole-rows > div{display:grid;overflow:hidden;height:7mm;min-height:0;box-sizing:border-box;}',
+        '.a4hole-rows > div{display:grid;overflow:hidden;height:8mm;min-height:0;box-sizing:border-box;}',
         /* 하단 고정 */
         '.a4bottom{flex-shrink:0;}'
         + '* {-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}'
@@ -3482,7 +3482,7 @@ window.addEventListener('load', function(){
       players.forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||'')); });
 
       /* ★ 합계/서명 같은 높이, 이름 크게, 여백 없이 */
-      var rowH2='24px';
+      var rowH2='30px';
       var bLbl='border-right:1px solid #555;';  /* 레이블 우측 */
       var bCol='border-right:1px solid #555;';  /* 선수칸 구분 */
       /* 행1: 이름 헤더 — border-top 없음 (박스 상단이 외곽선) */
@@ -3620,7 +3620,7 @@ window.addEventListener('load', function(){
     var bC='border-right:2px solid #666;';
     var bI='border-right:1px solid #bbb;';
     var bt='border-top:1px solid #555;';
-    var cols='30px repeat(8,minmax(0,20px)) 30px';
+    var cols='32px repeat(8,1fr) 36px';
     var hdr='<div style="'+_pca2+'background:'+bg+';text-align:center;font-size:11pt;font-weight:900;padding:3px 0;letter-spacing:2px;border-bottom:2px solid #666;">'+c+' 코 스</div>';
     var nameRow='<div style="display:grid;grid-template-columns:'+cols+';">'
       +'<div style="background:#e8e0d0;text-align:center;'+bC+'border-bottom:2px solid #666;font-weight:700;font-size:7.5pt;display:flex;align-items:center;justify-content:center;padding:2px;">홀<br>(파)</div>';
@@ -3683,7 +3683,7 @@ window.addEventListener('load', function(){
       players.forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||'')); });
 
       var bT='border-top:1px solid #555;'; var bC2='border-right:2px solid #666;';
-      var totalRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);border-bottom:1px solid #555;height:28px;">'
+      var totalRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);border-bottom:1px solid #555;height:36px;">'
         +'<div style="background:#e8e0d0;font-weight:900;'+bC2+'display:flex;align-items:center;justify-content:center;text-align:center;font-size:7.5pt;line-height:1.3;">2코스<br>합계</div>';
       for(var pi=0;pi<4;pi++){
         var nm2=pLabels[pi]; var p2=nm2.match(/^(.+?)\s*[\(（](.+?)[\)）]$/);
@@ -3691,10 +3691,10 @@ window.addEventListener('load', function(){
         totalRow+='<div style="background:#fff;'+(pi<3?bC2:'')+'display:flex;align-items:center;justify-content:center;text-align:center;padding:2px;"><div style="text-align:center;line-height:1.4;">'+nh2+'</div></div>';
       }
       totalRow+='</div>';
-      var scoreRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);height:28px;border-bottom:1px solid #555;">'
+      var scoreRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);height:36px;border-bottom:1px solid #555;">'
         +'<div style="background:#e8e0d0;font-weight:900;'+bC2+'display:flex;align-items:center;justify-content:center;font-size:8.5pt;">점수</div>'
         +'<div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bT+'"></div></div>';
-      var sigRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);height:28px;">'
+      var sigRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);height:36px;">'
         +'<div style="background:#e8e0d0;font-weight:900;'+bC2+'display:flex;align-items:center;justify-content:center;font-size:8.5pt;">서명</div>'
         +'<div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bT+'"></div></div>';
       var noticeRow='<div style="border-top:1px solid #555;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4px 10px;font-size:8pt;font-weight:700;color:#111;line-height:1.7;"><div>'
@@ -3714,7 +3714,7 @@ window.addEventListener('load', function(){
         +'<span>일시: '+esc(dateStr)+'&nbsp;&nbsp;<span style="color:#888;font-size:8pt;">'+(ti+1)+' / '+teams.length+'페이지</span></span>'
         +'</div></div>'
         +'<div style="display:grid;grid-template-columns:1fr 1fr;border:2px solid #666;">'
-        +'<div style="border-right:3px solid #000;">'+_courseBlock2(c1,pLabels)+'</div>'
+        +'<div style="border-right:2px solid #666;">'+_courseBlock2(c1,pLabels)+'</div>'
         +'<div>'+_courseBlock2(c2,pLabels)+'</div>'
         +'</div>'
         +'<div style="display:flex;border:2px solid #666;border-top:none;">'
@@ -3747,7 +3747,7 @@ window.addEventListener('load', function(){
         });
         var css='*{box-sizing:border-box;margin:0;padding:0}body{font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;background:#fff;}'
           +'*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}'
-          +'.a4page{width:297mm;height:210mm;padding:3mm 3mm 3mm 14mm;display:flex;flex-direction:column;break-after:page;page-break-after:always;overflow:hidden;}'
+          +'.a4page{width:297mm;height:210mm;padding:2mm 3mm 5mm;display:flex;flex-direction:column;break-after:page;page-break-after:always;overflow:hidden;}'
           +'.a4page:last-child{break-after:auto;page-break-after:auto;}'
           +'.a4hole-rows2{flex:1;min-height:0;display:block;overflow:hidden;}'
           +'.a4hole-rows2>div{height:10mm;box-sizing:border-box;}'
@@ -3788,7 +3788,7 @@ window.addEventListener('load', function(){
     var bg=_courseBg2[c]||'#f0f0f0';
     var bgDark=_courseBgDark[c]||bg;
     var bC='border-right:2px solid #666;'; var bI='border-right:1px solid #bbb;'; var bt='border-top:1px solid #555;';
-    var cols='30px repeat(8,minmax(0,20px)) 30px';
+    var cols='32px repeat(8,1fr) 36px';
     var hdr='<div style="'+_pca2+'background:'+bg+';text-align:center;font-size:11pt;font-weight:900;padding:3px 0;letter-spacing:2px;border-bottom:2px solid #666;">'+c+' 코 스</div>';
     var nameRow='<div style="display:grid;grid-template-columns:'+cols+';">'
       +'<div style="background:#e8e0d0;text-align:center;'+bC+'border-bottom:2px solid #666;font-weight:700;font-size:7.5pt;display:flex;align-items:center;justify-content:center;padding:2px;">홀<br>(파)</div>';
@@ -3810,7 +3810,7 @@ window.addEventListener('load', function(){
     for(var h=1;h<=9;h++){
       var isStart=(h===startHole);
       var holeBg=isStart?bgDark:bg;
-      var holeBorder=isStart?'border-top:1px solid #888;border-bottom:1px solid #888;':'border-top:1px solid #333;';
+      var holeBorder=isStart?'border-top:1px solid #777;border-bottom:1px solid #777;':'border-top:1px solid #777;';
       rows+='<div style="display:grid;grid-template-columns:'+cols+';height:11mm;box-sizing:border-box;">'
         +'<div style="'+_pca2+'text-align:center;'+bC+holeBorder+'background:'+holeBg+';font-size:'+(isStart?'9':'8.5')+'pt;font-weight:900;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2;">'+c+'-'+h+'<span style="color:'+(isStart?'#000':'#c8860a')+';font-size:7.5pt;">'+(isStart?'▶ 시작':'(  )')+'</span></div>';
       for(var pi=0;pi<4;pi++){
@@ -3906,7 +3906,7 @@ window.addEventListener('load', function(){
       players.forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||'')); });
 
       var bC2='border-right:2px solid #666;'; var bT='border-top:1px solid #555;';
-      var totalRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);border-bottom:1px solid #555;height:28px;">'
+      var totalRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);border-bottom:1px solid #555;height:36px;">'
         +'<div style="background:#e8e0d0;font-weight:900;'+bC2+'display:flex;align-items:center;justify-content:center;text-align:center;font-size:7.5pt;line-height:1.3;">2코스<br>합계</div>';
       for(var pi=0;pi<4;pi++){
         var nm2=pLabels[pi]; var p2=nm2.match(/^(.+?)\s*[\(（](.+?)[\)）]$/);
@@ -3914,10 +3914,10 @@ window.addEventListener('load', function(){
         totalRow+='<div style="background:#fff;'+(pi<3?bC2:'')+'display:flex;align-items:center;justify-content:center;text-align:center;padding:2px;"><div style="text-align:center;line-height:1.4;">'+nh2+'</div></div>';
       }
       totalRow+='</div>';
-      var scoreRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);height:28px;border-bottom:1px solid #555;">'
+      var scoreRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);height:36px;border-bottom:1px solid #555;">'
         +'<div style="background:#e8e0d0;font-weight:900;'+bC2+'display:flex;align-items:center;justify-content:center;font-size:8.5pt;">점수</div>'
         +'<div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bT+'"></div></div>';
-      var sigRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);height:28px;">'
+      var sigRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);height:36px;">'
         +'<div style="background:#e8e0d0;font-weight:900;'+bC2+'display:flex;align-items:center;justify-content:center;font-size:8.5pt;">서명</div>'
         +'<div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bT+'"></div></div>';
       var noticeRow='<div style="border-top:1px solid #555;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4px 10px;font-size:8pt;font-weight:700;color:#111;line-height:1.6;"><div>'
@@ -3971,7 +3971,7 @@ window.addEventListener('load', function(){
         });
         var css='*{box-sizing:border-box;margin:0;padding:0}body{font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;background:#fff;}'
           +'*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}'
-          +'.a4page{width:297mm;height:210mm;padding:4mm 4mm 4mm 14mm;display:flex;flex-direction:column;break-after:page;page-break-after:always;overflow:hidden;}'
+          +'.a4page{width:297mm;height:210mm;padding:4mm 5mm;display:flex;flex-direction:column;break-after:page;page-break-after:always;overflow:hidden;}'
           +'.a4page:last-child{break-after:auto;page-break-after:auto;}'
           +'.a4hole-rows2{flex:1;min-height:0;display:block;overflow:hidden;}'
           +'.a4hole-rows2>div{height:11mm;box-sizing:border-box;}'
@@ -3992,9 +3992,9 @@ window.addEventListener('load', function(){
   function _courseBlock3(c, pLabels){
     var bg=_courseBg3[c]||'#f0f0f0';
     var bC='border-right:2px solid #666;';   /* 선수 간 굵은 선 */
-    var bH='border-right:3px solid #000;';   /* 홀열 우측 */
+    var bH='border-right:2px solid #666;';   /* 홀열 우측 */
     var bThin='border-right:1px solid #bbb;'; /* 正/점수 내부 얇은 선 */
-    var cols='24px repeat(4,minmax(0,45px)) 26px';
+    var cols='26px repeat(4,1fr) 30px';
     var s='';
     /* 코스 헤더: 폰트 크게 */
     s+='<div style="'+_pca3+'background:'+bg+';text-align:center;font-size:11pt;font-weight:900;padding:4px 0;letter-spacing:3px;border-bottom:2px solid #666;">'+c+' 코 스</div>';
@@ -4176,7 +4176,7 @@ window.addEventListener('load', function(){
         var css='*{box-sizing:border-box;margin:0;padding:0}'
           +'body{font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;background:#fff;}'
           +'*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}'
-          +'.a4page{width:297mm;height:210mm;padding:3mm 3mm 3mm 14mm;display:flex;flex-direction:column;break-after:page;page-break-after:always;overflow:hidden;}'
+          +'.a4page{width:297mm;height:210mm;padding:2mm 3mm 5mm;display:flex;flex-direction:column;break-after:page;page-break-after:always;overflow:hidden;}'
           +'.a4page:last-child{break-after:auto;page-break-after:auto;}'
           +'.a4hole-rows3{display:block;overflow:hidden;}'
           +'.a4h3r{height:5.5mm!important;box-sizing:border-box;}'
@@ -4991,3 +4991,6 @@ window.addEventListener('load', function(){
 
 </body>
 </html>
+Words	18193
+Characters	338165
+Characters without spaces	297598
