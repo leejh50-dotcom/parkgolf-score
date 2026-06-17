@@ -3324,8 +3324,7 @@ window.addEventListener('load', function(){
       sub+='<div style="-webkit-print-color-adjust:exact;print-color-adjust:exact;background:'+bg+';'+bR+'height:100%;"></div>';
     }
     sub+='<div style="background:#f9f6f0;"></div></div>';
-    var showSubHdr=(c==='A'||c==='B')?subHdr:'';
-    return hdr+nameRow+showSubHdr+rows+sub;
+    return hdr+nameRow+subHdr+rows+sub;
   }
 
   /* ══ QR 일괄 인쇄 — position:fixed 임시 해제 방식 ══ */
@@ -3429,9 +3428,9 @@ window.addEventListener('load', function(){
         '.a4course-grid > div:nth-child(3),.a4course-grid > div:nth-child(4){border-top:2px solid #666;}',
         /* 각 코스 블록: 세로 flex */
         '.a4course-grid > div{display:flex;flex-direction:column;overflow:hidden;}',
-        /* hole-rows: flex 세로 → 9행이 공간 균등 분배 */
+        /* 코스 내 hole-rows: flex → grid repeat(9,1fr) 로 교체 → 픽셀 균등분배 */
         '.a4hole-rows{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden;}',
-        /* 각 홀 행: flex:1 → 공간 자동 분배 (height 고정 제거) */
+        /* 각 홀 행 */
         '.a4hole-rows > div{flex:1;display:grid;overflow:hidden;min-height:0;box-sizing:border-box;}',
         /* 하단 고정 */
         '.a4bottom{flex-shrink:0;}'
@@ -3684,7 +3683,7 @@ window.addEventListener('load', function(){
       players.forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||'')); });
 
       var bT='border-top:1px solid #555;'; var bC2='border-right:2px solid #666;';
-      var totalRow='<div style="display:grid;grid-template-columns:40px repeat(4,1fr);border-bottom:1px solid #555;height:36px;">'
+      var totalRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);border-bottom:1px solid #555;height:36px;">'
         +'<div style="background:#e8e0d0;font-weight:900;'+bC2+'display:flex;align-items:center;justify-content:center;text-align:center;font-size:7.5pt;line-height:1.3;">2코스<br>합계</div>';
       for(var pi=0;pi<4;pi++){
         var nm2=pLabels[pi]; var p2=nm2.match(/^(.+?)\s*[\(（](.+?)[\)）]$/);
@@ -3692,10 +3691,10 @@ window.addEventListener('load', function(){
         totalRow+='<div style="background:#fff;'+(pi<3?bC2:'')+'display:flex;align-items:center;justify-content:center;text-align:center;padding:2px;"><div style="text-align:center;line-height:1.4;">'+nh2+'</div></div>';
       }
       totalRow+='</div>';
-      var scoreRow='<div style="display:grid;grid-template-columns:40px repeat(4,1fr);height:36px;border-bottom:1px solid #555;">'
+      var scoreRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);height:36px;border-bottom:1px solid #555;">'
         +'<div style="background:#e8e0d0;font-weight:900;'+bC2+'display:flex;align-items:center;justify-content:center;font-size:8.5pt;">점수</div>'
         +'<div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bT+'"></div></div>';
-      var sigRow='<div style="display:grid;grid-template-columns:40px repeat(4,1fr);height:36px;">'
+      var sigRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);height:36px;">'
         +'<div style="background:#e8e0d0;font-weight:900;'+bC2+'display:flex;align-items:center;justify-content:center;font-size:8.5pt;">서명</div>'
         +'<div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bT+'"></div></div>';
       var noticeRow='<div style="border-top:1px solid #555;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4px 10px;font-size:8pt;font-weight:700;color:#111;line-height:1.7;"><div>'
@@ -3907,7 +3906,7 @@ window.addEventListener('load', function(){
       players.forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||'')); });
 
       var bC2='border-right:2px solid #666;'; var bT='border-top:1px solid #555;';
-      var totalRow='<div style="display:grid;grid-template-columns:40px repeat(4,1fr);border-bottom:1px solid #555;height:36px;">'
+      var totalRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);border-bottom:1px solid #555;height:36px;">'
         +'<div style="background:#e8e0d0;font-weight:900;'+bC2+'display:flex;align-items:center;justify-content:center;text-align:center;font-size:7.5pt;line-height:1.3;">2코스<br>합계</div>';
       for(var pi=0;pi<4;pi++){
         var nm2=pLabels[pi]; var p2=nm2.match(/^(.+?)\s*[\(（](.+?)[\)）]$/);
@@ -3915,10 +3914,10 @@ window.addEventListener('load', function(){
         totalRow+='<div style="background:#fff;'+(pi<3?bC2:'')+'display:flex;align-items:center;justify-content:center;text-align:center;padding:2px;"><div style="text-align:center;line-height:1.4;">'+nh2+'</div></div>';
       }
       totalRow+='</div>';
-      var scoreRow='<div style="display:grid;grid-template-columns:40px repeat(4,1fr);height:36px;border-bottom:1px solid #555;">'
+      var scoreRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);height:36px;border-bottom:1px solid #555;">'
         +'<div style="background:#e8e0d0;font-weight:900;'+bC2+'display:flex;align-items:center;justify-content:center;font-size:8.5pt;">점수</div>'
         +'<div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bT+'"></div></div>';
-      var sigRow='<div style="display:grid;grid-template-columns:40px repeat(4,1fr);height:36px;">'
+      var sigRow='<div style="display:grid;grid-template-columns:44px repeat(4,1fr);height:36px;">'
         +'<div style="background:#e8e0d0;font-weight:900;'+bC2+'display:flex;align-items:center;justify-content:center;font-size:8.5pt;">서명</div>'
         +'<div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bT+'"></div></div>';
       var noticeRow='<div style="border-top:1px solid #555;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4px 10px;font-size:8pt;font-weight:700;color:#111;line-height:1.6;"><div>'
@@ -3972,7 +3971,7 @@ window.addEventListener('load', function(){
         });
         var css='*{box-sizing:border-box;margin:0;padding:0}body{font-family:"Malgun Gothic","Apple SD Gothic Neo",sans-serif;background:#fff;}'
           +'*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}'
-          +'.a4page{width:297mm;height:210mm;padding:4mm 3mm 4mm 20mm;display:flex;flex-direction:column;break-after:page;page-break-after:always;overflow:hidden;}'
+          +'.a4page{width:297mm;height:210mm;padding:3mm 3mm 3mm 20mm;display:flex;flex-direction:column;break-after:page;page-break-after:always;overflow:hidden;}'
           +'.a4page:last-child{break-after:auto;page-break-after:auto;}'
           +'.a4hole-rows2{flex:1;min-height:0;display:block;overflow:hidden;}'
           +'.a4hole-rows2>div{height:11mm;box-sizing:border-box;}'
@@ -3995,7 +3994,7 @@ window.addEventListener('load', function(){
     var bC='border-right:2px solid #666;';   /* 선수 간 굵은 선 */
     var bH='border-right:2px solid #666;';   /* 홀열 우측 */
     var bThin='border-right:1px solid #bbb;'; /* 正/점수 내부 얇은 선 */
-    var cols='28px 71px 71px 71px 71px 30px';
+    var cols='28px 70px 70px 70px 70px 30px';
     var s='';
     /* 코스 헤더: 폰트 크게 */
     s+='<div style="'+_pca3+'background:'+bg+';text-align:center;font-size:11pt;font-weight:900;padding:4px 0;letter-spacing:3px;border-bottom:2px solid #666;">'+c+' 코 스</div>';
@@ -4099,7 +4098,7 @@ window.addEventListener('load', function(){
       players.forEach(function(p,i){qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||''));});
 
       var bC2='border-right:2px solid #666;'; var bT='border-top:1px solid #555;';
-      var totalRow='<div style="display:grid;grid-template-columns:42px 71px 71px 71px 71px;border-bottom:1px solid #555;">'
+      var totalRow='<div style="display:grid;grid-template-columns:42px 70px 70px 70px 70px;border-bottom:1px solid #555;">'
         +'<div style="background:#e8e0d0;font-weight:900;'+bC2+'font-size:7pt;text-align:center;padding:3px;line-height:1.3;display:flex;align-items:center;justify-content:center;">합계<br>'+c1+'+'+c2+'+'+c3+'</div>';
       for(var pi=0;pi<4;pi++){
         var nm2=pLabels[pi]; var p2=nm2.match(/^(.+?)\s*[\(（](.+?)[\)）]$/);
@@ -4107,10 +4106,10 @@ window.addEventListener('load', function(){
         totalRow+='<div style="background:#fff;'+(pi<3?bC2:'')+'display:flex;align-items:center;justify-content:center;padding:2px;"><div style="text-align:center;line-height:1.4;">'+nh2+'</div></div>';
       }
       totalRow+='</div>';
-      var scoreRow='<div style="display:grid;grid-template-columns:42px 71px 71px 71px 71px;height:28px;border-bottom:1px solid #555;">'
+      var scoreRow='<div style="display:grid;grid-template-columns:42px 70px 70px 70px 70px;height:28px;border-bottom:1px solid #555;">'
         +'<div style="background:#e8e0d0;font-weight:900;'+bC2+'font-size:8pt;text-align:center;display:flex;align-items:center;justify-content:center;">점수</div>'
         +'<div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bT+'"></div></div>';
-      var sigRow='<div style="display:grid;grid-template-columns:42px 71px 71px 71px 71px;height:28px;">'
+      var sigRow='<div style="display:grid;grid-template-columns:42px 70px 70px 70px 70px;height:28px;">'
         +'<div style="background:#e8e0d0;font-weight:900;'+bC2+'font-size:8pt;text-align:center;display:flex;align-items:center;justify-content:center;">서명</div>'
         +'<div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bC2+bT+'"></div><div style="'+bT+'"></div></div>';
       var noticeRow='<div style="border-top:1px solid #555;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4px 8px;">'
