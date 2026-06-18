@@ -4624,10 +4624,11 @@ window.addEventListener('load', function(){
             + (lp>0 ? 'margin-top:24px; border-top:4px solid #1a4a2e;' : '');
 
           var pageTeams = teams.slice(lp * listPerPage, (lp+1) * listPerPage);
-          var listHtml = '<div style="break-inside:avoid;page-break-inside:avoid;">'
-            +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">'
+          var listHtml = '<div style="break-inside:avoid;page-break-inside:avoid;margin-bottom:4px;">'
+            +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">'
             +'<div style="font-size:16px;font-weight:900;color:#1e3c72;">📋 QR카드 배부 확인 목록 · '+esc(code)+' · '+today+'</div>'
             +'<div style="font-size:14px;font-weight:700;color:#555;">'+(lp+1)+' / '+listTotalPages+'</div>'
+            +'</div>'
             +'</div>'
             +'<table style="width:100%;border-collapse:collapse;font-size:14px;">'
             + headerHtml + '<tbody>';
