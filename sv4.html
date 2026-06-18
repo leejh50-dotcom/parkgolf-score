@@ -3276,6 +3276,47 @@ window.addEventListener('load', function(){
 
   var _courseBg={'A':'#ffe0e0','B':'#ddeeff','C':'#fff9cc','D':'#f0f0f0'};
 
+
+  /* ── 관리용 배부 확인 목록 HTML 생성 ── */
+  function _buildMgmtListHtml(teams, code){
+    var today=new Date().toLocaleDateString('ko-KR');
+    var esc2=function(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');};
+    var perPage=25;
+    var totalPages=Math.ceil(teams.length/perPage);
+    var html='';
+    for(var lp=0;lp<totalPages;lp++){
+      var pageTeams=teams.slice(lp*perPage,(lp+1)*perPage);
+      html+='<div style="break-before:page;page-break-before:always;padding:14mm 10mm 10mm;box-sizing:border-box;">'
+        +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">'
+        +'<div style="font-size:14pt;font-weight:900;color:#1e3c72;">📋 QR카드 배부 확인 목록 · '+esc2(code)+' · '+today+'</div>'
+        +'<div style="font-size:11pt;font-weight:700;color:#555;">'+(lp+1)+' / '+totalPages+'</div>'
+        +'</div>'
+        +'<table style="width:100%;border-collapse:collapse;font-size:11pt;">'
+        +'<thead><tr style="background:#1a4a2e;color:#fff;">'
+        +'<th style="padding:7px 6px;text-align:center;width:36px;">No</th>'
+        +'<th style="padding:7px 6px;text-align:left;">조명</th>'
+        +'<th style="padding:7px 6px;text-align:left;">선수명</th>'
+        +'<th style="padding:7px 6px;text-align:left;width:130px;">심판명</th>'
+        +'<th style="padding:7px 6px;text-align:left;width:110px;">비고</th>'
+        +'</tr></thead><tbody>';
+      pageTeams.forEach(function(t,ti){
+        var rowNum=lp*perPage+ti+1;
+        var fp=(t.players&&t.players[0])?esc2(t.players[0].name||''):'';
+        var ec=(t.players||[]).length-1;
+        var pc=fp+(ec>0?' 외 '+ec:'');
+        var bg=ti%2===0?'':'background:#f9f9f9;';
+        html+='<tr style="'+bg+'">'
+          +'<td style="padding:7px 6px;text-align:center;border-bottom:0.5px solid #e5e7eb;color:#888;">'+rowNum+'</td>'
+          +'<td style="padding:7px 6px;border-bottom:0.5px solid #e5e7eb;font-weight:700;">'+esc2(t.team||'')+'</td>'
+          +'<td style="padding:7px 6px;border-bottom:0.5px solid #e5e7eb;">'+pc+'</td>'
+          +'<td style="padding:7px 6px;border-bottom:0.5px solid #e5e7eb;"><div style="border-bottom:0.5px solid #bbb;min-width:60px;">&nbsp;</div></td>'
+          +'<td style="padding:7px 6px;border-bottom:0.5px solid #e5e7eb;"><div style="border-bottom:0.5px solid #bbb;min-width:50px;">&nbsp;</div></td>'
+          +'</tr>';
+      });
+      html+='</tbody></table></div>';
+    }
+    return html;
+  }
   function _courseBlock(c, pLabels){
     var bg=_courseBg[c]||'#f0f0f0';
     var bC='border-right:2px solid #666;';
@@ -3446,7 +3487,7 @@ window.addEventListener('load', function(){
 
       /* 더 직접적인 방법: hole row에 flex:1 강제 적용 */
       var fullHtml = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>A4 기록지 인쇄</title>'
-        + '<style>' + css + '</style></head><body>' + bodyHtml + '</body></html>';
+        + '<style>' + css + '</style></head><body>' + bodyHtml + _buildMgmtListHtml(teams,code) + '</body></html>';
 
       var pw = window.open('', '_blank', 'width=900,height=1000');
       if(!pw){ alert('팝업이 차단되었습니다.\n주소창의 팝업 차단 아이콘 → 허용 후 재시도하세요.'); return; }
@@ -3766,7 +3807,7 @@ window.addEventListener('load', function(){
           +'@page{size:A4 landscape;margin:0;}';
         var pw=window.open('','_blank','width=1200,height=800');
         if(!pw){alert('팝업 차단됨. 허용 후 다시 시도하세요.');return;}
-        pw.document.open(); pw.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>2코스 기록지</title><style>'+css+'</style></head><body>'+bh+'</body></html>'); pw.document.close();
+        pw.document.open(); pw.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>2코스 기록지</title><style>'+css+'</style></head><body>'+bh+_buildMgmtListHtml(teams,code)+'</body></html>'); pw.document.close();
         pw.focus();
         pw.onload = function(){
           var imgs = pw.document.querySelectorAll('img');
@@ -4003,7 +4044,7 @@ window.addEventListener('load', function(){
           +'@page{size:A4 landscape;margin:0;}';
         var pw=window.open('','_blank','width=1200,height=800');
         if(!pw){alert('팝업 차단됨. 허용 후 다시 시도하세요.');return;}
-        pw.document.open(); pw.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>이틀대회 기록지</title><style>'+css+'</style></head><body>'+bh+'</body></html>'); pw.document.close();
+        pw.document.open(); pw.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>이틀대회 기록지</title><style>'+css+'</style></head><body>'+bh+_buildMgmtListHtml(teams,code)+'</body></html>'); pw.document.close();
         pw.focus();
         pw.onload = function(){
           var imgs = pw.document.querySelectorAll('img');
@@ -4221,7 +4262,7 @@ window.addEventListener('load', function(){
         var pw=window.open('','_blank','width=1200,height=800');
         if(!pw){alert('팝업 차단됨. 허용 후 다시 시도하세요.');return;}
         pw.document.open();
-        pw.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>3코스 기록지</title><style>'+css+'</style></head><body>'+bh+'</body></html>');
+        pw.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>3코스 기록지</title><style>'+css+'</style></head><body>'+bh+_buildMgmtListHtml(teams,code)+'</body></html>');
         pw.document.close();
         pw.focus();
         pw.onload = function(){
