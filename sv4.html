@@ -4620,7 +4620,8 @@ window.addEventListener('load', function(){
         for(var lp=0; lp<listTotalPages; lp++){
           var listWrapper = document.createElement('div');
           listWrapper.className = 'pgPageBlock';
-          listWrapper.style.cssText = 'break-before:page; page-break-before:always; padding:20px;';
+          listWrapper.style.cssText = 'break-before:page; page-break-before:always; padding:20px;'
+            + (lp>0 ? 'margin-top:24px; border-top:4px solid #1a4a2e;' : '');
 
           var pageTeams = teams.slice(lp * listPerPage, (lp+1) * listPerPage);
           var listHtml = '<div style="break-inside:avoid;page-break-inside:avoid;">'
