@@ -3719,15 +3719,15 @@ window.addEventListener('load', function(){
         +'</div>'
         +'<div style="display:flex;border:2px solid #666;border-top:none;">'
         +'<div style="flex:1;min-width:0;">'+totalRow+scoreRow+sigRow+noticeRow+'</div>'
-        +'<div style="width:176px;min-width:176px;flex-shrink:0;border-left:2px solid #666;background:#fff;display:flex;align-items:center;justify-content:center;padding:14px;">'
-        +'<div id="'+qrId+'" style="width:148px;height:148px;overflow:hidden;"></div>'
+        +'<div style="width:220px;min-width:220px;flex-shrink:0;border-left:2px solid #666;background:#fff;display:flex;align-items:center;justify-content:center;padding:16px;">'
+        +'<div id="'+qrId+'" style="width:184px;height:184px;overflow:hidden;"></div>'
         +'</div></div>';
       container.appendChild(page);
       setTimeout(function(qid,qt){ return function(){
         var el=document.getElementById(qid);
         if(el&&typeof QRCode!=='undefined')
           try{
-            new QRCode(el,{text:qt,width:800,height:800,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
+            new QRCode(el,{text:qt,width:800,height:800,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.L});
             var cv=el.querySelector('canvas'); if(cv) cv.style.cssText='width:140px;height:140px;display:block;';
             var im=el.querySelector('img'); if(im) im.style.display='none';
           }catch(e){}
@@ -3942,8 +3942,8 @@ window.addEventListener('load', function(){
         +'</div>'
         +'<div style="display:flex;border:2px solid #666;border-top:none;">'
         +'<div style="flex:1;min-width:0;">'+totalRow+scoreRow+sigRow+noticeRow+'</div>'
-        +'<div style="width:176px;min-width:176px;flex-shrink:0;border-left:2px solid #666;background:#fff;display:flex;align-items:center;justify-content:center;padding:14px;">'
-        +'<div id="'+qrId+'" style="width:148px;height:148px;overflow:hidden;"></div>'
+        +'<div style="width:220px;min-width:220px;flex-shrink:0;border-left:2px solid #666;background:#fff;display:flex;align-items:center;justify-content:center;padding:16px;">'
+        +'<div id="'+qrId+'" style="width:184px;height:184px;overflow:hidden;"></div>'
         +'</div></div>';
       container.appendChild(page);
 
