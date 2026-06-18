@@ -3293,7 +3293,7 @@ window.addEventListener('load', function(){
       var bR=(pi===3)?bE:bC;
       nameRow+='<div style="background:#fff;'+bR+'grid-column:span 2;display:flex;align-items:center;justify-content:center;padding:2px;"><div style="text-align:center;line-height:1.3;">'+nameHtml+'</div></div>';
     }
-    nameRow+='<div style="background:#e8e0d0;text-align:center;font-weight:700;font-size:8pt;display:flex;align-items:center;justify-content:center;">심판</div></div>';
+    nameRow+='<div style="background:#e8e0d0;text-align:center;border-left:2px solid #666;font-weight:700;font-size:8pt;display:flex;align-items:center;justify-content:center;">심판</div></div>';
     var subHdr='<div style="display:grid;grid-template-columns:'+_cols()+';">'
       +'<div style="background:#fff;'+bC+'"></div>';
     for(var pi=0;pi<4;pi++){
@@ -3301,7 +3301,7 @@ window.addEventListener('load', function(){
       subHdr+='<div style="background:#fff;text-align:center;'+bI+'font-size:8pt;color:#c8860a;font-weight:900;padding:1px;">正</div>';
       subHdr+='<div style="background:#fff;text-align:center;'+bR+'font-size:8pt;color:#555;padding:1px;">점수</div>';
     }
-    subHdr+='<div style="background:#fff;text-align:center;font-size:7pt;color:#999;padding:1px;">서명</div></div>';
+    subHdr+='<div style="background:#fff;text-align:center;border-left:2px solid #666;font-size:7pt;color:#999;padding:1px;">서명</div></div>';
     var rows='<div class="a4hole-rows">';
     for(var h=1;h<=9;h++){
       /* ★ 모든 셀에 border-top → 각 셀이 선을 직접 그림 → 완전 균일 */
@@ -3313,7 +3313,7 @@ window.addEventListener('load', function(){
         rows+='<div style="'+bI+bt+'background:#fff;"></div>';
         rows+='<div style="'+bR+bt+'"></div>';
       }
-      rows+='<div style="'+bt+'background:#f9f6f0;"></div></div>';
+      rows+='<div style="'+bt+'border-left:2px solid #666;background:#f9f6f0;"></div></div>';
     }
     rows+='</div>';
     var pca='<-webkit-print-color-adjust:exact;print-color-adjust:exact;';
@@ -3323,7 +3323,7 @@ window.addEventListener('load', function(){
       var bR=(pi===3)?bE:bC;
       sub+='<div style="-webkit-print-color-adjust:exact;print-color-adjust:exact;background:'+bg+';'+bR+'height:100%;"></div>';
     }
-    sub+='<div style="background:#f9f6f0;border-top:none;"></div></div>';
+    sub+='<div style="background:#f9f6f0;border-left:2px solid #666;border-top:none;"></div></div>';
     return hdr+nameRow+subHdr+rows+sub;
   }
 
@@ -3631,7 +3631,7 @@ window.addEventListener('load', function(){
       var bR2=(pi===3)?'border-right:none;':bC;
       nameRow+='<div style="background:#fff;'+bR2+'border-bottom:2px solid #666;grid-column:span 2;display:flex;align-items:center;justify-content:center;padding:2px;"><div style="text-align:center;line-height:1.4;">'+nhtml+'</div></div>';
     }
-    nameRow+='<div style="background:#e8e0d0;text-align:center;border-bottom:2px solid #666;font-weight:700;font-size:7.5pt;display:flex;align-items:center;justify-content:center;">심판</div></div>';
+    nameRow+='<div style="background:#e8e0d0;text-align:center;border-left:2px solid #666;border-bottom:2px solid #666;font-weight:700;font-size:7.5pt;display:flex;align-items:center;justify-content:center;">심판</div></div>';
     var subHdr='<div style="display:grid;grid-template-columns:'+cols+';">'
       +'<div style="background:#fff;'+bC+'border-bottom:1px solid #555;"></div>';
     for(var pi=0;pi<4;pi++){
@@ -3640,7 +3640,7 @@ window.addEventListener('load', function(){
       subHdr+='<div style="background:#fff;text-align:center;'+bI+'border-bottom:1px solid #555;font-size:7.5pt;color:#c8860a;font-weight:900;padding:1px;">正</div>';
       subHdr+='<div style="background:#fff;text-align:center;'+bSH+'border-bottom:1px solid #555;font-size:7.5pt;color:#555;padding:1px;">점수</div>';
     }
-    subHdr+='<div style="background:#fff;text-align:center;border-bottom:1px solid #555;font-size:6.5pt;color:#999;padding:1px;">서명</div></div>';
+    subHdr+='<div style="background:#fff;text-align:center;border-left:2px solid #666;border-bottom:1px solid #555;font-size:6.5pt;color:#999;padding:1px;">서명</div></div>';
     var rows='<div class="a4hole-rows2">';
     for(var h=1;h<=9;h++){
       rows+='<div style="display:grid;grid-template-columns:'+cols+';height:11mm;box-sizing:border-box;">'
@@ -3650,7 +3650,7 @@ window.addEventListener('load', function(){
         rows+='<div style="'+bI+bt+'background:#fff;"></div>';
         rows+='<div style="'+bRW+bt+'background:#fff;"></div>';
       }
-      rows+='<div style="'+bt+'background:#f9f6f0;"></div></div>';
+      rows+='<div style="'+bt+'border-left:2px solid #666;background:#f9f6f0;"></div></div>';
     }
     rows+='</div>';
     var sub='<div style="display:grid;grid-template-columns:'+cols+';height:33px;border-top:2px solid #666;">'
@@ -3659,7 +3659,7 @@ window.addEventListener('load', function(){
       var bSub=(pi===3)?'border-right:none;':'border-right:2px solid #666;';
       sub+='<div style="'+_pca2+'background:'+bg+';'+bSub+'grid-column:span 2;"></div>';
     }
-    sub+='<div style="background:#f9f6f0;border-top:none;"></div></div>';
+    sub+='<div style="background:#f9f6f0;border-left:2px solid #666;border-top:none;"></div></div>';
     return hdr+nameRow+subHdr+rows+sub;
   }
 
@@ -3731,7 +3731,7 @@ window.addEventListener('load', function(){
         var el=document.getElementById(qid);
         if(el&&typeof QRCode!=='undefined')
           try{
-            new QRCode(el,{text:qt,width:800,height:800,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.L});
+            new QRCode(el,{text:qt,width:800,height:800,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
             var cv=el.querySelector('canvas'); if(cv){cv.style.cssText='width:176px;height:176px;display:block;';}
             var im=el.querySelector('img'); if(im) im.style.display='none';
           }catch(e){}
@@ -3803,7 +3803,7 @@ window.addEventListener('load', function(){
       var bR2d=(pi===3)?'border-right:none;':bC;
       nameRow+='<div style="background:#fff;'+bR2d+'border-bottom:2px solid #666;grid-column:span 2;display:flex;align-items:center;justify-content:center;padding:2px;"><div style="text-align:center;line-height:1.4;">'+nhtml+'</div></div>';
     }
-    nameRow+='<div style="background:#e8e0d0;text-align:center;border-bottom:2px solid #666;font-weight:700;font-size:7.5pt;display:flex;align-items:center;justify-content:center;">심판</div></div>';
+    nameRow+='<div style="background:#e8e0d0;text-align:center;border-left:2px solid #666;border-bottom:2px solid #666;font-weight:700;font-size:7.5pt;display:flex;align-items:center;justify-content:center;">심판</div></div>';
     var subHdr='<div style="display:grid;grid-template-columns:'+cols+';">'
       +'<div style="background:#fff;'+bC+'border-bottom:1px solid #555;"></div>';
     for(var pi=0;pi<4;pi++){
@@ -3811,7 +3811,7 @@ window.addEventListener('load', function(){
       subHdr+='<div style="background:#fff;text-align:center;'+bI+'border-bottom:1px solid #555;font-size:7.5pt;color:#c8860a;font-weight:900;padding:1px;">正</div>';
       subHdr+='<div style="background:#fff;text-align:center;'+bSH2d+'border-bottom:1px solid #555;font-size:7.5pt;color:#555;padding:1px;">점수</div>';
     }
-    subHdr+='<div style="background:#fff;text-align:center;border-bottom:1px solid #555;font-size:6.5pt;color:#999;padding:1px;">서명</div></div>';
+    subHdr+='<div style="background:#fff;text-align:center;border-left:2px solid #666;border-bottom:1px solid #555;font-size:6.5pt;color:#999;padding:1px;">서명</div></div>';
     var rows='<div class="a4hole-rows2">';
     for(var h=1;h<=9;h++){
       var isStart=(h===startHole);
@@ -3825,7 +3825,7 @@ window.addEventListener('load', function(){
         rows+='<div style="'+bI+holeBorder+'background:'+cellBg+';"></div>';
         rows+='<div style="'+bRW2d+holeBorder+'background:'+cellBg+';"></div>';
       }
-      rows+='<div style="'+holeBorder+'background:#f9f6f0;"></div></div>';
+      rows+='<div style="'+holeBorder+'border-left:2px solid #666;background:#f9f6f0;"></div></div>';
     }
     rows+='</div>';
     var sub='<div style="display:grid;grid-template-columns:'+cols+';height:33px;border-top:2px solid #666;">'
@@ -3834,7 +3834,7 @@ window.addEventListener('load', function(){
       var bSub2d=(pi===3)?'border-right:none;':'border-right:2px solid #666;';
       sub+='<div style="'+_pca2+'background:'+bg+';'+bSub2d+'grid-column:span 2;"></div>';
     }
-    sub+='<div style="background:#f9f6f0;border-top:none;"></div></div>';
+    sub+='<div style="background:#f9f6f0;border-left:2px solid #666;border-top:none;"></div></div>';
     return hdr+nameRow+subHdr+rows+sub;
   }
 
@@ -3959,7 +3959,7 @@ window.addEventListener('load', function(){
         var el=document.getElementById(qid);
         if(el&&typeof QRCode!=='undefined')
           try{
-            new QRCode(el,{text:qt,width:800,height:800,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.L});
+            new QRCode(el,{text:qt,width:800,height:800,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
             var cv=el.querySelector('canvas'); if(cv){cv.style.cssText='width:176px;height:176px;display:block;';}
             var im=el.querySelector('img'); if(im) im.style.display='none';
           }catch(e){}
@@ -4016,7 +4016,7 @@ window.addEventListener('load', function(){
       var bLast3=(pi===3)?'border-right:none;':bC;
       s+='<div style="background:#fff;'+bLast3+'text-align:center;font-size:8pt;font-weight:900;padding:2px 0;line-height:1.4;display:flex;flex-direction:column;align-items:center;justify-content:center;">'+nhtml+'</div>';
     }
-    s+='<div style="'+_pca3+'background:#e8e0d0;text-align:center;font-size:8pt;font-weight:700;display:flex;align-items:center;justify-content:center;">심판</div>';
+    s+='<div style="'+_pca3+'background:#e8e0d0;text-align:center;border-left:2px solid #666;font-size:8pt;font-weight:700;display:flex;align-items:center;justify-content:center;">심판</div>';
     s+='</div>';
     /* 홀 행: 正(6mm) + 점수(8mm) */
     s+='<div class="a4hole-rows3">';
@@ -4029,7 +4029,7 @@ window.addEventListener('load', function(){
         var bL3r=(pi===3)?'border-right:none;':bC;
         s+='<div style="background:#fff;'+bL3r+hBorder+'padding-left:4px;display:flex;align-items:center;"><span style="font-size:7pt;color:#c8860a;font-weight:900;">正</span></div>';
       }
-      s+='<div style="'+hBorder+'background:#f5f5f5;"></div>';
+      s+='<div style="'+hBorder+'border-left:2px solid #666;background:#f5f5f5;"></div>';
       s+='</div>';
       /* 점수 줄: 正과 얇은 구분선 */
       s+='<div class="a4h3s" style="display:grid;grid-template-columns:'+cols+';height:8mm;">';
@@ -4038,7 +4038,7 @@ window.addEventListener('load', function(){
         var bL3s=(pi===3)?'border-right:none;':bC;
         s+='<div style="background:#fff;'+bL3s+hBorder+'padding-left:4px;display:flex;align-items:center;"></div>';
       }
-      s+='<div style="'+hBorder+'background:#f5f5f5;"></div>';
+      s+='<div style="'+hBorder+'border-left:2px solid #666;background:#f5f5f5;"></div>';
       s+='</div>';
     }
     s+='</div>';
@@ -4048,7 +4048,7 @@ window.addEventListener('load', function(){
     for(var pi=0;pi<4;pi++){
       s+='<div style="'+_pca3+'background:'+bg+';'+(pi<3?bC:'')+'"></div>';
     }
-    s+='<div style="background:#f0f0f0;"></div>';
+    s+='<div style="background:#f0f0f0;border-left:2px solid #666;"></div>';
     s+='</div>';
     return s;
   }
