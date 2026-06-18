@@ -3280,7 +3280,7 @@ window.addEventListener('load', function(){
     var bg=_courseBg[c]||'#f0f0f0';
     var bC='border-right:2px solid #666;';
     var bI='border-right:1px solid #bbb;';
-    var bE='border-right:2px solid #666;';
+    var bE='border-right:none;';
     var hdr='<div style="-webkit-print-color-adjust:exact;print-color-adjust:exact;background:'+bg+';color:#000;text-align:center;font-size:11pt;font-weight:900;padding:3px 0 4px;letter-spacing:2px;border-bottom:2px solid #666;border-top:1px solid #888;">'+c+' 코 스</div>';
     var nameRow='<div style="display:grid;grid-template-columns:'+_cols()+';border-bottom:2px solid #666;">'
       +'<div style="background:#e8e0d0;text-align:center;'+bC+'font-weight:700;font-size:8pt;display:flex;align-items:center;justify-content:center;padding:2px;">홀<br>(파)</div>';
@@ -3620,7 +3620,7 @@ window.addEventListener('load', function(){
     var bC='border-right:2px solid #666;';
     var bI='border-right:1px solid #bbb;';
     var bt='border-top:1px solid #555;';
-    var cols='40px 52px 52px 52px 52px 52px 52px 52px 52px 36px';
+    var cols='36px 50px 50px 50px 50px 50px 50px 50px 50px 36px';
     var hdr='<div style="'+_pca2+'background:'+bg+';text-align:center;font-size:11pt;font-weight:900;padding:3px 0;letter-spacing:2px;border-bottom:2px solid #666;">'+c+' 코 스</div>';
     var nameRow='<div style="display:grid;grid-template-columns:'+cols+';">'
       +'<div style="background:#e8e0d0;text-align:center;'+bC+'border-bottom:2px solid #666;font-weight:700;font-size:7.5pt;display:flex;align-items:center;justify-content:center;padding:2px;">홀<br>(파)</div>';
@@ -3628,15 +3628,17 @@ window.addEventListener('load', function(){
       var nm=pLabels[pi]||('경기자 '+(pi+1));
       var pts=nm.match(/^(.+?)\s*[\(（](.+?)[\)）]$/);
       var nhtml=pts?'<span style="font-size:11pt;font-weight:900;">'+esc(pts[1])+'</span><br><span style="font-size:8.5pt;color:#333;font-weight:600;">('+esc(pts[2])+')</span>':'<span style="font-size:9.5pt;font-weight:900;">'+esc(nm)+'</span>';
-      nameRow+='<div style="background:#fff;'+bC+'border-bottom:2px solid #666;grid-column:span 2;display:flex;align-items:center;justify-content:center;padding:2px;"><div style="text-align:center;line-height:1.4;">'+nhtml+'</div></div>';
+      var bR2=(pi===3)?'border-right:none;':bC;
+      nameRow+='<div style="background:#fff;'+bR2+'border-bottom:2px solid #666;grid-column:span 2;display:flex;align-items:center;justify-content:center;padding:2px;"><div style="text-align:center;line-height:1.4;">'+nhtml+'</div></div>';
     }
     nameRow+='<div style="background:#e8e0d0;text-align:center;border-bottom:2px solid #666;font-weight:700;font-size:7.5pt;display:flex;align-items:center;justify-content:center;">심판</div></div>';
     var subHdr='<div style="display:grid;grid-template-columns:'+cols+';">'
       +'<div style="background:#fff;'+bC+'border-bottom:1px solid #555;"></div>';
     for(var pi=0;pi<4;pi++){
       /* 正/점수 내부선 bI(1px), 선수 경계 bC(2px) */
+      var bSH=(pi===3)?'border-right:none;':bC;
       subHdr+='<div style="background:#fff;text-align:center;'+bI+'border-bottom:1px solid #555;font-size:7.5pt;color:#c8860a;font-weight:900;padding:1px;">正</div>';
-      subHdr+='<div style="background:#fff;text-align:center;'+bC+'border-bottom:1px solid #555;font-size:7.5pt;color:#555;padding:1px;">점수</div>';
+      subHdr+='<div style="background:#fff;text-align:center;'+bSH+'border-bottom:1px solid #555;font-size:7.5pt;color:#555;padding:1px;">점수</div>';
     }
     subHdr+='<div style="background:#fff;text-align:center;border-bottom:1px solid #555;font-size:6.5pt;color:#999;padding:1px;">서명</div></div>';
     var rows='<div class="a4hole-rows2">';
@@ -3644,8 +3646,9 @@ window.addEventListener('load', function(){
       rows+='<div style="display:grid;grid-template-columns:'+cols+';height:11mm;box-sizing:border-box;">'
         +'<div style="'+_pca2+'text-align:center;'+bC+bt+'background:'+bg+';font-size:8.5pt;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2;">'+c+'-'+h+'<span style="color:#c8860a;font-size:7.5pt;">(  )</span></div>';
       for(var pi=0;pi<4;pi++){
+        var bRW=(pi===3)?'border-right:none;':bC;
         rows+='<div style="'+bI+bt+'background:#fff;"></div>';
-        rows+='<div style="'+bC+bt+'background:#fff;"></div>';
+        rows+='<div style="'+bRW+bt+'background:#fff;"></div>';
       }
       rows+='<div style="background:#f9f6f0;"></div></div>';
     }
@@ -3653,7 +3656,8 @@ window.addEventListener('load', function(){
     var sub='<div style="display:grid;grid-template-columns:'+cols+';height:33px;border-top:2px solid #666;">'
       +'<div style="'+_pca2+'background:'+bg+';font-size:8.5pt;font-weight:900;text-align:center;'+bC+'display:flex;align-items:center;justify-content:center;">'+c+'소계</div>';
     for(var pi=0;pi<4;pi++){
-      sub+='<div style="'+_pca2+'background:'+bg+';border-right:2px solid #666;grid-column:span 2;"></div>';
+      var bSub=(pi===3)?'border-right:none;':'border-right:2px solid #666;';
+      sub+='<div style="'+_pca2+'background:'+bg+';'+bSub+'grid-column:span 2;"></div>';
     }
     sub+='<div style="background:#f9f6f0;border-top:none;"></div></div>';
     return hdr+nameRow+subHdr+rows+sub;
@@ -3719,17 +3723,17 @@ window.addEventListener('load', function(){
         +'</div>'
         +'<div style="display:flex;border:2px solid #666;border-top:none;">'
         +'<div style="flex:1;min-width:0;">'+totalRow+scoreRow+sigRow+noticeRow+'</div>'
-        +'<div style="width:220px;min-width:220px;min-height:204px;flex-shrink:0;border-left:2px solid #666;background:#fff;display:flex;align-items:center;justify-content:center;padding:16px;">'
-        +'<div id="'+qrId+'" style="width:172px;height:172px;flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;"></div>'
+        +'<div style="width:210px;min-width:210px;min-height:204px;flex-shrink:0;border-left:2px solid #666;background:#fff;display:flex;align-items:center;justify-content:center;padding:8px;">'
+        +'<div id="'+qrId+'" style="width:188px;height:188px;flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;"></div>'
         +'</div></div>';
       container.appendChild(page);
       setTimeout(function(qid,qt){ return function(){
         var el=document.getElementById(qid);
         if(el&&typeof QRCode!=='undefined')
           try{
-            new QRCode(el,{text:qt,width:172,height:172,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.L});
-            var cv=el.querySelector('canvas'); if(cv){cv.style.cssText='width:172px;height:172px;display:block;';cv.style.maxWidth='172px';cv.style.maxHeight='172px';}
-            var im=el.querySelector('img'); if(im) im.parentNode.removeChild(im);
+            new QRCode(el,{text:qt,width:800,height:800,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.L});
+            var cv=el.querySelector('canvas'); if(cv){cv.style.cssText='width:188px;height:188px;display:block;';}
+            var im=el.querySelector('img'); if(im) im.style.display='none';
           }catch(e){}
       };}(qrId,qrText), ti*40);
     });
@@ -3741,7 +3745,7 @@ window.addEventListener('load', function(){
         var bh='';
         Array.from(pages.children).forEach(function(pd){
           var cl=pd.cloneNode(true);
-          pd.querySelectorAll('canvas').forEach(function(c,i){ try{ var img=document.createElement('img'); img.src=c.toDataURL('image/png'); img.style.cssText='width:140px;height:140px;display:block;'; var clc=cl.querySelectorAll('canvas')[i]; if(clc) clc.parentNode.replaceChild(img,clc); }catch(e){} });
+          pd.querySelectorAll('canvas').forEach(function(c,i){ try{ var img=document.createElement('img'); img.src=c.toDataURL('image/png'); img.style.cssText='width:188px;height:188px;display:block;'; var clc=cl.querySelectorAll('canvas')[i]; if(clc) clc.parentNode.replaceChild(img,clc); }catch(e){} });
           cl.querySelectorAll('img').forEach(function(im){ if(im.style.display==='none') im.remove(); });
           bh+='<div class="a4page">'+cl.innerHTML+'</div>';
         });
@@ -3788,7 +3792,7 @@ window.addEventListener('load', function(){
     var bg=_courseBg2[c]||'#f0f0f0';
     var bgDark=_courseBgDark[c]||bg;
     var bC='border-right:2px solid #666;'; var bI='border-right:1px solid #bbb;'; var bt='border-top:1px solid #555;';
-    var cols='40px 52px 52px 52px 52px 52px 52px 52px 52px 36px';
+    var cols='36px 50px 50px 50px 50px 50px 50px 50px 50px 36px';
     var hdr='<div style="'+_pca2+'background:'+bg+';text-align:center;font-size:11pt;font-weight:900;padding:3px 0;letter-spacing:2px;border-bottom:2px solid #666;">'+c+' 코 스</div>';
     var nameRow='<div style="display:grid;grid-template-columns:'+cols+';">'
       +'<div style="background:#e8e0d0;text-align:center;'+bC+'border-bottom:2px solid #666;font-weight:700;font-size:7.5pt;display:flex;align-items:center;justify-content:center;padding:2px;">홀<br>(파)</div>';
@@ -3796,14 +3800,16 @@ window.addEventListener('load', function(){
       var nm=pLabels[pi]||('경기자 '+(pi+1));
       var pts=nm.match(/^(.+?)\s*[\(（](.+?)[\)）]$/);
       var nhtml=pts?'<span style="font-size:11pt;font-weight:900;">'+esc(pts[1])+'</span><br><span style="font-size:8.5pt;color:#333;font-weight:600;">('+esc(pts[2])+')</span>':'<span style="font-size:9.5pt;font-weight:900;">'+esc(nm)+'</span>';
-      nameRow+='<div style="background:#fff;'+bC+'border-bottom:2px solid #666;grid-column:span 2;display:flex;align-items:center;justify-content:center;padding:2px;"><div style="text-align:center;line-height:1.4;">'+nhtml+'</div></div>';
+      var bR2d=(pi===3)?'border-right:none;':bC;
+      nameRow+='<div style="background:#fff;'+bR2d+'border-bottom:2px solid #666;grid-column:span 2;display:flex;align-items:center;justify-content:center;padding:2px;"><div style="text-align:center;line-height:1.4;">'+nhtml+'</div></div>';
     }
     nameRow+='<div style="background:#e8e0d0;text-align:center;border-bottom:2px solid #666;font-weight:700;font-size:7.5pt;display:flex;align-items:center;justify-content:center;">심판</div></div>';
     var subHdr='<div style="display:grid;grid-template-columns:'+cols+';">'
       +'<div style="background:#fff;'+bC+'border-bottom:1px solid #555;"></div>';
     for(var pi=0;pi<4;pi++){
+      var bSH2d=(pi===3)?'border-right:none;':bC;
       subHdr+='<div style="background:#fff;text-align:center;'+bI+'border-bottom:1px solid #555;font-size:7.5pt;color:#c8860a;font-weight:900;padding:1px;">正</div>';
-      subHdr+='<div style="background:#fff;text-align:center;'+bC+'border-bottom:1px solid #555;font-size:7.5pt;color:#555;padding:1px;">점수</div>';
+      subHdr+='<div style="background:#fff;text-align:center;'+bSH2d+'border-bottom:1px solid #555;font-size:7.5pt;color:#555;padding:1px;">점수</div>';
     }
     subHdr+='<div style="background:#fff;text-align:center;border-bottom:1px solid #555;font-size:6.5pt;color:#999;padding:1px;">서명</div></div>';
     var rows='<div class="a4hole-rows2">';
@@ -3815,8 +3821,9 @@ window.addEventListener('load', function(){
         +'<div style="'+_pca2+'text-align:center;'+bC+holeBorder+'background:'+holeBg+';font-size:'+(isStart?'9':'8.5')+'pt;font-weight:900;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.2;">'+c+'-'+h+'<span style="color:'+(isStart?'#000':'#c8860a')+';font-size:7.5pt;">'+(isStart?'▶ 시작':'(  )')+'</span></div>';
       for(var pi=0;pi<4;pi++){
         var cellBg=isStart?'#fffaed':'#fff';
+        var bRW2d=(pi===3)?'border-right:none;':bC;
         rows+='<div style="'+bI+holeBorder+'background:'+cellBg+';"></div>';
-        rows+='<div style="'+bC+holeBorder+'background:'+cellBg+';"></div>';
+        rows+='<div style="'+bRW2d+holeBorder+'background:'+cellBg+';"></div>';
       }
       rows+='<div style="'+holeBorder+'background:#f9f6f0;"></div></div>';
     }
@@ -3824,7 +3831,8 @@ window.addEventListener('load', function(){
     var sub='<div style="display:grid;grid-template-columns:'+cols+';height:33px;border-top:2px solid #666;">'
       +'<div style="'+_pca2+'background:'+bg+';font-size:8.5pt;font-weight:900;text-align:center;'+bC+'display:flex;align-items:center;justify-content:center;">'+c+'소계</div>';
     for(var pi=0;pi<4;pi++){
-      sub+='<div style="'+_pca2+'background:'+bg+';border-right:2px solid #666;grid-column:span 2;"></div>';
+      var bSub2d=(pi===3)?'border-right:none;':'border-right:2px solid #666;';
+      sub+='<div style="'+_pca2+'background:'+bg+';'+bSub2d+'grid-column:span 2;"></div>';
     }
     sub+='<div style="background:#f9f6f0;border-top:none;"></div></div>';
     return hdr+nameRow+subHdr+rows+sub;
@@ -3942,8 +3950,8 @@ window.addEventListener('load', function(){
         +'</div>'
         +'<div style="display:flex;border:2px solid #666;border-top:none;">'
         +'<div style="flex:1;min-width:0;">'+totalRow+scoreRow+sigRow+noticeRow+'</div>'
-        +'<div style="width:220px;min-width:220px;min-height:204px;flex-shrink:0;border-left:2px solid #666;background:#fff;display:flex;align-items:center;justify-content:center;padding:16px;">'
-        +'<div id="'+qrId+'" style="width:172px;height:172px;flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;"></div>'
+        +'<div style="width:210px;min-width:210px;min-height:204px;flex-shrink:0;border-left:2px solid #666;background:#fff;display:flex;align-items:center;justify-content:center;padding:8px;">'
+        +'<div id="'+qrId+'" style="width:188px;height:188px;flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;"></div>'
         +'</div></div>';
       container.appendChild(page);
 
@@ -3951,9 +3959,9 @@ window.addEventListener('load', function(){
         var el=document.getElementById(qid);
         if(el&&typeof QRCode!=='undefined')
           try{
-            new QRCode(el,{text:qt,width:172,height:172,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.L});
-            var cv=el.querySelector('canvas'); if(cv){cv.style.cssText='width:172px;height:172px;display:block;';cv.style.maxWidth='172px';cv.style.maxHeight='172px';}
-            var im=el.querySelector('img'); if(im) im.parentNode.removeChild(im);
+            new QRCode(el,{text:qt,width:800,height:800,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.L});
+            var cv=el.querySelector('canvas'); if(cv){cv.style.cssText='width:188px;height:188px;display:block;';}
+            var im=el.querySelector('img'); if(im) im.style.display='none';
           }catch(e){}
       };}(qrId,qrText), ti*40);
     });
@@ -3965,7 +3973,7 @@ window.addEventListener('load', function(){
         var bh='';
         Array.from(pages.children).forEach(function(pd){
           var cl=pd.cloneNode(true);
-          pd.querySelectorAll('canvas').forEach(function(c,i){ try{ var img=document.createElement('img'); img.src=c.toDataURL('image/png'); img.style.cssText='width:140px;height:140px;display:block;'; var clc=cl.querySelectorAll('canvas')[i]; if(clc) clc.parentNode.replaceChild(img,clc); }catch(e){} });
+          pd.querySelectorAll('canvas').forEach(function(c,i){ try{ var img=document.createElement('img'); img.src=c.toDataURL('image/png'); img.style.cssText='width:188px;height:188px;display:block;'; var clc=cl.querySelectorAll('canvas')[i]; if(clc) clc.parentNode.replaceChild(img,clc); }catch(e){} });
           cl.querySelectorAll('img').forEach(function(im){ if(im.style.display==='none') im.remove(); });
           bh+='<div class="a4page">'+cl.innerHTML+'</div>';
         });
@@ -4005,7 +4013,8 @@ window.addEventListener('load', function(){
       var nm=pLabels[pi]||('경기자 '+(pi+1));
       var pt=nm.match(/^(.+?)\s*[\(（](.+?)[\)）]$/);
       var nhtml=pt?esc(pt[1])+'<br><span style="font-size:6pt;font-weight:500;color:#555;">('+esc(pt[2])+')</span>':'<span>'+esc(nm)+'</span>';
-      s+='<div style="background:#fff;'+bC+'text-align:center;font-size:8pt;font-weight:900;padding:2px 0;line-height:1.4;display:flex;flex-direction:column;align-items:center;justify-content:center;">'+nhtml+'</div>';
+      var bLast3=(pi===3)?'border-right:none;':bC;
+      s+='<div style="background:#fff;'+bLast3+'text-align:center;font-size:8pt;font-weight:900;padding:2px 0;line-height:1.4;display:flex;flex-direction:column;align-items:center;justify-content:center;">'+nhtml+'</div>';
     }
     s+='<div style="'+_pca3+'background:#e8e0d0;text-align:center;font-size:8pt;font-weight:700;display:flex;align-items:center;justify-content:center;">심판</div>';
     s+='</div>';
@@ -4017,15 +4026,17 @@ window.addEventListener('load', function(){
       s+='<div class="a4h3r" style="display:grid;grid-template-columns:'+cols+';height:6mm;">';
       s+='<div style="'+_pca3+'background:'+bg+';'+bH+hBorder+'text-align:center;font-size:8pt;font-weight:900;display:flex;align-items:center;justify-content:center;">'+c+'-'+h+'</div>';
       for(var pi=0;pi<4;pi++){
-        s+='<div style="background:#fff;'+bC+hBorder+'padding-left:4px;display:flex;align-items:center;"><span style="font-size:7pt;color:#c8860a;font-weight:900;">正</span></div>';
+        var bL3r=(pi===3)?'border-right:none;':bC;
+        s+='<div style="background:#fff;'+bL3r+hBorder+'padding-left:4px;display:flex;align-items:center;"><span style="font-size:7pt;color:#c8860a;font-weight:900;">正</span></div>';
       }
       s+='<div style="background:#f5f5f5;"></div>';
       s+='</div>';
       /* 점수 줄: 正과 얇은 구분선 */
       s+='<div class="a4h3s" style="display:grid;grid-template-columns:'+cols+';height:8mm;">';
-      s+='<div style="'+_pca3+'background:'+bg+';'+bH+'border-top:1px solid #ccc;text-align:center;font-size:6pt;font-weight:700;display:flex;align-items:center;justify-content:center;color:#c8860a;">(  )</div>';
+      s+='<div style="'+_pca3+'background:'+bg+';'+bH+'text-align:center;font-size:6pt;font-weight:700;display:flex;align-items:center;justify-content:center;color:#c8860a;">(  )</div>';
       for(var pi=0;pi<4;pi++){
-        s+='<div style="background:#fff;'+bC+'border-top:1px solid #ccc;padding-left:4px;display:flex;align-items:center;"></div>';
+        var bL3s=(pi===3)?'border-right:none;':bC;
+        s+='<div style="background:#fff;'+bL3s+'padding-left:4px;display:flex;align-items:center;"></div>';
       }
       s+='<div style="background:#f5f5f5;"></div>';
       s+='</div>';
