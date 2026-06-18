@@ -3323,7 +3323,7 @@ window.addEventListener('load', function(){
       var bR=(pi===3)?bE:bC;
       sub+='<div style="-webkit-print-color-adjust:exact;print-color-adjust:exact;background:'+bg+';'+bR+'height:100%;"></div>';
     }
-    sub+='<div style="background:#f9f6f0;"></div></div>';
+    sub+='<div style="background:#f9f6f0;border-top:none;"></div></div>';
     return hdr+nameRow+subHdr+rows+sub;
   }
 
@@ -3655,7 +3655,7 @@ window.addEventListener('load', function(){
     for(var pi=0;pi<4;pi++){
       sub+='<div style="'+_pca2+'background:'+bg+';border-right:2px solid #666;grid-column:span 2;"></div>';
     }
-    sub+='<div style="background:#f9f6f0;"></div></div>';
+    sub+='<div style="background:#f9f6f0;border-top:none;"></div></div>';
     return hdr+nameRow+subHdr+rows+sub;
   }
 
@@ -3826,7 +3826,7 @@ window.addEventListener('load', function(){
     for(var pi=0;pi<4;pi++){
       sub+='<div style="'+_pca2+'background:'+bg+';border-right:2px solid #666;grid-column:span 2;"></div>';
     }
-    sub+='<div style="background:#f9f6f0;"></div></div>';
+    sub+='<div style="background:#f9f6f0;border-top:none;"></div></div>';
     return hdr+nameRow+subHdr+rows+sub;
   }
 
@@ -4019,7 +4019,7 @@ window.addEventListener('load', function(){
       for(var pi=0;pi<4;pi++){
         s+='<div style="background:#fff;'+bC+'padding-left:4px;display:flex;align-items:center;"><span style="font-size:7pt;color:#c8860a;font-weight:900;">正</span></div>';
       }
-      s+='<div style="background:#f5f5f5;"></div>';
+      s+='<div style="background:#f5f5f5;border-top:none!important;"></div>';
       s+='</div>';
       /* 점수 줄: 正과 얇은 구분선 */
       s+='<div class="a4h3s" style="display:grid;grid-template-columns:'+cols+';height:8mm;border-top:1px solid #ccc;">';
@@ -4027,7 +4027,7 @@ window.addEventListener('load', function(){
       for(var pi=0;pi<4;pi++){
         s+='<div style="background:#fff;'+bC+'padding-left:4px;display:flex;align-items:center;"></div>';
       }
-      s+='<div style="background:#f5f5f5;"></div>';
+      s+='<div style="background:#f5f5f5;border-top:none!important;"></div>';
       s+='</div>';
     }
     s+='</div>';
