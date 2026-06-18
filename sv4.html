@@ -3272,7 +3272,7 @@ window.addEventListener('load', function(){
   var B_ROW     = '1px solid #555';   /* 홀 가로선 */
   var B_OUTER   = '1px solid #777';   /* 코스 우측/하단 */
 
-  function _cols(){ return '36px repeat(8,1fr) 28px'; }
+  function _cols(){ return '36px repeat(8,1fr) 1fr'; }
 
   var _courseBg={'A':'#ffe0e0','B':'#ddeeff','C':'#fff9cc','D':'#f0f0f0'};
 
@@ -3317,7 +3317,7 @@ window.addEventListener('load', function(){
     }
     rows+='</div>';
     var pca='<-webkit-print-color-adjust:exact;print-color-adjust:exact;';
-    var sub='<div style="display:grid;grid-template-columns:36px repeat(4,1fr) 28px;height:28px;border-top:2px solid #666;">'
+    var sub='<div style="display:grid;grid-template-columns:36px repeat(4,1fr) 1fr;height:28px;border-top:2px solid #666;">'
       +'<div style="-webkit-print-color-adjust:exact;print-color-adjust:exact;background:'+bg+';font-size:9pt;font-weight:900;text-align:center;'+bC+'display:flex;align-items:center;justify-content:center;">'+c+'소계</div>';
     for(var pi=0;pi<4;pi++){
       var bR=(pi===3)?bE:bC;
@@ -3454,7 +3454,14 @@ window.addEventListener('load', function(){
       pw.document.write(fullHtml);
       pw.document.close();
       pw.focus();
-      setTimeout(function(){ pw.print(); }, 800);
+      pw.onload = function(){
+        var imgs = pw.document.querySelectorAll('img');
+        var total = imgs.length, loaded = 0;
+        if(!total){ setTimeout(function(){pw.print();},400); return; }
+        function tryPrint(){ loaded++; if(loaded>=total) setTimeout(function(){pw.print();},200); }
+        Array.from(imgs).forEach(function(im){ if(im.complete) tryPrint(); else { im.onload=tryPrint; im.onerror=tryPrint; } });
+      };
+      setTimeout(function(){ pw.print(); }, 1500);
     }; // end doConvertAndPrint
 
     /* QR 생성 완료 대기 (최대 5초, 200ms 간격 체크) */
@@ -3620,7 +3627,7 @@ window.addEventListener('load', function(){
     var bC='border-right:2px solid #666;';
     var bI='border-right:1px solid #bbb;';
     var bt='border-top:1px solid #555;';
-    var cols='36px 50px 50px 50px 50px 50px 50px 50px 50px 36px';
+    var cols='36px 50px 50px 50px 50px 50px 50px 50px 50px 1fr';
     var hdr='<div style="'+_pca2+'background:'+bg+';text-align:center;font-size:11pt;font-weight:900;padding:3px 0;letter-spacing:2px;border-bottom:2px solid #666;">'+c+' 코 스</div>';
     var nameRow='<div style="display:grid;grid-template-columns:'+cols+';">'
       +'<div style="background:#e8e0d0;text-align:center;'+bC+'border-bottom:2px solid #666;font-weight:700;font-size:7.5pt;display:flex;align-items:center;justify-content:center;padding:2px;">홀<br>(파)</div>';
@@ -3759,7 +3766,15 @@ window.addEventListener('load', function(){
         var pw=window.open('','_blank','width=1200,height=800');
         if(!pw){alert('팝업 차단됨. 허용 후 다시 시도하세요.');return;}
         pw.document.open(); pw.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>2코스 기록지</title><style>'+css+'</style></head><body>'+bh+'</body></html>'); pw.document.close();
-        pw.focus(); setTimeout(function(){pw.print();},800);
+        pw.focus();
+        pw.onload = function(){
+          var imgs = pw.document.querySelectorAll('img');
+          var total = imgs.length, loaded = 0;
+          if(!total){ setTimeout(function(){pw.print();},400); return; }
+          function tryPrint(){ loaded++; if(loaded>=total) setTimeout(function(){pw.print();},200); }
+          Array.from(imgs).forEach(function(im){ if(im.complete) tryPrint(); else { im.onload=tryPrint; im.onerror=tryPrint; } });
+        };
+        setTimeout(function(){pw.print();},1500);
       };
       var w=0,wait=function(){ if(allR()||w>=5000){doP();}else{w+=200;setTimeout(wait,200);} }; wait();
     };
@@ -3792,7 +3807,7 @@ window.addEventListener('load', function(){
     var bg=_courseBg2[c]||'#f0f0f0';
     var bgDark=_courseBgDark[c]||bg;
     var bC='border-right:2px solid #666;'; var bI='border-right:1px solid #bbb;'; var bt='border-top:1px solid #555;';
-    var cols='36px 50px 50px 50px 50px 50px 50px 50px 50px 36px';
+    var cols='36px 50px 50px 50px 50px 50px 50px 50px 50px 1fr';
     var hdr='<div style="'+_pca2+'background:'+bg+';text-align:center;font-size:11pt;font-weight:900;padding:3px 0;letter-spacing:2px;border-bottom:2px solid #666;">'+c+' 코 스</div>';
     var nameRow='<div style="display:grid;grid-template-columns:'+cols+';">'
       +'<div style="background:#e8e0d0;text-align:center;'+bC+'border-bottom:2px solid #666;font-weight:700;font-size:7.5pt;display:flex;align-items:center;justify-content:center;padding:2px;">홀<br>(파)</div>';
@@ -3987,7 +4002,15 @@ window.addEventListener('load', function(){
         var pw=window.open('','_blank','width=1200,height=800');
         if(!pw){alert('팝업 차단됨. 허용 후 다시 시도하세요.');return;}
         pw.document.open(); pw.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>이틀대회 기록지</title><style>'+css+'</style></head><body>'+bh+'</body></html>'); pw.document.close();
-        pw.focus(); setTimeout(function(){pw.print();},800);
+        pw.focus();
+        pw.onload = function(){
+          var imgs = pw.document.querySelectorAll('img');
+          var total = imgs.length, loaded = 0;
+          if(!total){ setTimeout(function(){pw.print();},400); return; }
+          function tryPrint(){ loaded++; if(loaded>=total) setTimeout(function(){pw.print();},200); }
+          Array.from(imgs).forEach(function(im){ if(im.complete) tryPrint(); else { im.onload=tryPrint; im.onerror=tryPrint; } });
+        };
+        setTimeout(function(){pw.print();},1500);
       };
       var w=0,wait=function(){ if(allR()||w>=5000){doP();}else{w+=200;setTimeout(wait,200);} }; wait();
     };
@@ -4002,7 +4025,7 @@ window.addEventListener('load', function(){
     var bC='border-right:2px solid #666;';   /* 선수 간 굵은 선 */
     var bH='border-right:2px solid #666;';   /* 홀열 우측 */
     var bThin='border-right:1px solid #bbb;'; /* 正/점수 내부 얇은 선 */
-    var cols='28px 67px 67px 67px 67px 30px';
+    var cols='28px 67px 67px 67px 67px 1fr';
     var s='';
     /* 코스 헤더: 폰트 크게 */
     s+='<div style="'+_pca3+'background:'+bg+';text-align:center;font-size:11pt;font-weight:900;padding:4px 0;letter-spacing:3px;border-bottom:2px solid #666;">'+c+' 코 스</div>';
@@ -4199,7 +4222,14 @@ window.addEventListener('load', function(){
         pw.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>3코스 기록지</title><style>'+css+'</style></head><body>'+bh+'</body></html>');
         pw.document.close();
         pw.focus();
-        setTimeout(function(){pw.print();},800);
+        pw.onload = function(){
+          var imgs = pw.document.querySelectorAll('img');
+          var total = imgs.length, loaded = 0;
+          if(!total){ setTimeout(function(){pw.print();},400); return; }
+          function tryPrint(){ loaded++; if(loaded>=total) setTimeout(function(){pw.print();},200); }
+          Array.from(imgs).forEach(function(im){ if(im.complete) tryPrint(); else { im.onload=tryPrint; im.onerror=tryPrint; } });
+        };
+        setTimeout(function(){pw.print();},1500);
       };
       var w=0,wait=function(){if(allR()||w>=5000){doP();}else{w+=200;setTimeout(wait,200);}};
       wait();
