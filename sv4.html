@@ -3313,7 +3313,7 @@ window.addEventListener('load', function(){
         rows+='<div style="'+bI+bt+'background:#fff;"></div>';
         rows+='<div style="'+bR+bt+'"></div>';
       }
-      rows+='<div style="background:#f9f6f0;"></div></div>';
+      rows+='<div style="'+bt+'background:#f9f6f0;"></div></div>';
     }
     rows+='</div>';
     var pca='<-webkit-print-color-adjust:exact;print-color-adjust:exact;';
@@ -3650,7 +3650,7 @@ window.addEventListener('load', function(){
         rows+='<div style="'+bI+bt+'background:#fff;"></div>';
         rows+='<div style="'+bRW+bt+'background:#fff;"></div>';
       }
-      rows+='<div style="background:#f9f6f0;"></div></div>';
+      rows+='<div style="'+bt+'background:#f9f6f0;"></div></div>';
     }
     rows+='</div>';
     var sub='<div style="display:grid;grid-template-columns:'+cols+';height:33px;border-top:2px solid #666;">'
@@ -3723,8 +3723,8 @@ window.addEventListener('load', function(){
         +'</div>'
         +'<div style="display:flex;border:2px solid #666;border-top:none;">'
         +'<div style="flex:1;min-width:0;">'+totalRow+scoreRow+sigRow+noticeRow+'</div>'
-        +'<div style="width:210px;min-width:210px;min-height:204px;flex-shrink:0;border-left:2px solid #666;background:#fff;display:flex;align-items:center;justify-content:center;padding:8px;">'
-        +'<div id="'+qrId+'" style="width:188px;height:188px;flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;"></div>'
+        +'<div style="width:192px;min-width:192px;min-height:204px;flex-shrink:0;border-left:2px solid #666;background:#fff;display:flex;align-items:center;justify-content:center;padding:8px;">'
+        +'<div id="'+qrId+'" style="width:176px;height:176px;flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;"></div>'
         +'</div></div>';
       container.appendChild(page);
       setTimeout(function(qid,qt){ return function(){
@@ -3732,7 +3732,7 @@ window.addEventListener('load', function(){
         if(el&&typeof QRCode!=='undefined')
           try{
             new QRCode(el,{text:qt,width:800,height:800,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.L});
-            var cv=el.querySelector('canvas'); if(cv){cv.style.cssText='width:188px;height:188px;display:block;';}
+            var cv=el.querySelector('canvas'); if(cv){cv.style.cssText='width:176px;height:176px;display:block;';}
             var im=el.querySelector('img'); if(im) im.style.display='none';
           }catch(e){}
       };}(qrId,qrText), ti*40);
@@ -3745,7 +3745,7 @@ window.addEventListener('load', function(){
         var bh='';
         Array.from(pages.children).forEach(function(pd){
           var cl=pd.cloneNode(true);
-          pd.querySelectorAll('canvas').forEach(function(c,i){ try{ var img=document.createElement('img'); img.src=c.toDataURL('image/png'); img.style.cssText='width:188px;height:188px;display:block;'; var clc=cl.querySelectorAll('canvas')[i]; if(clc) clc.parentNode.replaceChild(img,clc); }catch(e){} });
+          pd.querySelectorAll('canvas').forEach(function(c,i){ try{ var img=document.createElement('img'); img.src=c.toDataURL('image/png'); img.style.cssText='width:176px;height:176px;display:block;'; var clc=cl.querySelectorAll('canvas')[i]; if(clc) clc.parentNode.replaceChild(img,clc); }catch(e){} });
           cl.querySelectorAll('img').forEach(function(im){ if(im.style.display==='none') im.remove(); });
           bh+='<div class="a4page">'+cl.innerHTML+'</div>';
         });
@@ -3950,8 +3950,8 @@ window.addEventListener('load', function(){
         +'</div>'
         +'<div style="display:flex;border:2px solid #666;border-top:none;">'
         +'<div style="flex:1;min-width:0;">'+totalRow+scoreRow+sigRow+noticeRow+'</div>'
-        +'<div style="width:210px;min-width:210px;min-height:204px;flex-shrink:0;border-left:2px solid #666;background:#fff;display:flex;align-items:center;justify-content:center;padding:8px;">'
-        +'<div id="'+qrId+'" style="width:188px;height:188px;flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;"></div>'
+        +'<div style="width:192px;min-width:192px;min-height:204px;flex-shrink:0;border-left:2px solid #666;background:#fff;display:flex;align-items:center;justify-content:center;padding:8px;">'
+        +'<div id="'+qrId+'" style="width:176px;height:176px;flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;"></div>'
         +'</div></div>';
       container.appendChild(page);
 
@@ -3960,7 +3960,7 @@ window.addEventListener('load', function(){
         if(el&&typeof QRCode!=='undefined')
           try{
             new QRCode(el,{text:qt,width:800,height:800,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.L});
-            var cv=el.querySelector('canvas'); if(cv){cv.style.cssText='width:188px;height:188px;display:block;';}
+            var cv=el.querySelector('canvas'); if(cv){cv.style.cssText='width:176px;height:176px;display:block;';}
             var im=el.querySelector('img'); if(im) im.style.display='none';
           }catch(e){}
       };}(qrId,qrText), ti*40);
@@ -3973,7 +3973,7 @@ window.addEventListener('load', function(){
         var bh='';
         Array.from(pages.children).forEach(function(pd){
           var cl=pd.cloneNode(true);
-          pd.querySelectorAll('canvas').forEach(function(c,i){ try{ var img=document.createElement('img'); img.src=c.toDataURL('image/png'); img.style.cssText='width:188px;height:188px;display:block;'; var clc=cl.querySelectorAll('canvas')[i]; if(clc) clc.parentNode.replaceChild(img,clc); }catch(e){} });
+          pd.querySelectorAll('canvas').forEach(function(c,i){ try{ var img=document.createElement('img'); img.src=c.toDataURL('image/png'); img.style.cssText='width:176px;height:176px;display:block;'; var clc=cl.querySelectorAll('canvas')[i]; if(clc) clc.parentNode.replaceChild(img,clc); }catch(e){} });
           cl.querySelectorAll('img').forEach(function(im){ if(im.style.display==='none') im.remove(); });
           bh+='<div class="a4page">'+cl.innerHTML+'</div>';
         });
@@ -4029,16 +4029,16 @@ window.addEventListener('load', function(){
         var bL3r=(pi===3)?'border-right:none;':bC;
         s+='<div style="background:#fff;'+bL3r+hBorder+'padding-left:4px;display:flex;align-items:center;"><span style="font-size:7pt;color:#c8860a;font-weight:900;">正</span></div>';
       }
-      s+='<div style="background:#f5f5f5;"></div>';
+      s+='<div style="'+hBorder+'background:#f5f5f5;"></div>';
       s+='</div>';
       /* 점수 줄: 正과 얇은 구분선 */
       s+='<div class="a4h3s" style="display:grid;grid-template-columns:'+cols+';height:8mm;">';
-      s+='<div style="'+_pca3+'background:'+bg+';'+bH+'text-align:center;font-size:6pt;font-weight:700;display:flex;align-items:center;justify-content:center;color:#c8860a;">(  )</div>';
+      s+='<div style="'+_pca3+'background:'+bg+';'+bH+hBorder+'text-align:center;font-size:6pt;font-weight:700;display:flex;align-items:center;justify-content:center;color:#c8860a;">(  )</div>';
       for(var pi=0;pi<4;pi++){
         var bL3s=(pi===3)?'border-right:none;':bC;
-        s+='<div style="background:#fff;'+bL3s+'padding-left:4px;display:flex;align-items:center;"></div>';
+        s+='<div style="background:#fff;'+bL3s+hBorder+'padding-left:4px;display:flex;align-items:center;"></div>';
       }
-      s+='<div style="background:#f5f5f5;"></div>';
+      s+='<div style="'+hBorder+'background:#f5f5f5;"></div>';
       s+='</div>';
     }
     s+='</div>';
@@ -4149,8 +4149,8 @@ window.addEventListener('load', function(){
         +'</div>'
         +'<div style="display:flex;border:2px solid #666;border-top:none;">'
         +'<div style="flex:1;min-width:0;display:flex;flex-direction:column;">'+totalRow+scoreRow+sigRow+noticeRow+'</div>'
-        +'<div style="width:160px;min-width:160px;flex-shrink:0;border-left:2px solid #666;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px;">'
-        +'<div id="'+qrId+'" style="width:144px;height:144px;overflow:hidden;"></div>'
+        +'<div style="width:192px;min-width:192px;flex-shrink:0;border-left:2px solid #666;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px;">'
+        +'<div id="'+qrId+'" style="width:176px;height:176px;overflow:hidden;"></div>'
         +'</div></div>';
       container.appendChild(page);
 
@@ -4159,7 +4159,7 @@ window.addEventListener('load', function(){
         if(el&&typeof QRCode!=='undefined')
           try{
             new QRCode(el,{text:qt,width:800,height:800,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
-            var cv=el.querySelector('canvas'); if(cv) cv.style.cssText='width:144px;height:144px;display:block;';
+            var cv=el.querySelector('canvas'); if(cv) cv.style.cssText='width:176px;height:176px;display:block;';
             var im=el.querySelector('img'); if(im) im.style.display='none';
           }catch(e){}
       };}(qrId,qrText), ti*40);
@@ -4176,7 +4176,7 @@ window.addEventListener('load', function(){
             try{
               var img=document.createElement('img');
               img.src=c.toDataURL('image/png');
-              img.style.cssText='width:144px;height:144px;display:block;';
+              img.style.cssText='width:176px;height:176px;display:block;';
               var clc=cl.querySelectorAll('canvas')[i];
               if(clc) clc.parentNode.replaceChild(img,clc);
             }catch(e){}
