@@ -3324,7 +3324,7 @@ window.addEventListener('load', function(){
       sub+='<div style="-webkit-print-color-adjust:exact;print-color-adjust:exact;background:'+bg+';'+bR+'height:100%;"></div>';
     }
     sub+='<div style="background:#f9f6f0;border-left:2px solid #666;border-top:none;"></div></div>';
-    return hdr+nameRow+subHdr+rows+sub;
+    return '<div style="width:100%;display:flex;flex-direction:column;">'+hdr+nameRow+subHdr+rows+sub+'</div>';
   }
 
   /* ══ QR 일괄 인쇄 — position:fixed 임시 해제 방식 ══ */
@@ -3667,7 +3667,7 @@ window.addEventListener('load', function(){
       sub+='<div style="'+_pca2+'background:'+bg+';'+bSub+'grid-column:span 2;"></div>';
     }
     sub+='<div style="background:#f9f6f0;border-left:2px solid #666;border-top:none;"></div></div>';
-    return hdr+nameRow+subHdr+rows+sub;
+    return '<div style="width:100%;display:flex;flex-direction:column;">'+hdr+nameRow+subHdr+rows+sub+'</div>';
   }
 
   function _openA4Sheet2Ov(teams,code,qrDate,webappUrl,c1,c2,dayStr){
@@ -3731,7 +3731,7 @@ window.addEventListener('load', function(){
         +'<div style="display:flex;border:2px solid #666;border-top:none;">'
         +'<div style="flex:1;min-width:0;">'+totalRow+scoreRow+sigRow+noticeRow+'</div>'
         +'<div style="width:192px;min-width:192px;min-height:204px;flex-shrink:0;border-left:2px solid #666;background:#fff;display:flex;align-items:center;justify-content:center;padding:8px;">'
-        +'<div id="'+qrId+'" style="width:176px;height:176px;flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;"></div>'
+        +'<div id="'+qrId+'" style="width:176px;height:176px;overflow:hidden;"></div>'
         +'</div></div>';
       container.appendChild(page);
       setTimeout(function(qid,qt){ return function(){
@@ -3850,7 +3850,7 @@ window.addEventListener('load', function(){
       sub+='<div style="'+_pca2+'background:'+bg+';'+bSub2d+'grid-column:span 2;"></div>';
     }
     sub+='<div style="background:#f9f6f0;border-left:2px solid #666;border-top:none;"></div></div>';
-    return hdr+nameRow+subHdr+rows+sub;
+    return '<div style="width:100%;display:flex;flex-direction:column;">'+hdr+nameRow+subHdr+rows+sub+'</div>';
   }
 
   window.generateTwoDaySheet = function(){
@@ -3966,7 +3966,7 @@ window.addEventListener('load', function(){
         +'<div style="display:flex;border:2px solid #666;border-top:none;">'
         +'<div style="flex:1;min-width:0;">'+totalRow+scoreRow+sigRow+noticeRow+'</div>'
         +'<div style="width:192px;min-width:192px;min-height:204px;flex-shrink:0;border-left:2px solid #666;background:#fff;display:flex;align-items:center;justify-content:center;padding:8px;">'
-        +'<div id="'+qrId+'" style="width:176px;height:176px;flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;"></div>'
+        +'<div id="'+qrId+'" style="width:176px;height:176px;overflow:hidden;"></div>'
         +'</div></div>';
       container.appendChild(page);
 
@@ -4073,7 +4073,7 @@ window.addEventListener('load', function(){
     }
     s+='<div style="background:#f0f0f0;border-left:2px solid #666;"></div>';
     s+='</div>';
-    return s;
+    return '<div style="width:100%;display:flex;flex-direction:column;">'+s+'</div>';
   }
 
   window.generateA4Sheet3Course = function(){
