@@ -3317,11 +3317,11 @@ window.addEventListener('load', function(){
     }
     rows+='</div>';
     var pca='<-webkit-print-color-adjust:exact;print-color-adjust:exact;';
-    var sub='<div style="display:grid;grid-template-columns:36px repeat(4,1fr) 1fr;height:28px;border-top:2px solid #666;">'
+    var sub='<div style="display:grid;grid-template-columns:36px repeat(8,1fr) 1fr;height:28px;border-top:2px solid #666;">'
       +'<div style="-webkit-print-color-adjust:exact;print-color-adjust:exact;background:'+bg+';font-size:9pt;font-weight:900;text-align:center;'+bC+'display:flex;align-items:center;justify-content:center;">'+c+'소계</div>';
     for(var pi=0;pi<4;pi++){
       var bR=(pi===3)?bE:bC;
-      sub+='<div style="-webkit-print-color-adjust:exact;print-color-adjust:exact;background:'+bg+';'+bR+'height:100%;"></div>';
+      sub+='<div style="-webkit-print-color-adjust:exact;print-color-adjust:exact;background:'+bg+';'+bR+'height:100%;grid-column:span 2;"></div>';
     }
     sub+='<div style="background:#f9f6f0;border-left:2px solid #666;border-top:none;"></div></div>';
     return hdr+nameRow+subHdr+rows+sub;
@@ -3638,7 +3638,7 @@ window.addEventListener('load', function(){
       var bR2=(pi===3)?'border-right:none;':bC;
       nameRow+='<div style="background:#fff;'+bR2+'border-bottom:2px solid #666;grid-column:span 2;display:flex;align-items:center;justify-content:center;padding:2px;"><div style="text-align:center;line-height:1.4;">'+nhtml+'</div></div>';
     }
-    nameRow+='<div style="background:#e8e0d0;text-align:center;border-left:2px solid #666;border-bottom:2px solid #666;font-weight:700;font-size:7.5pt;display:flex;align-items:center;justify-content:center;">심판</div></div>';
+    nameRow+='<div style="background:#e8e0d0;text-align:center;border-left:2px solid #666;border-bottom:2px solid #666;font-weight:700;font-size:11pt;display:flex;align-items:center;justify-content:center;">심판</div></div>';
     var subHdr='<div style="display:grid;grid-template-columns:'+cols+';">'
       +'<div style="background:#fff;'+bC+'border-bottom:1px solid #555;"></div>';
     for(var pi=0;pi<4;pi++){
@@ -3819,7 +3819,7 @@ window.addEventListener('load', function(){
       var bR2d=(pi===3)?'border-right:none;':bC;
       nameRow+='<div style="background:#fff;'+bR2d+'border-bottom:2px solid #666;grid-column:span 2;display:flex;align-items:center;justify-content:center;padding:2px;"><div style="text-align:center;line-height:1.4;">'+nhtml+'</div></div>';
     }
-    nameRow+='<div style="background:#e8e0d0;text-align:center;border-left:2px solid #666;border-bottom:2px solid #666;font-weight:700;font-size:7.5pt;display:flex;align-items:center;justify-content:center;">심판</div></div>';
+    nameRow+='<div style="background:#e8e0d0;text-align:center;border-left:2px solid #666;border-bottom:2px solid #666;font-weight:700;font-size:11pt;display:flex;align-items:center;justify-content:center;">심판</div></div>';
     var subHdr='<div style="display:grid;grid-template-columns:'+cols+';">'
       +'<div style="background:#fff;'+bC+'border-bottom:1px solid #555;"></div>';
     for(var pi=0;pi<4;pi++){
@@ -4058,12 +4058,12 @@ window.addEventListener('load', function(){
       s+='</div>';
       /* 점수 줄: 正과 얇은 구분선 */
       s+='<div class="a4h3s" style="display:grid;grid-template-columns:'+cols+';height:8mm;">';
-      s+='<div style="'+_pca3+'background:'+bg+';'+bH+hBorder+'text-align:center;font-size:6pt;font-weight:700;display:flex;align-items:center;justify-content:center;color:#c8860a;">(  )</div>';
+      s+='<div style="'+_pca3+'background:'+bg+';'+bH+'text-align:center;font-size:6pt;font-weight:700;display:flex;align-items:center;justify-content:center;color:#c8860a;">(  )</div>';
       for(var pi=0;pi<4;pi++){
         var bL3s=(pi===3)?'border-right:none;':bC;
-        s+='<div style="background:#fff;'+bL3s+hBorder+'padding-left:4px;display:flex;align-items:center;"></div>';
+        s+='<div style="background:#fff;'+bL3s+'padding-left:4px;display:flex;align-items:center;"></div>';
       }
-      s+='<div style="'+hBorder+'border-left:2px solid #666;background:#f5f5f5;"></div>';
+      s+='<div style="border-left:2px solid #666;background:#f5f5f5;"></div>';
       s+='</div>';
     }
     s+='</div>';
