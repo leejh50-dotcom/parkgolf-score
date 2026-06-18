@@ -3655,7 +3655,7 @@ window.addEventListener('load', function(){
     for(var pi=0;pi<4;pi++){
       sub+='<div style="'+_pca2+'background:'+bg+';border-right:2px solid #666;grid-column:span 2;"></div>';
     }
-    sub+='<div style="background:#f9f6f0;border-top:2px solid #666;"></div></div>';
+    sub+='<div style="background:#f9f6f0;border-top:none;"></div></div>';
     return hdr+nameRow+subHdr+rows+sub;
   }
 
@@ -3720,14 +3720,14 @@ window.addEventListener('load', function(){
         +'<div style="display:flex;border:2px solid #666;border-top:none;">'
         +'<div style="flex:1;min-width:0;">'+totalRow+scoreRow+sigRow+noticeRow+'</div>'
         +'<div style="width:220px;min-width:220px;flex-shrink:0;border-left:2px solid #666;background:#fff;display:flex;align-items:center;justify-content:center;padding:16px;">'
-        +'<div id="'+qrId+'" style="width:184px;height:184px;overflow:hidden;"></div>'
+        +'<div id="'+qrId+'" style="width:186px;height:186px;overflow:hidden;"></div>'
         +'</div></div>';
       container.appendChild(page);
       setTimeout(function(qid,qt){ return function(){
         var el=document.getElementById(qid);
         if(el&&typeof QRCode!=='undefined')
           try{
-            new QRCode(el,{text:qt,width:800,height:800,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.L});
+            new QRCode(el,{text:qt,width:186,height:186,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.L});
             var cv=el.querySelector('canvas'); if(cv) cv.style.cssText='width:140px;height:140px;display:block;';
             var im=el.querySelector('img'); if(im) im.style.display='none';
           }catch(e){}
@@ -3943,7 +3943,7 @@ window.addEventListener('load', function(){
         +'<div style="display:flex;border:2px solid #666;border-top:none;">'
         +'<div style="flex:1;min-width:0;">'+totalRow+scoreRow+sigRow+noticeRow+'</div>'
         +'<div style="width:220px;min-width:220px;flex-shrink:0;border-left:2px solid #666;background:#fff;display:flex;align-items:center;justify-content:center;padding:16px;">'
-        +'<div id="'+qrId+'" style="width:184px;height:184px;overflow:hidden;"></div>'
+        +'<div id="'+qrId+'" style="width:186px;height:186px;overflow:hidden;"></div>'
         +'</div></div>';
       container.appendChild(page);
 
@@ -4019,7 +4019,7 @@ window.addEventListener('load', function(){
       for(var pi=0;pi<4;pi++){
         s+='<div style="background:#fff;'+bC+'padding-left:4px;display:flex;align-items:center;"><span style="font-size:7pt;color:#c8860a;font-weight:900;">正</span></div>';
       }
-      s+='<div style="background:#f5f5f5;'+hBorder+'"></div>';
+      s+='<div style="background:#f5f5f5;"></div>';
       s+='</div>';
       /* 점수 줄: 正과 얇은 구분선 */
       s+='<div class="a4h3s" style="display:grid;grid-template-columns:'+cols+';height:8mm;border-top:1px solid #ccc;">';
