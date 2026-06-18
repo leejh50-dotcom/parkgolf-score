@@ -3313,7 +3313,7 @@ window.addEventListener('load', function(){
         rows+='<div style="'+bI+bt+'background:#fff;"></div>';
         rows+='<div style="'+bR+bt+'"></div>';
       }
-      rows+='<div style="'+bt+'background:#f9f6f0;"></div></div>';
+      rows+='<div style="background:#f9f6f0;"></div></div>';
     }
     rows+='</div>';
     var pca='<-webkit-print-color-adjust:exact;print-color-adjust:exact;';
@@ -3647,7 +3647,7 @@ window.addEventListener('load', function(){
         rows+='<div style="'+bI+bt+'background:#fff;"></div>';
         rows+='<div style="'+bC+bt+'background:#fff;"></div>';
       }
-      rows+='<div style="'+bt+'background:#f9f6f0;"></div></div>';
+      rows+='<div style="background:#f9f6f0;"></div></div>';
     }
     rows+='</div>';
     var sub='<div style="display:grid;grid-template-columns:'+cols+';height:33px;border-top:2px solid #666;">'
@@ -4014,12 +4014,12 @@ window.addEventListener('load', function(){
     for(var h=1;h<=9;h++){
       /* 正 줄: 위 홀과 굵은 경계 */
       var hBorder='border-top:1px solid #555;';
-      s+='<div class="a4h3r" style="display:grid;grid-template-columns:'+cols+';height:6mm;'+hBorder+'">';
-      s+='<div style="'+_pca3+'background:'+bg+';'+bH+'text-align:center;font-size:8pt;font-weight:900;display:flex;align-items:center;justify-content:center;">'+c+'-'+h+'</div>';
+      s+='<div class="a4h3r" style="display:grid;grid-template-columns:'+cols+';height:6mm;">';
+      s+='<div style="'+_pca3+'background:'+bg+';'+bH+hBorder+'text-align:center;font-size:8pt;font-weight:900;display:flex;align-items:center;justify-content:center;">'+c+'-'+h+'</div>';
       for(var pi=0;pi<4;pi++){
-        s+='<div style="background:#fff;'+bC+'padding-left:4px;display:flex;align-items:center;"><span style="font-size:7pt;color:#c8860a;font-weight:900;">正</span></div>';
+        s+='<div style="background:#fff;'+bC+hBorder+'padding-left:4px;display:flex;align-items:center;"><span style="font-size:7pt;color:#c8860a;font-weight:900;">正</span></div>';
       }
-      s+='<div style="background:#f5f5f5;border-top:none!important;"></div>';
+      s+='<div style="background:#f5f5f5;"></div>';
       s+='</div>';
       /* 점수 줄: 正과 얇은 구분선 */
       s+='<div class="a4h3s" style="display:grid;grid-template-columns:'+cols+';height:8mm;border-top:1px solid #ccc;">';
@@ -4027,7 +4027,7 @@ window.addEventListener('load', function(){
       for(var pi=0;pi<4;pi++){
         s+='<div style="background:#fff;'+bC+'padding-left:4px;display:flex;align-items:center;"></div>';
       }
-      s+='<div style="background:#f5f5f5;border-top:none!important;"></div>';
+      s+='<div style="background:#f5f5f5;"></div>';
       s+='</div>';
     }
     s+='</div>';
