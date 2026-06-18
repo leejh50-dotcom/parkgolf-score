@@ -3324,7 +3324,7 @@ window.addEventListener('load', function(){
       sub+='<div style="-webkit-print-color-adjust:exact;print-color-adjust:exact;background:'+bg+';'+bR+'height:100%;"></div>';
     }
     sub+='<div style="background:#f9f6f0;border-left:2px solid #666;border-top:none;"></div></div>';
-    return '<div style="width:100%;display:flex;flex-direction:column;">'+hdr+nameRow+subHdr+rows+sub+'</div>';
+    return hdr+nameRow+subHdr+rows+sub;
   }
 
   /* ══ QR 일괄 인쇄 — position:fixed 임시 해제 방식 ══ */
@@ -3667,7 +3667,7 @@ window.addEventListener('load', function(){
       sub+='<div style="'+_pca2+'background:'+bg+';'+bSub+'grid-column:span 2;"></div>';
     }
     sub+='<div style="background:#f9f6f0;border-left:2px solid #666;border-top:none;"></div></div>';
-    return '<div style="width:100%;display:flex;flex-direction:column;">'+hdr+nameRow+subHdr+rows+sub+'</div>';
+    return hdr+nameRow+subHdr+rows+sub;
   }
 
   function _openA4Sheet2Ov(teams,code,qrDate,webappUrl,c1,c2,dayStr){
@@ -3725,8 +3725,8 @@ window.addEventListener('load', function(){
         +'<span>일시: '+esc(dateStr)+'&nbsp;&nbsp;<span style="color:#888;font-size:8pt;">'+(ti+1)+' / '+teams.length+'페이지</span></span>'
         +'</div></div>'
         +'<div style="display:grid;grid-template-columns:1fr 1fr;border:2px solid #666;">'
-        +'<div style="border-right:2px solid #666;">'+_courseBlock2(c1,pLabels)+'</div>'
-        +'<div>'+_courseBlock2(c2,pLabels)+'</div>'
+        +'<div style="border-right:2px solid #666;min-width:0;overflow:hidden;">'+_courseBlock2(c1,pLabels)+'</div>'
+        +'<div style="min-width:0;overflow:hidden;">'+_courseBlock2(c2,pLabels)+'</div>'
         +'</div>'
         +'<div style="display:flex;border:2px solid #666;border-top:none;">'
         +'<div style="flex:1;min-width:0;">'+totalRow+scoreRow+sigRow+noticeRow+'</div>'
@@ -3738,11 +3738,12 @@ window.addEventListener('load', function(){
         var el=document.getElementById(qid);
         if(el&&typeof QRCode!=='undefined')
           try{
+            el.innerHTML='';
             new QRCode(el,{text:qt,width:800,height:800,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
             var cv=el.querySelector('canvas'); if(cv){cv.style.cssText='width:176px;height:176px;display:block;';}
             var im=el.querySelector('img'); if(im) im.style.display='none';
           }catch(e){}
-      };}(qrId,qrText), ti*40);
+      };}(qrId,qrText), 100+ti*40);
     });
 
     window._printA4Sheet2=function(){
@@ -3850,7 +3851,7 @@ window.addEventListener('load', function(){
       sub+='<div style="'+_pca2+'background:'+bg+';'+bSub2d+'grid-column:span 2;"></div>';
     }
     sub+='<div style="background:#f9f6f0;border-left:2px solid #666;border-top:none;"></div></div>';
-    return '<div style="width:100%;display:flex;flex-direction:column;">'+hdr+nameRow+subHdr+rows+sub+'</div>';
+    return hdr+nameRow+subHdr+rows+sub;
   }
 
   window.generateTwoDaySheet = function(){
@@ -3960,8 +3961,8 @@ window.addEventListener('load', function(){
         +'<span style="background:#e8f5e9;color:#2e7d32;padding:1px 8px;border-radius:4px;font-weight:900;">'+esc(startInfo)+'</span>'
         +'<span style="color:#888;font-size:8pt;">'+(ti+1)+' / '+teams.length+'페이지</span></div></div>'
         +'<div style="display:grid;grid-template-columns:1fr 1fr;border:2px solid #666;">'
-        +'<div style="border-right:2px solid #666;">'+_courseBlock2day(c1, pLabels, startCourse===c1?startHole:0)+'</div>'
-        +'<div>'+_courseBlock2day(c2, pLabels, startCourse===c2?startHole:0)+'</div>'
+        +'<div style="border-right:2px solid #666;min-width:0;overflow:hidden;">'+_courseBlock2day(c1, pLabels, startCourse===c1?startHole:0)+'</div>'
+        +'<div style="min-width:0;overflow:hidden;">'+_courseBlock2day(c2, pLabels, startCourse===c2?startHole:0)+'</div>'
         +'</div>'
         +'<div style="display:flex;border:2px solid #666;border-top:none;">'
         +'<div style="flex:1;min-width:0;">'+totalRow+scoreRow+sigRow+noticeRow+'</div>'
@@ -3974,11 +3975,12 @@ window.addEventListener('load', function(){
         var el=document.getElementById(qid);
         if(el&&typeof QRCode!=='undefined')
           try{
+            el.innerHTML='';
             new QRCode(el,{text:qt,width:800,height:800,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
             var cv=el.querySelector('canvas'); if(cv){cv.style.cssText='width:176px;height:176px;display:block;';}
             var im=el.querySelector('img'); if(im) im.style.display='none';
           }catch(e){}
-      };}(qrId,qrText), ti*40);
+      };}(qrId,qrText), 100+ti*40);
     });
 
     window._printTwoDaySheet=function(){
@@ -4073,7 +4075,7 @@ window.addEventListener('load', function(){
     }
     s+='<div style="background:#f0f0f0;border-left:2px solid #666;"></div>';
     s+='</div>';
-    return '<div style="width:100%;display:flex;flex-direction:column;">'+s+'</div>';
+    return s;
   }
 
   window.generateA4Sheet3Course = function(){
@@ -4164,11 +4166,11 @@ window.addEventListener('load', function(){
         +'<span>일시: '+esc(dateStr)+'&nbsp;&nbsp;<span style="color:#888;font-size:7.5pt;">'+(ti+1)+' / '+teams.length+'페이지</span></span>'
         +'</div></div>'
         +'<div style="display:grid;grid-template-columns:1fr 4px 1fr 4px 1fr;border:2px solid #666;">'
-        +'<div>'+_courseBlock3(c1,pLabels)+'</div>'
+        +'<div style="min-width:0;overflow:hidden;">'+_courseBlock3(c1,pLabels)+'</div>'
         +'<div style="background:#666;"></div>'
-        +'<div>'+_courseBlock3(c2,pLabels)+'</div>'
+        +'<div style="min-width:0;overflow:hidden;">'+_courseBlock3(c2,pLabels)+'</div>'
         +'<div style="background:#666;"></div>'
-        +'<div>'+_courseBlock3(c3,pLabels)+'</div>'
+        +'<div style="min-width:0;overflow:hidden;">'+_courseBlock3(c3,pLabels)+'</div>'
         +'</div>'
         +'<div style="display:flex;border:2px solid #666;border-top:none;">'
         +'<div style="flex:1;min-width:0;display:flex;flex-direction:column;">'+totalRow+scoreRow+sigRow+noticeRow+'</div>'
