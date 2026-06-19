@@ -507,40 +507,88 @@ function init() {
     APP.url  = decodeURIComponent(p.get('u') || '');
     APP.team = decodeURIComponent(p.get('t') || '');
     APP.date = decodeURIComponent(p.get('d') || '');
-    APP.hasParam = !!(APP.code && APP.url && APP.team);
-    // ★ co= 파라미터 (G열 코스) - 최우선 적용
-    var _co = p.get('co') || '';
-    if (_co) {
-      var _cp = _co.split(/[,\/\s]+/).map(function(s){return s.trim().toUpperCase();}).filter(function(s){return 'ABCD'.indexOf(s)>=0;});
-      if (_cp.length) {
-        // 중복 제거 후 ABCD 순서 정렬
-        var _uniq = [];
-        ['A','B','C','D'].forEach(function(x){ if(_cp.indexOf(x)>=0) _uniq.push(x); });
-        COURSES = _uniq.length ? _uniq : _cp;
-        APP._coFromParam = true;
-        APP.coursesFromG = true; // G열 출처 표시
-      }
+
+    // ★ QR에 &u=(GAS주소)가 없으면 localStorage → config.json 순으로 보완
+    //    (QR 길이를 줄여 안드로이드 스캔 안정성을 높이기 위함)
+    if (!APP.url) {
+      APP.url = localStorage.getItem('pasis_webapp_url') || '';
+    }
+    if (APP.url) {
+      try { localStorage.setItem('pasis_webapp_url', APP.url); } catch(e) {}
     }
 
-    if (APP.hasParam) {
-      APP.players = [];
-      for (var i = 1; i <= 4; i++) {
-        var raw = p.get(String(i)) || '';
-        if (!raw) continue;
-        var pts = decodeURIComponent(raw).split('|');
-        APP.players.push({
-          slot: i,
-          name:   (pts[0] || '').trim(),
-          gender: (pts[1] || '').trim(),
-          affil:  (pts[2] || '').trim(),
-          A:'', B:'', C:'', D:'', total:0, bigo:''
-        });
-      }
+    APP.hasParam = !!(APP.code && APP.url && APP.team);
+
+    if (!APP.url && APP.code && APP.team) {
+      // GAS주소를 아직 못 구함 → config.json 조회 후 마무리
+      fetchConfigAndFinish(p);
+      return;
     }
+
+    applyParsedParams(p);
   } catch(e) {}
 
   hide('loadingScreen');
   showCover();
+}
+
+// ── co=, players= 파라미터를 APP/COURSES에 반영 (공통) ──
+function applyParsedParams(p) {
+  // ★ co= 파라미터 (G열 코스) - 최우선 적용
+  var _co = p.get('co') || '';
+  if (_co) {
+    var _cp = _co.split(/[,\/\s]+/).map(function(s){return s.trim().toUpperCase();}).filter(function(s){return 'ABCD'.indexOf(s)>=0;});
+    if (_cp.length) {
+      // 중복 제거 후 ABCD 순서 정렬
+      var _uniq = [];
+      ['A','B','C','D'].forEach(function(x){ if(_cp.indexOf(x)>=0) _uniq.push(x); });
+      COURSES = _uniq.length ? _uniq : _cp;
+      APP._coFromParam = true;
+      APP.coursesFromG = true; // G열 출처 표시
+    }
+  }
+
+  if (APP.hasParam) {
+    APP.players = [];
+    for (var i = 1; i <= 4; i++) {
+      var raw = p.get(String(i)) || '';
+      if (!raw) continue;
+      var pts = decodeURIComponent(raw).split('|');
+      APP.players.push({
+        slot: i,
+        name:   (pts[0] || '').trim(),
+        gender: (pts[1] || '').trim(),
+        affil:  (pts[2] || '').trim(),
+        A:'', B:'', C:'', D:'', total:0, bigo:''
+      });
+    }
+  }
+}
+
+// ── config.json에서 GAS 주소(webappUrl)를 가져와 초기화 마무리 ──
+// QR에 &u= 없이 짧게 만든 경우를 위한 보완 경로.
+// config.json 예시: {"webappUrl":"https://script.google.com/macros/s/AKfycb.../exec"}
+function fetchConfigAndFinish(p) {
+  fetch('config.json', { cache: 'no-store' })
+    .then(function(r) { return r.json(); })
+    .then(function(cfg) {
+      APP.url = (cfg && cfg.webappUrl) ? String(cfg.webappUrl).trim() : '';
+      if (APP.url) {
+        try { localStorage.setItem('pasis_webapp_url', APP.url); } catch(e) {}
+      }
+      APP.hasParam = !!(APP.code && APP.url && APP.team);
+      applyParsedParams(p);
+    })
+    .catch(function() {
+      // config.json도 못 읽으면 연습 모드로 표시 (기존 동작 유지)
+      APP.hasParam = false;
+      applyParsedParams(p);
+    })
+    .then(function() {
+      hide('loadingScreen');
+      showCover();
+    });
+}
 }
 
 // ── 표지 ──
