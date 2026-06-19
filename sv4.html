@@ -3426,7 +3426,7 @@ window.addEventListener('load', function(){
           try{
             var img = document.createElement('img');
             img.src = c.toDataURL('image/png');
-            img.style.cssText = 'width:156px;height:156px;display:block;';
+            img.style.cssText = 'width:160px;height:160px;display:block;';
             if(cloneCanvases[i]) cloneCanvases[i].parentNode.replaceChild(img, cloneCanvases[i]);
           }catch(e){}
         });
@@ -3578,7 +3578,7 @@ window.addEventListener('load', function(){
         +'</div>'
         /* QR: 안내문 없이 QR만 */
         +'<div style="width:176px;min-width:176px;max-width:176px;flex-shrink:0;border-left:2px solid #666;background:#fff;display:flex;align-items:center;justify-content:center;padding:4px;">'
-        +'<div id="'+qrId+'" style="width:168px;height:168px;overflow:hidden;line-height:0;background:#fff;padding:6px;box-sizing:border-box;"></div>'
+        +'<div id="'+qrId+'" style="width:168px;height:168px;overflow:hidden;line-height:0;background:#fff;padding:4px;box-sizing:border-box;"></div>'
         +'</div></div>';
       container.appendChild(page);
       /* ★ QR 900px 생성 → CSS 156px 표시 (Quiet Zone 자체 padding 6px로 보장) */
@@ -3587,10 +3587,10 @@ window.addEventListener('load', function(){
         if(el&&typeof QRCode!=='undefined')
           try{
             el.innerHTML='';
-            new QRCode(el,{text:qt,width:312,height:312,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.Q});
+            new QRCode(el,{text:qt,width:320,height:320,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.L});
             /* canvas만 표시, img는 숨김 (QRCode.js가 두 개 생성) */
             var canvas=el.querySelector('canvas');
-            if(canvas){ canvas.style.cssText='width:156px;height:156px;display:block;'; }
+            if(canvas){ canvas.style.cssText='width:160px;height:160px;display:block;'; }
             var img=el.querySelector('img');
             if(img){ img.style.display='none'; }
           }catch(e){}
@@ -3756,7 +3756,7 @@ window.addEventListener('load', function(){
         +'<div style="display:flex;border:2px solid #666;border-top:none;">'
         +'<div style="flex:1;min-width:0;">'+totalRow+scoreRow+sigRow+noticeRow+'</div>'
         +'<div style="width:192px;min-width:192px;min-height:204px;flex-shrink:0;border-left:2px solid #666;background:#fff;display:flex;align-items:center;justify-content:center;padding:6px;">'
-        +'<div id="'+qrId+'" style="width:180px;height:180px;overflow:hidden;background:#fff;padding:6px;box-sizing:border-box;"></div>'
+        +'<div id="'+qrId+'" style="width:180px;height:180px;overflow:hidden;background:#fff;padding:4px;box-sizing:border-box;"></div>'
         +'</div></div>';
       container.appendChild(page);
       setTimeout(function(qid,qt){ return function(){
@@ -3764,8 +3764,8 @@ window.addEventListener('load', function(){
         if(el&&typeof QRCode!=='undefined')
           try{
             el.innerHTML='';
-            new QRCode(el,{text:qt,width:336,height:336,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.Q});
-            var cv=el.querySelector('canvas'); if(cv){cv.style.cssText='width:168px;height:168px;display:block;';}
+            new QRCode(el,{text:qt,width:344,height:344,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.L});
+            var cv=el.querySelector('canvas'); if(cv){cv.style.cssText='width:172px;height:172px;display:block;';}
             var im=el.querySelector('img'); if(im) im.style.display='none';
           }catch(e){}
       };}(qrId,qrText), 100+ti*40);
@@ -3780,7 +3780,7 @@ window.addEventListener('load', function(){
         var bh='';
         Array.from(pages.children).forEach(function(pd){
           var cl=pd.cloneNode(true);
-          pd.querySelectorAll('canvas').forEach(function(c,i){ try{ var img=document.createElement('img'); img.src=c.toDataURL('image/png'); img.style.cssText='width:168px;height:168px;display:block;'; var clc=cl.querySelectorAll('canvas')[i]; if(clc) clc.parentNode.replaceChild(img,clc); }catch(e){} });
+          pd.querySelectorAll('canvas').forEach(function(c,i){ try{ var img=document.createElement('img'); img.src=c.toDataURL('image/png'); img.style.cssText='width:172px;height:172px;display:block;'; var clc=cl.querySelectorAll('canvas')[i]; if(clc) clc.parentNode.replaceChild(img,clc); }catch(e){} });
           cl.querySelectorAll('img').forEach(function(im){ if(im.style.display==='none') im.remove(); });
           bh+='<div class="a4page">'+cl.innerHTML+'</div>';
         });
@@ -3994,7 +3994,7 @@ window.addEventListener('load', function(){
         +'<div style="display:flex;border:2px solid #666;border-top:none;">'
         +'<div style="flex:1;min-width:0;">'+totalRow+scoreRow+sigRow+noticeRow+'</div>'
         +'<div style="width:192px;min-width:192px;min-height:204px;flex-shrink:0;border-left:2px solid #666;background:#fff;display:flex;align-items:center;justify-content:center;padding:6px;">'
-        +'<div id="'+qrId+'" style="width:180px;height:180px;overflow:hidden;background:#fff;padding:6px;box-sizing:border-box;"></div>'
+        +'<div id="'+qrId+'" style="width:180px;height:180px;overflow:hidden;background:#fff;padding:4px;box-sizing:border-box;"></div>'
         +'</div></div>';
       container.appendChild(page);
 
@@ -4003,8 +4003,8 @@ window.addEventListener('load', function(){
         if(el&&typeof QRCode!=='undefined')
           try{
             el.innerHTML='';
-            new QRCode(el,{text:qt,width:336,height:336,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.Q});
-            var cv=el.querySelector('canvas'); if(cv){cv.style.cssText='width:168px;height:168px;display:block;';}
+            new QRCode(el,{text:qt,width:344,height:344,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.L});
+            var cv=el.querySelector('canvas'); if(cv){cv.style.cssText='width:172px;height:172px;display:block;';}
             var im=el.querySelector('img'); if(im) im.style.display='none';
           }catch(e){}
       };}(qrId,qrText), 100+ti*40);
@@ -4019,7 +4019,7 @@ window.addEventListener('load', function(){
         var bh='';
         Array.from(pages.children).forEach(function(pd){
           var cl=pd.cloneNode(true);
-          pd.querySelectorAll('canvas').forEach(function(c,i){ try{ var img=document.createElement('img'); img.src=c.toDataURL('image/png'); img.style.cssText='width:168px;height:168px;display:block;'; var clc=cl.querySelectorAll('canvas')[i]; if(clc) clc.parentNode.replaceChild(img,clc); }catch(e){} });
+          pd.querySelectorAll('canvas').forEach(function(c,i){ try{ var img=document.createElement('img'); img.src=c.toDataURL('image/png'); img.style.cssText='width:172px;height:172px;display:block;'; var clc=cl.querySelectorAll('canvas')[i]; if(clc) clc.parentNode.replaceChild(img,clc); }catch(e){} });
           cl.querySelectorAll('img').forEach(function(im){ if(im.style.display==='none') im.remove(); });
           bh+='<div class="a4page">'+cl.innerHTML+'</div>';
         });
@@ -4203,7 +4203,7 @@ window.addEventListener('load', function(){
         +'<div style="display:flex;border:2px solid #666;border-top:none;">'
         +'<div style="flex:1;min-width:0;display:flex;flex-direction:column;">'+totalRow+scoreRow+sigRow+noticeRow+'</div>'
         +'<div style="width:192px;min-width:192px;flex-shrink:0;border-left:2px solid #666;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px;">'
-        +'<div id="'+qrId+'" style="width:180px;height:180px;overflow:hidden;background:#fff;padding:6px;box-sizing:border-box;"></div>'
+        +'<div id="'+qrId+'" style="width:180px;height:180px;overflow:hidden;background:#fff;padding:4px;box-sizing:border-box;"></div>'
         +'</div></div>';
       container.appendChild(page);
 
@@ -4212,8 +4212,8 @@ window.addEventListener('load', function(){
         if(el&&typeof QRCode!=='undefined')
           try{
             el.innerHTML='';
-            new QRCode(el,{text:qt,width:336,height:336,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.Q});
-            var cv=el.querySelector('canvas'); if(cv) cv.style.cssText='width:168px;height:168px;display:block;';
+            new QRCode(el,{text:qt,width:344,height:344,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.L});
+            var cv=el.querySelector('canvas'); if(cv) cv.style.cssText='width:172px;height:172px;display:block;';
             var im=el.querySelector('img'); if(im) im.style.display='none';
           }catch(e){}
       };}(qrId,qrText), 100+ti*40);
@@ -4230,7 +4230,7 @@ window.addEventListener('load', function(){
             try{
               var img=document.createElement('img');
               img.src=c.toDataURL('image/png');
-              img.style.cssText='width:168px;height:168px;display:block;';
+              img.style.cssText='width:172px;height:172px;display:block;';
               var clc=cl.querySelectorAll('canvas')[i];
               if(clc) clc.parentNode.replaceChild(img,clc);
             }catch(e){}
