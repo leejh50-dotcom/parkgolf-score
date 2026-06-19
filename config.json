@@ -1,3 +1,6 @@
 {
-  "webappUrl": "https://script.google.com/macros/s/AKfycbx8Wx2GaRDZLME5928DUyyUGoLMtggvpJaJMC2cIhtY7xrt3l_lmhBjUbXKVvaHHsol/exec"
+  "default": "https://script.google.com/macros/s/AKfycbynunb1c-V8g1scvtszpeOJ9WbOLneRIo6_zKgf2rABlQKVfg71femesyq52PtI7Uk8OA/exec",
+  "byCode": {
+    "TEST": "https://script.google.com/macros/s/AKfycbx8Wx2GaRDZLME5928DUyyUGoLMtggvpJaJMC2cIhtY7xrt3l_lmhBjUbXKVvaHHsol/exec"
+  }
 }
