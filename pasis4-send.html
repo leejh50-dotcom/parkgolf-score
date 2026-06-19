@@ -508,13 +508,15 @@ function init() {
     APP.team = decodeURIComponent(p.get('t') || '');
     APP.date = decodeURIComponent(p.get('d') || '');
 
-    // ★ QR에 &u=(GAS주소)가 없으면 localStorage → config.json 순으로 보완
+    // ★ QR에 &u=(GAS주소)가 없으면 대회코드별 캐시 → config.json 순으로 보완
     //    (QR 길이를 줄여 안드로이드 스캔 안정성을 높이기 위함)
+    //    캐시 키를 대회코드별로 분리해 실전/시범용 URL이 서로 섞이지 않게 함.
+    var cacheKey = 'pasis_webapp_url_' + APP.code;
     if (!APP.url) {
-      APP.url = localStorage.getItem('pasis_webapp_url') || '';
+      APP.url = localStorage.getItem(cacheKey) || '';
     }
     if (APP.url) {
-      try { localStorage.setItem('pasis_webapp_url', APP.url); } catch(e) {}
+      try { localStorage.setItem(cacheKey, APP.url); } catch(e) {}
     }
 
     APP.hasParam = !!(APP.code && APP.url && APP.team);
@@ -567,14 +569,27 @@ function applyParsedParams(p) {
 
 // ── config.json에서 GAS 주소(webappUrl)를 가져와 초기화 마무리 ──
 // QR에 &u= 없이 짧게 만든 경우를 위한 보완 경로.
-// config.json 예시: {"webappUrl":"https://script.google.com/macros/s/AKfycb.../exec"}
+// config.json 구조:
+//   {
+//     "default": "실전용 웹앱 URL",
+//     "byCode": { "TEST": "시범/테스트용 웹앱 URL", "기타코드": "..." }
+//   }
+// → 대회코드에 byCode의 키(예: "TEST")가 포함되어 있으면 그 URL을, 아니면 default를 사용.
+//   예: "2026TEST", "TEST365" 모두 "TEST"를 포함하므로 매칭됨.
 function fetchConfigAndFinish(p) {
+  var cacheKey = 'pasis_webapp_url_' + APP.code;
   fetch('config.json', { cache: 'no-store' })
     .then(function(r) { return r.json(); })
     .then(function(cfg) {
-      APP.url = (cfg && cfg.webappUrl) ? String(cfg.webappUrl).trim() : '';
+      var byCode = (cfg && cfg.byCode) ? cfg.byCode : {};
+      var picked = '';
+      for (var key in byCode) {
+        if (APP.code.indexOf(key.toUpperCase()) >= 0) { picked = byCode[key]; break; }
+      }
+      if (!picked) picked = (cfg && cfg.default) || '';
+      APP.url = String(picked || '').trim();
       if (APP.url) {
-        try { localStorage.setItem('pasis_webapp_url', APP.url); } catch(e) {}
+        try { localStorage.setItem(cacheKey, APP.url); } catch(e) {}
       }
       APP.hasParam = !!(APP.code && APP.url && APP.team);
       applyParsedParams(p);
