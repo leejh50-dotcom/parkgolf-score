@@ -3510,7 +3510,7 @@ window.addEventListener('load', function(){
         return p.name?(p.name+(p.affil?' ('+p.affil+')':'')):'경기자 '+(i+1);
       });
       var coParam='&co=A,B,C,D';
-      var qrText=appUrl+'?c='+encodeURIComponent(code)+'&u='+encodeURIComponent(webappUrl)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam;
+      var qrText=appUrl+'?c='+encodeURIComponent(code)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam;
       players.forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||'')); });
 
       /* ★ 합계/서명 같은 높이, 이름 크게, 여백 없이 */
@@ -3716,7 +3716,7 @@ window.addEventListener('load', function(){
       while(players.length<4) players.push({name:'',gender:'',affil:''});
       var pLabels=players.map(function(p,i){ return p.name?(p.name+(p.affil?' ('+p.affil+')':'')):'경기자 '+(i+1); });
       var coParam='&co='+c1+','+c2;
-      var qrText=appUrl+'?c='+encodeURIComponent(code)+'&u='+encodeURIComponent(webappUrl)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam;
+      var qrText=appUrl+'?c='+encodeURIComponent(code)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam;
       players.forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||'')); });
 
       var bT='border-top:1px solid #555;'; var bC2='border-right:2px solid #666;';
@@ -3953,7 +3953,7 @@ window.addEventListener('load', function(){
       var pLabels=players.map(function(p,i){ return p.name?(p.name+(p.affil?' ('+p.affil+')':'')):'경기자 '+(i+1); });
 
       var coParam='&co='+c1+','+c2;
-      var qrText=appUrl+'?c='+encodeURIComponent(code)+'&u='+encodeURIComponent(webappUrl)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam;
+      var qrText=appUrl+'?c='+encodeURIComponent(code)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam;
       players.forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||'')); });
 
       var bC2='border-right:2px solid #666;'; var bT='border-top:1px solid #555;';
@@ -4159,7 +4159,7 @@ window.addEventListener('load', function(){
       while(players.length<4) players.push({name:'',gender:'',affil:''});
       var pLabels=players.map(function(p,i){return p.name?(p.name+(p.affil?' ('+p.affil+')':'')):'경기자 '+(i+1);});
       var coParam='&co='+c1+','+c2+','+c3;
-      var qrText=appUrl+'?c='+encodeURIComponent(code)+'&u='+encodeURIComponent(webappUrl)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam;
+      var qrText=appUrl+'?c='+encodeURIComponent(code)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam;
       players.forEach(function(p,i){qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||''));});
 
       var bC2='border-right:2px solid #666;'; var bT='border-top:1px solid #555;';
@@ -4432,12 +4432,12 @@ window.addEventListener('load', function(){
 
     function makeCard(teamObj, cardIdx, cardTotal){
       var coParam=(teamObj.courses&&teamObj.courses.length)?'&co='+encodeURIComponent(teamObj.courses.join(',')):'';
-      var qrText=appUrl+'?c='+encodeURIComponent(code)+'&u='+encodeURIComponent(webappUrl)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam;
+      var qrText=appUrl+'?c='+encodeURIComponent(code)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam;
       (teamObj.players||[]).forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||'')); });
 
       /* ★ QR URL 길이 체크: 2000자 초과 시 소속 생략하여 단축 */
       if(qrText.length > 2000){
-        qrText=appUrl+'?c='+encodeURIComponent(code)+'&u='+encodeURIComponent(webappUrl)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam;
+        qrText=appUrl+'?c='+encodeURIComponent(code)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam;
         (teamObj.players||[]).forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'); });
       }
 
