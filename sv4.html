@@ -3426,7 +3426,7 @@ window.addEventListener('load', function(){
           try{
             var img = document.createElement('img');
             img.src = c.toDataURL('image/png');
-            img.style.cssText = 'width:156px;height:156px;display:block;image-rendering:pixelated;';
+            img.style.cssText = 'width:156px;height:156px;display:block;';
             if(cloneCanvases[i]) cloneCanvases[i].parentNode.replaceChild(img, cloneCanvases[i]);
           }catch(e){}
         });
@@ -3587,10 +3587,10 @@ window.addEventListener('load', function(){
         if(el&&typeof QRCode!=='undefined')
           try{
             el.innerHTML='';
-            new QRCode(el,{text:qt,width:900,height:900,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.Q});
+            new QRCode(el,{text:qt,width:312,height:312,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.Q});
             /* canvas만 표시, img는 숨김 (QRCode.js가 두 개 생성) */
             var canvas=el.querySelector('canvas');
-            if(canvas){ canvas.style.cssText='width:156px;height:156px;display:block;image-rendering:pixelated;'; }
+            if(canvas){ canvas.style.cssText='width:156px;height:156px;display:block;'; }
             var img=el.querySelector('img');
             if(img){ img.style.display='none'; }
           }catch(e){}
@@ -3744,11 +3744,10 @@ window.addEventListener('load', function(){
       var page=document.createElement('div');
       page.style.cssText='background:#fff;margin-bottom:12px;border-radius:8px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.12);padding:8px;';
       page.innerHTML=
-        '<div style="margin-bottom:2px;display:flex;align-items:baseline;justify-content:center;gap:10px;flex-wrap:nowrap;">'
-        +'<span style="font-size:13pt;font-weight:900;color:#111;">'+esc(code)+' 파크골프대회'+(dayStr?' '+esc(dayStr):'')+'</span>'
-        +'<span style="font-size:9.5pt;font-weight:900;color:#1a237e;">조명: '+esc(teamObj.team||'')+'</span>'
-        +'<span style="font-size:8.5pt;color:#444;font-weight:600;">일시: '+esc(dateStr)+'</span>'
-        +'<span style="font-size:8pt;color:#888;">'+(ti+1)+' / '+teams.length+'페이지</span>'
+        '<div style="margin-bottom:2px;display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:nowrap;">'
+        +'<span style="font-size:9.5pt;font-weight:900;color:#1a237e;flex-shrink:0;">조명: '+esc(teamObj.team||'')+'</span>'
+        +'<span style="font-size:13pt;font-weight:900;color:#111;flex:1;text-align:center;">'+esc(code)+' 파크골프대회'+(dayStr?' '+esc(dayStr):'')+'</span>'
+        +'<span style="font-size:8.5pt;color:#444;font-weight:600;flex-shrink:0;white-space:nowrap;">일시: '+esc(dateStr)+'&nbsp;&nbsp;<span style="font-size:8pt;color:#888;">'+(ti+1)+' / '+teams.length+'페이지</span></span>'
         +'</div>'
         +'<div style="display:grid;grid-template-columns:1fr 1fr;border:2px solid #666;">'
         +'<div style="border-right:2px solid #666;min-width:0;overflow:hidden;">'+_courseBlock2(c1,pLabels)+'</div>'
@@ -3765,8 +3764,8 @@ window.addEventListener('load', function(){
         if(el&&typeof QRCode!=='undefined')
           try{
             el.innerHTML='';
-            new QRCode(el,{text:qt,width:900,height:900,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.Q});
-            var cv=el.querySelector('canvas'); if(cv){cv.style.cssText='width:168px;height:168px;display:block;image-rendering:pixelated;';}
+            new QRCode(el,{text:qt,width:336,height:336,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.Q});
+            var cv=el.querySelector('canvas'); if(cv){cv.style.cssText='width:168px;height:168px;display:block;';}
             var im=el.querySelector('img'); if(im) im.style.display='none';
           }catch(e){}
       };}(qrId,qrText), 100+ti*40);
@@ -3781,7 +3780,7 @@ window.addEventListener('load', function(){
         var bh='';
         Array.from(pages.children).forEach(function(pd){
           var cl=pd.cloneNode(true);
-          pd.querySelectorAll('canvas').forEach(function(c,i){ try{ var img=document.createElement('img'); img.src=c.toDataURL('image/png'); img.style.cssText='width:168px;height:168px;display:block;image-rendering:pixelated;'; var clc=cl.querySelectorAll('canvas')[i]; if(clc) clc.parentNode.replaceChild(img,clc); }catch(e){} });
+          pd.querySelectorAll('canvas').forEach(function(c,i){ try{ var img=document.createElement('img'); img.src=c.toDataURL('image/png'); img.style.cssText='width:168px;height:168px;display:block;'; var clc=cl.querySelectorAll('canvas')[i]; if(clc) clc.parentNode.replaceChild(img,clc); }catch(e){} });
           cl.querySelectorAll('img').forEach(function(im){ if(im.style.display==='none') im.remove(); });
           bh+='<div class="a4page">'+cl.innerHTML+'</div>';
         });
@@ -4004,8 +4003,8 @@ window.addEventListener('load', function(){
         if(el&&typeof QRCode!=='undefined')
           try{
             el.innerHTML='';
-            new QRCode(el,{text:qt,width:900,height:900,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.Q});
-            var cv=el.querySelector('canvas'); if(cv){cv.style.cssText='width:168px;height:168px;display:block;image-rendering:pixelated;';}
+            new QRCode(el,{text:qt,width:336,height:336,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.Q});
+            var cv=el.querySelector('canvas'); if(cv){cv.style.cssText='width:168px;height:168px;display:block;';}
             var im=el.querySelector('img'); if(im) im.style.display='none';
           }catch(e){}
       };}(qrId,qrText), 100+ti*40);
@@ -4020,7 +4019,7 @@ window.addEventListener('load', function(){
         var bh='';
         Array.from(pages.children).forEach(function(pd){
           var cl=pd.cloneNode(true);
-          pd.querySelectorAll('canvas').forEach(function(c,i){ try{ var img=document.createElement('img'); img.src=c.toDataURL('image/png'); img.style.cssText='width:168px;height:168px;display:block;image-rendering:pixelated;'; var clc=cl.querySelectorAll('canvas')[i]; if(clc) clc.parentNode.replaceChild(img,clc); }catch(e){} });
+          pd.querySelectorAll('canvas').forEach(function(c,i){ try{ var img=document.createElement('img'); img.src=c.toDataURL('image/png'); img.style.cssText='width:168px;height:168px;display:block;'; var clc=cl.querySelectorAll('canvas')[i]; if(clc) clc.parentNode.replaceChild(img,clc); }catch(e){} });
           cl.querySelectorAll('img').forEach(function(im){ if(im.style.display==='none') im.remove(); });
           bh+='<div class="a4page">'+cl.innerHTML+'</div>';
         });
@@ -4189,11 +4188,10 @@ window.addEventListener('load', function(){
       var page=document.createElement('div');
       page.style.cssText='background:#fff;margin-bottom:12px;border-radius:8px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.12);padding:8px;';
       page.innerHTML=
-        '<div style="margin-bottom:2px;display:flex;align-items:baseline;justify-content:center;gap:10px;flex-wrap:nowrap;">'
-        +'<span style="font-size:12pt;font-weight:900;color:#111;">'+esc(code)+' 파크골프대회'+(dayStr?' '+esc(dayStr):'')+'</span>'
-        +'<span style="font-size:9.5pt;font-weight:900;color:#1a237e;">조명: '+esc(teamObj.team||'')+'</span>'
-        +'<span style="font-size:8.5pt;color:#444;font-weight:600;">일시: '+esc(dateStr)+'</span>'
-        +'<span style="font-size:8pt;color:#888;">'+(ti+1)+' / '+teams.length+'페이지</span>'
+        '<div style="margin-bottom:2px;display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:nowrap;">'
+        +'<span style="font-size:9.5pt;font-weight:900;color:#1a237e;flex-shrink:0;">조명: '+esc(teamObj.team||'')+'</span>'
+        +'<span style="font-size:12pt;font-weight:900;color:#111;flex:1;text-align:center;">'+esc(code)+' 파크골프대회'+(dayStr?' '+esc(dayStr):'')+'</span>'
+        +'<span style="font-size:8.5pt;color:#444;font-weight:600;flex-shrink:0;white-space:nowrap;">일시: '+esc(dateStr)+'&nbsp;&nbsp;<span style="font-size:8pt;color:#888;">'+(ti+1)+' / '+teams.length+'페이지</span></span>'
         +'</div>'
         +'<div style="display:grid;grid-template-columns:1fr 4px 1fr 4px 1fr;border:2px solid #666;">'
         +'<div style="min-width:0;overflow:hidden;">'+_courseBlock3(c1,pLabels)+'</div>'
@@ -4214,8 +4212,8 @@ window.addEventListener('load', function(){
         if(el&&typeof QRCode!=='undefined')
           try{
             el.innerHTML='';
-            new QRCode(el,{text:qt,width:900,height:900,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.Q});
-            var cv=el.querySelector('canvas'); if(cv) cv.style.cssText='width:168px;height:168px;display:block;image-rendering:pixelated;';
+            new QRCode(el,{text:qt,width:336,height:336,colorDark:'#000000',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.Q});
+            var cv=el.querySelector('canvas'); if(cv) cv.style.cssText='width:168px;height:168px;display:block;';
             var im=el.querySelector('img'); if(im) im.style.display='none';
           }catch(e){}
       };}(qrId,qrText), 100+ti*40);
@@ -4232,7 +4230,7 @@ window.addEventListener('load', function(){
             try{
               var img=document.createElement('img');
               img.src=c.toDataURL('image/png');
-              img.style.cssText='width:168px;height:168px;display:block;image-rendering:pixelated;';
+              img.style.cssText='width:168px;height:168px;display:block;';
               var clc=cl.querySelectorAll('canvas')[i];
               if(clc) clc.parentNode.replaceChild(img,clc);
             }catch(e){}
