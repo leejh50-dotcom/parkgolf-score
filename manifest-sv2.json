@@ -1,12 +1,12 @@
 {
-  "name": "파시스2 (SV2.0)",
-  "short_name": "파시스2",
-  "start_url": "./sv2.html",
-  "display": "standalone",
-  "background_color": "#16a34a",
-  "theme_color": "#16a34a",
-  "icons": [
-    { "src": "sv2-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "sv2-512.png", "sizes": "512x512", "type": "image/png" }
-  ]
+    "name": "파시스2",
+    "short_name": "파시스2",
+    "start_url": "./sv2.html",
+    "display": "standalone",
+    "background_color": "#16a34a",
+    "theme_color": "#16a34a",
+    "icons": [
+      { "src": "sv2-192.png", "sizes": "192x192", "type": "image/png" },
+      { "src": "sv2-512.png", "sizes": "512x512", "type": "image/png" }
+    ]
 }
