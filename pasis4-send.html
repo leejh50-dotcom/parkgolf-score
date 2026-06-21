@@ -58,6 +58,25 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
 .cv-team-label{font-size:11px;color:rgba(255,255,255,.65);font-weight:700;letter-spacing:1px;margin-bottom:2px;}
 .cv-team-name{font-size:20px;font-weight:900;color:#fff;}
 .cv-team-code{font-size:11px;color:rgba(255,255,255,.7);margin-top:2px;font-weight:600;}
+.cv-lock-card{
+  background:rgba(255,255,255,.15);backdrop-filter:blur(8px);
+  border:1.5px solid rgba(255,255,255,.25);border-radius:14px;
+  padding:18px 18px;margin-bottom:16px;width:100%;max-width:320px;text-align:center;
+}
+.cv-lock-icon{font-size:30px;margin-bottom:4px;}
+.cv-lock-label{font-size:15px;color:#fff;font-weight:900;margin-bottom:2px;}
+.cv-lock-desc{font-size:12px;color:rgba(255,255,255,.7);font-weight:600;margin-bottom:12px;}
+.cv-lock-input{
+  width:100%;box-sizing:border-box;padding:14px;border-radius:10px;border:none;
+  font-size:18px;text-align:center;font-weight:800;margin-bottom:10px;
+  font-family:'Noto Sans KR',sans-serif;
+}
+.cv-lock-btn{
+  width:100%;padding:14px;background:#fff;color:var(--gold-dk);
+  border:none;border-radius:10px;font-size:16px;font-weight:900;cursor:pointer;
+  font-family:'Noto Sans KR',sans-serif;
+}
+.cv-lock-err{font-size:12px;color:#ffd2d2;font-weight:700;margin-top:8px;}
 .cv-no-param{
   background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.2);
   border-radius:14px;padding:8px 18px;margin-bottom:16px;
@@ -390,6 +409,15 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
     <div class="cv-team-name" id="cvTeamName"></div>
     <div class="cv-team-code" id="cvTeamCode"></div>
   </div>
+  <!-- 심판 암호 잠금 화면 (선수 노출 방지) -->
+  <div class="cv-lock-card" id="cvLockCard" style="display:none">
+    <div class="cv-lock-icon">🔒</div>
+    <div class="cv-lock-label">심판 확인</div>
+    <div class="cv-lock-desc">대회 암호를 입력해주세요</div>
+    <input type="text" id="cvLockInput" class="cv-lock-input" placeholder="암호 입력" autocomplete="off" maxlength="10" onkeypress="if(event.key==='Enter')checkLockPw();">
+    <button class="cv-lock-btn" id="cvLockBtn" onclick="checkLockPw()">확인</button>
+    <div class="cv-lock-err" id="cvLockErr" style="display:none">암호가 틀렸습니다</div>
+  </div>
   <div class="cv-no-param" id="cvNoParam" style="display:none">
     <div class="cv-no-param-txt">
       QR코드를 카메라로 스캔하면<br>
@@ -488,7 +516,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:#ddd8cc;min-height:100vh;c
 
 <script>
 var PASIS_SECRET = 'PASIS2026SV4'; // GAS SECRET_KEY 와 반드시 일치
-var APP = { code:'', url:'', team:'', date:'', players:[], hasParam:false };
+var APP = { code:'', url:'', team:'', date:'', players:[], hasParam:false, lockPw:'' };
 var COURSES = ['A','B','C','D'];
 
 // ── 화면 전환 헬퍼 ──
@@ -507,6 +535,7 @@ function init() {
     APP.url  = decodeURIComponent(p.get('u') || '');
     APP.team = decodeURIComponent(p.get('t') || '');
     APP.date = decodeURIComponent(p.get('d') || '');
+    APP.lockPw = (p.get('pw') || '').trim(); // ★ 그날의 잠금 암호 (인쇄 시 관리자가 지정, QR에 직접 포함)
 
     // ★ QR에 &u=(GAS주소)가 없으면 대회코드별 캐시 → config.json 순으로 보완
     //    (QR 길이를 줄여 안드로이드 스캔 안정성을 높이기 위함)
@@ -533,6 +562,7 @@ function init() {
   hide('loadingScreen');
   showCover();
 }
+
 
 // ── co=, players= 파라미터를 APP/COURSES에 반영 (공통) ──
 function applyParsedParams(p) {
@@ -606,13 +636,25 @@ function fetchConfigAndFinish(p) {
 }
 
 // ── 표지 ──
+// ※ 전송자는 매 코스·매 조마다 다른 심판(다른 휴대폰)이므로
+//    "한 번 인증하면 유지" 캐시를 두지 않고 매번 암호를 확인한다.
 function showCover() {
   show('coverScreen', true);
   hide('mainContent');
 
   var hasParam = APP.hasParam;
-  document.getElementById('cvTeamCard').style.display = hasParam ? 'block' : 'none';
-  document.getElementById('cvNoParam').style.display  = hasParam ? 'none'  : 'block';
+  var needLock = hasParam && APP.lockPw;
+
+  document.getElementById('cvTeamCard').style.display = (hasParam && !needLock) ? 'block' : 'none';
+  document.getElementById('cvLockCard').style.display  = needLock ? 'block' : 'none';
+  document.getElementById('cvNoParam').style.display   = hasParam ? 'none'  : 'block';
+  document.getElementById('cvStartBtn').style.display  = needLock ? 'none' : 'block';
+
+  if (needLock) {
+    document.getElementById('cvLockErr').style.display = 'none';
+    document.getElementById('cvLockInput').value = '';
+    return;
+  }
 
   if (hasParam) {
     document.getElementById('cvTeamName').textContent = APP.team;
@@ -621,6 +663,17 @@ function showCover() {
     document.getElementById('cvStartBtn').textContent = '▶ 점수 입력 시작';
   } else {
     document.getElementById('cvStartBtn').innerHTML = '점수입력<br><span style="font-size:18px;font-weight:700;opacity:.75">(연습용)</span>';
+  }
+}
+
+// ── 잠금 암호 확인 (이 화면에서만 1회 사용, 별도 저장 없음) ──
+function checkLockPw() {
+  var v = (document.getElementById('cvLockInput').value || '').trim();
+  if (v === APP.lockPw) {
+    APP.lockPw = ''; // 통과했으니 이 화면 안에서만 잠금 해제 (페이지 새로고침하면 다시 잠김)
+    showCover();
+  } else {
+    document.getElementById('cvLockErr').style.display = 'block';
   }
 }
 
