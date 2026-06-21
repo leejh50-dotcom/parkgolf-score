@@ -654,6 +654,14 @@ html, body {
           </button>
         </div>
 
+        <!-- 🔒 오늘의 QR암호(선택) - QR에 포함되어, 심판이 점수 입력 화면을 열기 전 확인용 -->
+        <div style="margin-bottom:10px;">
+          <label style="display:block;font-size:13px;font-weight:900;color:#c2410c;margin-bottom:4px;padding-left:2px;">🔒 오늘의 QR암호</label>
+          <input id="lockPwInput" type="text" placeholder="예: 29 (선택, 심판 확인용)" maxlength="6" inputmode="numeric"
+            style="width:100%; padding:12px 14px; border:3px solid #f97316; border-radius:10px; font-size:16px; font-weight:900; box-sizing:border-box; outline:none; background:#fff7ed; letter-spacing:3px; text-align:center;" />
+          <div style="font-size:11px;color:#9a3412;margin-top:4px;padding-left:2px;">※ 대회 시작 전 모든 심판에게 미리 안내. 비워두면 암호 확인 없이 바로 입력화면이 열립니다.</div>
+        </div>
+
         <button onclick="showSavedUrlsList()"
           style="width:100%; padding:13px; background:#6b7280; color:#fff; border:none; border-radius:10px; font-size:15px; font-weight:900; cursor:pointer;">
           저장된 URL 목록
@@ -781,17 +789,6 @@ html, body {
       <input type="text" id="tournamentCode" placeholder="대회코드"
         style="width: 100%; text-align: center; font-weight: 900; background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
               border: 3px solid #00acc1; padding: 14px 14px; letter-spacing: 2px; text-transform: uppercase; box-sizing: border-box;font-size:20px!important;">
-    </div>
-  </div>
-
-  <!-- 🔒 오늘의 암호(선택) - QR에 포함되어, 심판이 점수 입력 화면을 열기 전 확인용 -->
-  <div class="input-group">
-    <div style="position: relative; width: 100%;">
-      <label style="display:block;font-size:13px;font-weight:900;color:#c2410c;margin-bottom:4px;padding-left:2px;">🔒 오늘의 암호 (심판 확인용, 2자리 숫자 권장)</label>
-      <input type="text" id="lockPwInput" placeholder="예: 29" maxlength="6" inputmode="numeric"
-        style="width: 100%; text-align: center; font-weight: 900; background: linear-gradient(135deg, #fff7ed 0%, #fed7aa 100%);
-              border: 3px solid #f97316; padding: 14px 14px; letter-spacing: 4px; box-sizing: border-box;font-size:20px!important;">
-      <div style="font-size:11px;color:#9a3412;margin-top:4px;padding-left:2px;">※ 대회 시작 전 모든 심판에게 미리 안내. 비워두면 암호 확인 없이 바로 입력화면이 열립니다.</div>
     </div>
   </div>
 
