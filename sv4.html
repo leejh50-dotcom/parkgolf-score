@@ -3282,8 +3282,8 @@ window.addEventListener('load', function(){
     if(!teams||!teams.length) return '';
     var today=new Date().toLocaleDateString('ko-KR');
     var esc2=function(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');};
-    var headerRow='<tr style="background:#1a4a2e;color:#fff;">'      +'<th style="padding:7px 6px;text-align:center;width:40px;">No</th>'      +'<th style="padding:7px 6px;text-align:left;">조명</th>'      +'<th style="padding:7px 6px;text-align:left;">선수명</th>'      +'<th style="padding:7px 6px;text-align:left;width:140px;">심판명</th>'      +'<th style="padding:7px 6px;text-align:left;width:120px;">비고</th>'      +'</tr>';
-    var perPage=(orientation==='landscape')?14:20;
+    var headerRow='<tr style="background:#fff;color:#000;border-bottom:2px solid #1a4a2e;">'      +'<th style="padding:7px 6px;text-align:center;width:40px;font-weight:900;">No</th>'      +'<th style="padding:7px 6px;text-align:left;font-weight:900;">조명</th>'      +'<th style="padding:7px 6px;text-align:left;font-weight:900;">선수명</th>'      +'<th style="padding:7px 6px;text-align:left;width:140px;font-weight:900;">심판명</th>'      +'<th style="padding:7px 6px;text-align:left;width:120px;font-weight:900;">비고</th>'      +'</tr>';
+    var perPage=(orientation==='landscape')?20:25;
     var totalPages=Math.ceil(teams.length/perPage);
     var html='';
     for(var lp=0;lp<totalPages;lp++){
@@ -4609,12 +4609,12 @@ window.addEventListener('load', function(){
         /* ★ 마지막 페이지: 배부 확인 목록 (25행/페이지, 헤더 반복, 페이지 번호) */
         var listPerPage = isMobile ? 16 : 20;
         var listTotalPages = Math.ceil(teams.length / listPerPage);
-        var headerHtml = '<thead><tr style="background:#1a4a2e;color:#fff;">'
-          +'<th style="padding:9px 8px;text-align:center;width:40px;font-size:14px;">No</th>'
-          +'<th style="padding:9px 8px;text-align:left;font-size:14px;">조명</th>'
-          +'<th style="padding:9px 8px;text-align:left;font-size:14px;">선수명</th>'
-          +'<th style="padding:9px 8px;text-align:left;font-size:14px;">심판명</th>'
-          +'<th style="padding:9px 8px;text-align:left;font-size:14px;">비고</th>'
+        var headerHtml = '<thead><tr style="background:#fff;color:#000;border-bottom:2px solid #1a4a2e;">'
+          +'<th style="padding:9px 8px;text-align:center;width:40px;font-size:14px;font-weight:900;">No</th>'
+          +'<th style="padding:9px 8px;text-align:left;font-size:14px;font-weight:900;">조명</th>'
+          +'<th style="padding:9px 8px;text-align:left;font-size:14px;font-weight:900;">선수명</th>'
+          +'<th style="padding:9px 8px;text-align:left;font-size:14px;font-weight:900;">심판명</th>'
+          +'<th style="padding:9px 8px;text-align:left;font-size:14px;font-weight:900;">비고</th>'
           +'</tr></thead>';
 
         for(var lp=0; lp<listTotalPages; lp++){
