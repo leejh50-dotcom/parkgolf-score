@@ -784,6 +784,17 @@ html, body {
     </div>
   </div>
 
+  <!-- 🔒 오늘의 암호(선택) - QR에 포함되어, 심판이 점수 입력 화면을 열기 전 확인용 -->
+  <div class="input-group">
+    <div style="position: relative; width: 100%;">
+      <label style="display:block;font-size:13px;font-weight:900;color:#c2410c;margin-bottom:4px;padding-left:2px;">🔒 오늘의 암호 (심판 확인용, 2자리 숫자 권장)</label>
+      <input type="text" id="lockPwInput" placeholder="예: 29" maxlength="6" inputmode="numeric"
+        style="width: 100%; text-align: center; font-weight: 900; background: linear-gradient(135deg, #fff7ed 0%, #fed7aa 100%);
+              border: 3px solid #f97316; padding: 14px 14px; letter-spacing: 4px; box-sizing: border-box;font-size:20px!important;">
+      <div style="font-size:11px;color:#9a3412;margin-top:4px;padding-left:2px;">※ 대회 시작 전 모든 심판에게 미리 안내. 비워두면 암호 확인 없이 바로 입력화면이 열립니다.</div>
+    </div>
+  </div>
+
   <input type="hidden" id="tournamentName" value="" />
 
   <div class="input-group">
@@ -3510,7 +3521,9 @@ window.addEventListener('load', function(){
         return p.name?(p.name+(p.affil?' ('+p.affil+')':'')):'경기자 '+(i+1);
       });
       var coParam='&co=A,B,C,D';
-      var qrText=appUrl+'?c='+encodeURIComponent(code)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam;
+      var _lockPw=((document.getElementById('lockPwInput')||{}).value||'').trim();
+      var pwParam=_lockPw?('&pw='+encodeURIComponent(_lockPw)):'';
+      var qrText=appUrl+'?c='+encodeURIComponent(code)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam+pwParam;
       players.forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||'')); });
 
       /* ★ 합계/서명 같은 높이, 이름 크게, 여백 없이 */
@@ -3716,7 +3729,9 @@ window.addEventListener('load', function(){
       while(players.length<4) players.push({name:'',gender:'',affil:''});
       var pLabels=players.map(function(p,i){ return p.name?(p.name+(p.affil?' ('+p.affil+')':'')):'경기자 '+(i+1); });
       var coParam='&co='+c1+','+c2;
-      var qrText=appUrl+'?c='+encodeURIComponent(code)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam;
+      var _lockPw=((document.getElementById('lockPwInput')||{}).value||'').trim();
+      var pwParam=_lockPw?('&pw='+encodeURIComponent(_lockPw)):'';
+      var qrText=appUrl+'?c='+encodeURIComponent(code)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam+pwParam;
       players.forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||'')); });
 
       var bT='border-top:1px solid #555;'; var bC2='border-right:2px solid #666;';
@@ -3953,7 +3968,9 @@ window.addEventListener('load', function(){
       var pLabels=players.map(function(p,i){ return p.name?(p.name+(p.affil?' ('+p.affil+')':'')):'경기자 '+(i+1); });
 
       var coParam='&co='+c1+','+c2;
-      var qrText=appUrl+'?c='+encodeURIComponent(code)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam;
+      var _lockPw=((document.getElementById('lockPwInput')||{}).value||'').trim();
+      var pwParam=_lockPw?('&pw='+encodeURIComponent(_lockPw)):'';
+      var qrText=appUrl+'?c='+encodeURIComponent(code)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam+pwParam;
       players.forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||'')); });
 
       var bC2='border-right:2px solid #666;'; var bT='border-top:1px solid #555;';
@@ -4159,7 +4176,9 @@ window.addEventListener('load', function(){
       while(players.length<4) players.push({name:'',gender:'',affil:''});
       var pLabels=players.map(function(p,i){return p.name?(p.name+(p.affil?' ('+p.affil+')':'')):'경기자 '+(i+1);});
       var coParam='&co='+c1+','+c2+','+c3;
-      var qrText=appUrl+'?c='+encodeURIComponent(code)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam;
+      var _lockPw=((document.getElementById('lockPwInput')||{}).value||'').trim();
+      var pwParam=_lockPw?('&pw='+encodeURIComponent(_lockPw)):'';
+      var qrText=appUrl+'?c='+encodeURIComponent(code)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam+pwParam;
       players.forEach(function(p,i){qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||''));});
 
       var bC2='border-right:2px solid #666;'; var bT='border-top:1px solid #555;';
@@ -4432,12 +4451,14 @@ window.addEventListener('load', function(){
 
     function makeCard(teamObj, cardIdx, cardTotal){
       var coParam=(teamObj.courses&&teamObj.courses.length)?'&co='+encodeURIComponent(teamObj.courses.join(',')):'';
-      var qrText=appUrl+'?c='+encodeURIComponent(code)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam;
+      var _lockPw=((document.getElementById('lockPwInput')||{}).value||'').trim();
+      var pwParam=_lockPw?('&pw='+encodeURIComponent(_lockPw)):'';
+      var qrText=appUrl+'?c='+encodeURIComponent(code)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam+pwParam;
       (teamObj.players||[]).forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'+(p.affil||'')); });
 
       /* ★ QR URL 길이 체크: 2000자 초과 시 소속 생략하여 단축 */
       if(qrText.length > 2000){
-        qrText=appUrl+'?c='+encodeURIComponent(code)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam;
+        qrText=appUrl+'?c='+encodeURIComponent(code)+'&d='+encodeURIComponent(qrDate)+'&t='+encodeURIComponent(teamObj.team||'')+coParam+pwParam;
         (teamObj.players||[]).forEach(function(p,i){ qrText+='&'+(i+1)+'='+encodeURIComponent((p.name||'')+'|'+(p.gender||'')+'|'); });
       }
 
