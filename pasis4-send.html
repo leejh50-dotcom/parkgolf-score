@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="파시스4전송">
+<meta name="apple-mobile-web-app-title" content="PS전송">
 <meta name="theme-color" content="#c8860a">
 <link rel="manifest" href="manifest-sv4send.json">
 <link rel="apple-touch-icon" href="pasis4-send-icon.png">
@@ -14,7 +14,7 @@
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(s){s.unregister();});});}
 if('caches' in window){caches.keys().then(function(k){k.forEach(function(c){caches.delete(c);});});}
 </script>
-<title>파시스4전송</title>
+<title>PASIS4 Send · 파크골프 점수 전송</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;900&display=swap');
 :root {
@@ -507,40 +507,102 @@ function init() {
     APP.url  = decodeURIComponent(p.get('u') || '');
     APP.team = decodeURIComponent(p.get('t') || '');
     APP.date = decodeURIComponent(p.get('d') || '');
-    APP.hasParam = !!(APP.code && APP.url && APP.team);
-    // ★ co= 파라미터 (G열 코스) - 최우선 적용
-    var _co = p.get('co') || '';
-    if (_co) {
-      var _cp = _co.split(/[,\/\s]+/).map(function(s){return s.trim().toUpperCase();}).filter(function(s){return 'ABCD'.indexOf(s)>=0;});
-      if (_cp.length) {
-        // 중복 제거 후 ABCD 순서 정렬
-        var _uniq = [];
-        ['A','B','C','D'].forEach(function(x){ if(_cp.indexOf(x)>=0) _uniq.push(x); });
-        COURSES = _uniq.length ? _uniq : _cp;
-        APP._coFromParam = true;
-        APP.coursesFromG = true; // G열 출처 표시
-      }
+
+    // ★ QR에 &u=(GAS주소)가 없으면 대회코드별 캐시 → config.json 순으로 보완
+    //    (QR 길이를 줄여 안드로이드 스캔 안정성을 높이기 위함)
+    //    캐시 키를 대회코드별로 분리해 실전/시범용 URL이 서로 섞이지 않게 함.
+    var cacheKey = 'pasis_webapp_url_' + APP.code;
+    if (!APP.url) {
+      APP.url = localStorage.getItem(cacheKey) || '';
+    }
+    if (APP.url) {
+      try { localStorage.setItem(cacheKey, APP.url); } catch(e) {}
     }
 
-    if (APP.hasParam) {
-      APP.players = [];
-      for (var i = 1; i <= 4; i++) {
-        var raw = p.get(String(i)) || '';
-        if (!raw) continue;
-        var pts = decodeURIComponent(raw).split('|');
-        APP.players.push({
-          slot: i,
-          name:   (pts[0] || '').trim(),
-          gender: (pts[1] || '').trim(),
-          affil:  (pts[2] || '').trim(),
-          A:'', B:'', C:'', D:'', total:0, bigo:''
-        });
-      }
+    APP.hasParam = !!(APP.code && APP.url && APP.team);
+
+    if (!APP.url && APP.code && APP.team) {
+      // GAS주소를 아직 못 구함 → config.json 조회 후 마무리
+      fetchConfigAndFinish(p);
+      return;
     }
+
+    applyParsedParams(p);
   } catch(e) {}
 
   hide('loadingScreen');
   showCover();
+}
+
+// ── co=, players= 파라미터를 APP/COURSES에 반영 (공통) ──
+function applyParsedParams(p) {
+  // ★ co= 파라미터 (G열 코스) - 최우선 적용
+  var _co = p.get('co') || '';
+  if (_co) {
+    var _cp = _co.split(/[,\/\s]+/).map(function(s){return s.trim().toUpperCase();}).filter(function(s){return 'ABCD'.indexOf(s)>=0;});
+    if (_cp.length) {
+      // 중복 제거 후 ABCD 순서 정렬
+      var _uniq = [];
+      ['A','B','C','D'].forEach(function(x){ if(_cp.indexOf(x)>=0) _uniq.push(x); });
+      COURSES = _uniq.length ? _uniq : _cp;
+      APP._coFromParam = true;
+      APP.coursesFromG = true; // G열 출처 표시
+    }
+  }
+
+  if (APP.hasParam) {
+    APP.players = [];
+    for (var i = 1; i <= 4; i++) {
+      var raw = p.get(String(i)) || '';
+      if (!raw) continue;
+      var pts = decodeURIComponent(raw).split('|');
+      APP.players.push({
+        slot: i,
+        name:   (pts[0] || '').trim(),
+        gender: (pts[1] || '').trim(),
+        affil:  (pts[2] || '').trim(),
+        A:'', B:'', C:'', D:'', total:0, bigo:''
+      });
+    }
+  }
+}
+
+// ── config.json에서 GAS 주소(webappUrl)를 가져와 초기화 마무리 ──
+// QR에 &u= 없이 짧게 만든 경우를 위한 보완 경로.
+// config.json 구조:
+//   {
+//     "default": "실전용 웹앱 URL",
+//     "byCode": { "TEST": "시범/테스트용 웹앱 URL", "기타코드": "..." }
+//   }
+// → 대회코드에 byCode의 키(예: "TEST")가 포함되어 있으면 그 URL을, 아니면 default를 사용.
+//   예: "2026TEST", "TEST365" 모두 "TEST"를 포함하므로 매칭됨.
+function fetchConfigAndFinish(p) {
+  var cacheKey = 'pasis_webapp_url_' + APP.code;
+  fetch('config.json', { cache: 'no-store' })
+    .then(function(r) { return r.json(); })
+    .then(function(cfg) {
+      var byCode = (cfg && cfg.byCode) ? cfg.byCode : {};
+      var picked = '';
+      for (var key in byCode) {
+        if (APP.code.indexOf(key.toUpperCase()) >= 0) { picked = byCode[key]; break; }
+      }
+      if (!picked) picked = (cfg && cfg.default) || '';
+      APP.url = String(picked || '').trim();
+      if (APP.url) {
+        try { localStorage.setItem(cacheKey, APP.url); } catch(e) {}
+      }
+      APP.hasParam = !!(APP.code && APP.url && APP.team);
+      applyParsedParams(p);
+    })
+    .catch(function() {
+      // config.json도 못 읽으면 연습 모드로 표시 (기존 동작 유지)
+      APP.hasParam = false;
+      applyParsedParams(p);
+    })
+    .then(function() {
+      hide('loadingScreen');
+      showCover();
+    });
 }
 
 // ── 표지 ──
