@@ -656,6 +656,7 @@ html, body {
         </div>
 
         <!-- 🔒 오늘의 QR암호(선택) - QR에 포함되어, 심판이 점수 입력 화면을 열기 전 확인용 -->
+        <style>#lockPwInput::placeholder{color:#d4a373;font-weight:500;opacity:0.65;letter-spacing:0;}</style>
         <div style="margin-bottom:10px;">
           <label style="display:block;font-size:13px;font-weight:900;color:#c2410c;margin-bottom:4px;padding-left:2px;">🔒 오늘의 QR암호</label>
           <input id="lockPwInput" type="text" placeholder="예: 35 (선택, 심판 확인용)" maxlength="6" inputmode="numeric"
@@ -3479,7 +3480,8 @@ window.addEventListener('load', function(){
         ;
 
       /* 더 직접적인 방법: hole row에 flex:1 강제 적용 */
-      var fullHtml = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>A4 기록지 인쇄</title>'
+      var _titlePw4=((document.getElementById('lockPwInput')||{}).value||'').trim();var _titleStr4='4코스 기록지'+(_titlePw4?('(QR'+_titlePw4+')'):'');
+      var fullHtml = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>'+_titleStr4+'</title>'
         + '<style>' + css + '</style></head><body>' + bodyHtml + _buildMgmtListHtml(teams,code,'portrait') + '</body></html>';
 
       var pw = window.open('', '_blank', 'width=900,height=1000');
@@ -3806,7 +3808,8 @@ window.addEventListener('load', function(){
           +'@page{size:A4 landscape;margin:0;}'          +'.mgmt-page{break-before:page;page-break-before:always;padding:15mm 12mm 10mm;box-sizing:border-box;}'          +'.mgmt-page:last-child{break-after:auto;}';
         var pw=window.open('','_blank','width=1200,height=800');
         if(!pw){alert('팝업 차단됨. 허용 후 다시 시도하세요.');return;}
-        pw.document.open(); pw.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>2코스 기록지</title><style>'+css+'</style></head><body>'+bh+_buildMgmtListHtml(teams,code,'landscape')+'</body></html>'); pw.document.close();
+        var _titlePw1=((document.getElementById('lockPwInput')||{}).value||'').trim();var _titleStr1='2코스 기록지'+(_titlePw1?('(QR'+_titlePw1+')'):'');
+        pw.document.open(); pw.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>'+_titleStr1+'</title><style>'+css+'</style></head><body>'+bh+_buildMgmtListHtml(teams,code,'landscape')+'</body></html>'); pw.document.close();
         pw.focus();
         pw.onload = function(){
           var imgs = pw.document.querySelectorAll('img');
@@ -4047,7 +4050,8 @@ window.addEventListener('load', function(){
           +'@page{size:A4 landscape;margin:0;}'          +'.mgmt-page{break-before:page;page-break-before:always;padding:15mm 12mm 10mm;box-sizing:border-box;}'          +'.mgmt-page:last-child{break-after:auto;}';
         var pw=window.open('','_blank','width=1200,height=800');
         if(!pw){alert('팝업 차단됨. 허용 후 다시 시도하세요.');return;}
-        pw.document.open(); pw.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>이틀대회 기록지</title><style>'+css+'</style></head><body>'+bh+_buildMgmtListHtml(teams,code,'landscape')+'</body></html>'); pw.document.close();
+        var _titlePw2=((document.getElementById('lockPwInput')||{}).value||'').trim();var _titleStr2='이틀대회 기록지'+(_titlePw2?('(QR'+_titlePw2+')'):'');
+        pw.document.open(); pw.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>'+_titleStr2+'</title><style>'+css+'</style></head><body>'+bh+_buildMgmtListHtml(teams,code,'landscape')+'</body></html>'); pw.document.close();
         pw.focus();
         pw.onload = function(){
           var imgs = pw.document.querySelectorAll('img');
@@ -4269,7 +4273,8 @@ window.addEventListener('load', function(){
         var pw=window.open('','_blank','width=1200,height=800');
         if(!pw){alert('팝업 차단됨. 허용 후 다시 시도하세요.');return;}
         pw.document.open();
-        pw.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>3코스 기록지</title><style>'+css+'</style></head><body>'+bh+_buildMgmtListHtml(teams,code,'landscape')+'</body></html>');
+        var _titlePw3=((document.getElementById('lockPwInput')||{}).value||'').trim();var _titleStr3='3코스 기록지'+(_titlePw3?('(QR'+_titlePw3+')'):'');
+        pw.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>'+_titleStr3+'</title><style>'+css+'</style></head><body>'+bh+_buildMgmtListHtml(teams,code,'landscape')+'</body></html>');
         pw.document.close();
         pw.focus();
         pw.onload = function(){
