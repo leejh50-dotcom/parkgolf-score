@@ -1290,11 +1290,11 @@
 <input id="dateInput" readonly="readonly" type="text" style="text-align: center; font-weight: bold;" />
 </div>
 <div class="input-group location-with-map">
-<div style="flex: 1; display: flex; align-items: center; border: 3px solid #7A8B96; border-radius: 8px; background: white; overflow: hidden;">
-<input id="locationInput" type="text" placeholder="장소" style="flex: 1; font-size: 16px; text-align: center; border: none !important; background: transparent !important;" />
-<span style="padding: 0 10px; font-size: 18px; font-weight: 600; color: #2C3640; white-space: nowrap;">파크골프장</span>
+<div style="flex: 1; display: flex; align-items: center; border: 3px solid #7A8B96; border-radius: 8px; background: white; overflow: hidden; min-width: 0;">
+<input id="locationInput" type="text" placeholder="장소" style="flex: 1; min-width: 0; font-size: 16px; text-align: center; border: none !important; background: transparent !important;" />
+<span style="padding: 0 8px; font-size: 18px; font-weight: 600; color: #2C3640; white-space: nowrap; flex-shrink: 0;">파크골프장</span>
 </div>
-<button class="map-link" onclick="openMap()" style="margin-left: 8px; width: 60px; padding: 12px 8px; height: auto;">지도</button>
+<button class="map-link" onclick="openMap()" style="margin-left: 8px; width: 60px; padding: 12px 8px; height: auto; flex-shrink: 0;">지도</button>
 </div>
 <div class="input-group">
 <input id="teamNameInput" type="text" placeholder="조(팀)명(예 3, A)" style="text-align: center; font-size: 16px; font-weight: 600; padding: 12px;" />
