@@ -1181,6 +1181,33 @@
   font-weight: 800 !important;
 }
 
+/* 안내 문구(placeholder)는 회색, 실제로 입력한 글자만 검정으로 구분 */
+.parkgolf-app .player-input input::placeholder,
+.parkgolf-app .input-group input::placeholder,
+.parkgolf-app .input-group textarea::placeholder {
+    color: #999999 !important;
+    -webkit-text-fill-color: #999999 !important;
+    opacity: 1 !important;
+    font-weight: 600 !important;
+}
+.parkgolf-app .player-input input::-webkit-input-placeholder,
+.parkgolf-app .input-group input::-webkit-input-placeholder {
+    color: #999999 !important;
+    -webkit-text-fill-color: #999999 !important;
+    opacity: 1 !important;
+    font-weight: 600 !important;
+}
+.parkgolf-app .player-input input:-ms-input-placeholder,
+.parkgolf-app .input-group input:-ms-input-placeholder {
+    color: #999999 !important;
+    font-weight: 600 !important;
+}
+.parkgolf-app .player-input input::-ms-input-placeholder,
+.parkgolf-app .input-group input::-ms-input-placeholder {
+    color: #999999 !important;
+    font-weight: 600 !important;
+}
+
 @media (max-width: 360px){
   .parkgolf-app #teamNameInput::placeholder,
   .parkgolf-app #teamNameInput::-webkit-input-placeholder,
