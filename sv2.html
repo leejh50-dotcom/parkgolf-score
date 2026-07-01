@@ -908,22 +908,24 @@
 
 .parkgolf-app .toast {
     position: fixed !important;
-    top: 20px !important;
+    top: 50% !important;
     left: 50% !important;
-    transform: translateX(-50%) !important;
-    background: #1e3c72 !important;
+    transform: translate(-50%, -50%) !important;
+    background: rgba(15, 40, 90, 0.95) !important;
     color: white !important;
-    padding: 14px 24px !important;
-    border-radius: 8px !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+    padding: 24px 32px !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5) !important;
     opacity: 0 !important;
     transition: opacity 0.3s !important;
     z-index: 99999 !important;
     white-space: pre-line !important;
     text-align: center !important;
-    font-size: 15px !important;
-    line-height: 1.6 !important;
-    min-width: 220px !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    line-height: 1.8 !important;
+    min-width: 260px !important;
+    max-width: 85vw !important;
 }
 
 .parkgolf-app .toast.show {
