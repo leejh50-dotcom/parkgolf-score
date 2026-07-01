@@ -908,7 +908,7 @@
 
 .parkgolf-app .toast {
     position: fixed !important;
-    bottom: 20px !important;
+    top: 20px !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
     background: #1e3c72 !important;
@@ -918,7 +918,7 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
     opacity: 0 !important;
     transition: opacity 0.3s !important;
-    z-index: 2000 !important;
+    z-index: 99999 !important;
     white-space: pre-line !important;
     text-align: center !important;
     font-size: 15px !important;
@@ -1531,13 +1531,1262 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-<script>const _0x5b5570=_0x2ec9;(function(_0x135f82,_0x430a85){const _0x251576=_0x2ec9,_0x854479=_0x135f82();while(!![]){try{const _0x4c1ab8=parseInt(_0x251576(0x150))/0x1+parseInt(_0x251576(0x195))/0x2*(-parseInt(_0x251576(0x1e8))/0x3)+-parseInt(_0x251576(0x1f0))/0x4+-parseInt(_0x251576(0x1af))/0x5*(parseInt(_0x251576(0x19e))/0x6)+-parseInt(_0x251576(0x1a1))/0x7*(-parseInt(_0x251576(0x1d2))/0x8)+-parseInt(_0x251576(0x18e))/0x9*(-parseInt(_0x251576(0x1d7))/0xa)+-parseInt(_0x251576(0x180))/0xb*(-parseInt(_0x251576(0x1a6))/0xc);if(_0x4c1ab8===_0x430a85)break;else _0x854479['push'](_0x854479['shift']());}catch(_0x144210){_0x854479['push'](_0x854479['shift']());}}}(_0x9165,0x9352d),function checkHtml2Canvas(){const _0x546969=_0x2ec9;if(typeof html2canvas==='undefined'){console[_0x546969(0x1ab)](_0x546969(0x1ff));var _0x109819=document['createElement']('script');_0x109819[_0x546969(0x231)]=_0x546969(0x20d),_0x109819[_0x546969(0x164)]=function(){const _0x616f7c=_0x546969;console[_0x616f7c(0x1ab)](_0x616f7c(0x1d8));},_0x109819[_0x546969(0x158)]=function(){const _0x2824f5=_0x546969;console[_0x2824f5(0x19b)]('html2canvas\x20로드\x20실패\x20-\x20모든\x20CDN\x20시도\x20완료');},document['head'][_0x546969(0x1f1)](_0x109819);}else console[_0x546969(0x1ab)](_0x546969(0x149));}());const courseNames=['A','B','C','D'];let selectedHoles=0x9,coursePars={'A':[0x3,0x5,0x3,0x5,0x3,0x3,0x3,0x4,0x4],'B':[0x3,0x5,0x3,0x5,0x3,0x3,0x3,0x4,0x4],'C':[0x3,0x5,0x3,0x5,0x3,0x3,0x3,0x4,0x4],'D':[0x3,0x5,0x3,0x5,0x3,0x3,0x3,0x4,0x4]},scores={'A':{0x1:Array(0x9)[_0x5b5570(0x1bd)](''),0x2:Array(0x9)[_0x5b5570(0x1bd)](''),0x3:Array(0x9)[_0x5b5570(0x1bd)](''),0x4:Array(0x9)[_0x5b5570(0x1bd)]('')},'B':{0x1:Array(0x9)[_0x5b5570(0x1bd)](''),0x2:Array(0x9)[_0x5b5570(0x1bd)](''),0x3:Array(0x9)['fill'](''),0x4:Array(0x9)['fill']('')},'C':{0x1:Array(0x9)[_0x5b5570(0x1bd)](''),0x2:Array(0x9)[_0x5b5570(0x1bd)](''),0x3:Array(0x9)[_0x5b5570(0x1bd)](''),0x4:Array(0x9)['fill']('')},'D':{0x1:Array(0x9)[_0x5b5570(0x1bd)](''),0x2:Array(0x9)[_0x5b5570(0x1bd)](''),0x3:Array(0x9)[_0x5b5570(0x1bd)](''),0x4:Array(0x9)[_0x5b5570(0x1bd)]('')}},playerNames=['','','',''],currentParCourse='',currentParHole=0x0,currentScoreCourse='',currentScorePlayer=0x0,currentScoreHole=0x0,tempScore='',isPenalty=![];function getAllHistories(){const _0x2642c1=_0x5b5570,_0x52a570=localStorage[_0x2642c1(0x1c9)](_0x2642c1(0x138));return _0x52a570?JSON[_0x2642c1(0x170)](_0x52a570):[];}function saveHistory(){const _0x4f0fcd=_0x5b5570,_0x2857d2=getAllHistories(),_0x3aedc3=new Date(),_0x15360e=_0x3aedc3[_0x4f0fcd(0x197)](),_0x2f5084={'id':_0x15360e,'date':_0x3aedc3[_0x4f0fcd(0x18f)]()+'.'+String(_0x3aedc3[_0x4f0fcd(0x156)]()+0x1)[_0x4f0fcd(0x1cb)](0x2,'0')+'.'+String(_0x3aedc3[_0x4f0fcd(0x174)]())['padStart'](0x2,'0')+'\x20'+String(_0x3aedc3[_0x4f0fcd(0x1b5)]())[_0x4f0fcd(0x1cb)](0x2,'0')+':'+String(_0x3aedc3['getMinutes']())[_0x4f0fcd(0x1cb)](0x2,'0'),'location':document[_0x4f0fcd(0x1b7)]('locationInput')['value']||'','playerNames':playerNames[_0x4f0fcd(0x212)](function(_0x273060){return _0x273060;}),'selectedHoles':selectedHoles,'coursePars':coursePars,'scores':scores};_0x2857d2[_0x4f0fcd(0x1e1)](_0x2f5084),_0x2857d2[_0x4f0fcd(0x23a)]>0x32&&_0x2857d2['pop'](),localStorage[_0x4f0fcd(0x179)]('parkGolfHistories',JSON[_0x4f0fcd(0x1ef)](_0x2857d2)),updateHistoryCount();}function updateHistoryCount(){const _0x2f10b1=_0x5b5570,_0x2f0d5c=getAllHistories();document[_0x2f10b1(0x1b7)](_0x2f10b1(0x151))[_0x2f10b1(0x147)]=_0x2f0d5c[_0x2f10b1(0x23a)];}function openHistoryModal(){const _0x5ec0fa=_0x5b5570,_0x3b885b=getAllHistories(),_0x3837e3=document['getElementById'](_0x5ec0fa(0x1d5));if(_0x3b885b[_0x5ec0fa(0x23a)]===0x0)_0x3837e3['innerHTML']='<div\x20class=\x22empty-history\x22>저장된\x20기록이\x20없습니다</div>';else{let _0x493dab='';_0x3b885b['forEach'](function(_0x442472){const _0x53e846=_0x5ec0fa,_0x3f712d=_0x442472['playerNames'][_0x53e846(0x1f4)](',\x20')||_0x53e846(0x221);_0x493dab+=_0x53e846(0x15d)+_0x53e846(0x1c0)+_0x53e846(0x19d)+_0x442472[_0x53e846(0x237)]+'</div>'+_0x53e846(0x1a5)+_0x442472[_0x53e846(0x1d1)]+_0x53e846(0x1e9)+_0x53e846(0x21e)+_0x3f712d+_0x53e846(0x1e9)+_0x53e846(0x1e9)+'<div\x20class=\x22history-item-actions\x22>'+_0x53e846(0x1f5)+_0x442472['id']+_0x53e846(0x1ba)+'<button\x20class=\x22delete-btn-small\x22\x20onclick=\x22deleteHistory('+_0x442472['id']+_0x53e846(0x136)+_0x53e846(0x1e9)+_0x53e846(0x1e9);}),_0x3837e3['innerHTML']=_0x493dab;}document[_0x5ec0fa(0x1b7)](_0x5ec0fa(0x17d))['classList'][_0x5ec0fa(0x20b)]('show');}function closeHistoryModal(){const _0x4753f4=_0x5b5570;document[_0x4753f4(0x1b7)]('historyModal')[_0x4753f4(0x1df)][_0x4753f4(0x22b)](_0x4753f4(0x1c1));}function loadHistory(_0xbf513d){const _0x25784f=_0x5b5570,_0x197ad8=getAllHistories(),_0x520b4f=_0x197ad8[_0x25784f(0x21d)](function(_0x105fa2){return _0x105fa2['id']===_0xbf513d;});if(_0x520b4f){const _0x166fa6=_0x520b4f[_0x25784f(0x1d1)]===_0x25784f(0x1db)||_0x520b4f[_0x25784f(0x1d1)]===_0x25784f(0x16d)?'':_0x520b4f[_0x25784f(0x1d1)]||'';document[_0x25784f(0x1b7)](_0x25784f(0x1b3))[_0x25784f(0x191)]=_0x166fa6,document[_0x25784f(0x1b7)](_0x25784f(0x165))[_0x25784f(0x147)]=_0x166fa6||_0x25784f(0x16d),selectedHoles=_0x520b4f[_0x25784f(0x1fd)],coursePars=_0x520b4f[_0x25784f(0x1f9)],scores=_0x520b4f['scores'],playerNames=_0x520b4f[_0x25784f(0x1d4)];for(let _0x35c6af=0x1;_0x35c6af<=0x4;_0x35c6af++){document[_0x25784f(0x1b7)]('player'+_0x35c6af)['value']=playerNames[_0x35c6af-0x1]||'';}document[_0x25784f(0x1b6)](_0x25784f(0x234))[_0x25784f(0x14c)](function(_0x5ef9ec,_0x4a04f6){const _0x257486=_0x25784f;_0x5ef9ec[_0x257486(0x1df)]['toggle']('active',[0x9,0x12,0x1b,0x24][_0x4a04f6]===selectedHoles);}),renderAllCourses(),updateSummary(),closeHistoryModal(),showToast(_0x25784f(0x16c));}}function deleteHistory(_0x2be6c8){const _0x28373f=_0x5b5570;if(confirm(_0x28373f(0x15a))){let _0x484727=getAllHistories();_0x484727=_0x484727[_0x28373f(0x212)](function(_0xe2a504){return _0xe2a504['id']!==_0x2be6c8;}),localStorage[_0x28373f(0x179)]('parkGolfHistories',JSON['stringify'](_0x484727)),updateHistoryCount(),openHistoryModal(),showToast('기록이\x20삭제되었습니다');}}function shareResult(){const _0x226f32=_0x5b5570;var _0xbf4f39=/Android/i[_0x226f32(0x16b)](navigator[_0x226f32(0x17f)]);if(_0xbf4f39){tryAndroidTextShare();return;}document[_0x226f32(0x1b7)](_0x226f32(0x1e0))[_0x226f32(0x1df)][_0x226f32(0x20b)](_0x226f32(0x1c1));}function closeShareSelectModal(){const _0xb304a=_0x5b5570;document[_0xb304a(0x1b7)](_0xb304a(0x1e0))[_0xb304a(0x1df)][_0xb304a(0x22b)]('show');}function fixOklchColors(_0x22a3fd){const _0x214b09=_0x5b5570;var _0x3f20e3=_0x22a3fd[_0x214b09(0x1b6)]('*'),_0x928cb3=[_0x214b09(0x1ec),_0x214b09(0x198),_0x214b09(0x21b),_0x214b09(0x20a),'borderRightColor',_0x214b09(0x17c),_0x214b09(0x163),_0x214b09(0x1de)];_0x3f20e3[_0x214b09(0x14c)](function(_0xf980dc){const _0xd40605=_0x214b09;var _0x189fff=window[_0xd40605(0x207)](_0xf980dc);_0x928cb3[_0xd40605(0x14c)](function(_0x5d2a65){const _0x14c78a=_0xd40605;var _0x2127e2=_0x189fff[_0x5d2a65];if(_0x2127e2&&_0x2127e2[_0x14c78a(0x225)]('oklch')!==-0x1){var _0x3d4fb7=document[_0x14c78a(0x17a)](_0x14c78a(0x1cd));_0x3d4fb7['style']['display']=_0x14c78a(0x206),_0x3d4fb7[_0x14c78a(0x16f)][_0x14c78a(0x1ec)]=_0x2127e2,document[_0x14c78a(0x230)][_0x14c78a(0x1f1)](_0x3d4fb7);var _0x2a6481=window[_0x14c78a(0x207)](_0x3d4fb7)[_0x14c78a(0x1ec)];document[_0x14c78a(0x230)]['removeChild'](_0x3d4fb7);try{_0xf980dc[_0x14c78a(0x16f)][_0x5d2a65]=_0x2a6481;}catch(_0x1789c9){}}});});}function shareOnlySummary(){const _0x50040b=_0x5b5570;closeShareSelectModal();var _0x240e31=/Android/i[_0x50040b(0x16b)](navigator[_0x50040b(0x17f)]);if(_0x240e31){tryAndroidTextShare();return;}if(typeof html2canvas===_0x50040b(0x188)){alert('⚠️\x20이미지\x20생성\x20기능을\x20로드할\x20수\x20없습니다.\x0a\x0a해결\x20방법:\x0a1.\x20페이지를\x20완전히\x20새로고침(Ctrl+F5\x20또는\x20Cmd+R)\x0a2.\x20브라우저\x20캐시\x20삭제\x20후\x20재시도\x0a3.\x20다른\x20브라우저로\x20시도\x0a\x0a문제가\x20계속되면\x20관리자에게\x20문의하세요.');return;}document[_0x50040b(0x1b7)](_0x50040b(0x144))[_0x50040b(0x1df)][_0x50040b(0x20b)](_0x50040b(0x1c1));const _0x1828eb=document[_0x50040b(0x1b7)](_0x50040b(0x1e2)),_0x26162c=_0x1828eb['style'][_0x50040b(0x14a)];_0x1828eb[_0x50040b(0x16f)][_0x50040b(0x14a)]='none',setTimeout(function(){const _0x2c54fc=_0x50040b;fixOklchColors(document['getElementById']('resultCapture')),html2canvas(document['getElementById']('resultCapture'),{'backgroundColor':_0x2c54fc(0x137),'scale':0x2,'logging':![],'useCORS':!![],'allowTaint':!![],'foreignObjectRendering':![],'imageTimeout':0x0})[_0x2c54fc(0x13c)](function(_0x355147){const _0x4886cc=_0x2c54fc;_0x1828eb[_0x4886cc(0x16f)][_0x4886cc(0x14a)]=_0x26162c,document[_0x4886cc(0x1b7)]('loadingModal')[_0x4886cc(0x1df)][_0x4886cc(0x22b)](_0x4886cc(0x1c1)),_0x355147[_0x4886cc(0x152)](function(_0x2d20b9){const _0x5ed948=_0x4886cc;if(!_0x2d20b9){alert('이미지\x20생성에\x20실패했습니다.');return;}var _0x31789c=_0x5ed948(0x1cf)+new Date()[_0x5ed948(0x197)]()+'.png';try{var _0x295ef0=new File([_0x2d20b9],_0x31789c,{'type':_0x5ed948(0x1fb)}),_0x4473ce=navigator['canShare']&&navigator['canShare']({'files':[_0x295ef0]});_0x4473ce?navigator[_0x5ed948(0x1da)]({'files':[_0x295ef0],'title':_0x5ed948(0x210),'text':_0x5ed948(0x13e)})[_0x5ed948(0x13c)](function(){const _0x3faddc=_0x5ed948;console[_0x3faddc(0x1ab)](_0x3faddc(0x239));})[_0x5ed948(0x19a)](function(_0x3f10b6){const _0x24de65=_0x5ed948;_0x3f10b6[_0x24de65(0x23e)]!==_0x24de65(0x14e)&&(console[_0x24de65(0x1ab)]('공유\x20오류:',_0x3f10b6),tryClipboardShare(_0x2d20b9,_0x355147));}):tryAndroidTextShare();}catch(_0x2f4b58){console['log']('File\x20생성\x20오류:',_0x2f4b58),tryClipboardShare(_0x2d20b9,_0x355147);}},_0x4886cc(0x1fb),0.95);})[_0x2c54fc(0x19a)](function(_0x58d38a){const _0x4d060a=_0x2c54fc;_0x1828eb['style'][_0x4d060a(0x14a)]=_0x26162c,document['getElementById'](_0x4d060a(0x144))[_0x4d060a(0x1df)]['remove']('show'),_0x58d38a['message']&&_0x58d38a[_0x4d060a(0x185)][_0x4d060a(0x225)](_0x4d060a(0x1ea))!==-0x1||_0x58d38a[_0x4d060a(0x185)][_0x4d060a(0x225)]('unsupported\x20color')!==-0x1||_0x58d38a[_0x4d060a(0x185)][_0x4d060a(0x225)](_0x4d060a(0x170))!==-0x1?(showToast(_0x4d060a(0x159),0xbb8),setTimeout(function(){tryAndroidTextShare();},0x1f4)):alert(_0x4d060a(0x1c3)+_0x58d38a[_0x4d060a(0x185)]+_0x4d060a(0x18c)),console[_0x4d060a(0x1ab)](_0x4d060a(0x1a2),_0x58d38a);});},0x1f4);}function buildResultText(){const _0x517829=_0x5b5570;var _0x145893=document['getElementById'](_0x517829(0x154))['textContent']||'',_0x425ed6=document['getElementById'](_0x517829(0x165))[_0x517829(0x147)]||'',_0x4b8342=document[_0x517829(0x1b7)](_0x517829(0x1fe))['textContent']||'',_0x536902=['A','B','C','D'],_0x2c3dce=Math['round'](selectedHoles/0x9),_0x50906b=_0x536902[_0x517829(0x218)](0x0,_0x2c3dce),_0x41ffe5=[];_0x41ffe5[_0x517829(0x1c4)](_0x517829(0x168)),_0x41ffe5[_0x517829(0x1c4)](_0x517829(0x1b0));if(_0x145893)_0x41ffe5[_0x517829(0x1c4)](_0x517829(0x1d3)+_0x145893);if(_0x425ed6&&_0x425ed6!==_0x517829(0x16d))_0x41ffe5[_0x517829(0x1c4)]('📍\x20'+_0x425ed6+_0x517829(0x157));if(_0x4b8342&&_0x4b8342!==_0x517829(0x16d))_0x41ffe5['push']('👥\x20'+_0x4b8342+'조');_0x41ffe5[_0x517829(0x1c4)]('');for(var _0x7cbd46=0x0;_0x7cbd46<0x4;_0x7cbd46++){var _0x57f508=playerNames[_0x7cbd46];if(!_0x57f508)continue;var _0x2d1631=0x0,_0x248462=0x0;_0x50906b[_0x517829(0x14c)](function(_0x24a438){const _0x50e02d=_0x517829;scores[_0x24a438][_0x7cbd46+0x1][_0x50e02d(0x14c)](function(_0x452547){if(_0x452547!=='')_0x2d1631+=parseInt(_0x452547)||0x0;}),coursePars[_0x24a438][_0x50e02d(0x14c)](function(_0x4759a5){_0x248462+=parseInt(_0x4759a5)||0x0;});});var _0x421a91=_0x2d1631-_0x248462,_0x4b8965=_0x421a91>0x0?'+'+_0x421a91:_0x421a91===0x0?'E':String(_0x421a91);_0x41ffe5[_0x517829(0x1c4)]('•\x20'+_0x57f508+'\x20:\x20'+_0x2d1631+_0x517829(0x166)+_0x4b8965+')');}return _0x41ffe5[_0x517829(0x1c4)](_0x517829(0x1b0)),_0x41ffe5[_0x517829(0x1c4)](_0x517829(0x205)),_0x41ffe5['join']('\x0a');}function tryAndroidTextShare(){const _0x539cfe=_0x5b5570;var _0x4c2b6b=buildResultText();navigator[_0x539cfe(0x1d0)]&&navigator[_0x539cfe(0x1d0)][_0x539cfe(0x1fc)]?navigator[_0x539cfe(0x1d0)]['writeText'](_0x4c2b6b)[_0x539cfe(0x13c)](function(){showToast('📋\x20결과가\x20복사되었습니다!\x0a카카오톡을\x20열고\x20대화창에\x20붙여넣기\x20하세요.',0x1194);})[_0x539cfe(0x19a)](function(){androidTextFallback(_0x4c2b6b);}):androidTextFallback(_0x4c2b6b);}function androidTextFallback(_0x4797a9){const _0x8d0a1d=_0x5b5570;var _0x232aab=document[_0x8d0a1d(0x17a)](_0x8d0a1d(0x220));_0x232aab['value']=_0x4797a9,_0x232aab[_0x8d0a1d(0x16f)]['position']=_0x8d0a1d(0x1b9),_0x232aab[_0x8d0a1d(0x16f)][_0x8d0a1d(0x1aa)]='0',document[_0x8d0a1d(0x230)][_0x8d0a1d(0x1f1)](_0x232aab),_0x232aab[_0x8d0a1d(0x1ed)](),_0x232aab[_0x8d0a1d(0x1b2)]();try{document[_0x8d0a1d(0x1c8)](_0x8d0a1d(0x1a0)),showToast('📋\x20결과가\x20복사되었습니다!\x0a카카오톡을\x20열고\x20대화창에\x20붙여넣기\x20하세요.',0x1194);}catch(_0x98763c){alert(_0x8d0a1d(0x1b4)+_0x4797a9+_0x8d0a1d(0x1a9));}document[_0x8d0a1d(0x230)]['removeChild'](_0x232aab);}function tryClipboardShare(_0x3ca223,_0x3f808a){const _0x492a7b=_0x5b5570;if(navigator[_0x492a7b(0x1d0)]&&ClipboardItem)try{navigator[_0x492a7b(0x1d0)][_0x492a7b(0x1c6)]([new ClipboardItem({'image/png':_0x3ca223})])[_0x492a7b(0x13c)](function(){const _0xb4ee5f=_0x492a7b;alert(_0xb4ee5f(0x17b));})[_0x492a7b(0x19a)](function(_0x2bbe7b){const _0x5ec1c1=_0x492a7b;console['log'](_0x5ec1c1(0x18b),_0x2bbe7b),fallbackDownload(_0x3f808a);});}catch(_0x314773){console[_0x492a7b(0x1ab)](_0x492a7b(0x219),_0x314773),fallbackDownload(_0x3f808a);}else fallbackDownload(_0x3f808a);}function fallbackDownload(_0x4ba487){const _0x56be5a=_0x5b5570;var _0x1c4025=_0x4ba487['toDataURL'](_0x56be5a(0x1fb),0.95),_0x58c1ef=document['createElement']('a');_0x58c1ef[_0x56be5a(0x145)]=_0x56be5a(0x1cf)+new Date()[_0x56be5a(0x197)]()+_0x56be5a(0x172),_0x58c1ef['href']=_0x1c4025,document[_0x56be5a(0x230)][_0x56be5a(0x1f1)](_0x58c1ef),_0x58c1ef[_0x56be5a(0x1e6)](),document[_0x56be5a(0x230)][_0x56be5a(0x1ee)](_0x58c1ef),setTimeout(function(){alert('📥\x20이미지가\x20저장되었습니다!\x0a\x0a갤러리(사진)\x20앱을\x20열어서\x0a저장된\x20이미지를\x20선택하여\x20공유하세요.');},0x1f4);}function shareAll(){const _0x56ea8c=_0x5b5570;closeShareSelectModal();var _0x1b3e8b=/Android/i['test'](navigator[_0x56ea8c(0x17f)]);if(_0x1b3e8b){tryAndroidTextShare();return;}if(typeof html2canvas===_0x56ea8c(0x188)){alert(_0x56ea8c(0x15b));return;}document[_0x56ea8c(0x1b7)](_0x56ea8c(0x144))['classList']['add'](_0x56ea8c(0x1c1)),setTimeout(function(){const _0x42876e=_0x56ea8c;fixOklchColors(document[_0x42876e(0x1b7)](_0x42876e(0x186))),html2canvas(document[_0x42876e(0x1b7)](_0x42876e(0x186)),{'backgroundColor':'#ffffff','scale':0x2,'logging':![],'useCORS':!![],'allowTaint':!![],'foreignObjectRendering':![],'imageTimeout':0x0,'scrollY':0x0,'scrollX':0x0})['then'](function(_0x31f40e){const _0x12a26d=_0x42876e,_0x203221=document['getElementById'](_0x12a26d(0x1e2));let _0x4aca5f=0x0;const _0x204c81=_0x203221[_0x12a26d(0x1b6)](_0x12a26d(0x177));_0x204c81[_0x12a26d(0x14c)](function(_0x181fe7){_0x4aca5f+=_0x181fe7['offsetHeight']+0x14;});const _0x14d066=Math[_0x12a26d(0x1a4)](_0x4aca5f,_0x203221['scrollHeight'])+0xc8;html2canvas(_0x203221,{'backgroundColor':'#ffffff','scale':0x2,'logging':![],'useCORS':!![],'allowTaint':!![],'foreignObjectRendering':![],'imageTimeout':0x0,'scrollY':0x0,'scrollX':0x0,'windowHeight':_0x14d066+0x12c,'height':_0x14d066,'onclone':function(_0x2a9f65){const _0x106125=_0x12a26d,_0x4f459d=_0x2a9f65[_0x106125(0x1b7)](_0x106125(0x1e2));_0x4f459d&&(_0x4f459d[_0x106125(0x16f)][_0x106125(0x1f2)]=_0x14d066+'px',_0x4f459d[_0x106125(0x16f)]['overflow']=_0x106125(0x1ce),_0x4f459d[_0x106125(0x16f)]['paddingBottom']='50px');}})[_0x12a26d(0x13c)](function(_0x234ee9){const _0x1258b3=_0x12a26d,_0x4d45dd=_0x31f40e[_0x1258b3(0x1f2)]+_0x234ee9[_0x1258b3(0x1f2)]+0x28,_0x40b580=Math[_0x1258b3(0x1a4)](_0x31f40e[_0x1258b3(0x160)],_0x234ee9[_0x1258b3(0x160)]),_0x8ddaca=document[_0x1258b3(0x17a)](_0x1258b3(0x211));_0x8ddaca[_0x1258b3(0x160)]=_0x40b580,_0x8ddaca['height']=_0x4d45dd;const _0x538e0e=_0x8ddaca['getContext']('2d');_0x538e0e['fillStyle']=_0x1258b3(0x137),_0x538e0e['fillRect'](0x0,0x0,_0x40b580,_0x4d45dd),_0x538e0e[_0x1258b3(0x1ad)](_0x31f40e,(_0x40b580-_0x31f40e['width'])/0x2,0x0),_0x538e0e[_0x1258b3(0x1ad)](_0x234ee9,(_0x40b580-_0x234ee9[_0x1258b3(0x160)])/0x2,_0x31f40e[_0x1258b3(0x1f2)]+0x28),document[_0x1258b3(0x1b7)](_0x1258b3(0x144))[_0x1258b3(0x1df)][_0x1258b3(0x22b)](_0x1258b3(0x1c1)),_0x8ddaca[_0x1258b3(0x152)](function(_0x1146e5){const _0x4acbb0=_0x1258b3;if(!_0x1146e5){alert(_0x4acbb0(0x1f8));return;}var _0x576316=_0x4acbb0(0x182)+new Date()[_0x4acbb0(0x197)]()+_0x4acbb0(0x172);try{var _0x2d888e=new File([_0x1146e5],_0x576316,{'type':_0x4acbb0(0x1fb)}),_0x5036a2=navigator[_0x4acbb0(0x226)]&&navigator[_0x4acbb0(0x226)]({'files':[_0x2d888e]});_0x5036a2?navigator[_0x4acbb0(0x1da)]({'files':[_0x2d888e],'title':'파크골프\x20경기\x20결과','text':'파크골프\x20경기\x20결과를\x20공유합니다.'})['then'](function(){const _0x42252a=_0x4acbb0;console[_0x42252a(0x1ab)](_0x42252a(0x239));})[_0x4acbb0(0x19a)](function(_0xf657fc){const _0x47e64e=_0x4acbb0;_0xf657fc['name']!==_0x47e64e(0x14e)&&(console[_0x47e64e(0x1ab)]('공유\x20오류:',_0xf657fc),tryClipboardShare(_0x1146e5,_0x8ddaca));}):tryAndroidTextShare();}catch(_0x3f8550){console[_0x4acbb0(0x1ab)](_0x4acbb0(0x22f),_0x3f8550),tryClipboardShare(_0x1146e5,_0x8ddaca);}},_0x1258b3(0x1fb),0.95);})[_0x12a26d(0x19a)](function(_0x5589f6){const _0x52e78c=_0x12a26d;document[_0x52e78c(0x1b7)](_0x52e78c(0x144))[_0x52e78c(0x1df)][_0x52e78c(0x22b)](_0x52e78c(0x1c1)),_0x5589f6[_0x52e78c(0x185)]&&_0x5589f6[_0x52e78c(0x185)][_0x52e78c(0x225)](_0x52e78c(0x1ea))!==-0x1||_0x5589f6[_0x52e78c(0x185)][_0x52e78c(0x225)]('unsupported\x20color')!==-0x1||_0x5589f6['message'][_0x52e78c(0x225)](_0x52e78c(0x170))!==-0x1?(showToast(_0x52e78c(0x159),0xbb8),setTimeout(function(){tryAndroidTextShare();},0x1f4)):alert(_0x52e78c(0x1c3)+_0x5589f6[_0x52e78c(0x185)]+_0x52e78c(0x18c)),console[_0x52e78c(0x1ab)](_0x52e78c(0x16e),_0x5589f6);});})['catch'](function(_0x4a7986){const _0x10cc47=_0x42876e;document[_0x10cc47(0x1b7)](_0x10cc47(0x144))[_0x10cc47(0x1df)][_0x10cc47(0x22b)](_0x10cc47(0x1c1)),_0x4a7986[_0x10cc47(0x185)]&&_0x4a7986[_0x10cc47(0x185)][_0x10cc47(0x225)](_0x10cc47(0x1ea))!==-0x1||_0x4a7986[_0x10cc47(0x185)][_0x10cc47(0x225)](_0x10cc47(0x223))!==-0x1||_0x4a7986[_0x10cc47(0x185)][_0x10cc47(0x225)](_0x10cc47(0x170))!==-0x1?(showToast('이미지\x20생성\x20불가\x20—\x20결과\x20텍스트로\x20공유합니다.',0xbb8),setTimeout(function(){tryAndroidTextShare();},0x1f4)):alert('⚠️\x20이미지\x20생성에\x20실패했습니다.\x0a\x0a오류:\x20'+_0x4a7986[_0x10cc47(0x185)]+'\x0a\x0a해결\x20방법:\x0a1.\x20페이지\x20새로고침(F5\x20또는\x20Ctrl+R)\x0a2.\x20점수를\x20다시\x20입력한\x20후\x20재시도\x0a3.\x20다른\x20브라우저로\x20시도'),console[_0x10cc47(0x1ab)](_0x10cc47(0x13b),_0x4a7986);});},0x1f4);}function fallbackShare(_0x24f262){const _0x4c98b4=_0x5b5570;_0x24f262[_0x4c98b4(0x152)](function(_0x4e36c4){const _0x54c24f=_0x4c98b4,_0x65127d=URL['createObjectURL'](_0x4e36c4),_0x4eae6c=document[_0x54c24f(0x17a)]('a');_0x4eae6c[_0x54c24f(0x1d6)]=_0x65127d,_0x4eae6c[_0x54c24f(0x145)]=_0x54c24f(0x1eb)+new Date()['getTime']()+_0x54c24f(0x172),document[_0x54c24f(0x230)][_0x54c24f(0x1f1)](_0x4eae6c),_0x4eae6c[_0x54c24f(0x1e6)](),document[_0x54c24f(0x230)][_0x54c24f(0x1ee)](_0x4eae6c),URL[_0x54c24f(0x139)](_0x65127d),document[_0x54c24f(0x1b7)](_0x54c24f(0x144))['classList'][_0x54c24f(0x22b)](_0x54c24f(0x1c1)),showToast(_0x54c24f(0x1c5));});}function initDate(){updateDateTime(),setInterval(updateDateTime,0x3e8);}function updateDateTime(){const _0x154af6=_0x5b5570,_0x4644be=new Date(),_0x331876=_0x4644be[_0x154af6(0x18f)](),_0xcc7e4b=String(_0x4644be[_0x154af6(0x156)]()+0x1)[_0x154af6(0x1cb)](0x2,'0'),_0x194ee2=String(_0x4644be['getDate']())[_0x154af6(0x1cb)](0x2,'0'),_0xa15918=String(_0x4644be[_0x154af6(0x1b5)]())[_0x154af6(0x1cb)](0x2,'0'),_0x755b8f=String(_0x4644be['getMinutes']())[_0x154af6(0x1cb)](0x2,'0'),_0x3690e0=String(_0x4644be['getSeconds']())[_0x154af6(0x1cb)](0x2,'0'),_0x24dd91=_0x331876+'.'+_0xcc7e4b+'.'+_0x194ee2+'\x20'+_0xa15918+':'+_0x755b8f+':'+_0x3690e0;document[_0x154af6(0x1b7)](_0x154af6(0x217))['value']=_0x24dd91,document[_0x154af6(0x1b7)](_0x154af6(0x154))['textContent']=_0x24dd91;}function updateTeamName(){const _0x20aad5=_0x5b5570,_0x563a50=document[_0x20aad5(0x1b7)]('teamNameInput')[_0x20aad5(0x191)]||_0x20aad5(0x16d);document['getElementById'](_0x20aad5(0x1fe))[_0x20aad5(0x147)]=_0x563a50;}function loadData(){const _0x4939b0=_0x5b5570,_0x32daef=localStorage['getItem'](_0x4939b0(0x1bb));if(_0x32daef){const _0x866379=JSON[_0x4939b0(0x170)](_0x32daef),_0x3f1db2=_0x866379[_0x4939b0(0x1d1)]===_0x4939b0(0x1db)||_0x866379[_0x4939b0(0x1d1)]==='미입력'?'':_0x866379['location']||'';document[_0x4939b0(0x1b7)](_0x4939b0(0x1b3))[_0x4939b0(0x191)]=_0x3f1db2,document[_0x4939b0(0x1b7)](_0x4939b0(0x1dd))[_0x4939b0(0x191)]=_0x866379[_0x4939b0(0x142)]||'',updateTeamName(),document[_0x4939b0(0x1b7)](_0x4939b0(0x165))[_0x4939b0(0x147)]=_0x3f1db2||_0x4939b0(0x16d),selectedHoles=_0x866379[_0x4939b0(0x1fd)]||0x9,coursePars=_0x866379[_0x4939b0(0x1f9)]||coursePars,scores=_0x866379[_0x4939b0(0x1e4)]||scores,playerNames=_0x866379[_0x4939b0(0x1d4)]||['','','',''];for(let _0x40fd82=0x1;_0x40fd82<=0x4;_0x40fd82++){document[_0x4939b0(0x1b7)](_0x4939b0(0x169)+_0x40fd82)[_0x4939b0(0x191)]=playerNames[_0x40fd82-0x1];}return document[_0x4939b0(0x1b6)]('.hole-option')['forEach'](function(_0x2c07d5,_0x484542){const _0x378d0c=_0x4939b0;_0x2c07d5[_0x378d0c(0x1df)][_0x378d0c(0x203)](_0x378d0c(0x23f),[0x9,0x12,0x1b,0x24][_0x484542]===selectedHoles);}),renderAllCourses(),showToast(_0x4939b0(0x1f6)),!![];}return![];}function autoSave(){const _0x496dd0=_0x5b5570;for(let _0x2ab97e=0x1;_0x2ab97e<=0x4;_0x2ab97e++){playerNames[_0x2ab97e-0x1]=document[_0x496dd0(0x1b7)](_0x496dd0(0x169)+_0x2ab97e)[_0x496dd0(0x191)];}const _0x593d1e=document[_0x496dd0(0x1b7)](_0x496dd0(0x1b3))['value'],_0x35333e={'location':_0x593d1e,'selectedHoles':selectedHoles,'coursePars':coursePars,'scores':scores,'playerNames':playerNames};localStorage[_0x496dd0(0x179)](_0x496dd0(0x1bb),JSON[_0x496dd0(0x1ef)](_0x35333e));const _0x349f99=document[_0x496dd0(0x1b7)](_0x496dd0(0x208));_0x349f99&&_0x35333e[_0x496dd0(0x23c)]&&(_0x349f99[_0x496dd0(0x191)]=_0x35333e[_0x496dd0(0x23c)]);}function saveData(){const _0x1ff18b=_0x5b5570;for(let _0x159919=0x1;_0x159919<=0x4;_0x159919++){playerNames[_0x159919-0x1]=document[_0x1ff18b(0x1b7)](_0x1ff18b(0x169)+_0x159919)[_0x1ff18b(0x191)];}const _0x13df59=document[_0x1ff18b(0x1b7)](_0x1ff18b(0x1b3))['value'],_0x40bbec=document[_0x1ff18b(0x1b7)]('teamNameInput')[_0x1ff18b(0x191)];document[_0x1ff18b(0x1b7)](_0x1ff18b(0x165))[_0x1ff18b(0x147)]=_0x13df59||_0x1ff18b(0x16d),updateTeamName();const _0x20bf79=document[_0x1ff18b(0x1b7)](_0x1ff18b(0x208)),_0x3ee961=_0x20bf79?_0x20bf79[_0x1ff18b(0x191)]:'',_0x1510c9={'location':_0x13df59,'teamName':_0x40bbec,'selectedHoles':selectedHoles,'coursePars':coursePars,'scores':scores,'playerNames':playerNames,'note':_0x3ee961};localStorage[_0x1ff18b(0x179)](_0x1ff18b(0x1bb),JSON[_0x1ff18b(0x1ef)](_0x1510c9)),saveHistory(),renderAllCourses(),showToast(_0x1ff18b(0x19f));}function showToast(_0x3e4857,_0x16b17b){const _0x23c02b=_0x5b5570,_0x26a3da=document['getElementById'](_0x23c02b(0x200));_0x26a3da[_0x23c02b(0x147)]=_0x3e4857,_0x26a3da[_0x23c02b(0x1df)][_0x23c02b(0x20b)](_0x23c02b(0x1c1)),setTimeout(function(){const _0x5d814f=_0x23c02b;_0x26a3da[_0x5d814f(0x1df)]['remove'](_0x5d814f(0x1c1));},_0x16b17b||0x7d0);}function openMap(){const _0x3f7d4b=_0x5b5570,_0x15091d=document[_0x3f7d4b(0x1b7)](_0x3f7d4b(0x1b3))[_0x3f7d4b(0x191)];if(_0x15091d){const _0xae44bd=_0x3f7d4b(0x148)+encodeURIComponent(_0x15091d+_0x3f7d4b(0x157)),_0x10c69b=/iPhone|iPad|iPod|Android/i[_0x3f7d4b(0x16b)](navigator[_0x3f7d4b(0x17f)]);_0x10c69b?window['location'][_0x3f7d4b(0x1d6)]=_0xae44bd:window[_0x3f7d4b(0x235)](_0xae44bd,_0x3f7d4b(0x222));}else alert(_0x3f7d4b(0x192));}function selectHoles(_0x50851c){const _0x43af64=_0x5b5570;selectedHoles=_0x50851c,document['querySelectorAll'](_0x43af64(0x234))[_0x43af64(0x14c)](function(_0x5d19f1,_0xb7c9f5){const _0x5468a9=_0x43af64;_0x5d19f1[_0x5468a9(0x1df)][_0x5468a9(0x203)](_0x5468a9(0x23f),[0x9,0x12,0x1b,0x24][_0xb7c9f5]===_0x50851c);}),renderAllCourses();}function clearAllScores(){const _0x21551=_0x5b5570;confirm(_0x21551(0x193))&&(scores={'A':{0x1:Array(0x9)['fill'](''),0x2:Array(0x9)[_0x21551(0x1bd)](''),0x3:Array(0x9)['fill'](''),0x4:Array(0x9)[_0x21551(0x1bd)]('')},'B':{0x1:Array(0x9)['fill'](''),0x2:Array(0x9)['fill'](''),0x3:Array(0x9)['fill'](''),0x4:Array(0x9)['fill']('')},'C':{0x1:Array(0x9)['fill'](''),0x2:Array(0x9)[_0x21551(0x1bd)](''),0x3:Array(0x9)[_0x21551(0x1bd)](''),0x4:Array(0x9)[_0x21551(0x1bd)]('')},'D':{0x1:Array(0x9)[_0x21551(0x1bd)](''),0x2:Array(0x9)[_0x21551(0x1bd)](''),0x3:Array(0x9)[_0x21551(0x1bd)](''),0x4:Array(0x9)['fill']('')}},renderAllCourses(),updateSummary(),showToast(_0x21551(0x1e3)));}function normalizePlayerName(_0x16f98e){const _0xd78c9a=_0x5b5570;if(_0x16f98e==null)return'';let _0x1b7ae8=String(_0x16f98e);return _0x1b7ae8=_0x1b7ae8[_0xd78c9a(0x22e)](/[\u0000-\u001F\u007F]/g,''),_0x1b7ae8=_0x1b7ae8[_0xd78c9a(0x22e)](/&quot;|&#34;/g,'\x22')['replace'](/&#39;|&apos;/g,'\x27')[_0xd78c9a(0x22e)](/&amp;/g,'&')['replace'](/&lt;/g,'<')[_0xd78c9a(0x22e)](/&gt;/g,'>'),_0x1b7ae8=_0x1b7ae8[_0xd78c9a(0x22e)](/\s+/g,'\x20')['trim'](),_0x1b7ae8=_0x1b7ae8[_0xd78c9a(0x22e)](/^[\[\(\{\"\'\\]+/,'')[_0xd78c9a(0x22e)](/[\]\)\}\"\'\\]+$/,''),_0x1b7ae8=_0x1b7ae8[_0xd78c9a(0x22e)](/\s+/g,'\x20')[_0xd78c9a(0x13a)](),_0x1b7ae8;}function savePlayerName(_0x44f8bf){const _0x137d70=_0x5b5570;_0x44f8bf=normalizePlayerName(_0x44f8bf);if(!_0x44f8bf)return;let _0x2e4614=JSON[_0x137d70(0x170)](localStorage[_0x137d70(0x1c9)](_0x137d70(0x171))||'[]');!_0x2e4614['includes'](_0x44f8bf)&&(_0x2e4614[_0x137d70(0x1c4)](_0x44f8bf),localStorage[_0x137d70(0x179)](_0x137d70(0x171),JSON['stringify'](_0x2e4614)));}function getSavedNames(){const _0x532fb9=_0x5b5570,_0x2c51bb=localStorage[_0x532fb9(0x1c9)](_0x532fb9(0x171));if(!_0x2c51bb)return[];try{const _0x3c32bc=JSON['parse'](_0x2c51bb),_0x1428f1=typeof _0x3c32bc===_0x532fb9(0x1ac)?JSON['parse'](_0x3c32bc):_0x3c32bc;if(!Array[_0x532fb9(0x140)](_0x1428f1))return[];return _0x1428f1[_0x532fb9(0x212)](_0x953559=>typeof _0x953559===_0x532fb9(0x1ac))[_0x532fb9(0x19c)](_0x5b7356=>normalizePlayerName(_0x5b7356))[_0x532fb9(0x212)](_0x2f6de5=>_0x2f6de5);}catch(_0x300d9b){return console['warn'](_0x532fb9(0x14d),_0x300d9b),localStorage['removeItem'](_0x532fb9(0x171)),[];}}function _0x2ec9(_0x57d77b,_0x4e8bf1){_0x57d77b=_0x57d77b-0x136;const _0x91658e=_0x9165();let _0x2ec9ac=_0x91658e[_0x57d77b];return _0x2ec9ac;}function deleteSavedName(_0x56bb15){const _0xcf42c7=_0x5b5570;let _0x29a378=getSavedNames();_0x29a378=_0x29a378[_0xcf42c7(0x212)](function(_0x3b0417){return _0x3b0417!==_0x56bb15;}),localStorage['setItem'](_0xcf42c7(0x171),JSON[_0xcf42c7(0x1ef)](_0x29a378));}function openNameListModal(){const _0x1df963=_0x5b5570,_0x55a0c9=getSavedNames(),_0x528281=document[_0x1df963(0x1b7)](_0x1df963(0x224));_0x528281[_0x1df963(0x228)]='';if(!_0x55a0c9||_0x55a0c9['length']===0x0){const _0x3ef169=document['createElement']('div');_0x3ef169['className']=_0x1df963(0x1bc),_0x3ef169[_0x1df963(0x228)]=_0x1df963(0x155),_0x528281[_0x1df963(0x1f1)](_0x3ef169);}else _0x55a0c9['forEach'](function(_0x580ec9){const _0x57722c=_0x1df963,_0xaf7f25=document[_0x57722c(0x17a)](_0x57722c(0x1cd));_0xaf7f25[_0x57722c(0x16f)][_0x57722c(0x1bf)]=_0x57722c(0x22a),_0xaf7f25['addEventListener']('click',function(){selectPlayerName(_0x580ec9);});const _0x16abea=document['createElement'](_0x57722c(0x1be));_0x16abea[_0x57722c(0x16f)]['cssText']=_0x57722c(0x229),_0x16abea['textContent']=normalizePlayerName(_0x580ec9),_0xaf7f25[_0x57722c(0x1f1)](_0x16abea);const _0x378a55=document['createElement'](_0x57722c(0x183));_0x378a55[_0x57722c(0x1f3)]=_0x57722c(0x183),_0x378a55[_0x57722c(0x16f)][_0x57722c(0x1bf)]=_0x57722c(0x173),_0x378a55[_0x57722c(0x147)]='삭제',_0x378a55[_0x57722c(0x1a7)](_0x57722c(0x1e6),function(_0x436423){_0x436423['stopPropagation'](),deleteNameFromList(_0x580ec9);}),_0xaf7f25[_0x57722c(0x1f1)](_0x378a55),_0x528281[_0x57722c(0x1f1)](_0xaf7f25);});_0x528281[_0x1df963(0x194)]=0x0;const _0x1057a5=document[_0x1df963(0x1b7)](_0x1df963(0x21c));_0x1057a5[_0x1df963(0x16f)][_0x1df963(0x1a3)](_0x1df963(0x14a),_0x1df963(0x1c2),_0x1df963(0x1c7)),_0x1057a5['classList'][_0x1df963(0x20b)]('show');}function selectPlayerName(_0x150000){const _0x41796d=_0x5b5570;_0x150000=normalizePlayerName(_0x150000);for(let _0x4ff57e=0x1;_0x4ff57e<=0x4;_0x4ff57e++){const _0xbdd1bd=document[_0x41796d(0x1b7)](_0x41796d(0x169)+_0x4ff57e);if(!_0xbdd1bd['value']||_0xbdd1bd[_0x41796d(0x191)]['trim']()===''){_0xbdd1bd[_0x41796d(0x191)]=_0x150000,playerNames[_0x4ff57e-0x1]=_0x150000,renderAllCourses(),updateSummary(),saveData(),closeNameListModal(),showToast(_0x150000+_0x41796d(0x181));return;}}showToast(_0x41796d(0x190));}function _0x9165(){const _0x761d91=['이미지\x20생성\x20오류:','setProperty','max','<div\x20class=\x22history-item-location\x22>📍\x20','93480NYcspt','addEventListener','score','\x0a\x0a위\x20내용을\x20복사해서\x20카카오톡에\x20붙여넣으세요.','opacity','log','string','drawImage','rank-new-','279300huHPEc','━━━━━━━━━━━━━━━','auto','select','locationInput','결과\x20텍스트:\x0a\x0a','getHours','querySelectorAll','getElementById','input','fixed',')\x22>불러오기</button>','parkGolfData','name-list-empty','fill','span','cssText','<div\x20class=\x22history-item-info\x22>','show','flex','⚠️\x20이미지\x20생성에\x20실패했습니다.\x0a\x0a오류:\x20','push','이미지가\x20저장되었습니다!\x0a갤러리에서\x20확인\x20후\x20공유해주세요.','write','important','execCommand','getItem','#FFD700','padStart','background','div','visible','parkgolf_summary_','clipboard','location','812664hHmEsS','📅\x20','playerNames','historyList','href','82230xMWrgV','html2canvas\x20로드\x20성공\x20(대체\x20CDN)','score-','share','장소\x20미입력','total-new-','teamNameInput','outlineColor','classList','shareSelectModal','unshift','coursesContainer','점수가\x20지워졌습니다','scores',')\x22>(','click','scoreDisplay','2401551VmyJUN','</div>','oklch','parkgolf-result-','color','focus','removeChild','stringify','1453720rTXMzJ','appendChild','height','type','join','<button\x20class=\x22load-btn\x22\x20onclick=\x22loadHistory(','저장된\x20데이터를\x20불러왔습니다','<div\x20class=\x22par-inline\x22\x20onclick=\x22openParModal(\x27','이미지\x20생성에\x20실패했습니다.','coursePars','<td\x20class=\x22score-cell\x22\x20style=\x22width:\x20calc((100%\x20-\x2030px)\x20/\x204)\x20!important;\x20min-width:\x2080px\x20!important;\x22>','image/png','writeText','selectedHoles','shareTeamName','html2canvas\x20로드\x20재시도...','toast','#dc3545','change','toggle','</th>','📱\x20PASIS\x20sv2.0\x20클럽용','none','getComputedStyle','note-input-new','경기자\x20','borderTopColor','add','명단에서\x20삭제되었습니다','https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js','#f8f9fa','</td>','파크골프\x20경기\x20결과','canvas','filter','reduce','stopPropagation','readyState','touchend','dateInput','slice','클립보드\x20오류:','<thead><tr>','borderColor','nameListModal','find','<div\x20class=\x22history-item-players\x22>👥\x20','preventDefault','textarea','경기자\x20미등록','_blank','unsupported\x20color','nameListContainer','indexOf','canShare','DOMContentLoaded','innerHTML','font-size:15px;\x20font-weight:bold;\x20color:#1e3c72;','display:flex;\x20justify-content:space-between;\x20align-items:center;\x20padding:12px;\x20margin-bottom:8px;\x20background:#f8f9fa;\x20border:2px\x20solid\x20#dee2e6;\x20border-radius:8px;\x20cursor:pointer;','remove','</tr>','loading','replace','File\x20생성\x20오류:','body','src','<tr>','600','.hole-option','open','<th\x20class=\x22player-header\x22>','date','<td\x20style=\x22font-size:\x2020px\x20!important;\x20font-weight:\x20900\x20!important;\x22>','공유\x20완료','length','sort','note','scrollHeight','name','active',')\x22>삭제</button>','#ffffff','parkGolfHistories','revokeObjectURL','trim','합계표\x20이미지\x20생성\x20오류:','then','\x22을(를)\x20명단에서\x20삭제하시겠습니까?','파크골프\x20경기\x20결과를\x20공유합니다.','<div\x20class=\x22hole-num\x22>','isArray','<div\x20style=\x22height:\x2050px;\x20margin:\x200;\x20padding:\x200;\x20background:\x20transparent;\x22></div>','teamName','#1e3c72','loadingModal','download',')</div>','textContent','https://www.google.com/maps/search/?api=1&query=','html2canvas\x20로드\x20성공','display','<tr\x20class=\x22total-row\x22>','forEach','저장된\x20이름\x20목록\x20파싱\x20오류\x20-\x20초기화','AbortError','경기자\x20이름과\x20점수가\x20지워졌습니다','931003ygQKvE','historyCount','toBlob','blur','shareDate','저장된\x20이름이\x20없습니다.<br>경기자\x20이름을\x20입력하면\x20자동으로\x20저장됩니다.','getMonth','\x20파크골프장','onerror','이미지\x20생성\x20불가\x20—\x20결과\x20텍스트로\x20공유합니다.','이\x20기록을\x20삭제하시겠습니까?','⚠️\x20이미지\x20생성\x20기능을\x20로드할\x20수\x20없습니다.\x0a\x0a해결\x20방법:\x0a1.\x20페이지를\x20완전히\x20새로고침(Ctrl+F5\x20또는\x20Cmd+R)\x0a2.\x20브라우저\x20캐시\x20삭제\x20후\x20재시도\x0a3.\x20다른\x20브라우저로\x20시도\x0a\x0a문제가\x20계속되면\x20관리자에게\x20문의하세요.','penalty-new-','<div\x20class=\x22history-item\x22>','parModal','</tr></tbody></table></div>','width','<th\x20class=\x22holepar-head\x22\x20style=\x22width:\x2030px\x20!important;\x20min-width:\x2030px\x20!important;\x20max-width:\x2030px\x20!important;\x20padding:\x206px\x200\x20!important;\x22>홀</th>','bold','borderLeftColor','onload','shareLocation','타\x20(','nameListCloseBtn','🏌️\x20파크골프\x20경기\x20결과','player','fontWeight','test','기록을\x20불러왔습니다','미입력','코스별\x20카드\x20이미지\x20생성\x20오류:','style','parse','parkGolfPlayerNames','.png','padding:6px\x2012px;\x20background:transparent;\x20color:#dc3545;\x20border:none;\x20font-size:14px;\x20font-weight:bold;\x20cursor:pointer;','getDate','penalty','\x22\x20onclick=\x22openScoreModal(\x27','.course-card','touchstart','setItem','createElement','📋\x20이미지가\x20클립보드에\x20복사되었습니다!\x0a\x0a카카오톡,\x20문자\x20등\x20원하는\x20앱을\x20열고\x0a대화창에서\x20길게\x20눌러\x20[붙여넣기]를\x20선택하세요.','borderBottomColor','historyModal','모든\x20경기자\x20이름과\x20점수를\x20지우시겠습니까?','userAgent','341VrbMdd','\x20선택됨','parkgolf_full_','button','includes','message','resultCapture','<div\x20class=\x22total-label\x22>계</div>','undefined',')\x22>','scoreModal','클립보드\x20복사\x20실패:','\x0a\x0a해결\x20방법:\x0a1.\x20페이지\x20새로고침(F5\x20또는\x20Ctrl+R)\x0a2.\x20점수를\x20다시\x20입력한\x20후\x20재시도\x0a3.\x20다른\x20브라우저로\x20시도','<table\x20class=\x22course-table\x22\x20style=\x22width:\x20100%\x20!important;\x20margin:\x200\x20!important;\x22>','801YrQUei','getFullYear','모든\x20경기자\x20칸이\x20이미\x20채워져\x20있습니다','value','장소를\x20입력해주세요!','모든\x20점수를\x20지우시겠습니까?','scrollTop','2xSvtuA','코스\x20(PAR\x20','getTime','backgroundColor','<div\x20class=\x22score-display\x20','catch','error','map','<div\x20class=\x22history-item-date\x22>','102HZKkSl','저장되었습니다!','copy','56qjcubN'];_0x9165=function(){return _0x761d91;};return _0x9165();}function deleteNameFromList(_0x5597de){const _0x2dd843=_0x5b5570;confirm('\x22'+_0x5597de+_0x2dd843(0x13d))&&(deleteSavedName(_0x5597de),openNameListModal(),showToast(_0x2dd843(0x20c)));}function closeNameListModal(){const _0xfd4ea9=_0x5b5570,_0x559494=document[_0xfd4ea9(0x1b7)]('nameListModal');_0x559494[_0xfd4ea9(0x1df)]['remove'](_0xfd4ea9(0x1c1)),_0x559494[_0xfd4ea9(0x16f)][_0xfd4ea9(0x1a3)]('display','none',_0xfd4ea9(0x1c7));}function clearPlayerNames(){const _0x3ac523=_0x5b5570;if(confirm(_0x3ac523(0x17e))){for(let _0x2d85a8=0x1;_0x2d85a8<=0x4;_0x2d85a8++){document[_0x3ac523(0x1b7)](_0x3ac523(0x169)+_0x2d85a8)[_0x3ac523(0x191)]='',playerNames[_0x2d85a8-0x1]='';}scores={'A':{0x1:Array(0x9)[_0x3ac523(0x1bd)](''),0x2:Array(0x9)['fill'](''),0x3:Array(0x9)[_0x3ac523(0x1bd)](''),0x4:Array(0x9)[_0x3ac523(0x1bd)]('')},'B':{0x1:Array(0x9)[_0x3ac523(0x1bd)](''),0x2:Array(0x9)[_0x3ac523(0x1bd)](''),0x3:Array(0x9)['fill'](''),0x4:Array(0x9)[_0x3ac523(0x1bd)]('')},'C':{0x1:Array(0x9)['fill'](''),0x2:Array(0x9)[_0x3ac523(0x1bd)](''),0x3:Array(0x9)[_0x3ac523(0x1bd)](''),0x4:Array(0x9)[_0x3ac523(0x1bd)]('')},'D':{0x1:Array(0x9)[_0x3ac523(0x1bd)](''),0x2:Array(0x9)[_0x3ac523(0x1bd)](''),0x3:Array(0x9)['fill'](''),0x4:Array(0x9)[_0x3ac523(0x1bd)]('')}},renderAllCourses(),updateSummary(),saveData(),showToast(_0x3ac523(0x14f));}}function openParModal(_0x406f17,_0x2cbbbb){const _0x5a4006=_0x5b5570;currentParCourse=_0x406f17,currentParHole=_0x2cbbbb,document[_0x5a4006(0x1b7)]('parModal')[_0x5a4006(0x1df)][_0x5a4006(0x20b)](_0x5a4006(0x1c1));}function setPar(_0x168ce6){coursePars[currentParCourse][currentParHole]=_0x168ce6,closeModal(),renderAllCourses(),updateSummary(),autoSave();}function openScoreModal(_0x329a3c,_0x26c018,_0x2bdee7){const _0xf2e5e=_0x5b5570;currentScoreCourse=_0x329a3c,currentScorePlayer=_0x26c018,currentScoreHole=_0x2bdee7;const _0x13b777=scores[_0x329a3c][_0x26c018][_0x2bdee7];_0x13b777?(isPenalty=_0x13b777[_0xf2e5e(0x184)](')'),tempScore=_0x13b777['replace'](')','')):(tempScore='',isPenalty=![]),updateScoreDisplay(),document[_0xf2e5e(0x1b7)](_0xf2e5e(0x18a))[_0xf2e5e(0x1df)][_0xf2e5e(0x20b)](_0xf2e5e(0x1c1));}function addDigit(_0x3fd802){const _0x142415=_0x5b5570;tempScore[_0x142415(0x23a)]<0x2&&(tempScore+=_0x3fd802,updateScoreDisplay());}function deleteDigit(){const _0x152d69=_0x5b5570;tempScore=tempScore[_0x152d69(0x218)](0x0,-0x1),updateScoreDisplay();}function togglePenalty(){tempScore&&(isPenalty=!isPenalty,updateScoreDisplay());}function updateScoreDisplay(){const _0x3ca2eb=_0x5b5570,_0x11b945=document[_0x3ca2eb(0x1b7)](_0x3ca2eb(0x1e7));tempScore?(_0x11b945[_0x3ca2eb(0x147)]=tempScore+(isPenalty?')':''),_0x11b945[_0x3ca2eb(0x16f)][_0x3ca2eb(0x1ec)]=isPenalty?_0x3ca2eb(0x201):_0x3ca2eb(0x143),_0x11b945[_0x3ca2eb(0x16f)]['background']=isPenalty?'#ffebee':'#f8f9fa',_0x11b945[_0x3ca2eb(0x16f)]['fontWeight']=isPenalty?_0x3ca2eb(0x162):_0x3ca2eb(0x233)):(_0x11b945['textContent']='-',_0x11b945[_0x3ca2eb(0x16f)][_0x3ca2eb(0x1ec)]=_0x3ca2eb(0x143),_0x11b945['style'][_0x3ca2eb(0x1cc)]=_0x3ca2eb(0x20e),_0x11b945[_0x3ca2eb(0x16f)][_0x3ca2eb(0x16a)]='600');}function confirmScore(){tempScore?scores[currentScoreCourse][currentScorePlayer][currentScoreHole]=tempScore+(isPenalty?')':''):scores[currentScoreCourse][currentScorePlayer][currentScoreHole]='',closeModal(),renderAllCourses(),updateSummary(),autoSave();}function closeModal(){const _0x1c45ff=_0x5b5570;document[_0x1c45ff(0x1b7)](_0x1c45ff(0x15e))['classList']['remove'](_0x1c45ff(0x1c1)),document[_0x1c45ff(0x1b7)](_0x1c45ff(0x18a))['classList'][_0x1c45ff(0x22b)](_0x1c45ff(0x1c1)),tempScore='',isPenalty=![];}function getPlayerName(_0x51c9db){const _0x3e03f2=_0x5b5570,_0x2cae87=document['getElementById'](_0x3e03f2(0x169)+_0x51c9db)[_0x3e03f2(0x191)];return _0x2cae87||_0x3e03f2(0x209)+_0x51c9db;}function renderCourseTable(_0x1306d6,_0x3d3161){const _0x46ae56=_0x5b5570,_0x1facee=coursePars[_0x1306d6],_0x56c14c=_0x1facee[_0x46ae56(0x213)](function(_0xa22275,_0x126cb6){return _0xa22275+_0x126cb6;},0x0),_0x4f2786=_0x3d3161>0x0?_0x46ae56(0x141):'';let _0x438acd=_0x4f2786+'<div\x20class=\x22course-card\x22\x20style=\x22margin:\x200\x200\x2012px\x200\x20!important;\x20padding:\x200\x20!important;\x20width:\x20100%\x20!important;\x22>'+'<div\x20class=\x22course-header\x22>'+_0x1306d6+_0x46ae56(0x196)+_0x56c14c+_0x46ae56(0x146)+_0x46ae56(0x18d)+_0x46ae56(0x21a)+_0x46ae56(0x161)+_0x46ae56(0x236)+getPlayerName(0x1)+_0x46ae56(0x204)+_0x46ae56(0x236)+getPlayerName(0x2)+_0x46ae56(0x204)+_0x46ae56(0x236)+getPlayerName(0x3)+_0x46ae56(0x204)+'<th\x20class=\x22player-header\x22>'+getPlayerName(0x4)+_0x46ae56(0x204)+'</tr></thead><tbody>';for(let _0x4879c9=0x0;_0x4879c9<0x9;_0x4879c9++){_0x438acd+=_0x46ae56(0x232)+'<td\x20class=\x22holepar-cell\x22\x20style=\x22width:\x2030px\x20!important;\x20min-width:\x2030px\x20!important;\x20max-width:\x2030px\x20!important;\x22>'+_0x46ae56(0x13f)+(_0x4879c9+0x1)+_0x46ae56(0x1e9)+_0x46ae56(0x1f7)+_0x1306d6+'\x27,\x20'+_0x4879c9+_0x46ae56(0x1e5)+_0x1facee[_0x4879c9]+')</div>'+_0x46ae56(0x20f);for(let _0x24f0ed=0x1;_0x24f0ed<=0x4;_0x24f0ed++){const _0x24d4e8=scores[_0x1306d6][_0x24f0ed][_0x4879c9],_0x83537d=_0x24d4e8[_0x46ae56(0x184)](')'),_0x16161c=_0x24d4e8||'-';_0x438acd+=_0x46ae56(0x1fa)+_0x46ae56(0x199)+(_0x83537d?_0x46ae56(0x175):'')+_0x46ae56(0x176)+_0x1306d6+'\x27,\x20'+_0x24f0ed+',\x20'+_0x4879c9+_0x46ae56(0x189)+_0x16161c+'</div>'+'</td>';}_0x438acd+=_0x46ae56(0x22c);}_0x438acd+=_0x46ae56(0x14b)+'<td\x20class=\x22holepar-total\x22\x20style=\x22width:\x2030px\x20!important;\x20min-width:\x2030px\x20!important;\x20max-width:\x2030px\x20!important;\x22>'+_0x46ae56(0x187)+'<div\x20class=\x22par-inline-total\x22>('+_0x56c14c+_0x46ae56(0x146)+_0x46ae56(0x20f);for(let _0x23b30f=0x1;_0x23b30f<=0x4;_0x23b30f++){const _0xe28d62=scores[_0x1306d6][_0x23b30f][_0x46ae56(0x213)](function(_0x59e33b,_0x4547fe){const _0x4ff989=_0x46ae56,_0x597253=parseInt(_0x4547fe[_0x4ff989(0x22e)](')',''))||0x0;return _0x59e33b+_0x597253;},0x0);_0x438acd+=_0x46ae56(0x238)+(_0xe28d62||'-')+_0x46ae56(0x20f);}return _0x438acd+=_0x46ae56(0x15f),_0x438acd;}function updateTableHeaders(){const _0x57ef22=_0x5b5570,_0x41a208=document['querySelectorAll']('.summary-table-new\x20thead\x20th');for(let _0xd077e5=0x1;_0xd077e5<=0x4;_0xd077e5++){const _0x2c1939=getPlayerName(_0xd077e5);_0x41a208[_0xd077e5]&&(_0x41a208[_0xd077e5][_0x57ef22(0x147)]=_0x2c1939);}}function renderAllCourses(){const _0x4050cf=_0x5b5570,_0x32803c=document[_0x4050cf(0x1b7)](_0x4050cf(0x1e2)),_0x48d553=selectedHoles/0x9;let _0x4e87de='';for(let _0xef1830=0x0;_0xef1830<_0x48d553;_0xef1830++){_0x4e87de+=renderCourseTable(courseNames[_0xef1830],_0xef1830);}_0x32803c[_0x4050cf(0x228)]=_0x4e87de,updateTableHeaders(),updateSummary();}function updateSummary(){const _0x3f20cd=_0x5b5570;for(let _0x526f83=0x1;_0x526f83<=0x4;_0x526f83++){let _0x59716c=0x0,_0x90e03e=0x0,_0x57c019=0x0;['A','B','C','D'][_0x3f20cd(0x14c)](function(_0x30d5c0){const _0x239925=_0x3f20cd,_0x1f4724=scores[_0x30d5c0][_0x526f83]['reduce'](function(_0x53dd04,_0x50ecbd){const _0x5d3364=_0x2ec9,_0x57c850=parseInt(_0x50ecbd[_0x5d3364(0x22e)](')',''))||0x0;if(_0x57c850===0x1)_0x90e03e++;if(_0x50ecbd[_0x5d3364(0x184)](')'))_0x57c019++;return _0x53dd04+_0x57c850;},0x0);_0x59716c+=_0x1f4724;const _0x33130f=document[_0x239925(0x1b7)](_0x239925(0x1d9)+_0x30d5c0+'-'+_0x526f83);_0x33130f&&(_0x33130f[_0x239925(0x147)]=_0x1f4724||'-');});const _0x13f03d=document['getElementById'](_0x3f20cd(0x1dc)+_0x526f83);_0x13f03d&&(_0x13f03d['textContent']=_0x59716c||'-');const _0x3c0d11=document[_0x3f20cd(0x1b7)]('holeinone-new-'+_0x526f83);_0x3c0d11&&(_0x3c0d11[_0x3f20cd(0x147)]=_0x90e03e||'-');const _0x1d36b2=document['getElementById'](_0x3f20cd(0x15c)+_0x526f83);_0x1d36b2&&(_0x1d36b2[_0x3f20cd(0x147)]=_0x57c019||'-');}let _0x3b5cf9=[];for(let _0x1afe36=0x1;_0x1afe36<=0x4;_0x1afe36++){let _0x43ced4=0x0;['A','B','C','D'][_0x3f20cd(0x14c)](function(_0x5c930f){const _0x3d5f93=scores[_0x5c930f][_0x1afe36]['reduce'](function(_0x12d1f3,_0x362f51){const _0x2cedde=_0x2ec9,_0x436f7e=parseInt(_0x362f51[_0x2cedde(0x22e)](')',''))||0x0;return _0x12d1f3+_0x436f7e;},0x0);_0x43ced4+=_0x3d5f93;}),_0x3b5cf9[_0x3f20cd(0x1c4)]({'player':_0x1afe36,'score':_0x43ced4});}let _0x1d2cf3=_0x3b5cf9[_0x3f20cd(0x212)](function(_0x110810){const _0x3628d5=_0x3f20cd;return _0x110810[_0x3628d5(0x1a8)]>0x0;});_0x1d2cf3[_0x3f20cd(0x23b)](function(_0x2983d9,_0x300f22){const _0x416931=_0x3f20cd;return _0x2983d9['score']-_0x300f22[_0x416931(0x1a8)];});let _0x39cdcf={},_0x22caff=0x1;for(let _0x1c7eaa=0x0;_0x1c7eaa<_0x1d2cf3[_0x3f20cd(0x23a)];_0x1c7eaa++){_0x1c7eaa>0x0&&_0x1d2cf3[_0x1c7eaa][_0x3f20cd(0x1a8)]!==_0x1d2cf3[_0x1c7eaa-0x1][_0x3f20cd(0x1a8)]&&(_0x22caff=_0x1c7eaa+0x1),_0x39cdcf[_0x1d2cf3[_0x1c7eaa][_0x3f20cd(0x169)]]=_0x22caff;}for(let _0x5dad12=0x1;_0x5dad12<=0x4;_0x5dad12++){const _0x31d5cb=document[_0x3f20cd(0x1b7)](_0x3f20cd(0x1ae)+_0x5dad12);if(_0x31d5cb){if(_0x39cdcf[_0x5dad12]){_0x31d5cb['textContent']=_0x39cdcf[_0x5dad12]+'위';if(_0x39cdcf[_0x5dad12]===0x1)_0x31d5cb['style'][_0x3f20cd(0x1ec)]=_0x3f20cd(0x1ca);else{if(_0x39cdcf[_0x5dad12]===0x2)_0x31d5cb[_0x3f20cd(0x16f)][_0x3f20cd(0x1ec)]='#C0C0C0';else _0x39cdcf[_0x5dad12]===0x3?_0x31d5cb['style'][_0x3f20cd(0x1ec)]='#CD7F32':_0x31d5cb[_0x3f20cd(0x16f)][_0x3f20cd(0x1ec)]=_0x3f20cd(0x143);}}else _0x31d5cb['textContent']='-',_0x31d5cb[_0x3f20cd(0x16f)][_0x3f20cd(0x1ec)]=_0x3f20cd(0x143);}}}document[_0x5b5570(0x215)]===_0x5b5570(0x22d)?document['addEventListener'](_0x5b5570(0x227),initializeApp):initializeApp();function initializeApp(){const _0x2660f3=_0x5b5570,_0x4dfbab=document['getElementById'](_0x2660f3(0x167));_0x4dfbab&&_0x4dfbab[_0x2660f3(0x1a7)](_0x2660f3(0x1e6),function(_0x11df3f){const _0x48d240=_0x2660f3;_0x11df3f[_0x48d240(0x21f)](),_0x11df3f['stopPropagation'](),closeNameListModal();},{'passive':![]});initDate();const _0x3a9678=loadData();updateHistoryCount();!_0x3a9678&&setTimeout(function(){renderAllCourses();},0x64);document[_0x2660f3(0x1b7)](_0x2660f3(0x1b3))[_0x2660f3(0x1a7)](_0x2660f3(0x1b8),function(){const _0x3e619e=_0x2660f3;document['getElementById'](_0x3e619e(0x165))[_0x3e619e(0x147)]=this[_0x3e619e(0x191)]||_0x3e619e(0x16d);});const _0x93e834=document[_0x2660f3(0x1b7)](_0x2660f3(0x1dd));_0x93e834&&(_0x93e834[_0x2660f3(0x1a7)]('input',function(){updateTeamName();}),_0x93e834[_0x2660f3(0x1a7)](_0x2660f3(0x202),autoSave));for(let _0x21fbbf=0x1;_0x21fbbf<=0x4;_0x21fbbf++){document[_0x2660f3(0x1b7)](_0x2660f3(0x169)+_0x21fbbf)[_0x2660f3(0x1a7)](_0x2660f3(0x153),function(){const _0x3ba67a=_0x2660f3,_0x5a4bb5=this[_0x3ba67a(0x191)][_0x3ba67a(0x13a)]();_0x5a4bb5&&savePlayerName(_0x5a4bb5),playerNames[_0x21fbbf-0x1]=this[_0x3ba67a(0x191)],renderAllCourses(),updateSummary(),autoSave();});}const _0x7d2d97=document[_0x2660f3(0x1b7)](_0x2660f3(0x208));_0x7d2d97&&(_0x7d2d97[_0x2660f3(0x1a7)]('input',function(){const _0x1a8505=_0x2660f3;this[_0x1a8505(0x16f)][_0x1a8505(0x1f2)]=_0x1a8505(0x1b1),this[_0x1a8505(0x16f)][_0x1a8505(0x1f2)]=this[_0x1a8505(0x23d)]+'px',autoSave();}),_0x7d2d97[_0x2660f3(0x16f)][_0x2660f3(0x1f2)]=_0x2660f3(0x1b1),_0x7d2d97[_0x2660f3(0x16f)][_0x2660f3(0x1f2)]=_0x7d2d97[_0x2660f3(0x23d)]+'px');const _0x4ff472=document['getElementById'](_0x2660f3(0x167));if(_0x4ff472){const _0x471dff=function(_0x407c1e){const _0x516060=_0x2660f3;_0x407c1e&&(_0x407c1e[_0x516060(0x21f)](),_0x407c1e[_0x516060(0x214)]()),closeNameListModal();};_0x4ff472[_0x2660f3(0x1a7)](_0x2660f3(0x1e6),_0x471dff,{'passive':![]}),_0x4ff472[_0x2660f3(0x1a7)](_0x2660f3(0x178),_0x471dff,{'passive':![]}),_0x4ff472[_0x2660f3(0x1a7)](_0x2660f3(0x216),_0x471dff,{'passive':![]});}}</script>
+<script>
+        // html2canvas 로드 확인 및 재시도
+        (function checkHtml2Canvas() {
+            if (typeof html2canvas === 'undefined') {
+                console.log('html2canvas 로드 재시도...');
+                // 대체 CDN에서 로드 시도
+                var script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+                script.onload = function() {
+                    console.log('html2canvas 로드 성공 (대체 CDN)');
+                };
+                script.onerror = function() {
+                    console.error('html2canvas 로드 실패 - 모든 CDN 시도 완료');
+                };
+                document.head.appendChild(script);
+            } else {
+                console.log('html2canvas 로드 성공');
+            }
+        })();
+        
+        const courseNames = ['A', 'B', 'C', 'D'];
+        let selectedHoles = 9;
+        let coursePars = {
+            A: [3, 5, 3, 5, 3, 3, 3, 4, 4],
+            B: [3, 5, 3, 5, 3, 3, 3, 4, 4],
+            C: [3, 5, 3, 5, 3, 3, 3, 4, 4],
+            D: [3, 5, 3, 5, 3, 3, 3, 4, 4]
+        };
+        
+        let scores = {
+            A: { 1: Array(9).fill(''), 2: Array(9).fill(''), 3: Array(9).fill(''), 4: Array(9).fill('') },
+            B: { 1: Array(9).fill(''), 2: Array(9).fill(''), 3: Array(9).fill(''), 4: Array(9).fill('') },
+            C: { 1: Array(9).fill(''), 2: Array(9).fill(''), 3: Array(9).fill(''), 4: Array(9).fill('') },
+            D: { 1: Array(9).fill(''), 2: Array(9).fill(''), 3: Array(9).fill(''), 4: Array(9).fill('') }
+        };
+        
+        let playerNames = ['', '', '', ''];
+        let currentParCourse = '';
+        let currentParHole = 0;
+        let currentScoreCourse = '';
+        let currentScorePlayer = 0;
+        let currentScoreHole = 0;
+        let tempScore = '';
+        let isPenalty = false;
+        
+        // 저장된 기록 관리
+        function getAllHistories() {
+            const histories = localStorage.getItem('parkGolfHistories');
+            return histories ? JSON.parse(histories) : [];
+        }
+        
+        function saveHistory() {
+            const histories = getAllHistories();
+            const now = new Date();
+            const timestamp = now.getTime();
+            
+            const newHistory = {
+                id: timestamp,
+                date: now.getFullYear() + '.' + 
+                      String(now.getMonth() + 1).padStart(2, '0') + '.' + 
+                      String(now.getDate()).padStart(2, '0') + ' ' +
+                      String(now.getHours()).padStart(2, '0') + ':' + 
+                      String(now.getMinutes()).padStart(2, '0'),
+                location: document.getElementById('locationInput').value || '',
+                playerNames: playerNames.filter(function(name) { return name; }),
+                selectedHoles: selectedHoles,
+                coursePars: coursePars,
+                scores: scores
+            };
+            
+            histories.unshift(newHistory);
+            
+            // 최대 50개까지만 저장
+            if (histories.length > 50) {
+                histories.pop();
+            }
+            
+            localStorage.setItem('parkGolfHistories', JSON.stringify(histories));
+            updateHistoryCount();
+        }
+        
+        function updateHistoryCount() {
+            const histories = getAllHistories();
+            document.getElementById('historyCount').textContent = histories.length;
+        }
+        
+        function openHistoryModal() {
+            const histories = getAllHistories();
+            const listDiv = document.getElementById('historyList');
+            
+            if (histories.length === 0) {
+                listDiv.innerHTML = '<div class="empty-history">저장된 기록이 없습니다</div>';
+            } else {
+                let html = '';
+                histories.forEach(function(history) {
+                    const playerList = history.playerNames.join(', ') || '경기자 미등록';
+                    html += '<div class="history-item">' +
+                           '<div class="history-item-info">' +
+                           '<div class="history-item-date">' + history.date + '</div>' +
+                           '<div class="history-item-location">📍 ' + history.location + '</div>' +
+                           '<div class="history-item-players">👥 ' + playerList + '</div>' +
+                           '</div>' +
+                           '<div class="history-item-actions">' +
+                           '<button class="load-btn" onclick="loadHistory(' + history.id + ')">불러오기</button>' +
+                           '<button class="delete-btn-small" onclick="deleteHistory(' + history.id + ')">삭제</button>' +
+                           '</div>' +
+                           '</div>';
+                });
+                listDiv.innerHTML = html;
+            }
+            
+            document.getElementById('historyModal').classList.add('show');
+        }
+        
+        function closeHistoryModal() {
+            document.getElementById('historyModal').classList.remove('show');
+        }
+        
+        function loadHistory(id) {
+            const histories = getAllHistories();
+            const history = histories.find(function(h) { return h.id === id; });
+            
+            if (history) {
+                const loc = (history.location === '장소 미입력' || history.location === '미입력') ? '' : (history.location || '');
+                document.getElementById('locationInput').value = loc;
+                document.getElementById('shareLocation').textContent = loc || '미입력';
+                selectedHoles = history.selectedHoles;
+                coursePars = history.coursePars;
+                scores = history.scores;
+                playerNames = history.playerNames;
+                
+                // 경기자 이름 복원
+                for (let i = 1; i <= 4; i++) {
+                    document.getElementById('player' + i).value = playerNames[i-1] || '';
+                }
+                
+                // 코스 선택 복원
+                document.querySelectorAll('.hole-option').forEach(function(el, idx) {
+                    el.classList.toggle('active', [9, 18, 27, 36][idx] === selectedHoles);
+                });
+                
+                renderAllCourses();
+                updateSummary();
+                closeHistoryModal();
+                showToast('기록을 불러왔습니다');
+            }
+        }
+        
+        function deleteHistory(id) {
+            if (confirm('이 기록을 삭제하시겠습니까?')) {
+                let histories = getAllHistories();
+                histories = histories.filter(function(h) { return h.id !== id; });
+                localStorage.setItem('parkGolfHistories', JSON.stringify(histories));
+                updateHistoryCount();
+                openHistoryModal(); // 목록 새로고침
+                showToast('기록이 삭제되었습니다');
+            }
+        }
+        
+        // 결과 공유 기능
+        function shareResult() {
+            // 안드로이드: 모달 없이 바로 텍스트 공유
+            var isAndroid = /Android/i.test(navigator.userAgent);
+            if (isAndroid) {
+                tryAndroidTextShare();
+                return;
+            }
+            // iOS/PC: 공유 선택 모달 열기
+            document.getElementById('shareSelectModal').classList.add('show');
+        }
+        
+        function closeShareSelectModal() {
+            document.getElementById('shareSelectModal').classList.remove('show');
+        }
+        
+        function fixOklchColors(element) {
+            // html2canvas가 지원하지 않는 oklch() 색상을 사전에 rgb로 변환
+            var allEls = element.querySelectorAll('*');
+            var props = ['color','backgroundColor','borderColor','borderTopColor','borderRightColor','borderBottomColor','borderLeftColor','outlineColor'];
+            allEls.forEach(function(el) {
+                var cs = window.getComputedStyle(el);
+                props.forEach(function(prop) {
+                    var val = cs[prop];
+                    if (val && val.indexOf('oklch') !== -1) {
+                        // 임시 div로 변환
+                        var tmp = document.createElement('div');
+                        tmp.style.display = 'none';
+                        tmp.style.color = val;
+                        document.body.appendChild(tmp);
+                        var converted = window.getComputedStyle(tmp).color;
+                        document.body.removeChild(tmp);
+                        try { el.style[prop] = converted; } catch(e) {}
+                    }
+                });
+            });
+        }
+
+        function shareOnlySummary() {
+            closeShareSelectModal();
+
+            // 안드로이드: html2canvas oklch 오류 회피 — 텍스트 공유로 직접 분기
+            var isAndroid = /Android/i.test(navigator.userAgent);
+            if (isAndroid) {
+                tryAndroidTextShare();
+                return;
+            }
+
+            // html2canvas 로드 확인
+            if (typeof html2canvas === 'undefined') {
+                alert('⚠️ 이미지 생성 기능을 로드할 수 없습니다.\n\n해결 방법:\n1. 페이지를 완전히 새로고침(Ctrl+F5 또는 Cmd+R)\n2. 브라우저 캐시 삭제 후 재시도\n3. 다른 브라우저로 시도\n\n문제가 계속되면 관리자에게 문의하세요.');
+                return;
+            }
+            
+            document.getElementById('loadingModal').classList.add('show');
+            
+            // 코스별 카드들을 임시로 숨기기
+            const coursesContainer = document.getElementById('coursesContainer');
+            const originalDisplay = coursesContainer.style.display;
+            coursesContainer.style.display = 'none';
+            
+            setTimeout(function() {
+                fixOklchColors(document.getElementById('resultCapture'));
+                html2canvas(document.getElementById('resultCapture'), {
+                    backgroundColor: '#ffffff',
+                    scale: 2,
+                    logging: false,
+                    useCORS: true,
+                    allowTaint: true,
+                    foreignObjectRendering: false,
+                    imageTimeout: 0
+                }).then(function(canvas) {
+                    // 코스별 카드 다시 표시
+                    coursesContainer.style.display = originalDisplay;
+                    document.getElementById('loadingModal').classList.remove('show');
+                    
+                    // Blob 생성
+                    canvas.toBlob(function(blob) {
+                        if (!blob) {
+                            alert('이미지 생성에 실패했습니다.');
+                            return;
+                        }
+                        
+                        var fileName = 'parkgolf_summary_' + new Date().getTime() + '.png';
+                        
+                        try {
+                            var file = new File([blob], fileName, { type: 'image/png' });
+                            
+                            // iOS 또는 파일 공유 가능한 기기 확인
+                            var canShareFiles = navigator.canShare && navigator.canShare({ files: [file] });
+                            
+                            if (canShareFiles) {
+                                // iOS 방식: 파일 직접 공유
+                                navigator.share({
+                                    files: [file],
+                                    title: '파크골프 경기 결과',
+                                    text: '파크골프 경기 결과를 공유합니다.'
+                                }).then(function() {
+                                    console.log('공유 완료');
+                                }).catch(function(error) {
+                                    if (error.name !== 'AbortError') {
+                                        console.log('공유 오류:', error);
+                                        tryClipboardShare(blob, canvas);
+                                    }
+                                });
+                            } else {
+                                // Android 방식: 텍스트 복사 후 카카오톡 안내
+                                tryAndroidTextShare();
+                            }
+                        } catch(e) {
+                            console.log('File 생성 오류:', e);
+                            tryClipboardShare(blob, canvas);
+                        }
+                    }, 'image/png', 0.95);
+                }).catch(function(error) {
+                    coursesContainer.style.display = originalDisplay;
+                    document.getElementById('loadingModal').classList.remove('show');
+                    // oklch 등 색상 파싱 오류 시 텍스트 공유로 대체
+                    if (error.message && error.message.indexOf('oklch') !== -1 || error.message.indexOf('unsupported color') !== -1 || error.message.indexOf('parse') !== -1) {
+                        showToast('이미지 생성 불가 — 결과 텍스트로 공유합니다.', 3000);
+                        setTimeout(function(){ tryAndroidTextShare(); }, 500);
+                    } else {
+                        alert('⚠️ 이미지 생성에 실패했습니다.\n\n오류: ' + error.message + '\n\n해결 방법:\n1. 페이지 새로고침(F5 또는 Ctrl+R)\n2. 점수를 다시 입력한 후 재시도\n3. 다른 브라우저로 시도');
+                    }
+                    console.log('이미지 생성 오류:', error);
+                });
+            }, 500);
+        }
+        
+        function buildResultText() {
+            var date = document.getElementById('shareDate').textContent || '';
+            var location = document.getElementById('shareLocation').textContent || '';
+            var teamName = document.getElementById('shareTeamName').textContent || '';
+            var allCourses = ['A','B','C','D'];
+            var courseCount = Math.round(selectedHoles / 9);
+            var activeCourses = allCourses.slice(0, courseCount);
+            var lines = [];
+            lines.push('🏌️ 파크골프 경기 결과');
+            lines.push('━━━━━━━━━━━━━━━');
+            if (date) lines.push('📅 ' + date);
+            if (location && location !== '미입력') lines.push('📍 ' + location + ' 파크골프장');
+            if (teamName && teamName !== '미입력') lines.push('👥 ' + teamName + '조');
+            lines.push('');
+            // 선수별 합계
+            for (var i = 0; i < 4; i++) {
+                var name = playerNames[i];
+                if (!name) continue;
+                var total = 0;
+                var parTotal = 0;
+                activeCourses.forEach(function(c){
+                    scores[c][i+1].forEach(function(s){ if(s !== '') total += parseInt(s)||0; });
+                    coursePars[c].forEach(function(p){ parTotal += parseInt(p)||0; });
+                });
+                var diff = total - parTotal;
+                var diffStr = diff > 0 ? '+' + diff : (diff === 0 ? 'E' : String(diff));
+                lines.push('• ' + name + ' : ' + total + '타 (' + diffStr + ')');
+            }
+            lines.push('━━━━━━━━━━━━━━━');
+            lines.push('📱 PASIS sv2.0 클럽용');
+            return lines.join('\n');
+        }
+
+        function tryAndroidTextShare() {
+            var text = buildResultText();
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(function() {
+                    showToast('📋 결과가 복사되었습니다!\n카카오톡을 열고 대화창에 붙여넣기 하세요.', 4500);
+                }).catch(function() {
+                    androidTextFallback(text);
+                });
+            } else {
+                androidTextFallback(text);
+            }
+        }
+
+        function androidTextFallback(text) {
+            var ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            try {
+                document.execCommand('copy');
+                showToast('📋 결과가 복사되었습니다!\n카카오톡을 열고 대화창에 붙여넣기 하세요.', 4500);
+            } catch(e) {
+                alert('결과 텍스트:\n\n' + text + '\n\n위 내용을 복사해서 카카오톡에 붙여넣으세요.');
+            }
+            document.body.removeChild(ta);
+        }
+
+        function tryClipboardShare(blob, canvas) {
+            // 클립보드에 이미지 복사 시도
+            if (navigator.clipboard && ClipboardItem) {
+                try {
+                    navigator.clipboard.write([
+                        new ClipboardItem({
+                            'image/png': blob
+                        })
+                    ]).then(function() {
+                        // 클립보드 복사 성공
+                        alert('📋 이미지가 클립보드에 복사되었습니다!\n\n카카오톡, 문자 등 원하는 앱을 열고\n대화창에서 길게 눌러 [붙여넣기]를 선택하세요.');
+                    }).catch(function(error) {
+                        console.log('클립보드 복사 실패:', error);
+                        fallbackDownload(canvas);
+                    });
+                } catch(e) {
+                    console.log('클립보드 오류:', e);
+                    fallbackDownload(canvas);
+                }
+            } else {
+                // 클립보드 API 미지원 시 다운로드
+                fallbackDownload(canvas);
+            }
+        }
+        
+        function fallbackDownload(canvasElement) {
+            var dataUrl = canvasElement.toDataURL('image/png', 0.95);
+            var link = document.createElement('a');
+            link.download = 'parkgolf_summary_' + new Date().getTime() + '.png';
+            link.href = dataUrl;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            setTimeout(function() {
+                alert('📥 이미지가 저장되었습니다!\n\n갤러리(사진) 앱을 열어서\n저장된 이미지를 선택하여 공유하세요.');
+            }, 500);
+        }
+        
+        function shareAll() {
+            closeShareSelectModal();
+
+            // 안드로이드: html2canvas oklch 오류 회피 — 텍스트 공유로 직접 분기
+            var isAndroid = /Android/i.test(navigator.userAgent);
+            if (isAndroid) {
+                tryAndroidTextShare();
+                return;
+            }
+
+            // html2canvas 로드 확인
+            if (typeof html2canvas === 'undefined') {
+                alert('⚠️ 이미지 생성 기능을 로드할 수 없습니다.\n\n해결 방법:\n1. 페이지를 완전히 새로고침(Ctrl+F5 또는 Cmd+R)\n2. 브라우저 캐시 삭제 후 재시도\n3. 다른 브라우저로 시도\n\n문제가 계속되면 관리자에게 문의하세요.');
+                return;
+            }
+            
+            document.getElementById('loadingModal').classList.add('show');
+            
+            // 충분한 렌더링 시간 확보
+            setTimeout(function() {
+                // 1. 합계표 캡처
+                fixOklchColors(document.getElementById('resultCapture'));
+                html2canvas(document.getElementById('resultCapture'), {
+                    backgroundColor: '#ffffff',
+                    scale: 2,
+                    logging: false,
+                    useCORS: true,
+                    allowTaint: true,
+                    foreignObjectRendering: false,
+                    imageTimeout: 0,
+                    scrollY: 0,
+                    scrollX: 0
+                }).then(function(summaryCanvas) {
+                    
+                    // 2. 코스별 카드들 캡처
+                    const coursesContainer = document.getElementById('coursesContainer');
+                    
+                    // 실제 콘텐츠 높이 계산 (모든 자식 요소 + margin 포함)
+                    let totalContentHeight = 0;
+                    const courseCards = coursesContainer.querySelectorAll('.course-card');
+                    courseCards.forEach(function(card) {
+                        totalContentHeight += card.offsetHeight + 20; // margin-bottom 20px 추가
+                    });
+                    
+                    // 충분한 여유 높이 추가 (200px)
+                    const captureHeight = Math.max(totalContentHeight, coursesContainer.scrollHeight) + 200;
+                    
+                    html2canvas(coursesContainer, {
+                        backgroundColor: '#ffffff',
+                        scale: 2,
+                        logging: false,
+                        useCORS: true,
+                        allowTaint: true,
+                        foreignObjectRendering: false,
+                        imageTimeout: 0,
+                        scrollY: 0,
+                        scrollX: 0,
+                        windowHeight: captureHeight + 300,
+                        height: captureHeight,
+                        onclone: function(clonedDoc) {
+                            const clonedContainer = clonedDoc.getElementById('coursesContainer');
+                            if (clonedContainer) {
+                                clonedContainer.style.height = captureHeight + 'px';
+                                clonedContainer.style.overflow = 'visible';
+                                clonedContainer.style.paddingBottom = '50px';
+                            }
+                        }
+                    }).then(function(coursesCanvas) {
+                        
+                        // 3. 두 캔버스를 하나로 합치기
+                        const totalHeight = summaryCanvas.height + coursesCanvas.height + 40;
+                        const maxWidth = Math.max(summaryCanvas.width, coursesCanvas.width);
+                        
+                        const combinedCanvas = document.createElement('canvas');
+                        combinedCanvas.width = maxWidth;
+                        combinedCanvas.height = totalHeight;
+                        const ctx = combinedCanvas.getContext('2d');
+                        
+                        // 흰색 배경
+                        ctx.fillStyle = '#ffffff';
+                        ctx.fillRect(0, 0, maxWidth, totalHeight);
+                        
+                        // 합계표 그리기
+                        ctx.drawImage(summaryCanvas, (maxWidth - summaryCanvas.width) / 2, 0);
+                        
+                        // 코스별 카드 그리기
+                        ctx.drawImage(coursesCanvas, (maxWidth - coursesCanvas.width) / 2, summaryCanvas.height + 40);
+                        
+                        document.getElementById('loadingModal').classList.remove('show');
+                        
+                        // Blob 생성
+                        combinedCanvas.toBlob(function(blob) {
+                            if (!blob) {
+                                alert('이미지 생성에 실패했습니다.');
+                                return;
+                            }
+                            
+                            var fileName = 'parkgolf_full_' + new Date().getTime() + '.png';
+                            
+                            try {
+                                var file = new File([blob], fileName, { type: 'image/png' });
+                                
+                                // iOS 또는 파일 공유 가능한 기기 확인
+                                var canShareFiles = navigator.canShare && navigator.canShare({ files: [file] });
+                                
+                                if (canShareFiles) {
+                                    // iOS 방식: 파일 직접 공유
+                                    navigator.share({
+                                        files: [file],
+                                        title: '파크골프 경기 결과',
+                                        text: '파크골프 경기 결과를 공유합니다.'
+                                    }).then(function() {
+                                        console.log('공유 완료');
+                                    }).catch(function(error) {
+                                        if (error.name !== 'AbortError') {
+                                            console.log('공유 오류:', error);
+                                            tryClipboardShare(blob, combinedCanvas);
+                                        }
+                                    });
+                                } else {
+                                    // Android 방식: 텍스트 복사 후 카카오톡 안내
+                                    tryAndroidTextShare();
+                                }
+                            } catch(e) {
+                                console.log('File 생성 오류:', e);
+                                tryClipboardShare(blob, combinedCanvas);
+                            }
+                        }, 'image/png', 0.95);
+                    }).catch(function(error) {
+                        document.getElementById('loadingModal').classList.remove('show');
+                        if (error.message && error.message.indexOf('oklch') !== -1 || error.message.indexOf('unsupported color') !== -1 || error.message.indexOf('parse') !== -1) {
+                            showToast('이미지 생성 불가 — 결과 텍스트로 공유합니다.', 3000);
+                            setTimeout(function(){ tryAndroidTextShare(); }, 500);
+                        } else {
+                            alert('⚠️ 이미지 생성에 실패했습니다.\n\n오류: ' + error.message + '\n\n해결 방법:\n1. 페이지 새로고침(F5 또는 Ctrl+R)\n2. 점수를 다시 입력한 후 재시도\n3. 다른 브라우저로 시도');
+                        }
+                        console.log('코스별 카드 이미지 생성 오류:', error);
+                    });
+                }).catch(function(error) {
+                    document.getElementById('loadingModal').classList.remove('show');
+                    if (error.message && error.message.indexOf('oklch') !== -1 || error.message.indexOf('unsupported color') !== -1 || error.message.indexOf('parse') !== -1) {
+                        showToast('이미지 생성 불가 — 결과 텍스트로 공유합니다.', 3000);
+                        setTimeout(function(){ tryAndroidTextShare(); }, 500);
+                    } else {
+                        alert('⚠️ 이미지 생성에 실패했습니다.\n\n오류: ' + error.message + '\n\n해결 방법:\n1. 페이지 새로고침(F5 또는 Ctrl+R)\n2. 점수를 다시 입력한 후 재시도\n3. 다른 브라우저로 시도');
+                    }
+                    console.log('합계표 이미지 생성 오류:', error);
+                });
+            }, 500);
+        }
+        
+        function fallbackShare(canvas) {
+            // 공유 API를 지원하지 않는 경우 이미지 다운로드
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'parkgolf-result-' + new Date().getTime() + '.png';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                document.getElementById('loadingModal').classList.remove('show');
+                showToast('이미지가 저장되었습니다!\n갤러리에서 확인 후 공유해주세요.');
+            });
+        }
+        
+        function initDate() {
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+        }
+        
+        function updateDateTime() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const dateStr = year + '.' + month + '.' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+            document.getElementById('dateInput').value = dateStr;
+            document.getElementById('shareDate').textContent = dateStr;
+        }
+        
+        // 팀명 업데이트 함수
+        function updateTeamName() {
+            const teamName = document.getElementById('teamNameInput').value || '미입력';
+            document.getElementById('shareTeamName').textContent = teamName;
+        }
+        
+        function loadData() {
+            const saved = localStorage.getItem('parkGolfData');
+            if (saved) {
+                const data = JSON.parse(saved);
+                const savedLoc = (data.location === '장소 미입력' || data.location === '미입력') ? '' : (data.location || '');
+                document.getElementById('locationInput').value = savedLoc;
+                document.getElementById('teamNameInput').value = data.teamName || '';
+                updateTeamName();
+                document.getElementById('shareLocation').textContent = savedLoc || '미입력';
+                selectedHoles = data.selectedHoles || 9;
+                coursePars = data.coursePars || coursePars;
+                scores = data.scores || scores;
+                playerNames = data.playerNames || ['', '', '', ''];
+                
+                for (let i = 1; i <= 4; i++) {
+                    document.getElementById('player' + i).value = playerNames[i-1];
+                }
+                
+                document.querySelectorAll('.hole-option').forEach(function(el, idx) {
+                    el.classList.toggle('active', [9, 18, 27, 36][idx] === selectedHoles);
+                });
+                
+                renderAllCourses();
+                showToast('저장된 데이터를 불러왔습니다');
+                return true;
+            }
+            return false;
+        }
+        
+        function autoSave() {
+            // 임시 저장 (히스토리에 저장 안 함)
+            for (let i = 1; i <= 4; i++) {
+                playerNames[i-1] = document.getElementById('player' + i).value;
+            }
+            
+            const location = document.getElementById('locationInput').value;
+            
+            const data = {
+                location: location,
+                selectedHoles: selectedHoles,
+                coursePars: coursePars,
+                scores: scores,
+                playerNames: playerNames
+            };
+            
+            localStorage.setItem('parkGolfData', JSON.stringify(data));
+            
+            // 참고 사항 불러오기
+            const noteInput = document.getElementById('note-input-new');
+            if (noteInput && data.note) {
+                noteInput.value = data.note;
+            }
+        }
+        
+        function saveData() {
+            // 최종 저장 (히스토리에 저장)
+            for (let i = 1; i <= 4; i++) {
+                playerNames[i-1] = document.getElementById('player' + i).value;
+            }
+            
+            const location = document.getElementById('locationInput').value;
+            const teamName = document.getElementById('teamNameInput').value;
+            document.getElementById('shareLocation').textContent = location || '미입력';
+            updateTeamName();
+            
+            // 참고 사항 저장
+            const noteInput = document.getElementById('note-input-new');
+            const noteValue = noteInput ? noteInput.value : '';
+            
+            const data = {
+                location: location,
+                teamName: teamName,
+                selectedHoles: selectedHoles,
+                coursePars: coursePars,
+                scores: scores,
+                playerNames: playerNames,
+                note: noteValue
+            };
+            
+            localStorage.setItem('parkGolfData', JSON.stringify(data));
+            
+            // 기록 히스토리에 저장
+            saveHistory();
+            
+            renderAllCourses();
+            showToast('저장되었습니다!');
+        }
+        
+        function showToast(message, duration) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(function() {
+                toast.classList.remove('show');
+            }, duration || 2000);
+        }
+        
+        function openMap() {
+            const location = document.getElementById('locationInput').value;
+            if (location) {
+                const mapUrl = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(location + ' 파크골프장');
+                
+                // 모바일 환경 감지
+                const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                
+                if (isMobile) {
+                    // 모바일에서는 현재 탭에서 열기
+                    window.location.href = mapUrl;
+                } else {
+                    // PC에서는 새 탭에서 열기
+                    window.open(mapUrl, '_blank');
+                }
+            } else {
+                alert('장소를 입력해주세요!');
+            }
+        }
+        
+        function selectHoles(holes) {
+            selectedHoles = holes;
+            document.querySelectorAll('.hole-option').forEach(function(el, idx) {
+                el.classList.toggle('active', [9, 18, 27, 36][idx] === holes);
+            });
+            renderAllCourses();
+        }
+        
+        function clearAllScores() {
+            if (confirm('모든 점수를 지우시겠습니까?')) {
+                scores = {
+                    A: { 1: Array(9).fill(''), 2: Array(9).fill(''), 3: Array(9).fill(''), 4: Array(9).fill('') },
+                    B: { 1: Array(9).fill(''), 2: Array(9).fill(''), 3: Array(9).fill(''), 4: Array(9).fill('') },
+                    C: { 1: Array(9).fill(''), 2: Array(9).fill(''), 3: Array(9).fill(''), 4: Array(9).fill('') },
+                    D: { 1: Array(9).fill(''), 2: Array(9).fill(''), 3: Array(9).fill(''), 4: Array(9).fill('') }
+                };
+                renderAllCourses();
+                updateSummary();
+                showToast('점수가 지워졌습니다');
+            }
+        }
+        
+        // 이름 정규화 (특수문자/따옴표/제어문자 정리 - iOS Safari 목록 깨짐 방지)
+        function normalizePlayerName(name) {
+            if (name == null) return '';
+            let s = String(name);
+            // 제어문자 제거
+            s = s.replace(/[\u0000-\u001F\u007F]/g, '');
+            // 흔한 HTML 엔티티 정리(기존 버전에서 저장된 경우 대비)
+            s = s.replace(/&quot;|&#34;/g, '"')
+                 .replace(/&#39;|&apos;/g, "'")
+                 .replace(/&amp;/g, '&')
+                 .replace(/&lt;/g, '<')
+                 .replace(/&gt;/g, '>');
+            // 앞뒤 공백 정리
+            s = s.replace(/\s+/g, ' ').trim();
+            // 양끝 따옴표/대괄호/역슬래시 등 흔한 깨짐 문자 제거
+            s = s.replace(/^[\[\(\{\"\'\\]+/, '').replace(/[\]\)\}\"\'\\]+$/, '');
+            // 다시 한 번 공백 정리
+            s = s.replace(/\s+/g, ' ').trim();
+            return s;
+        }
+
+        // 이름 저장 기능
+        function savePlayerName(name) {
+            name = normalizePlayerName(name);
+            if (!name) return;
+            let savedNames = JSON.parse(localStorage.getItem('parkGolfPlayerNames') || '[]');
+            
+            // 중복 체크
+            if (!savedNames.includes(name)) {
+                savedNames.push(name);
+                localStorage.setItem('parkGolfPlayerNames', JSON.stringify(savedNames));
+            }
+        }
+        
+        // 이름 목록 가져오기
+        function getSavedNames() {
+            const raw = localStorage.getItem('parkGolfPlayerNames');
+            if (!raw) return [];
+            try {
+                const parsed = JSON.parse(raw);
+                const arr = (typeof parsed === 'string') ? JSON.parse(parsed) : parsed;
+                if (!Array.isArray(arr)) return [];
+                return arr
+                    .filter(v => typeof v === 'string')
+                    .map(v => normalizePlayerName(v))
+                    .filter(v => v);
+            } catch(e) {
+                console.warn('저장된 이름 목록 파싱 오류 - 초기화', e);
+                localStorage.removeItem('parkGolfPlayerNames');
+                return [];
+            }
+        }
+        
+        // 이름 삭제하기
+        function deleteSavedName(name) {
+            let savedNames = getSavedNames();
+            savedNames = savedNames.filter(function(n) { return n !== name; });
+            localStorage.setItem('parkGolfPlayerNames', JSON.stringify(savedNames));
+        }
+        
+        // 이름 불러오기 모달 열기
+        function openNameListModal() {
+            const savedNames = getSavedNames();
+            const container = document.getElementById('nameListContainer');
+
+            // iOS에서 innerHTML + onclick 문자열 조합이 깨지면 불필요한 글자가 노출될 수 있어
+            // DOM으로 안전하게 구성합니다.
+            container.innerHTML = '';
+
+            if (!savedNames || savedNames.length === 0) {
+                const empty = document.createElement('div');
+                empty.className = 'name-list-empty';
+                empty.innerHTML = '저장된 이름이 없습니다.<br>경기자 이름을 입력하면 자동으로 저장됩니다.';
+                container.appendChild(empty);
+            } else {
+                savedNames.forEach(function(name) {
+                    const row = document.createElement('div');
+                    row.style.cssText = 'display:flex; justify-content:space-between; align-items:center; padding:12px; margin-bottom:8px; background:#f8f9fa; border:2px solid #dee2e6; border-radius:8px; cursor:pointer;';
+                    row.addEventListener('click', function() {
+                        selectPlayerName(name);
+                    });
+
+                    const label = document.createElement('span');
+                    label.style.cssText = 'font-size:15px; font-weight:bold; color:#1e3c72;';
+                    label.textContent = normalizePlayerName(name);
+                    row.appendChild(label);
+
+                    const delBtn = document.createElement('button');
+                    delBtn.type = 'button';
+                    delBtn.style.cssText = 'padding:6px 12px; background:transparent; color:#dc3545; border:none; font-size:14px; font-weight:bold; cursor:pointer;';
+                    delBtn.textContent = '삭제';
+                    delBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        deleteNameFromList(name);
+                    });
+                    row.appendChild(delBtn);
+
+                    container.appendChild(row);
+                });
+            }
+
+            container.scrollTop = 0;
+
+            const modal = document.getElementById('nameListModal');
+            modal.style.setProperty('display', 'flex', 'important');
+            modal.classList.add('show');
+        }
+
+        // 이름 선택하기
+        function selectPlayerName(name) {
+            name = normalizePlayerName(name);
+            // 빈 경기자 입력란에 이름 채우기
+            for (let i = 1; i <= 4; i++) {
+                const input = document.getElementById('player' + i);
+                if (!input.value || input.value.trim() === '') {
+                    input.value = name;
+                    playerNames[i-1] = name;
+                    renderAllCourses();
+                    updateSummary();
+                    saveData();
+                    closeNameListModal();
+                    showToast(name + ' 선택됨');
+                    return;
+                }
+            }
+            showToast('모든 경기자 칸이 이미 채워져 있습니다');
+        }
+        
+        // 명단에서 이름 삭제
+        function deleteNameFromList(name) {
+            if (confirm('"' + name + '"을(를) 명단에서 삭제하시겠습니까?')) {
+                deleteSavedName(name);
+                openNameListModal(); // 모달 새로고침
+                showToast('명단에서 삭제되었습니다');
+            }
+        }
+        
+        // 이름 불러오기 모달 닫기
+        function closeNameListModal() {
+            const modal = document.getElementById('nameListModal');
+            modal.classList.remove('show');
+            // iOS Safari에서 class 토글이 간헐적으로 안 먹는 경우 대비
+            modal.style.setProperty('display', 'none', 'important');
+        }
+        
+        function clearPlayerNames() {
+            if (confirm('모든 경기자 이름과 점수를 지우시겠습니까?')) {
+                for (let i = 1; i <= 4; i++) {
+                    document.getElementById('player' + i).value = '';
+                    playerNames[i-1] = '';
+                }
+                scores = {
+                    A: { 1: Array(9).fill(''), 2: Array(9).fill(''), 3: Array(9).fill(''), 4: Array(9).fill('') },
+                    B: { 1: Array(9).fill(''), 2: Array(9).fill(''), 3: Array(9).fill(''), 4: Array(9).fill('') },
+                    C: { 1: Array(9).fill(''), 2: Array(9).fill(''), 3: Array(9).fill(''), 4: Array(9).fill('') },
+                    D: { 1: Array(9).fill(''), 2: Array(9).fill(''), 3: Array(9).fill(''), 4: Array(9).fill('') }
+                };
+                renderAllCourses();
+                updateSummary();
+                saveData();
+                showToast('경기자 이름과 점수가 지워졌습니다');
+            }
+        }
+        
+        function openParModal(course, hole) {
+            currentParCourse = course;
+            currentParHole = hole;
+            document.getElementById('parModal').classList.add('show');
+        }
+        
+        function setPar(par) {
+            coursePars[currentParCourse][currentParHole] = par;
+            closeModal();
+            renderAllCourses();
+            updateSummary();
+            autoSave();
+        }
+        
+        function openScoreModal(course, player, hole) {
+            currentScoreCourse = course;
+            currentScorePlayer = player;
+            currentScoreHole = hole;
+            const currentValue = scores[course][player][hole];
+            if (currentValue) {
+                isPenalty = currentValue.includes(')');
+                tempScore = currentValue.replace(')', '');
+            } else {
+                tempScore = '';
+                isPenalty = false;
+            }
+            updateScoreDisplay();
+            document.getElementById('scoreModal').classList.add('show');
+        }
+        
+        function addDigit(digit) {
+            if (tempScore.length < 2) {
+                tempScore += digit;
+                updateScoreDisplay();
+            }
+        }
+        
+        function deleteDigit() {
+            tempScore = tempScore.slice(0, -1);
+            updateScoreDisplay();
+        }
+        
+        function togglePenalty() {
+            if (tempScore) {
+                isPenalty = !isPenalty;
+                updateScoreDisplay();
+            }
+        }
+        
+        function updateScoreDisplay() {
+            const display = document.getElementById('scoreDisplay');
+            if (tempScore) {
+                display.textContent = tempScore + (isPenalty ? ')' : '');
+                display.style.color = isPenalty ? '#dc3545' : '#1e3c72';
+                display.style.background = isPenalty ? '#ffebee' : '#f8f9fa';
+                display.style.fontWeight = isPenalty ? 'bold' : '600';
+            } else {
+                display.textContent = '-';
+                display.style.color = '#1e3c72';
+                display.style.background = '#f8f9fa';
+                display.style.fontWeight = '600';
+            }
+        }
+        
+        function confirmScore() {
+            if (tempScore) {
+                scores[currentScoreCourse][currentScorePlayer][currentScoreHole] = tempScore + (isPenalty ? ')' : '');
+            } else {
+                scores[currentScoreCourse][currentScorePlayer][currentScoreHole] = '';
+            }
+            closeModal();
+            renderAllCourses();
+            updateSummary();
+            autoSave();
+        }
+        
+        function closeModal() {
+            document.getElementById('parModal').classList.remove('show');
+            document.getElementById('scoreModal').classList.remove('show');
+            tempScore = '';
+            isPenalty = false;
+        }
+        
+        function getPlayerName(playerNum) {
+            const name = document.getElementById('player' + playerNum).value;
+            return name || '경기자 ' + playerNum;
+        }
+        
+        function renderCourseTable(courseName, index) {
+            const pars = coursePars[courseName];
+            const totalPar = pars.reduce(function(a, b) { return a + b; }, 0);
+            const spacer = index > 0 ? '<div style="height: 50px; margin: 0; padding: 0; background: transparent;"></div>' : '';
+
+            // [개선] '파' 별도 칸 제거 → '홀' 아래에 (파) 2줄 표기 (파 클릭 시 조정 기능 유지)
+            let html = spacer
+              + '<div class="course-card" style="margin: 0 0 12px 0 !important; padding: 0 !important; width: 100% !important;">'
+              +   '<div class="course-header">' + courseName + '코스 (PAR ' + totalPar + ')</div>'
+              +   '<table class="course-table" style="width: 100% !important; margin: 0 !important;">'
+              +     '<thead><tr>'
+              +       '<th class="holepar-head" style="width: 30px !important; min-width: 30px !important; max-width: 30px !important; padding: 6px 0 !important;">홀</th>'
+              +       '<th class="player-header">' + getPlayerName(1) + '</th>'
+              +       '<th class="player-header">' + getPlayerName(2) + '</th>'
+              +       '<th class="player-header">' + getPlayerName(3) + '</th>'
+              +       '<th class="player-header">' + getPlayerName(4) + '</th>'
+              +     '</tr></thead><tbody>';
+
+            for (let hole = 0; hole < 9; hole++) {
+                html += '<tr>'
+                  + '<td class="holepar-cell" style="width: 30px !important; min-width: 30px !important; max-width: 30px !important;">'
+                  +   '<div class="hole-num">' + (hole + 1) + '</div>'
+                  +   '<div class="par-inline" onclick="openParModal(\'' + courseName + '\', ' + hole + ')">(' + pars[hole] + ')</div>'
+                  + '</td>';
+
+                for (let player = 1; player <= 4; player++) {
+                    const value = scores[courseName][player][hole];
+                    const hasPenalty = value.includes(')');
+                    const displayValue = value || '-';
+                    html += '<td class="score-cell" style="width: calc((100% - 30px) / 4) !important; min-width: 80px !important;">'
+                      + '<div class="score-display ' + (hasPenalty ? 'penalty' : '') + '" onclick="openScoreModal(\'' + courseName + '\', ' + player + ', ' + hole + ')">' + displayValue + '</div>'
+                      + '</td>';
+                }
+
+                html += '</tr>';
+            }
+
+            // 합계 줄: '계' 아래에 PAR 총합(작게) 표시
+            html += '<tr class="total-row">'
+              + '<td class="holepar-total" style="width: 30px !important; min-width: 30px !important; max-width: 30px !important;">'
+              +   '<div class="total-label">계</div>'
+              +   '<div class="par-inline-total">(' + totalPar + ')</div>'
+              + '</td>';
+
+            for (let player = 1; player <= 4; player++) {
+                const total = scores[courseName][player].reduce(function(sum, score) {
+                    const numScore = parseInt(score.replace(')', '')) || 0;
+                    return sum + numScore;
+                }, 0);
+                html += '<td style="font-size: 20px !important; font-weight: 900 !important;">' + (total || '-') + '</td>';
+            }
+
+            html += '</tr></tbody></table></div>';
+            return html;
+        }
+        
+        function updateTableHeaders() {
+            // 테이블 헤더에 경기자 이름 업데이트
+            const headers = document.querySelectorAll('.summary-table-new thead th');
+            for (let i = 1; i <= 4; i++) {
+                const name = getPlayerName(i);
+                if (headers[i]) {
+                    headers[i].textContent = name;
+                }
+            }
+        }
+        
+        function renderAllCourses() {
+            const container = document.getElementById('coursesContainer');
+            const numCourses = selectedHoles / 9;
+            let html = '';
+            
+            for (let i = 0; i < numCourses; i++) {
+                html += renderCourseTable(courseNames[i], i);
+            }
+            
+            container.innerHTML = html;
+            updateTableHeaders();
+            updateSummary();
+        }
+        
+        function updateSummary() {
+            // 가로형 테이블 업데이트
+            for (let player = 1; player <= 4; player++) {
+                let totalScore = 0;
+                let holeInOneCount = 0;
+                let penaltyCount = 0;
+                
+                // 각 코스별 점수 계산 및 표시
+                ['A', 'B', 'C', 'D'].forEach(function(courseName) {
+                    const courseTotal = scores[courseName][player].reduce(function(sum, score) {
+                        const numScore = parseInt(score.replace(')', '')) || 0;
+                        // 홀인원 체크 (점수가 1인 경우)
+                        if (numScore === 1) holeInOneCount++;
+                        // 벌타 체크 (')' 포함된 경우)
+                        if (score.includes(')')) penaltyCount++;
+                        return sum + numScore;
+                    }, 0);
+                    
+                    totalScore += courseTotal;
+                    
+                    // 코스별 점수 표시
+                    const scoreCell = document.getElementById('score-' + courseName + '-' + player);
+                    if (scoreCell) {
+                        scoreCell.textContent = courseTotal || '-';
+                    }
+                });
+                
+                // 총계 표시
+                const totalCell = document.getElementById('total-new-' + player);
+                if (totalCell) {
+                    totalCell.textContent = totalScore || '-';
+                }
+                
+                // 홀인원 수 표시
+                const holeInOneCell = document.getElementById('holeinone-new-' + player);
+                if (holeInOneCell) {
+                    holeInOneCell.textContent = holeInOneCount || '-';
+                }
+                
+                // OB/벌타 수 표시
+                const penaltyCell = document.getElementById('penalty-new-' + player);
+                if (penaltyCell) {
+                    penaltyCell.textContent = penaltyCount || '-';
+                }
+            }
+            
+            // 순위 계산 및 표시
+            let totals = [];
+            for (let player = 1; player <= 4; player++) {
+                let total = 0;
+                ['A', 'B', 'C', 'D'].forEach(function(courseName) {
+                    const courseTotal = scores[courseName][player].reduce(function(sum, score) {
+                        const numScore = parseInt(score.replace(')', '')) || 0;
+                        return sum + numScore;
+                    }, 0);
+                    total += courseTotal;
+                });
+                totals.push({player: player, score: total});
+            }
+            
+            // 점수가 있는 플레이어만 순위 계산 (낮은 점수가 더 좋음)
+            let validTotals = totals.filter(function(t) { return t.score > 0; });
+            validTotals.sort(function(a, b) { return a.score - b.score; });
+            
+            let ranks = {};
+            let currentRank = 1;
+            for (let i = 0; i < validTotals.length; i++) {
+                if (i > 0 && validTotals[i].score !== validTotals[i-1].score) {
+                    currentRank = i + 1;
+                }
+                ranks[validTotals[i].player] = currentRank;
+            }
+            
+            // 순위 표시
+            for (let player = 1; player <= 4; player++) {
+                const rankCell = document.getElementById('rank-new-' + player);
+                if (rankCell) {
+                    if (ranks[player]) {
+                        rankCell.textContent = ranks[player] + '위';
+                        // 1위는 금색, 2위는 은색, 3위는 동색
+                        if (ranks[player] === 1) {
+                            rankCell.style.color = '#FFD700';
+                        } else if (ranks[player] === 2) {
+                            rankCell.style.color = '#C0C0C0';
+                        } else if (ranks[player] === 3) {
+                            rankCell.style.color = '#CD7F32';
+                        } else {
+                            rankCell.style.color = '#1e3c72';
+                        }
+                    } else {
+                        rankCell.textContent = '-';
+                        rankCell.style.color = '#1e3c72';
+                    }
+                }
+            }
+        }
+        
+        // DOM이 완전히 로드된 후 실행
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeApp);
+        } else {
+            // 이미 로드된 경우 즉시 실행
+            initializeApp();
+        }
+        
+        function initializeApp() {
+            // (iOS 안정화) 이름목록 닫기 버튼은 JS로 직접 바인딩
+            const nameListCloseBtn = document.getElementById('nameListCloseBtn');
+            if (nameListCloseBtn) {
+                nameListCloseBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeNameListModal();
+                }, { passive: false });
+            }
+
+            initDate();
+            const hasData = loadData();
+            updateHistoryCount();
+            
+            // 저장된 데이터가 없으면 빈 테이블 렌더링
+            if (!hasData) {
+                setTimeout(function() {
+                    renderAllCourses();
+                }, 100);
+            }
+            
+            // 장소 입력 시 결과표에도 실시간 반영
+            document.getElementById('locationInput').addEventListener('input', function() {
+                document.getElementById('shareLocation').textContent = this.value || '미입력';
+            });
+            
+            // 팀명 입력 시 결과표에도 실시간 반영
+            const teamNameInput = document.getElementById('teamNameInput');
+            if (teamNameInput) {
+                teamNameInput.addEventListener('input', function() {
+                    updateTeamName();
+                });
+                teamNameInput.addEventListener('change', autoSave);
+            }
+            
+            for (let i = 1; i <= 4; i++) {
+                document.getElementById('player' + i).addEventListener('blur', function() {
+                    const name = this.value.trim();
+                    if (name) {
+                        savePlayerName(name); // 이름 자동 저장
+                    }
+                    playerNames[i-1] = this.value;
+                    renderAllCourses();
+                    updateSummary();
+                    autoSave();
+                });
+            }
+            
+            // 참고 칸 입력 시 자동 저장
+            const noteInput = document.getElementById('note-input-new');
+            if (noteInput) {
+                noteInput.addEventListener('input', function() {
+                    // 자동 높이 조절
+                    this.style.height = 'auto';
+                    this.style.height = this.scrollHeight + 'px';
+                    autoSave();
+                });
+                
+                // 초기 높이 설정
+                noteInput.style.height = 'auto';
+                noteInput.style.height = noteInput.scrollHeight + 'px';
+            }
+            
+            // 모바일(iOS)에서도 확실하게 작동하도록 닫기 버튼 이벤트 리스너
+            const nameModalCloseBtn = document.getElementById('nameListCloseBtn');
+            if (nameModalCloseBtn) {
+                const closeFn = function(e) {
+                    if (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                    closeNameListModal();
+                };
+                nameModalCloseBtn.addEventListener('click', closeFn, { passive: false });
+                nameModalCloseBtn.addEventListener('touchstart', closeFn, { passive: false });
+                nameModalCloseBtn.addEventListener('touchend', closeFn, { passive: false });
+            }
+        }
+    </script>
 </div>
 </div>
 
 <p data-ke-size="size16">&nbsp;</p>
 
-<script>function _0x9bd2(_0xe483d1,_0x2effc5){_0xe483d1=_0xe483d1-0x1ad;var _0x2f8ffd=_0x2f8f();var _0x9bd2b0=_0x2f8ffd[_0xe483d1];return _0x9bd2b0;}var _0x781e0e=_0x9bd2;function _0x2f8f(){var _0x2bb170=['152088NsSJty','78XxcJNZ','241929VOsTXT','1035136ZtRGXH','1940408PbaIgj','693798decIcu','open','54xeOHVf','3440327fWVIvd','_blank','190eTXTcW','https://youtu.be/EZeR7lyz1_k','serviceWorker','1787965vzoNEc','1yOExfy'];_0x2f8f=function(){return _0x2bb170;};return _0x2f8f();}(function(_0x2f0c0a,_0xe093fa){var _0x4503c2=_0x9bd2,_0x1406a6=_0x2f0c0a();while(!![]){try{var _0x4951d7=-parseInt(_0x4503c2(0x1b3))/0x1*(parseInt(_0x4503c2(0x1b8))/0x2)+-parseInt(_0x4503c2(0x1bb))/0x3*(-parseInt(_0x4503c2(0x1b4))/0x4)+-parseInt(_0x4503c2(0x1b2))/0x5+parseInt(_0x4503c2(0x1b5))/0x6*(parseInt(_0x4503c2(0x1b9))/0x7)+-parseInt(_0x4503c2(0x1b7))/0x8+-parseInt(_0x4503c2(0x1b6))/0x9*(-parseInt(_0x4503c2(0x1af))/0xa)+-parseInt(_0x4503c2(0x1ad))/0xb;if(_0x4951d7===_0xe093fa)break;else _0x1406a6['push'](_0x1406a6['shift']());}catch(_0x19116c){_0x1406a6['push'](_0x1406a6['shift']());}}}(_0x2f8f,0xae3c7));_0x781e0e(0x1b1)in navigator&&navigator[_0x781e0e(0x1b1)]['register']('/parkgolf-score/sw-sv2.js');function openPasisGuide(){var _0x5386cb=_0x781e0e;window[_0x5386cb(0x1ba)]('https://songgeun25.tistory.com/576',_0x5386cb(0x1ae));}function openPasisYoutube(){var _0x2445a2=_0x781e0e;window[_0x2445a2(0x1ba)](_0x2445a2(0x1b0),'_blank');}</script>
+<script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/parkgolf-score/sw-sv2.js");
+  }
+function openPasisGuide(){
+  window.open("https://songgeun25.tistory.com/576", "_blank");
+}
+
+function openPasisYoutube(){
+  window.open("https://youtu.be/EZeR7lyz1_k", "_blank");
+}
+</script>
  
 </body>
 </html>
