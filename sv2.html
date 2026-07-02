@@ -12,6 +12,11 @@
 <style>
     /* 모바일 가독성 기본값 */
     html { -webkit-text-size-adjust: 100%; }
+    html, body {
+        touch-action: pan-y;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior-y: auto;
+    }
     body { margin: 0; font-size: 18px; line-height: 1.35; }
 
     .parkgolf-app, .parkgolf-app * { -webkit-text-size-adjust: 100%; }
@@ -1382,28 +1387,28 @@
 </div>
 <div class="input-group location-with-map">
 <div style="flex: 1; display: flex; align-items: center; justify-content: center; border: 3px solid #7A8B96; border-radius: 8px; background: white; min-width: 0;">
-<input id="locationInput" type="text" placeholder="장소" autocomplete="off" name="pgSearchLocationField" style="flex: 0 0 110px; width: 110px; min-width: 0; font-size: 16px; text-align: center; border: none !important; background: transparent !important; padding: 12px 4px !important;" />
+<input id="locationInput" type="text" placeholder="장소" autocomplete="off" enterkeyhint="done" name="pgSearchLocationField" style="flex: 0 0 110px; width: 110px; min-width: 0; font-size: 16px; text-align: center; border: none !important; background: transparent !important; padding: 12px 4px !important;" />
 <span style="padding: 0; font-size: 18px; font-weight: 600; color: #000000; white-space: nowrap; flex-shrink: 0; color-scheme: light; forced-color-adjust: none;">파크골프장</span>
 </div>
 <button class="map-link" onclick="openMap()" style="margin-left: 8px; width: 60px; padding: 12px 8px; height: auto; flex-shrink: 0;">지도</button>
 </div>
 <div class="input-group">
-<input id="teamNameInput" type="text" placeholder="조(팀)명(예 3, A)" autocomplete="off" name="pgSearchTeamField" style="text-align: center; font-size: 16px; font-weight: 600; padding: 12px;" />
+<input id="teamNameInput" type="text" placeholder="조(팀)명(예 3, A)" autocomplete="off" enterkeyhint="done" name="pgSearchTeamField" style="text-align: center; font-size: 16px; font-weight: 600; padding: 12px;" />
 </div>
 <div class="input-group" style="margin-top: 30px !important;"><label style="font-size: 21px !important; text-align: center; font-weight: 900;">경기자 이름 등록</label>
 <div class="players-section">
 <div class="player-input">
 <div class="player-number">1</div>
-<input id="player1" type="text" placeholder="경기자 1" autocomplete="off" name="pgSearchPlayerField1" style="color:#000000 !important; -webkit-text-fill-color:#000000 !important; font-weight:800 !important; color-scheme: light !important; forced-color-adjust: none !important;" /></div>
+<input id="player1" type="text" placeholder="경기자 1" autocomplete="off" enterkeyhint="done" name="pgSearchPlayerField1" style="color:#000000 !important; -webkit-text-fill-color:#000000 !important; font-weight:800 !important; color-scheme: light !important; forced-color-adjust: none !important;" /></div>
 <div class="player-input">
 <div class="player-number">2</div>
-<input id="player2" type="text" placeholder="경기자 2" autocomplete="off" name="pgSearchPlayerField2" style="color:#000000 !important; -webkit-text-fill-color:#000000 !important; font-weight:800 !important; color-scheme: light !important; forced-color-adjust: none !important;" /></div>
+<input id="player2" type="text" placeholder="경기자 2" autocomplete="off" enterkeyhint="done" name="pgSearchPlayerField2" style="color:#000000 !important; -webkit-text-fill-color:#000000 !important; font-weight:800 !important; color-scheme: light !important; forced-color-adjust: none !important;" /></div>
 <div class="player-input">
 <div class="player-number">3</div>
-<input id="player3" type="text" placeholder="경기자 3" autocomplete="off" name="pgSearchPlayerField3" style="color:#000000 !important; -webkit-text-fill-color:#000000 !important; font-weight:800 !important; color-scheme: light !important; forced-color-adjust: none !important;" /></div>
+<input id="player3" type="text" placeholder="경기자 3" autocomplete="off" enterkeyhint="done" name="pgSearchPlayerField3" style="color:#000000 !important; -webkit-text-fill-color:#000000 !important; font-weight:800 !important; color-scheme: light !important; forced-color-adjust: none !important;" /></div>
 <div class="player-input">
 <div class="player-number">4</div>
-<input id="player4" type="text" placeholder="경기자 4" autocomplete="off" name="pgSearchPlayerField4" style="color:#000000 !important; -webkit-text-fill-color:#000000 !important; font-weight:800 !important; color-scheme: light !important; forced-color-adjust: none !important;" /></div>
+<input id="player4" type="text" placeholder="경기자 4" autocomplete="off" enterkeyhint="done" name="pgSearchPlayerField4" style="color:#000000 !important; -webkit-text-fill-color:#000000 !important; font-weight:800 !important; color-scheme: light !important; forced-color-adjust: none !important;" /></div>
 </div>
 </div>
 <div class="button-group" style="grid-template-columns: 1fr 1fr; margin-bottom: 30px !important;"><button class="load-btn" onclick="openNameListModal()">이름<br>불러오기</button> <button class="clear-btn" onclick="clearPlayerNames()">이름·점수<br>지우기</button></div>
@@ -2246,7 +2251,11 @@
                     el.classList.toggle('active', [9, 18, 27, 36][idx] === selectedHoles);
                 });
                 
-                renderAllCourses();
+                // 화면을 먼저 그리고 터치에 반응할 수 있도록, 무거운 표 렌더링은 한 틱 미룬다.
+                // (동기로 바로 렌더링하면 안드로이드 일부 기기에서 첫 스크롤/터치가 씹히는 원인이 됨)
+                setTimeout(function() {
+                    renderAllCourses();
+                }, 0);
                 return true;
             }
             return false;
@@ -2940,6 +2949,19 @@ function openPasisYoutube(){
     // 그 외에는(다른 입력칸 포함 전부) 배경으로 취급해서 키보드를 내린다.
     active.blur();
   }, { passive: true });
+
+  // 키보드의 "완료"(엔터) 키를 눌러도 바로 내려가게 한다.
+  // (배경을 터치하기 애매한 마지막 입력칸(경기자4 등)에서 특히 유용)
+  targetIds.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        el.blur();
+      }
+    });
+  });
 })();
 </script>
  
