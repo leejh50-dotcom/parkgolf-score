@@ -975,7 +975,7 @@
 .parkgolf-app #kbDoneBtn {
     position: fixed !important;
     right: 12px !important;
-    bottom: 12px !important;
+    bottom: 60px !important;
     width: 44px !important;
     height: 44px !important;
     border-radius: 50% !important;
@@ -2936,5 +2936,43 @@ function openPasisYoutube(){
   function repositionKbBtn() {
     if (window.visualViewport) {
       var vv = window.visualViewport;
-      kbDoneBtn.style.top = (vv.offsetTop + vv.height - 44 - 12) + 'px';
-      kbDoneBtn.style.left = (vv.offset
+      kbDoneBtn.style.top = (vv.offsetTop + vv.height - 44 - 60) + 'px';
+      kbDoneBtn.style.left = (vv.offsetLeft + vv.width - 44 - 12) + 'px';
+      kbDoneBtn.style.right = 'auto';
+    }
+  }
+
+  document.addEventListener('focusin', function (e) {
+    if (e.target && targetIds.indexOf(e.target.id) !== -1) {
+      repositionKbBtn();
+      kbDoneBtn.classList.add('show');
+    }
+  });
+
+  document.addEventListener('focusout', function (e) {
+    if (e.target && targetIds.indexOf(e.target.id) !== -1) {
+      setTimeout(function () {
+        var active = document.activeElement;
+        if (!active || targetIds.indexOf(active.id) === -1) {
+          kbDoneBtn.classList.remove('show');
+        }
+      }, 50);
+    }
+  });
+
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', repositionKbBtn);
+    window.visualViewport.addEventListener('scroll', repositionKbBtn);
+  }
+
+  kbDoneBtn.addEventListener('click', function () {
+    if (document.activeElement && typeof document.activeElement.blur === 'function') {
+      document.activeElement.blur();
+    }
+    kbDoneBtn.classList.remove('show');
+  });
+})();
+</script>
+ 
+</body>
+</html>
