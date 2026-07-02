@@ -975,7 +975,7 @@
 .parkgolf-app #kbDoneBtn {
     position: fixed !important;
     right: 12px !important;
-    bottom: 60px !important;
+    top: 50vh !important;
     width: 44px !important;
     height: 44px !important;
     border-radius: 50% !important;
@@ -2931,20 +2931,8 @@ function openPasisYoutube(){
 
   var targetIds = ['locationInput', 'teamNameInput', 'player1', 'player2', 'player3', 'player4'];
 
-  // 키보드가 열려 화면(visual viewport)이 밀리거나 줄어들어도,
-  // 버튼이 항상 "실제로 보이는 화면"의 우상단에 오도록 위치를 다시 계산한다.
-  function repositionKbBtn() {
-    if (window.visualViewport) {
-      var vv = window.visualViewport;
-      kbDoneBtn.style.top = (vv.offsetTop + vv.height - 44 - 60) + 'px';
-      kbDoneBtn.style.left = (vv.offsetLeft + vv.width - 44 - 12) + 'px';
-      kbDoneBtn.style.right = 'auto';
-    }
-  }
-
   document.addEventListener('focusin', function (e) {
     if (e.target && targetIds.indexOf(e.target.id) !== -1) {
-      repositionKbBtn();
       kbDoneBtn.classList.add('show');
     }
   });
@@ -2959,11 +2947,6 @@ function openPasisYoutube(){
       }, 50);
     }
   });
-
-  if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', repositionKbBtn);
-    window.visualViewport.addEventListener('scroll', repositionKbBtn);
-  }
 
   kbDoneBtn.addEventListener('click', function () {
     if (document.activeElement && typeof document.activeElement.blur === 'function') {
