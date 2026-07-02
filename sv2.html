@@ -961,19 +961,30 @@
     opacity: 1 !important;
 }
 
+/* 사파리(iOS)가 자체적으로 붙이는 연락처/비밀번호 자동완성 아이콘·버튼 숨김 */
+.parkgolf-app input[autocomplete="off"]::-webkit-contacts-auto-fill-button,
+.parkgolf-app input[autocomplete="off"]::-webkit-credentials-auto-fill-button {
+    visibility: hidden !important;
+    display: none !important;
+    pointer-events: none !important;
+    height: 0 !important;
+    width: 0 !important;
+    margin: 0 !important;
+}
+
 .parkgolf-app #kbDoneBtn {
     position: fixed !important;
-    right: 16px !important;
-    bottom: 16px !important;
-    width: 48px !important;
-    height: 48px !important;
+    right: 12px !important;
+    top: 12px !important;
+    width: 44px !important;
+    height: 44px !important;
     border-radius: 50% !important;
     background: #28a745 !important;
     color: #ffffff !important;
     border: none !important;
-    font-size: 22px !important;
+    font-size: 20px !important;
     font-weight: 900 !important;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3) !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4) !important;
     z-index: 100000 !important;
     display: none !important;
     align-items: center !important;
@@ -1307,7 +1318,7 @@
     .parkgolf-app .guide-buttons{
       display:flex !important;
       flex-wrap: wrap !important;
-      gap:12px !important;
+      gap:8px !important;
     }
     .parkgolf-app .guide-label{
       width: 100% !important;
@@ -1324,7 +1335,7 @@
       gap:10px !important;
       border:none !important;
       border-radius: 14px !important;
-      padding: 14px 12px !important;
+      padding: 14px 4px !important;
       cursor:pointer !important;
       text-align:left !important;
       color:#fff !important;
@@ -1359,9 +1370,10 @@
       font-size: 16px !important;
       font-weight: 900 !important;
       line-height: 1.45 !important;
+      white-space: nowrap !important;
     }
     @media (max-width: 480px){
-      .parkgolf-app .guide-btn{ padding: 14px 8px !important; justify-content: center !important; }
+      .parkgolf-app .guide-btn{ padding: 14px 2px !important; justify-content: center !important; }
       .parkgolf-app .guide-btn-text{ font-size: 15px !important; }
     }
 .parkgolf-app .guide-message{
@@ -1395,28 +1407,28 @@
 </div>
 <div class="input-group location-with-map">
 <div style="flex: 1; display: flex; align-items: center; justify-content: center; border: 3px solid #7A8B96; border-radius: 8px; background: white; min-width: 0;">
-<input id="locationInput" type="text" placeholder="장소" autocomplete="off" name="pgLocationField" style="flex: 0 0 110px; width: 110px; min-width: 0; font-size: 16px; text-align: center; border: none !important; background: transparent !important; padding: 12px 4px !important;" />
+<input id="locationInput" type="text" placeholder="장소" autocomplete="off" name="pgSearchLocationField" style="flex: 0 0 110px; width: 110px; min-width: 0; font-size: 16px; text-align: center; border: none !important; background: transparent !important; padding: 12px 4px !important;" />
 <span style="padding: 0; font-size: 18px; font-weight: 600; color: #000000; white-space: nowrap; flex-shrink: 0; color-scheme: light; forced-color-adjust: none;">파크골프장</span>
 </div>
 <button class="map-link" onclick="openMap()" style="margin-left: 8px; width: 60px; padding: 12px 8px; height: auto; flex-shrink: 0;">지도</button>
 </div>
 <div class="input-group">
-<input id="teamNameInput" type="text" placeholder="조(팀)명(예 3, A)" autocomplete="off" name="pgTeamField" style="text-align: center; font-size: 16px; font-weight: 600; padding: 12px;" />
+<input id="teamNameInput" type="text" placeholder="조(팀)명(예 3, A)" autocomplete="off" name="pgSearchTeamField" style="text-align: center; font-size: 16px; font-weight: 600; padding: 12px;" />
 </div>
 <div class="input-group" style="margin-top: 30px !important;"><label style="font-size: 21px !important; text-align: center; font-weight: 900;">경기자 이름 등록</label>
 <div class="players-section">
 <div class="player-input">
 <div class="player-number">1</div>
-<input id="player1" type="text" placeholder="경기자 1" autocomplete="off" name="pgPlayerField1" style="color:#000000 !important; -webkit-text-fill-color:#000000 !important; font-weight:800 !important; color-scheme: light !important; forced-color-adjust: none !important;" /></div>
+<input id="player1" type="text" placeholder="경기자 1" autocomplete="off" name="pgSearchPlayerField1" style="color:#000000 !important; -webkit-text-fill-color:#000000 !important; font-weight:800 !important; color-scheme: light !important; forced-color-adjust: none !important;" /></div>
 <div class="player-input">
 <div class="player-number">2</div>
-<input id="player2" type="text" placeholder="경기자 2" autocomplete="off" name="pgPlayerField2" style="color:#000000 !important; -webkit-text-fill-color:#000000 !important; font-weight:800 !important; color-scheme: light !important; forced-color-adjust: none !important;" /></div>
+<input id="player2" type="text" placeholder="경기자 2" autocomplete="off" name="pgSearchPlayerField2" style="color:#000000 !important; -webkit-text-fill-color:#000000 !important; font-weight:800 !important; color-scheme: light !important; forced-color-adjust: none !important;" /></div>
 <div class="player-input">
 <div class="player-number">3</div>
-<input id="player3" type="text" placeholder="경기자 3" autocomplete="off" name="pgPlayerField3" style="color:#000000 !important; -webkit-text-fill-color:#000000 !important; font-weight:800 !important; color-scheme: light !important; forced-color-adjust: none !important;" /></div>
+<input id="player3" type="text" placeholder="경기자 3" autocomplete="off" name="pgSearchPlayerField3" style="color:#000000 !important; -webkit-text-fill-color:#000000 !important; font-weight:800 !important; color-scheme: light !important; forced-color-adjust: none !important;" /></div>
 <div class="player-input">
 <div class="player-number">4</div>
-<input id="player4" type="text" placeholder="경기자 4" autocomplete="off" name="pgPlayerField4" style="color:#000000 !important; -webkit-text-fill-color:#000000 !important; font-weight:800 !important; color-scheme: light !important; forced-color-adjust: none !important;" /></div>
+<input id="player4" type="text" placeholder="경기자 4" autocomplete="off" name="pgSearchPlayerField4" style="color:#000000 !important; -webkit-text-fill-color:#000000 !important; font-weight:800 !important; color-scheme: light !important; forced-color-adjust: none !important;" /></div>
 </div>
 </div>
 <div class="button-group" style="grid-template-columns: 1fr 1fr; margin-bottom: 30px !important;"><button class="load-btn" onclick="openNameListModal()">이름<br>불러오기</button> <button class="clear-btn" onclick="clearPlayerNames()">이름·점수<br>지우기</button></div>
@@ -2912,15 +2924,27 @@ function openPasisYoutube(){
 }
 
 // 이름/장소/조명 입력칸에 포커스가 갈 때만 "입력 완료" 체크 버튼을 보여주고,
-// 누르면 포커스를 해제해서 키보드를 내린다 (안드로이드에서 아이폰처럼 키보드 닫기 버튼 제공).
+// 누르면 포커스를 해제해서 키보드를 내린다 (안드로이드/아이폰에서 키보드 닫기 버튼 제공).
 (function () {
   var kbDoneBtn = document.getElementById('kbDoneBtn');
   if (!kbDoneBtn) return;
 
   var targetIds = ['locationInput', 'teamNameInput', 'player1', 'player2', 'player3', 'player4'];
 
+  // 키보드가 열려 화면(visual viewport)이 밀리거나 줄어들어도,
+  // 버튼이 항상 "실제로 보이는 화면"의 우상단에 오도록 위치를 다시 계산한다.
+  function repositionKbBtn() {
+    if (window.visualViewport) {
+      var vv = window.visualViewport;
+      kbDoneBtn.style.top = (vv.offsetTop + 12) + 'px';
+      kbDoneBtn.style.left = (vv.offsetLeft + vv.width - 44 - 12) + 'px';
+      kbDoneBtn.style.right = 'auto';
+    }
+  }
+
   document.addEventListener('focusin', function (e) {
     if (e.target && targetIds.indexOf(e.target.id) !== -1) {
+      repositionKbBtn();
       kbDoneBtn.classList.add('show');
     }
   });
@@ -2935,6 +2959,11 @@ function openPasisYoutube(){
       }, 50);
     }
   });
+
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', repositionKbBtn);
+    window.visualViewport.addEventListener('scroll', repositionKbBtn);
+  }
 
   kbDoneBtn.addEventListener('click', function () {
     if (document.activeElement && typeof document.activeElement.blur === 'function') {
