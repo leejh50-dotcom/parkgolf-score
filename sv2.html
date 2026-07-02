@@ -973,7 +973,7 @@
 }
 
 .parkgolf-app #kbDoneBtn {
-    position: fixed !important;
+    position: absolute !important;
     right: 12px !important;
     top: 50vh !important;
     width: 44px !important;
@@ -2925,15 +2925,38 @@ function openPasisYoutube(){
 
 // 이름/장소/조명 입력칸에 포커스가 갈 때만 "입력 완료" 체크 버튼을 보여주고,
 // 누르면 포커스를 해제해서 키보드를 내린다 (안드로이드/아이폰에서 키보드 닫기 버튼 제공).
+// 이 기기의 브라우저는 position:fixed가 키보드 열린 상태에서 제대로 고정되지 않아서,
+// 스크롤 위치를 계속 읽어 문서 기준 좌표를 직접 계산해 붙여넣는 방식으로 우회한다.
 (function () {
   var kbDoneBtn = document.getElementById('kbDoneBtn');
   if (!kbDoneBtn) return;
 
   var targetIds = ['locationInput', 'teamNameInput', 'player1', 'player2', 'player3', 'player4'];
+  var pollTimer = null;
+
+  function repositionKbBtn() {
+    var scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop || 0;
+    var viewportH = window.innerHeight || document.documentElement.clientHeight;
+    kbDoneBtn.style.top = (scrollY + viewportH * 0.5) + 'px';
+  }
+
+  function startTracking() {
+    repositionKbBtn();
+    if (pollTimer) return;
+    pollTimer = setInterval(repositionKbBtn, 200);
+  }
+
+  function stopTracking() {
+    if (pollTimer) {
+      clearInterval(pollTimer);
+      pollTimer = null;
+    }
+  }
 
   document.addEventListener('focusin', function (e) {
     if (e.target && targetIds.indexOf(e.target.id) !== -1) {
       kbDoneBtn.classList.add('show');
+      startTracking();
     }
   });
 
@@ -2943,9 +2966,18 @@ function openPasisYoutube(){
         var active = document.activeElement;
         if (!active || targetIds.indexOf(active.id) === -1) {
           kbDoneBtn.classList.remove('show');
+          stopTracking();
         }
       }, 50);
     }
+  });
+
+  window.addEventListener('scroll', function () {
+    if (kbDoneBtn.classList.contains('show')) repositionKbBtn();
+  }, { passive: true });
+
+  window.addEventListener('resize', function () {
+    if (kbDoneBtn.classList.contains('show')) repositionKbBtn();
   });
 
   kbDoneBtn.addEventListener('click', function () {
@@ -2953,6 +2985,7 @@ function openPasisYoutube(){
       document.activeElement.blur();
     }
     kbDoneBtn.classList.remove('show');
+    stopTracking();
   });
 })();
 </script>
