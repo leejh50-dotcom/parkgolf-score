@@ -2898,23 +2898,48 @@ function openPasisYoutube(){
 }
 
 // 이름/장소/조명 입력칸에 포커스가 가 있는 상태에서 그 외의 배경(다른 입력칸이 아닌 곳)을
-// 터치하면 자동으로 포커스를 해제해서 키보드가 내려가게 한다.
+// "탭"하면(스크롤이 아니라) 자동으로 포커스를 해제해서 키보드가 내려가게 한다.
+// 주의: touchstart 시점에 바로 처리하면 스크롤을 시작하는 손가락 움직임까지 걸려서
+// 키보드가 스크롤 도중에 닫히며 화면이 흔들려 스크롤이 끊기므로,
+// touchend 시점에 "손가락이 거의 안 움직였을 때(=탭)"만 처리한다.
 (function () {
   var targetIds = ['locationInput', 'teamNameInput', 'player1', 'player2', 'player3', 'player4'];
+  var startX = 0, startY = 0, startTarget = null, tracking = false;
 
   document.addEventListener('touchstart', function (e) {
+    var t = e.touches && e.touches[0];
+    if (!t) { tracking = false; return; }
+    startX = t.clientX;
+    startY = t.clientY;
+    startTarget = e.target;
+    tracking = true;
+  }, { passive: true });
+
+  document.addEventListener('touchend', function (e) {
+    if (!tracking) return;
+    tracking = false;
+
     var active = document.activeElement;
     if (!active || targetIds.indexOf(active.id) === -1) return;
 
-    var target = e.target;
+    var t = e.changedTouches && e.changedTouches[0];
+    if (!t) return;
+
+    // 일정 거리 이상 움직였으면 스크롤이었던 것이므로 무시한다.
+    var dx = Math.abs(t.clientX - startX);
+    var dy = Math.abs(t.clientY - startY);
+    if (dx > 10 || dy > 10) return;
+
+    var target = startTarget;
+    if (!target) return;
     // 입력칸 자기 자신을 누른 거면(커서 이동 등) 그대로 둔다.
     if (target === active) return;
     // 우리가 관리하는 다른 입력칸(경기자1~4, 장소, 조명)으로 옮겨가는 거면
     // 자연스러운 포커스 전환을 위해 그대로 둔다.
-    var closestManagedInput = target.closest('input, textarea');
+    var closestManagedInput = target.closest && target.closest('input, textarea');
     if (closestManagedInput && targetIds.indexOf(closestManagedInput.id) !== -1) return;
     // 버튼/링크는 그 자체 동작이 우선이므로 막지 않는다.
-    if (target.closest('button, a, select, label')) return;
+    if (target.closest && target.closest('button, a, select, label')) return;
 
     // 그 외에는(날짜칸처럼 우리가 관리하지 않는 다른 흰색 입력칸 포함) 전부 배경으로 취급해서 키보드를 내린다.
     active.blur();
