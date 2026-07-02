@@ -1600,7 +1600,7 @@
 </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" defer></script>
 <script>
         // html2canvas 로드 확인 및 재시도
         (function checkHtml2Canvas() {
@@ -2934,14 +2934,10 @@ function openPasisYoutube(){
     if (!target) return;
     // 입력칸 자기 자신을 누른 거면(커서 이동 등) 그대로 둔다.
     if (target === active) return;
-    // 우리가 관리하는 다른 입력칸(경기자1~4, 장소, 조명)으로 옮겨가는 거면
-    // 자연스러운 포커스 전환을 위해 그대로 둔다.
-    var closestManagedInput = target.closest && target.closest('input, textarea');
-    if (closestManagedInput && targetIds.indexOf(closestManagedInput.id) !== -1) return;
     // 버튼/링크는 그 자체 동작이 우선이므로 막지 않는다.
     if (target.closest && target.closest('button, a, select, label')) return;
 
-    // 그 외에는(날짜칸처럼 우리가 관리하지 않는 다른 흰색 입력칸 포함) 전부 배경으로 취급해서 키보드를 내린다.
+    // 그 외에는(다른 입력칸 포함 전부) 배경으로 취급해서 키보드를 내린다.
     active.blur();
   }, { passive: true });
 })();
