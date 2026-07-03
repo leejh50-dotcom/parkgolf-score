@@ -2964,9 +2964,21 @@ function openPasisYoutube(){
     });
   });
 
-  // 이름칸에 포커스가 있는 상태에서 화면을 스크롤하기 시작하면
+  // 이름칸에 포커스가 있는 상태에서 손가락을 움직여 스크롤을 시작하면
   // (몇 명을 입력했든 상관없이) 그 순간 바로 키보드가 같이 내려가게 한다.
   // 빈칸을 다시 탭하면 그 칸에 포커스가 가면서 키보드가 자연스럽게 다시 올라온다(기본 동작).
+  document.addEventListener('touchmove', function (e) {
+    var active = document.activeElement;
+    if (!active || targetIds.indexOf(active.id) === -1) return;
+    var t = e.touches && e.touches[0];
+    if (!t) return;
+    var dx = Math.abs(t.clientX - startX);
+    var dy = Math.abs(t.clientY - startY);
+    if (dx > 8 || dy > 8) {
+      active.blur();
+    }
+  }, { passive: true });
+
   window.addEventListener('scroll', function () {
     var active = document.activeElement;
     if (active && targetIds.indexOf(active.id) !== -1) {
