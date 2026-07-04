@@ -1,6 +1,6 @@
 {
   "name": "파시스sv4프로",
-  "short_name": "파시스sv4",
+  "short_name": "파시스4프로",
   "start_url": "./sv4.html",
   "scope": "/parkgolf-score/",
   "display": "standalone",
