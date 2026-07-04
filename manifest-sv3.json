@@ -1,6 +1,6 @@
 {
-  "name": "파시스3",
-  "short_name": "파시스3",
+  "name": "파시스sv3",
+  "short_name": "파시스sv3",
   "start_url": "/parkgolf-score/cover.html",
   "scope": "/파골프접수/",
   "display": "standalone",
