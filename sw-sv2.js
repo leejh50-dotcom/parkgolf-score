@@ -1,4 +1,5 @@
 const CACHE = "sv2-cache-v2";
+const CACHE_PREFIX = "sv2-cache-";
 const ASSETS = [
   "/parkgolf-score/sv2.html",
   "/parkgolf-score/manifest-sv2.json",
@@ -15,7 +16,13 @@ self.addEventListener("install", (e) => {
 self.addEventListener("activate", (e) => {
   e.waitUntil(
     caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)))
+      // 내 이름(sv2-cache-)으로 시작하는 옛 버전 캐시만 정리한다.
+      // 다른 실험판(sv2_5-cache- 등)의 캐시는 건드리지 않는다.
+      Promise.all(
+        keys
+          .filter((k) => k.startsWith(CACHE_PREFIX) && k !== CACHE)
+          .map((k) => caches.delete(k))
+      )
     )
   );
   self.clients.claim();
