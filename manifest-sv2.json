@@ -2,6 +2,7 @@
     "name": "파시스sv2",
     "short_name": "파시스sv2",
     "start_url": "./sv2.html",
+    "scope": "/parkgolf-score/sv2.html",
     "display": "standalone",
     "background_color": "#16a34a",
     "theme_color": "#16a34a",
