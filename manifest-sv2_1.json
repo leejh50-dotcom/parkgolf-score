@@ -1,6 +1,6 @@
 {
     "name": "파시스 sv2.1 클럽용",
-    "short_name": "파시스2.1",
+    "short_name": "파시스sv2.1",
     "start_url": "./sv2_1.html",
     "scope": "/parkgolf-score/sv2_1.html",
     "display": "standalone",
