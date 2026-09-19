@@ -1789,7 +1789,7 @@ pasisBleDevice = await navigator.bluetooth.requestDevice({
             await service.getCharacteristic(PASIS_BLE_TX_UUID);
 
         await pasisBleTx.startNotifications();
-
+pasisBleTx.addEventListener('characteristicvaluechanged', handlePasisSyncData);
         console.log('PASIS WATCH BLE 연결 성공');
 
         alert('PASIS WATCH BLE 연결 성공');
@@ -1800,6 +1800,29 @@ pasisBleDevice = await navigator.bluetooth.requestDevice({
         console.error('PASIS WATCH BLE 연결 실패:', err);
         alert('PASIS WATCH BLE 연결 실패\n\n' + err.message);
         return false;
+    }
+}
+// PASIS WATCH BLE 데이터 수신
+function handlePasisSyncData(event) {
+    const value = event.target.value;
+    const data = new Uint8Array(
+        value.buffer,
+        value.byteOffset,
+        value.byteLength
+    );
+
+    console.log(
+        'BLE RX:',
+        Array.from(data)
+            .map(function(b) {
+                return b.toString(16).padStart(2, '0');
+            })
+            .join(' ')
+    );
+
+    // SYNC_DATA(0x31)인지 확인
+    if (data.length >= 4 && data[0] === 0x01 && data[1] === 0x31) {
+        console.log('SYNC DATA 수신 성공');
     }
 }
 // PASIS WATCH 점수 동기화 요청
