@@ -1763,7 +1763,9 @@ let pasisBleDevice = null;
 let pasisBleServer = null;
 let pasisBleRx = null;
 let pasisBleTx = null;
-
+let pasisSyncScores = new Uint8Array(144);
+let pasisSyncReceived = new Array(144).fill(false);
+let pasisSyncReceivedCount = 0;
 // ========================================
 // PASIS WATCH BLE 연결
 async function connectPasisWatchBLE() {
@@ -1820,11 +1822,37 @@ function handlePasisSyncData(event) {
             .join(' ')
     );
 
-    // SYNC_DATA(0x31)인지 확인
-    if (data.length >= 4 && data[0] === 0x01 && data[1] === 0x31) {
-        console.log('SYNC DATA 수신 성공');
-alert('워치 점수 데이터 수신 성공');
+// SYNC_DATA(0x31) 수신
+if (data.length >= 14 && data[0] === 0x01 && data[1] === 0x31) {
+
+    const offset = data[12];
+    const count = data[13];
+
+    for (let i = 0; i < count; i++) {
+        const index = offset + i;
+
+        if (index < 144) {
+            pasisSyncScores[index] = data[14 + i];
+
+            if (!pasisSyncReceived[index]) {
+                pasisSyncReceived[index] = true;
+                pasisSyncReceivedCount++;
+            }
+        }
     }
+
+    console.log(
+        'SYNC DATA:',
+        offset,
+        count,
+        'TOTAL:',
+        pasisSyncReceivedCount
+    );
+
+    if (pasisSyncReceivedCount === 144) {
+        alert('워치 점수 144개 수신 완료');
+    }
+}
 }
 // PASIS WATCH 점수 동기화 요청
 async function requestPasisWatchSync() {
