@@ -1849,9 +1849,33 @@ if (data.length >= 14 && data[0] === 0x01 && data[1] === 0x31) {
         pasisSyncReceivedCount
     );
 
-    if (pasisSyncReceivedCount === 144) {
-        alert('워치 점수 144개 수신 완료');
+if (pasisSyncReceivedCount === 144) {
+
+    const courses = ['A', 'B', 'C', 'D'];
+
+    for (let player = 0; player < 4; player++) {
+        for (let course = 0; course < 4; course++) {
+            for (let hole = 0; hole < 9; hole++) {
+
+                const index =
+                    player * 36 +
+                    course * 9 +
+                    hole;
+
+                const raw = pasisSyncScores[index];
+                const score = raw & 0x0F;
+                const ob = (raw & 0x10) !== 0;
+
+                scores[courses[course]][player + 1][hole] =
+                    String(score) + (ob ? ')' : '');
+            }
+        }
     }
+
+    renderAllCourses();
+
+    alert('워치 점수 144개를 점수표에 적용 완료');
+}
 }
 }
 // PASIS WATCH 점수 동기화 요청
