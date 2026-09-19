@@ -1509,7 +1509,7 @@
 <button id="watchLoadBtn" onclick="connectPasisWatchBLE()" style="width: 100%; padding: 12px; font-size: 16px; font-weight: 600; background: #1e3c72; color: #fff; border: none; border-radius: 8px;">⌚ 워치에서 불러오기</button>
 </div>
 <div class="input-group" style="margin-top: 6px !important;">
-<button id="watchSendBtn" onclick="sendToWatch()" style="width: 100%; padding: 12px; font-size: 16px; font-weight: 600; background: #28a745; color: #fff; border: none; border-radius: 8px;">⌚ 워치로 보내기</button>
+<button id="watchSendBtn" onclick="requestPasisWatchSync()" style="width: 100%; padding: 12px; font-size: 16px; font-weight: 600; background: #28a745; color: #fff; border: none; border-radius: 8px;">⌚ 워치로 보내기</button>
 </div>
 <div class="input-group" style="margin-top: 30px !important;">
 <div class="setup-selectors">
@@ -1800,6 +1800,27 @@ pasisBleDevice = await navigator.bluetooth.requestDevice({
         console.error('PASIS WATCH BLE 연결 실패:', err);
         alert('PASIS WATCH BLE 연결 실패\n\n' + err.message);
         return false;
+    }
+}
+// PASIS WATCH 점수 동기화 요청
+async function requestPasisWatchSync() {
+    try {
+        if (!pasisBleRx) {
+            alert('먼저 PASIS WATCH BLE를 연결해주세요.');
+            return;
+        }
+
+        // VERSION=01, CMD_SYNC_REQUEST=30, LENGTH=0000
+        const packet = new Uint8Array([0x01, 0x30, 0x00, 0x00]);
+
+        await pasisBleRx.writeValue(packet);
+
+        console.log('SYNC REQUEST 전송: 01 30 00 00');
+        alert('SYNC REQUEST 전송 완료');
+
+    } catch (err) {
+        console.error('SYNC REQUEST 전송 실패:', err);
+        alert('SYNC REQUEST 전송 실패\n\n' + err.message);
     }
 }
         // html2canvas 로드 확인 및 재시도
