@@ -1770,10 +1770,10 @@ async function connectPasisWatchBLE() {
     try {
         console.log('PASIS WATCH BLE 검색 시작');
 
-        pasisBleDevice = await navigator.bluetooth.requestDevice({
-            filters: [{ namePrefix: 'PASIS' }],
-            optionalServices: [PASIS_BLE_SERVICE_UUID]
-        });
+pasisBleDevice = await navigator.bluetooth.requestDevice({
+    acceptAllDevices: true,
+    optionalServices: [PASIS_BLE_SERVICE_UUID]
+});
 
         console.log('BLE 장치 선택:', pasisBleDevice.name);
 
