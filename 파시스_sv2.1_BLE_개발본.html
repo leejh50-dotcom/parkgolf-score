@@ -1930,7 +1930,15 @@ async function sendScoresToPasisWatch() {
             if (!connected) return;
         }
 
-        // 1) 조(팀)명 + 선수 4명 전송
+        async function writePasisPacket(packet) {
+            if (typeof pasisBleRx.writeValueWithResponse === 'function') {
+                await pasisBleRx.writeValueWithResponse(packet);
+            } else {
+                await pasisBleRx.writeValue(packet);
+            }
+        }
+
+        // 1. 조(팀)명 + 선수 4명
         const setupValues = [
             document.getElementById('teamNameInput')?.value.trim() || '',
             document.getElementById('player1')?.value.trim() || '',
@@ -1941,25 +1949,31 @@ async function sendScoresToPasisWatch() {
 
         const encoder = new TextEncoder();
 
-        for (let fieldId = 0; fieldId < setupValues.length; fieldId++) {
-            const nameBytes = encoder.encode(setupValues[fieldId]);
-
-            // fieldId 1 byte + UTF-8 text
-            const payloadLength = 1 + nameBytes.length;
+        for (let fieldId = 0; fieldId < 5; fieldId++) {
+            const textBytes = encoder.encode(setupValues[fieldId]);
+            const payloadLength = 1 + textBytes.length;
             const packet = new Uint8Array(4 + payloadLength);
 
-            packet[0] = 0x01;
-            packet[1] = 0x21;
+            packet[0] = 0x01;                 // protocol
+            packet[1] = 0x21;                 // CMD_GAME_SETUP
             packet[2] = payloadLength & 0xFF;
             packet[3] = (payloadLength >> 8) & 0xFF;
-            packet[4] = fieldId;
-            packet.set(nameBytes, 5);
+            packet[4] = fieldId;              // 0=조명, 1~4=선수
+            packet.set(textBytes, 5);
 
-            await pasisBleRx.writeValue(packet);
-            await new Promise(resolve => setTimeout(resolve, 50));
+            await writePasisPacket(packet);
+
+            console.log(
+                'GAME SETUP SENT:',
+                fieldId,
+                setupValues[fieldId]
+            );
+
+            // Bluefy/iPhone BLE에서 연속 write가 유실되지 않도록 충분히 간격을 둔다.
+            await new Promise(resolve => setTimeout(resolve, 180));
         }
 
-        // 2) HTML 점수를 WATCH player-first 배열로 변환
+        // 2. 점수 144개 생성
         const courses = ['A', 'B', 'C', 'D'];
         const watchScores = new Uint8Array(144);
 
@@ -1991,7 +2005,7 @@ async function sendScoresToPasisWatch() {
             }
         }
 
-        // 3) 144개 점수를 6개씩 전송
+        // 3. 점수는 기존 검증된 방식 그대로 6개씩 전송
         for (let offset = 0; offset < 144; offset += 6) {
             const count = Math.min(6, 144 - offset);
             const packet = new Uint8Array(4 + 2 + count);
@@ -2007,7 +2021,7 @@ async function sendScoresToPasisWatch() {
                 packet[6 + i] = watchScores[offset + i];
             }
 
-            await pasisBleRx.writeValue(packet);
+            await writePasisPacket(packet);
             await new Promise(resolve => setTimeout(resolve, 30));
         }
 
@@ -2015,9 +2029,10 @@ async function sendScoresToPasisWatch() {
 
     } catch (err) {
         console.error('WATCH 전송 실패:', err);
-        alert('WATCH 전송 실패\\n\\n' + err.message);
+        alert('WATCH 전송 실패\n\n' + err.message);
     }
 }
+
  
         // html2canvas 로드 확인 및 재시도
         (function checkHtml2Canvas() {
