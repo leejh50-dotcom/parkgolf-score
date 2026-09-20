@@ -1506,7 +1506,7 @@
 <input id="teamNameInput" type="text" placeholder="조(팀)명 넣기" autocomplete="off" enterkeyhint="done" name="pgSearchTeamField" style="text-align: center; font-size: 16px; font-weight: 600; padding: 12px;" />
 </div>
 <div class="input-group" style="margin-top: 6px !important;">
-<button id="watchLoadBtn" onclick="connectPasisWatchBLE()" style="width: 100%; padding: 12px; font-size: 16px; font-weight: 600; background: #1e3c72; color: #fff; border: none; border-radius: 8px;">⌚ 워치에서 불러오기</button>
+<button id="watchLoadBtn" onclick="loadScoresFromPasisWatch()" style="width: 100%; padding: 12px; font-size: 16px; font-weight: 600; background: #1e3c72; color: #fff; border: none; border-radius: 8px;">⌚ 워치에서 불러오기</button>
 </div>
 <div class="input-group" style="margin-top: 6px !important;">
 <button id="watchSendBtn" onclick="sendScoresToPasisWatch()" style="width: 100%; padding: 12px; font-size: 16px; font-weight: 600; background: #28a745; color: #fff; border: none; border-radius: 8px;">⌚ 워치로 보내기</button>
@@ -1804,6 +1804,30 @@ pasisBleTx.addEventListener('characteristicvaluechanged', handlePasisSyncData);
         return false;
     }
 }
+// PASIS WATCH 연결 후 점수 불러오기
+async function loadScoresFromPasisWatch() {
+    try {
+        if (!pasisBleRx) {
+            const connected = await connectPasisWatchBLE();
+
+            if (!connected) {
+                return;
+            }
+        }
+
+        // 이전 수신 상태 초기화
+        pasisSyncScores = new Uint8Array(144);
+        pasisSyncReceived = new Array(144).fill(false);
+        pasisSyncReceivedCount = 0;
+
+        // WATCH에 전체 점수 요청
+        await requestPasisWatchSync();
+
+    } catch (err) {
+        console.error('WATCH 점수 불러오기 실패:', err);
+        alert('WATCH 점수 불러오기 실패\n\n' + err.message);
+    }
+}  
 // PASIS WATCH BLE 데이터 수신
 function handlePasisSyncData(event) {
     const value = event.target.value;
