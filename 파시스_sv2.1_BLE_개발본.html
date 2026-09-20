@@ -1987,19 +1987,6 @@ async function sendScoresToPasisWatch() {
     }
 }
 
-            await writePasisPacket(packet);
-            await new Promise(resolve => setTimeout(resolve, 30));
-        }
-
-        console.log('WATCH GAME SETUP + SCORE SEND COMPLETE');
-
-    } catch (err) {
-        console.error('WATCH 전송 실패:', err);
-        alert('WATCH 전송 실패\n\n' + err.message);
-    }
-}
-
- 
         // html2canvas 로드 확인 및 재시도
         (function checkHtml2Canvas() {
             if (typeof html2canvas === 'undefined') {
