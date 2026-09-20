@@ -1794,8 +1794,6 @@ pasisBleDevice = await navigator.bluetooth.requestDevice({
 pasisBleTx.addEventListener('characteristicvaluechanged', handlePasisSyncData);
         console.log('PASIS WATCH BLE 연결 성공');
 
-        alert('PASIS WATCH BLE 연결 성공');
-
         return true;
 
     } catch (err) {
