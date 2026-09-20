@@ -2279,7 +2279,26 @@ async function sendScoresToPasisWatch() {
                 resolve => setTimeout(resolve, 150)
             );
         }
+        // =====================================================
+        // 5. 조명 이미지 전송
+        // playerId 4 = 조명
+        // =====================================================
 
+        const teamName = setupValues[0];
+
+        await sendNameBitmap(
+            4,
+            teamName
+        );
+
+        console.log(
+            'TEAM BITMAP SENT:',
+            teamName
+        );
+
+        await new Promise(
+            resolve => setTimeout(resolve, 150)
+        );
 
         console.log(
             'WATCH GAME SETUP + NAME BITMAP COMPLETE'
