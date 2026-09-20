@@ -1819,6 +1819,7 @@ async function loadScoresFromPasisWatch() {
         pasisSyncReceivedCount = 0;
 
         // WATCH에 전체 점수 요청
+      alert('SYNC 요청 직전');
         await requestPasisWatchSync();
 
     } catch (err) {
