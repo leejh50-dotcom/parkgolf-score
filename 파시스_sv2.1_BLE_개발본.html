@@ -1506,10 +1506,12 @@
 <input id="teamNameInput" type="text" placeholder="조(팀)명 넣기" autocomplete="off" enterkeyhint="done" name="pgSearchTeamField" style="text-align: center; font-size: 16px; font-weight: 600; padding: 12px;" />
 </div>
 <div class="input-group" style="margin-top: 6px !important;">
-<button id="watchLoadBtn" onclick="loadScoresFromPasisWatch()" style="width: 100%; padding: 12px; font-size: 16px; font-weight: 600; background: #1e3c72; color: #fff; border: none; border-radius: 8px;">⌚ 워치에서 불러오기</button>
+    <button id="watchSendBtn" onclick="sendScoresToPasisWatch()" style="width: 100%; padding: 12px; font-size: 16px; font-weight: 600; background: #28a745; color: #fff; border: none; border-radius: 8px;">⌚ 워치로 보내기</button>
 </div>
+
 <div class="input-group" style="margin-top: 6px !important;">
-<button id="watchSendBtn" onclick="sendScoresToPasisWatch()" style="width: 100%; padding: 12px; font-size: 16px; font-weight: 600; background: #28a745; color: #fff; border: none; border-radius: 8px;">⌚ 워치로 보내기</button>
+    <button id="watchLoadBtn" onclick="loadScoresFromPasisWatch()" style="width: 100%; padding: 12px; font-size: 16px; font-weight: 600; background: #1e3c72; color: #fff; border: none; border-radius: 8px;">⌚ 워치에서 불러오기</button>
+</div>
 </div>
 <div class="input-group" style="margin-top: 30px !important;">
 <div class="setup-selectors">
@@ -1791,7 +1793,6 @@ pasisBleDevice = await navigator.bluetooth.requestDevice({
             await service.getCharacteristic(PASIS_BLE_TX_UUID);
 
         await pasisBleTx.startNotifications();
-      alert('NOTIFY 시작 성공');
 pasisBleTx.addEventListener('characteristicvaluechanged', handlePasisSyncData);
         console.log('PASIS WATCH BLE 연결 성공');
 
@@ -1820,7 +1821,6 @@ async function loadScoresFromPasisWatch() {
         pasisSyncReceivedCount = 0;
 
         // WATCH에 전체 점수 요청
-      alert('SYNC 요청 직전');
         await requestPasisWatchSync();
 
     } catch (err) {
