@@ -1925,22 +1925,27 @@ async function requestPasisWatchSync() {
 // PASIS 2.1 점수 -> WATCH 전송
 async function sendScoresToPasisWatch() {
     try {
-        // BLE 연결이 안 되어 있으면 먼저 연결
+        // BLE 연결
         if (!pasisBleRx) {
             const connected = await connectPasisWatchBLE();
             if (!connected) return;
         }
 
         async function writePasisPacket(packet) {
-            if (typeof pasisBleRx.writeValueWithResponse === 'function') {
+            if (
+                typeof pasisBleRx.writeValueWithResponse === 'function'
+            ) {
                 await pasisBleRx.writeValueWithResponse(packet);
             } else {
                 await pasisBleRx.writeValue(packet);
             }
         }
 
-        // 폰 → 워치로 보낼 것은
-        // 조(팀)명 + 선수 4명 이름뿐
+
+        // =====================================================
+        // 1. 조명 + 선수 4명 텍스트 전송
+        // =====================================================
+
         const setupValues = [
             document.getElementById('teamNameInput')?.value.trim() || '',
             document.getElementById('player1')?.value.trim() || '',
@@ -1952,20 +1957,31 @@ async function sendScoresToPasisWatch() {
         const encoder = new TextEncoder();
 
         for (let fieldId = 0; fieldId < 5; fieldId++) {
-            const textBytes = encoder.encode(setupValues[fieldId]);
-            const payloadLength = 1 + textBytes.length;
 
-            const packet = new Uint8Array(4 + payloadLength);
+            const textBytes =
+                encoder.encode(setupValues[fieldId]);
 
-            packet[0] = 0x01;  // protocol version
-            packet[1] = 0x21;  // CMD_GAME_SETUP
-            packet[2] = payloadLength & 0xFF;
-            packet[3] = (payloadLength >> 8) & 0xFF;
+            const payloadLength =
+                1 + textBytes.length;
 
-            // 0 = 조명
-            // 1~4 = 선수 1~4
+            const packet =
+                new Uint8Array(4 + payloadLength);
+
+            packet[0] = 0x01;
+            packet[1] = 0x21;
+
+            packet[2] =
+                payloadLength & 0xFF;
+
+            packet[3] =
+                (payloadLength >> 8) & 0xFF;
+
             packet[4] = fieldId;
-            packet.set(textBytes, 5);
+
+            packet.set(
+                textBytes,
+                5
+            );
 
             await writePasisPacket(packet);
 
@@ -1975,15 +1991,311 @@ async function sendScoresToPasisWatch() {
                 setupValues[fieldId]
             );
 
-            // iPhone/Bluefy 연속 전송 안정화
-            await new Promise(resolve => setTimeout(resolve, 180));
+            await new Promise(
+                resolve => setTimeout(resolve, 180)
+            );
         }
 
-        console.log('WATCH GAME SETUP SEND COMPLETE');
+
+        // =====================================================
+        // 2. 한글 이름 → 1비트 이미지
+        // =====================================================
+
+        function makeNameBitmap(name) {
+
+            const canvas =
+                document.createElement('canvas');
+
+            const ctx =
+                canvas.getContext(
+                    '2d',
+                    { willReadFrequently: true }
+                );
+
+            canvas.width = 96;
+            canvas.height = 18;
+
+            ctx.clearRect(
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+            ctx.fillStyle = '#ffffff';
+
+            ctx.font =
+                'bold 16px "Apple SD Gothic Neo", sans-serif';
+
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            ctx.fillText(
+                name,
+                canvas.width / 2,
+                canvas.height / 2
+            );
+
+            const image =
+                ctx.getImageData(
+                    0,
+                    0,
+                    canvas.width,
+                    canvas.height
+                );
+
+            let minX = canvas.width;
+            let minY = canvas.height;
+            let maxX = -1;
+            let maxY = -1;
+
+
+            // 실제 글자가 있는 범위 찾기
+            for (
+                let y = 0;
+                y < canvas.height;
+                y++
+            ) {
+                for (
+                    let x = 0;
+                    x < canvas.width;
+                    x++
+                ) {
+
+                    const pos =
+                        (y * canvas.width + x) * 4;
+
+                    const alpha =
+                        image.data[pos + 3];
+
+                    if (alpha > 64) {
+
+                        if (x < minX) minX = x;
+                        if (x > maxX) maxX = x;
+
+                        if (y < minY) minY = y;
+                        if (y > maxY) maxY = y;
+                    }
+                }
+            }
+
+
+            // 빈 이름
+            if (
+                maxX < minX ||
+                maxY < minY
+            ) {
+                return {
+                    width: 1,
+                    height: 1,
+                    data: new Uint8Array(1)
+                };
+            }
+
+
+            const width =
+                maxX - minX + 1;
+
+            const height =
+                maxY - minY + 1;
+
+            const byteCount =
+                Math.ceil(
+                    width * height / 8
+                );
+
+            const bitmap =
+                new Uint8Array(byteCount);
+
+            let bitIndex = 0;
+
+
+            // MSB first 1-bit bitmap
+            for (
+                let y = minY;
+                y <= maxY;
+                y++
+            ) {
+                for (
+                    let x = minX;
+                    x <= maxX;
+                    x++
+                ) {
+
+                    const pos =
+                        (y * canvas.width + x) * 4;
+
+                    const alpha =
+                        image.data[pos + 3];
+
+                    if (alpha > 64) {
+
+                        bitmap[
+                            bitIndex >> 3
+                        ] |= (
+                            1 <<
+                            (7 - (bitIndex & 7))
+                        );
+                    }
+
+                    bitIndex++;
+                }
+            }
+
+
+            return {
+                width: width,
+                height: height,
+                data: bitmap
+            };
+        }
+
+
+        // =====================================================
+        // 3. 선수 이름 이미지 BLE 전송
+        // =====================================================
+
+        async function sendNameBitmap(
+            playerId,
+            name
+        ) {
+
+            const result =
+                makeNameBitmap(name);
+
+            const width =
+                result.width;
+
+            const height =
+                result.height;
+
+            const bitmap =
+                result.data;
+
+
+            // BLE 한 패킷을 작게 유지
+            const chunkSize = 10;
+
+
+            for (
+                let offset = 0;
+                offset < bitmap.length;
+                offset += chunkSize
+            ) {
+
+                const count =
+                    Math.min(
+                        chunkSize,
+                        bitmap.length - offset
+                    );
+
+
+                // payload:
+                // playerId
+                // width
+                // height
+                // offset
+                // count
+                // bitmap bytes
+
+                const payloadLength =
+                    5 + count;
+
+                const packet =
+                    new Uint8Array(
+                        4 + payloadLength
+                    );
+
+
+                packet[0] = 0x01;
+
+                // CMD_NAME_BITMAP
+                packet[1] = 0x22;
+
+                packet[2] =
+                    payloadLength & 0xFF;
+
+                packet[3] =
+                    (payloadLength >> 8) & 0xFF;
+
+                packet[4] = playerId;
+                packet[5] = width;
+                packet[6] = height;
+                packet[7] = offset;
+                packet[8] = count;
+
+
+                packet.set(
+                    bitmap.slice(
+                        offset,
+                        offset + count
+                    ),
+                    9
+                );
+
+
+                await writePasisPacket(
+                    packet
+                );
+
+
+                await new Promise(
+                    resolve =>
+                        setTimeout(resolve, 80)
+                );
+            }
+
+
+            console.log(
+                'NAME BITMAP SENT:',
+                playerId + 1,
+                name,
+                width,
+                height,
+                bitmap.length
+            );
+        }
+
+
+        // =====================================================
+        // 4. 선수 4명 순서대로 이미지 전송
+        // =====================================================
+
+        for (
+            let playerId = 0;
+            playerId < 4;
+            playerId++
+        ) {
+
+            const name =
+                setupValues[playerId + 1];
+
+            await sendNameBitmap(
+                playerId,
+                name
+            );
+
+            await new Promise(
+                resolve => setTimeout(resolve, 150)
+            );
+        }
+
+
+        console.log(
+            'WATCH GAME SETUP + NAME BITMAP COMPLETE'
+        );
 
     } catch (err) {
-        console.error('WATCH 설정 전송 실패:', err);
-        alert('WATCH 설정 전송 실패\n\n' + err.message);
+
+        console.error(
+            'WATCH 설정 전송 실패:',
+            err
+        );
+
+        alert(
+            'WATCH 설정 전송 실패\n\n'
+            + err.message
+        );
     }
 }
 
