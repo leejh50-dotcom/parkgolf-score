@@ -1509,7 +1509,7 @@
 <button id="watchLoadBtn" onclick="connectPasisWatchBLE()" style="width: 100%; padding: 12px; font-size: 16px; font-weight: 600; background: #1e3c72; color: #fff; border: none; border-radius: 8px;">⌚ 워치에서 불러오기</button>
 </div>
 <div class="input-group" style="margin-top: 6px !important;">
-<button id="watchSendBtn" onclick="requestPasisWatchSync()" style="width: 100%; padding: 12px; font-size: 16px; font-weight: 600; background: #28a745; color: #fff; border: none; border-radius: 8px;">⌚ 워치로 보내기</button>
+<button id="watchSendBtn" onclick="sendScoresToPasisWatch()" style="width: 100%; padding: 12px; font-size: 16px; font-weight: 600; background: #28a745; color: #fff; border: none; border-radius: 8px;">⌚ 워치로 보내기</button>
 </div>
 <div class="input-group" style="margin-top: 30px !important;">
 <div class="setup-selectors">
@@ -1898,6 +1898,81 @@ async function requestPasisWatchSync() {
         alert('SYNC REQUEST 전송 실패\n\n' + err.message);
     }
 }
+// PASIS 2.1 점수 -> WATCH 전송
+async function sendScoresToPasisWatch() {
+    try {
+        if (!pasisBleRx) {
+            alert('먼저 PASIS WATCH BLE를 연결해주세요.');
+            return;
+        }
+
+        const courses = ['A', 'B', 'C', 'D'];
+        const watchScores = new Uint8Array(144);
+
+        // HTML 점수표를 WATCH의 player-first 배열로 변환
+        for (let player = 0; player < 4; player++) {
+            for (let course = 0; course < 4; course++) {
+                for (let hole = 0; hole < 9; hole++) {
+
+                    const value =
+                        scores[courses[course]][player + 1][hole];
+
+                    let score = 0;
+                    let ob = false;
+
+                    if (value !== '') {
+                        score = parseInt(
+                            String(value).replace(')', '')
+                        ) || 0;
+
+                        ob = String(value).includes(')');
+                    }
+
+                    const index =
+                        player * 36 +
+                        course * 9 +
+                        hole;
+
+                    watchScores[index] =
+                        (score & 0x0F) |
+                        (ob ? 0x10 : 0x00);
+                }
+            }
+        }
+
+        // 6개씩 WATCH로 전송
+        for (let offset = 0; offset < 144; offset += 6) {
+
+            const count = Math.min(6, 144 - offset);
+
+            const packet = new Uint8Array(4 + 2 + count);
+
+            packet[0] = 0x01;
+            packet[1] = 0x20;
+            packet[2] = 2 + count;
+            packet[3] = 0x00;
+
+            packet[4] = offset;
+            packet[5] = count;
+
+            for (let i = 0; i < count; i++) {
+                packet[6 + i] = watchScores[offset + i];
+            }
+
+            await pasisBleRx.writeValue(packet);
+
+            await new Promise(function(resolve) {
+                setTimeout(resolve, 30);
+            });
+        }
+
+        console.log('WATCH SCORE SEND COMPLETE');
+
+    } catch (err) {
+        console.error('WATCH 점수 전송 실패:', err);
+        alert('WATCH 점수 전송 실패\n\n' + err.message);
+    }
+}  
         // html2canvas 로드 확인 및 재시도
         (function checkHtml2Canvas() {
             if (typeof html2canvas === 'undefined') {
