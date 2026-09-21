@@ -3469,24 +3469,31 @@ async function clearPlayerNames() {
         updateSummary();
         saveData();
 
-        // 워치가 연결되어 있으면 워치 점수도 전체 초기화
+        // 워치도 연결한 뒤 A~D 전체 점수 초기화
         try {
             if (
-                pasisBleDevice &&
-                pasisBleDevice.gatt &&
-                pasisBleDevice.gatt.connected &&
-                pasisBleRx
+                !pasisBleDevice ||
+                !pasisBleDevice.gatt ||
+                !pasisBleDevice.gatt.connected ||
+                !pasisBleRx
             ) {
-                const packet = new Uint8Array([
-                    0x01,   // protocol version
-                    0x32,   // CMD_CLEAR_GAME
-                    0x00,   // payload length low
-                    0x00    // payload length high
-                ]);
+                const connected = await connectPasisWatchBLE();
 
-                await writePasisPacket(packet);
-                console.log('PASIS WATCH GAME CLEARED');
+                if (!connected) {
+                    throw new Error('PASIS WATCH BLE 연결 실패');
+                }
             }
+
+            const packet = new Uint8Array([
+                0x01,   // protocol version
+                0x32,   // CMD_CLEAR_GAME
+                0x00,   // payload length low
+                0x00    // payload length high
+            ]);
+
+            await writePasisPacket(packet);
+            console.log('PASIS WATCH GAME CLEARED');
+
         } catch (err) {
             console.log('PASIS WATCH CLEAR FAILED:', err);
         }
