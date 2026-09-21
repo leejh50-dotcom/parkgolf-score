@@ -1983,8 +1983,13 @@ async function sendScoresToPasisWatch() {
                 5
             );
 
-            await writePasisPacket(packet);
-
+        if (
+            typeof pasisBleRx.writeValueWithResponse === 'function'
+        ) {
+            await pasisBleRx.writeValueWithResponse(packet);
+        } else {
+            await pasisBleRx.writeValue(packet);
+        }
             console.log(
                 'GAME SETUP SENT:',
                 fieldId,
@@ -3502,8 +3507,13 @@ async function clearPlayerNames() {
             0x00
         ]);
 
-        await writePasisPacket(packet);
-
+if (
+    typeof pasisBleRx.writeValueWithResponse === 'function'
+) {
+    await pasisBleRx.writeValueWithResponse(packet);
+} else {
+    await pasisBleRx.writeValue(packet);
+}
     } catch (err) {
         console.log('PASIS WATCH CLEAR FAILED:', err);
     }
