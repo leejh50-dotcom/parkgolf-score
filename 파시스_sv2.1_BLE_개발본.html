@@ -1890,8 +1890,8 @@ if (pasisSyncReceivedCount === 144) {
                 const score = raw & 0x0F;
                 const ob = (raw & 0x10) !== 0;
 
-                scores[courses[course]][player + 1][hole] =
-                    String(score) + (ob ? ')' : '');
+    scores[courses[course]][player + 1][hole] =
+    score === 0 ? '' : String(score) + (ob ? ')' : '');
             }
         }
     }
