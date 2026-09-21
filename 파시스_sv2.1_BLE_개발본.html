@@ -2001,29 +2001,20 @@ async function sendScoresToPasisWatch() {
             );
         }
 
-        // =====================================================
-        // 새 경기 시작: WATCH의 기존 144개 점수 전부 0으로 초기화
-        // =====================================================
-        for (let offset = 0; offset < 144; offset += 6) {
-            const count = Math.min(6, 144 - offset);
-            const packet = new Uint8Array(4 + 2 + count);
+        // 새 경기 시작: WATCH 전체 점수 초기화
+const clearPacket = new Uint8Array([
+    0x01,
+    0x32,
+    0x00,
+    0x00
+]);
 
-            packet[0] = 0x01;
-            packet[1] = 0x20;
-            packet[2] = 2 + count;
-            packet[3] = 0x00;
-            packet[4] = offset;
-            packet[5] = count;
+await writePasisPacket(clearPacket);
 
-            for (let i = 0; i < count; i++) {
-                packet[6 + i] = 0;
-            }
+await new Promise(resolve => setTimeout(resolve, 300));
 
-            await writePasisPacket(packet);
-            await new Promise(resolve => setTimeout(resolve, 180));
-        }
+console.log('WATCH CLEAR GAME SENT');
 
-        console.log('WATCH SCORE CLEAR COMPLETE');
         // =====================================================
         // 2. 한글 이름 → 1비트 이미지
         // =====================================================
