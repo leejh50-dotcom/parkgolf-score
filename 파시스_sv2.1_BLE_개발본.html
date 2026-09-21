@@ -2020,7 +2020,7 @@ async function sendScoresToPasisWatch() {
             }
 
             await writePasisPacket(packet);
-            await new Promise(resolve => setTimeout(resolve, 80));
+            await new Promise(resolve => setTimeout(resolve, 180));
         }
 
         console.log('WATCH SCORE CLEAR COMPLETE');
