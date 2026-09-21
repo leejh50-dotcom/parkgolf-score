@@ -3448,24 +3448,52 @@ async function sendScoresToPasisWatch() {
             modal.style.setProperty('display', 'none', 'important');
         }
         
-        function clearPlayerNames() {
-            if (confirm('모든 경기자 이름과 점수를 지우시겠습니까?')) {
-                for (let i = 1; i <= 4; i++) {
-                    document.getElementById('player' + i).value = '';
-                    playerNames[i-1] = '';
-                }
-                scores = {
-                    A: { 1: Array(9).fill(''), 2: Array(9).fill(''), 3: Array(9).fill(''), 4: Array(9).fill('') },
-                    B: { 1: Array(9).fill(''), 2: Array(9).fill(''), 3: Array(9).fill(''), 4: Array(9).fill('') },
-                    C: { 1: Array(9).fill(''), 2: Array(9).fill(''), 3: Array(9).fill(''), 4: Array(9).fill('') },
-                    D: { 1: Array(9).fill(''), 2: Array(9).fill(''), 3: Array(9).fill(''), 4: Array(9).fill('') }
-                };
-                renderAllCourses();
-                updateSummary();
-                saveData();
-                showToast('경기자 이름과 점수가 지워졌습니다');
-            }
+async function clearPlayerNames() {
+    if (confirm('모든 경기자 이름과 점수를 지우시겠습니까?')) {
+
+        // 휴대폰의 경기자 이름 삭제
+        for (let i = 1; i <= 4; i++) {
+            document.getElementById('player' + i).value = '';
+            playerNames[i - 1] = '';
         }
+
+        // 휴대폰 A~D 전체 점수 삭제
+        scores = {
+            A: { 1: Array(9).fill(''), 2: Array(9).fill(''), 3: Array(9).fill(''), 4: Array(9).fill('') },
+            B: { 1: Array(9).fill(''), 2: Array(9).fill(''), 3: Array(9).fill(''), 4: Array(9).fill('') },
+            C: { 1: Array(9).fill(''), 2: Array(9).fill(''), 3: Array(9).fill(''), 4: Array(9).fill('') },
+            D: { 1: Array(9).fill(''), 2: Array(9).fill(''), 3: Array(9).fill(''), 4: Array(9).fill('') }
+        };
+
+        renderAllCourses();
+        updateSummary();
+        saveData();
+
+        // 워치가 연결되어 있으면 워치 점수도 전체 초기화
+        try {
+            if (
+                pasisBleDevice &&
+                pasisBleDevice.gatt &&
+                pasisBleDevice.gatt.connected &&
+                pasisBleRx
+            ) {
+                const packet = new Uint8Array([
+                    0x01,   // protocol version
+                    0x32,   // CMD_CLEAR_GAME
+                    0x00,   // payload length low
+                    0x00    // payload length high
+                ]);
+
+                await writePasisPacket(packet);
+                console.log('PASIS WATCH GAME CLEARED');
+            }
+        } catch (err) {
+            console.log('PASIS WATCH CLEAR FAILED:', err);
+        }
+
+        showToast('경기자 이름과 점수가 지워졌습니다');
+    }
+}
         
         function openParModal(course, hole) {
             currentParCourse = course;
