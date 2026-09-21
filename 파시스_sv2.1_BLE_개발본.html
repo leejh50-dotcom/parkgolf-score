@@ -2067,7 +2067,7 @@ async function sendScoresToPasisWatch() {
                 .filter(v => (v & 0x0F) === 0)
                 .length
         );
-        alert('워치 전송 전 빈칸 수 = ' + Array.from(watchScores).filter(v => (v & 0x0F) === 0).length);
+        document.getElementById('watchSendBtn').textContent = '⌚ 빈칸=' + Array.from(watchScores).filter(v => (v & 0x0F) === 0).length;;
 
         // =====================================================
         // 3. 144개 점수를 6개씩 WATCH로 전송
