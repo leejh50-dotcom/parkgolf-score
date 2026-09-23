@@ -1946,17 +1946,30 @@ async function sendScoresToPasisWatch() {
         // 1. 조명 + 선수 4명 텍스트 전송
         // =====================================================
 
-        const setupValues = [
-            document.getElementById('teamNameInput')?.value.trim() || '',
-            document.getElementById('player1')?.value.trim() || '',
-            document.getElementById('player2')?.value.trim() || '',
-            document.getElementById('player3')?.value.trim() || '',
-            document.getElementById('player4')?.value.trim() || ''
-        ];
+       const playerValues = [
+    document.getElementById('player1')?.value.trim() || '',
+    document.getElementById('player2')?.value.trim() || '',
+    document.getElementById('player3')?.value.trim() || '',
+    document.getElementById('player4')?.value.trim() || ''
+];
 
-        const encoder = new TextEncoder();
+const playerCount = Math.max(
+    1,
+    playerValues.filter(name => name !== '').length
+);
 
-        for (let fieldId = 0; fieldId < 5; fieldId++) {
+const setupValues = [
+    document.getElementById('teamNameInput')?.value.trim() || '',
+    playerValues[0],
+    playerValues[1],
+    playerValues[2],
+    playerValues[3],
+    String(playerCount)
+];
+
+const encoder = new TextEncoder();
+
+for (let fieldId = 0; fieldId < 6; fieldId++) {
 
             const textBytes =
                 encoder.encode(setupValues[fieldId]);
