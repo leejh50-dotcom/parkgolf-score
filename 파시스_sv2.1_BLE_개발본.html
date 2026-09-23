@@ -1953,18 +1953,13 @@ async function sendScoresToPasisWatch() {
     document.getElementById('player4')?.value.trim() || ''
 ];
 
-const playerCount = Math.max(
-    1,
-    playerValues.filter(name => name !== '').length
-);
-
 const setupValues = [
     document.getElementById('teamNameInput')?.value.trim() || '',
     playerValues[0],
     playerValues[1],
     playerValues[2],
     playerValues[3],
-    String(playerCount)
+    String(activePlayerCount)
 ];
 
 const encoder = new TextEncoder();
