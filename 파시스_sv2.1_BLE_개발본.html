@@ -1915,11 +1915,11 @@ async function requestPasisWatchSync() {
         await pasisBleRx.writeValue(packet);
 
         console.log('SYNC REQUEST 전송: 01 30 00 00');
-        alert('SYNC REQUEST 전송 완료');
+        showToast('워치로 전송 완료.');
 
     } catch (err) {
         console.error('SYNC REQUEST 전송 실패:', err);
-        alert('SYNC REQUEST 전송 실패\n\n' + err.message);
+        alert('워치로 전송 실패.\n\n' + err.message);
     }
 }
 // PASIS 2.1 점수 -> WATCH 전송
@@ -3480,10 +3480,87 @@ console.log('WATCH CLEAR GAME SENT');
             // iOS Safari에서 class 토글이 간헐적으로 안 먹는 경우 대비
             modal.style.setProperty('display', 'none', 'important');
         }
-        
+function showResetConfirm() {
+    return new Promise(function(resolve) {
+
+        const overlay = document.createElement('div');
+
+        overlay.style.cssText =
+            'position:fixed;' +
+            'left:0;top:0;width:100%;height:100%;' +
+            'background:rgba(0,0,0,0.45);' +
+            'display:flex;align-items:center;justify-content:center;' +
+            'z-index:99999;';
+
+        const box = document.createElement('div');
+
+        box.style.cssText =
+            'width:82%;max-width:340px;' +
+            'background:#fff;border-radius:16px;' +
+            'padding:24px 18px 18px;' +
+            'box-sizing:border-box;' +
+            'text-align:center;';
+
+        const message = document.createElement('div');
+
+        message.textContent =
+            '모든 경기자 이름과 점수를 지우시겠습니까?';
+
+        message.style.cssText =
+            'font-size:18px;font-weight:800;' +
+            'line-height:1.5;margin-bottom:22px;color:#222;';
+
+        const buttons = document.createElement('div');
+
+        buttons.style.cssText =
+            'display:flex;gap:10px;';
+
+        const cancelBtn = document.createElement('button');
+
+        cancelBtn.textContent = '취소';
+
+        cancelBtn.style.cssText =
+            'flex:1;padding:13px;' +
+            'border:none;border-radius:10px;' +
+            'font-size:17px;font-weight:800;' +
+            'background:#e5e5e5;color:#222;';
+
+        const resetBtn = document.createElement('button');
+
+        resetBtn.textContent = '초기화';
+
+        resetBtn.style.cssText =
+            'flex:1;padding:13px;' +
+            'border:none;border-radius:10px;' +
+            'font-size:17px;font-weight:800;' +
+            'background:#dc3545;color:#fff;';
+
+        cancelBtn.onclick = function() {
+            overlay.remove();
+            resolve(false);
+        };
+
+        resetBtn.onclick = function() {
+            overlay.remove();
+            resolve(true);
+        };
+
+        buttons.appendChild(cancelBtn);
+        buttons.appendChild(resetBtn);
+
+        box.appendChild(message);
+        box.appendChild(buttons);
+
+        overlay.appendChild(box);
+        document.body.appendChild(overlay);
+    });
+}        
 async function clearPlayerNames() {
-    if (!confirm('모든 경기자 이름과 점수를 지우시겠습니까?')) {
+    const confirmed = await showResetConfirm();
+
+    if (!confirmed) {
         return;
+    }
     }
 
     // 휴대폰 경기자 이름 삭제
