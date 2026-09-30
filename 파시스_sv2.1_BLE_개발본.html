@@ -1915,7 +1915,6 @@ async function requestPasisWatchSync() {
         await pasisBleRx.writeValue(packet);
 
         console.log('SYNC REQUEST 전송: 01 30 00 00');
-        showToast('워치로 전송 완료.');
 
     } catch (err) {
         console.error('SYNC REQUEST 전송 실패:', err);
