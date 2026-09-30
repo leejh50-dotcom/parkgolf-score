@@ -3500,8 +3500,18 @@ console.log('WATCH CLEAR GAME SENT');
             modal.style.setProperty('display', 'none', 'important');
         }
         
-async function clearPlayerNames() {
-    if (!confirm('모든 경기자 이름과 점수를 지우시겠습니까?')) {
+function closeClearConfirm() {
+    document.getElementById('clearConfirmModal').classList.remove('show');
+}
+
+function confirmClearPlayerNames() {
+    closeClearConfirm();
+    clearPlayerNames(true);
+}
+
+async function clearPlayerNames(confirmed = false) {
+    if (!confirmed) {
+        document.getElementById('clearConfirmModal').classList.add('show');
         return;
     }
 
