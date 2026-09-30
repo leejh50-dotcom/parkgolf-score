@@ -1799,10 +1799,10 @@ pasisBleTx.addEventListener('characteristicvaluechanged', handlePasisSyncData);
         return true;
 
     } catch (err) {
-        console.error('PASIS WATCH BLE 연결 실패:', err);
-        alert('PASIS WATCH BLE 연결 실패\n\n' + err.message);
-        return false;
-    }
+    console.error('PASIS WATCH BLE 연결 실패:', err);
+    showToast('BLE 연결 실패');
+    return false;
+}
 }
 // PASIS WATCH 연결 후 점수 불러오기
 async function loadScoresFromPasisWatch() {
@@ -1825,7 +1825,7 @@ async function loadScoresFromPasisWatch() {
 
     } catch (err) {
         console.error('WATCH 점수 불러오기 실패:', err);
-        alert('WATCH 점수 불러오기 실패\n\n' + err.message);
+        showToast('점수 불러오기 실패');
     }
 }  
 // PASIS WATCH BLE 데이터 수신
