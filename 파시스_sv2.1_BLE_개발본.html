@@ -1709,7 +1709,27 @@
 <button class="modal-close" onclick="closeModal()">취소</button></div>
 </div>
 <div id="toast" class="toast">&nbsp;</div>
+<div id="clearConfirmModal" class="modal">
+  <div class="modal-content" style="max-width: 340px; text-align: center;">
+    <h3 style="margin-bottom: 24px;">모든 경기자 이름과 점수를 지우시겠습니까?</h3>
 
+    <div style="display:flex; gap:10px;">
+      <button
+        type="button"
+        onclick="closeClearConfirm()"
+        style="flex:1; padding:14px; border:none; border-radius:10px; font-size:17px; font-weight:800;">
+        취소
+      </button>
+
+      <button
+        type="button"
+        onclick="confirmClearPlayerNames()"
+        style="flex:1; padding:14px; border:none; border-radius:10px; font-size:17px; font-weight:800; background:#dc3545; color:white;">
+        초기화
+      </button>
+    </div>
+  </div>
+</div>
 <div id="loadingModal" class="modal">
 <div class="modal-content" style="text-align: center; padding: 40px;">
 <div style="font-size: 48px; margin-bottom: 20px;">📸</div>
