@@ -2066,6 +2066,8 @@ async function sendScoresToPasisWatch() {
             if (!connected) return;
         }
 
+      await testCurrentAltitude();
+
         async function writePasisPacket(packet) {
             if (
                 typeof pasisBleRx.writeValueWithResponse === 'function'
