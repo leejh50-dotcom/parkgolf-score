@@ -2057,8 +2057,7 @@ async function requestPasisWatchSync() {
 async function sendScoresToPasisWatch() {
     try {
         // BLE 연결
-        if (!pasisBleRx) {
-            const connected = await connectPasisWatchBLE();
+if (!pasisBleDevice || !pasisBleDevice.gatt || !pasisBleDevice.gatt.connected || !pasisBleRx) {            const connected = await connectPasisWatchBLE();
             if (!connected) return;
         }
 
