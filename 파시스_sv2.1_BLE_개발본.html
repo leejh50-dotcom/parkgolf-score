@@ -1504,7 +1504,7 @@
 </div>
 
 <div class="input-group">
-<input id="teamNameInput" type="text" placeholder="조(팀)명 넣기" autocomplete="off" enterkeyhint="done" name="pgSearchTeamField" style="text-align: center; font-size: 16px; font-weight: 600; padding: 12px;" />
+<input id="teamNameInput" oninput="updateTeamName(); saveData();" type="text" placeholder="조(팀)명 넣기" autocomplete="off" enterkeyhint="done" name="pgSearchTeamField" style="text-align: center; font-size: 16px; font-weight: 600; padding: 12px;" />
 </div>
 <div class="input-group" style="margin-top: 6px !important;">
     <button id="watchSendBtn" onclick="sendScoresToPasisWatch()" style="width: 100%; padding: 12px; font-size: 16px; font-weight: 600; background: #28a745; color: #fff; border: none; border-radius: 8px;">⌚ 워치로 보내기</button>
