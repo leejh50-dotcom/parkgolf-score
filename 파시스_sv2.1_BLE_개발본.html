@@ -2476,10 +2476,7 @@ console.log('WATCH CLEAR GAME SENT');
             err
         );
 
-        alert(
-            'WATCH 설정 전송 실패\n\n'
-            + err.message
-        );
+        showToast('워치로 전송 실패', 3000);
     }
 }
 
