@@ -3683,28 +3683,12 @@ async function clearPlayerNames(confirmed = false) {
 
     // 워치 A~D 전체 점수도 초기화
     try {
-        let newlyConnected = false;
-
-        if (
-            !pasisBleDevice ||
-            !pasisBleDevice.gatt ||
-            !pasisBleDevice.gatt.connected ||
-            !pasisBleRx
-        ) {
-            const connected = await connectPasisWatchBLE();
-
-            if (!connected) {
-                throw new Error('PASIS WATCH BLE 연결 실패');
-            }
-
-            newlyConnected = true;
-        }
-
-        // 새 BLE 연결 직후 쓰기 준비 시간 확보
-        if (newlyConnected) {
-            await new Promise(resolve => setTimeout(resolve, 500));
-        }
-
+    if (
+        pasisBleDevice &&
+        pasisBleDevice.gatt &&
+        pasisBleDevice.gatt.connected &&
+        pasisBleRx
+    ) {
         const packet = new Uint8Array([
             0x01,
             0x32,
@@ -3712,16 +3696,19 @@ async function clearPlayerNames(confirmed = false) {
             0x00
         ]);
 
-if (
-    typeof pasisBleRx.writeValueWithResponse === 'function'
-) {
-    await pasisBleRx.writeValueWithResponse(packet);
-} else {
-    await pasisBleRx.writeValue(packet);
-}
-    } catch (err) {
-        console.log('PASIS WATCH CLEAR FAILED:', err);
+        if (
+            typeof pasisBleRx.writeValueWithResponse === 'function'
+        ) {
+            await pasisBleRx.writeValueWithResponse(packet);
+        } else {
+            await pasisBleRx.writeValue(packet);
+        }
+    } else {
+        console.log('PASIS WATCH 미연결 - 휴대폰만 삭제');
     }
+} catch (err) {
+    console.log('PASIS WATCH CLEAR FAILED:', err);
+}
 
     showToast('경기자 이름과 점수가 지워졌습니다');
 }
