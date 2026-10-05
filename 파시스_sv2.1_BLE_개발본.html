@@ -1834,7 +1834,40 @@ async function testCurrentAltitude() {
                 }
 
                 const altitude = Math.round(data.elevation[0]);
+                const altitudeBytes =
+                    new TextEncoder().encode(String(altitude));
 
+                const altitudePacket =
+                    new Uint8Array(4 + altitudeBytes.length);
+
+                altitudePacket[0] = 0x01;
+                altitudePacket[1] = 0x33;
+                altitudePacket[2] =
+                    altitudeBytes.length & 0xFF;
+                altitudePacket[3] =
+                    (altitudeBytes.length >> 8) & 0xFF;
+
+                altitudePacket.set(
+                    altitudeBytes,
+                    4
+                );
+
+                if (
+                    typeof pasisBleRx.writeValueWithResponse === 'function'
+                ) {
+                    await pasisBleRx.writeValueWithResponse(
+                        altitudePacket
+                    );
+                } else {
+                    await pasisBleRx.writeValue(
+                        altitudePacket
+                    );
+                }
+
+                console.log(
+                    'ALTITUDE SENT:',
+                    altitude
+                );
                 console.log(
                     '현재 위치:',
                     lat,
