@@ -2054,7 +2054,7 @@ async function requestPasisWatchSync() {
 
     } catch (err) {
         console.error('SYNC REQUEST 전송 실패:', err);
-        alert('워치로 전송 실패.\n\n' + err.message);
+        showToast('워치로 전송 실패', 3000);
     }
 }
 // PASIS 2.1 점수 -> WATCH 전송
