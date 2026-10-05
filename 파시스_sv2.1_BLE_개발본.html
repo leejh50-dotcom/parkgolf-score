@@ -1797,6 +1797,11 @@ let pasisSyncReceivedCount = 0;
 // 현재 위치 실제 지형 고도 시험
 // ========================================
 async function testCurrentAltitude() {
+    if (!pasisBleRx) {
+        const connected = await connectPasisWatchBLE();
+        if (!connected) return;
+    }
+
     if (!navigator.geolocation) {
         showToast('이 휴대폰은 위치 기능을 지원하지 않습니다.');
         return;
