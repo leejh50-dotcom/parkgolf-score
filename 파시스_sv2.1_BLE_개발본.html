@@ -1915,7 +1915,29 @@ if (pasisBleDevice && pasisBleDevice.gatt) {
         pasisBleDevice = null;
     }
 }
+      
+if (!pasisBleDevice && typeof navigator.bluetooth.getDevices === 'function') {
+    try {
+        const devices = await navigator.bluetooth.getDevices();
+        const savedDevice = devices.find(
+            device => device.name === 'PASIS SCORE'
+        );
 
+        if (savedDevice && savedDevice.gatt) {
+            try {
+                pasisBleServer = await savedDevice.gatt.connect();
+                pasisBleDevice = savedDevice;
+                console.log('PASIS SCORE 이전 허용 장치 자동 재연결 성공');
+            } catch (e) {
+                console.log('이전 허용 장치 재연결 실패');
+                pasisBleDevice = null;
+            }
+        }
+    } catch (e) {
+        console.log('이전 허용 BLE 장치 확인 실패');
+    }
+}
+      
 if (!pasisBleDevice) {
     pasisBleDevice = await navigator.bluetooth.requestDevice({
         acceptAllDevices: true,
