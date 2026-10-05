@@ -2076,8 +2076,7 @@ if (!pasisBleDevice || !pasisBleDevice.gatt || !pasisBleDevice.gatt.connected ||
             if (!connected) return;
         }
 
-      await testCurrentAltitude();
-
+      // await testCurrentAltitude();
         async function writePasisPacket(packet) {
             if (
                 typeof pasisBleRx.writeValueWithResponse === 'function'
@@ -2483,9 +2482,11 @@ console.log('WATCH CLEAR GAME SENT');
         console.log(
             'WATCH GAME SETUP + NAME BITMAP COMPLETE'
         );
-
+      
+        await testCurrentAltitude();
+      
     } catch (err) {
-
+      
         console.error(
             'WATCH 설정 전송 실패:',
             err
