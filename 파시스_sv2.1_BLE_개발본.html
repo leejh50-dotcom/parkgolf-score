@@ -1904,15 +1904,30 @@ async function connectPasisWatchBLE() {
     try {
         console.log('PASIS WATCH BLE 검색 시작');
 
-pasisBleDevice = await navigator.bluetooth.requestDevice({
-    acceptAllDevices: true,
-    optionalServices: [PASIS_BLE_SERVICE_UUID]
-});
+if (pasisBleDevice && pasisBleDevice.gatt) {
+    try {
+        if (!pasisBleDevice.gatt.connected) {
+            pasisBleServer = await pasisBleDevice.gatt.connect();
+            console.log('PASIS WATCH 자동 재연결 성공');
+        }
+    } catch (e) {
+        console.log('자동 재연결 실패 - 장치 선택으로 전환');
+        pasisBleDevice = null;
+    }
+}
 
-        console.log('BLE 장치 선택:', pasisBleDevice.name);
+if (!pasisBleDevice) {
+    pasisBleDevice = await navigator.bluetooth.requestDevice({
+        acceptAllDevices: true,
+        optionalServices: [PASIS_BLE_SERVICE_UUID]
+    });
 
-        pasisBleServer = await pasisBleDevice.gatt.connect();
+    console.log('BLE 장치 선택:', pasisBleDevice.name);
+}
 
+pasisBleServer = pasisBleDevice.gatt.connected
+    ? pasisBleDevice.gatt
+    : await pasisBleDevice.gatt.connect();
         const service =
             await pasisBleServer.getPrimaryService(PASIS_BLE_SERVICE_UUID);
 
