@@ -3324,9 +3324,12 @@ console.log('WATCH CLEAR GAME SENT');
             }
             
             const location = document.getElementById('locationInput').value;
-            
+
+            const teamName = document.getElementById('teamNameInput').value;
+          
             const data = {
                 location: location,
+                teamName: teamName,
                 selectedHoles: selectedHoles,
                 coursePars: coursePars,
                 scores: scores,
