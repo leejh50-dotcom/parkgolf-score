@@ -1943,52 +1943,15 @@ async function connectPasisWatchBLE() {
     try {
         console.log('PASIS WATCH BLE 검색 시작');
 
-if (pasisBleDevice && pasisBleDevice.gatt) {
-    try {
-        if (!pasisBleDevice.gatt.connected) {
-            pasisBleServer = await pasisBleDevice.gatt.connect();
-            console.log('PASIS WATCH 자동 재연결 성공');
-        }
-    } catch (e) {
-        console.log('자동 재연결 실패 - 장치 선택으로 전환');
-        pasisBleDevice = null;
-    }
-}
-      
-if (!pasisBleDevice && typeof navigator.bluetooth.getDevices === 'function') {
-    try {
-        const devices = await navigator.bluetooth.getDevices();
-        const savedDevice = devices.find(
-            device => device.name === 'PASIS SCORE'
-        );
+        pasisBleDevice = await navigator.bluetooth.requestDevice({
+            acceptAllDevices: true,
+            optionalServices: [PASIS_BLE_SERVICE_UUID]
+        });
 
-        if (savedDevice && savedDevice.gatt) {
-            try {
-                pasisBleServer = await savedDevice.gatt.connect();
-                pasisBleDevice = savedDevice;
-                console.log('PASIS SCORE 이전 허용 장치 자동 재연결 성공');
-            } catch (e) {
-                console.log('이전 허용 장치 재연결 실패');
-                pasisBleDevice = null;
-            }
-        }
-    } catch (e) {
-        console.log('이전 허용 BLE 장치 확인 실패');
-    }
-}
-      
-if (!pasisBleDevice) {
-    pasisBleDevice = await navigator.bluetooth.requestDevice({
-        acceptAllDevices: true,
-        optionalServices: [PASIS_BLE_SERVICE_UUID]
-    });
+        console.log('BLE 장치 선택:', pasisBleDevice.name);
 
-    console.log('BLE 장치 선택:', pasisBleDevice.name);
-}
+        pasisBleServer = await pasisBleDevice.gatt.connect();
 
-pasisBleServer = pasisBleDevice.gatt.connected
-    ? pasisBleDevice.gatt
-    : await pasisBleDevice.gatt.connect();
         const service =
             await pasisBleServer.getPrimaryService(PASIS_BLE_SERVICE_UUID);
 
@@ -1999,16 +1962,20 @@ pasisBleServer = pasisBleDevice.gatt.connected
             await service.getCharacteristic(PASIS_BLE_TX_UUID);
 
         await pasisBleTx.startNotifications();
-pasisBleTx.addEventListener('characteristicvaluechanged', handlePasisSyncData);
+        pasisBleTx.addEventListener(
+            'characteristicvaluechanged',
+            handlePasisSyncData
+        );
+
         console.log('PASIS WATCH BLE 연결 성공');
 
         return true;
 
     } catch (err) {
-    console.error('PASIS WATCH BLE 연결 실패:', err);
-    showToast('BLE 연결 실패');
-    return false;
-}
+        console.error('PASIS WATCH BLE 연결 실패:', err);
+        showToast('BLE 연결 실패');
+        return false;
+    }
 }
 // PASIS WATCH 연결 후 점수 불러오기
 async function loadScoresFromPasisWatch() {
