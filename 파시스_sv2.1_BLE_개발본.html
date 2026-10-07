@@ -1504,7 +1504,7 @@
 </div>
 
 <div class="input-group">
-<input id="teamNameInput" oninput="updateTeamName(); saveData();" type="text" placeholder="조(팀)명 넣기" autocomplete="off" enterkeyhint="done" name="pgSearchTeamField" style="text-align: center; font-size: 16px; font-weight: 600; padding: 12px;" />
+<input id="teamNameInput" oninput="updateTeamName(); autoSave();" type="text" placeholder="조(팀)명 넣기" autocomplete="off" enterkeyhint="done" name="pgSearchTeamField" style="text-align: center; font-size: 16px; font-weight: 600; padding: 12px;" />
 </div>
 <div class="input-group" style="margin-top: 6px !important;">
     <button id="watchSendBtn" onclick="sendScoresToPasisWatch()" style="width: 100%; padding: 12px; font-size: 16px; font-weight: 600; background: #28a745; color: #fff; border: none; border-radius: 8px;">⌚ 워치로 보내기</button>
@@ -3607,7 +3607,7 @@ console.log('WATCH CLEAR GAME SENT');
                     playerNames[targetPlayerSlot - 1] = name;
                     renderAllCourses();
                     updateSummary();
-                    saveData();
+                    autoSave();
                     closeNameListModal();
                     showToast(name + ' 선택됨');
                     targetPlayerSlot = null;
@@ -3624,7 +3624,7 @@ console.log('WATCH CLEAR GAME SENT');
                     playerNames[i-1] = name;
                     renderAllCourses();
                     updateSummary();
-                    saveData();
+                    autoSave();
                     closeNameListModal();
                     showToast(name + ' 선택됨');
                     return;
@@ -3682,7 +3682,7 @@ async function clearPlayerNames(confirmed = false) {
 
     renderAllCourses();
     updateSummary();
-    saveData();
+    autoSave();
 
     // 워치 A~D 전체 점수도 초기화
     try {
