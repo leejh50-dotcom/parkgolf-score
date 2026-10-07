@@ -2121,7 +2121,7 @@ if (!pasisBleDevice || !pasisBleDevice.gatt || !pasisBleDevice.gatt.connected ||
             if (!connected) return;
         }
 
-      await testCurrentAltitude();
+      // await testCurrentAltitude();
         async function writePasisPacket(packet) {
             if (
                 typeof pasisBleRx.writeValueWithResponse === 'function'
