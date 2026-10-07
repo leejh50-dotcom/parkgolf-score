@@ -1731,6 +1731,29 @@
     </div>
   </div>
 </div>
+
+<div id="historyDeleteConfirmModal" class="modal">
+  <div class="modal-content" style="max-width: 340px; text-align: center;">
+    <h3 style="margin-bottom: 24px;">이 기록을 삭제하시겠습니까?</h3>
+
+    <div style="display:flex; gap:10px;">
+      <button
+        type="button"
+        onclick="closeHistoryDeleteConfirm()"
+        style="flex:1; padding:14px; border:none; border-radius:10px; font-size:17px; font-weight:800;">
+        취소
+      </button>
+
+      <button
+        type="button"
+        onclick="confirmDeleteHistory()"
+        style="flex:1; padding:14px; border:none; border-radius:10px; font-size:17px; font-weight:800; background:#dc3545; color:white;">
+        삭제
+      </button>
+    </div>
+  </div>
+</div>
+  
 <div id="loadingModal" class="modal">
 <div class="modal-content" style="text-align: center; padding: 40px;">
 <div style="font-size: 48px; margin-bottom: 20px;">📸</div>
@@ -2688,16 +2711,38 @@ console.log('WATCH CLEAR GAME SENT');
             }
         }
         
-        function deleteHistory(id) {
-            if (confirm('이 기록을 삭제하시겠습니까?')) {
-                let histories = getAllHistories();
-                histories = histories.filter(function(h) { return h.id !== id; });
-                localStorage.setItem('parkGolfHistories_sv21', JSON.stringify(histories));
-                updateHistoryCount();
-                openHistoryModal(); // 목록 새로고침
-                showToast('기록이 삭제되었습니다');
-            }
-        }
+        let pendingDeleteHistoryId = null;
+
+function deleteHistory(id) {
+    pendingDeleteHistoryId = id;
+    document.getElementById('historyDeleteConfirmModal').classList.add('show');
+}
+
+function closeHistoryDeleteConfirm() {
+    document.getElementById('historyDeleteConfirmModal').classList.remove('show');
+    pendingDeleteHistoryId = null;
+}
+
+function confirmDeleteHistory() {
+    if (pendingDeleteHistoryId === null) return;
+
+    let histories = getAllHistories();
+    histories = histories.filter(function(h) {
+        return h.id !== pendingDeleteHistoryId;
+    });
+
+    localStorage.setItem(
+        'parkGolfHistories_sv21',
+        JSON.stringify(histories)
+    );
+
+    document.getElementById('historyDeleteConfirmModal').classList.remove('show');
+    pendingDeleteHistoryId = null;
+
+    updateHistoryCount();
+    openHistoryModal();
+    showToast('기록이 삭제되었습니다');
+}
         
         // 결과 공유 기능
         function shareResult() {
