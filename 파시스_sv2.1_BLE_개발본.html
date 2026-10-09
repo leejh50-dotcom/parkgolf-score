@@ -1943,11 +1943,22 @@ async function connectPasisWatchBLE() {
     try {
         console.log('PASIS WATCH BLE 검색 시작');
 
+        if (!pasisBleDevice) {
+    if (navigator.bluetooth.getDevices) {
+        const devices = await navigator.bluetooth.getDevices();
+
+        pasisBleDevice = devices.find(
+            device => device.name === 'PASIS SCORE'
+        ) || null;
+    }
+
+    if (!pasisBleDevice) {
         pasisBleDevice = await navigator.bluetooth.requestDevice({
             acceptAllDevices: true,
             optionalServices: [PASIS_BLE_SERVICE_UUID]
         });
-
+    }
+}
         console.log('BLE 장치 선택:', pasisBleDevice.name);
 
         pasisBleServer = await pasisBleDevice.gatt.connect();
