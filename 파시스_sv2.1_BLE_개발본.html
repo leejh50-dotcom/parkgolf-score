@@ -1982,11 +1982,16 @@ async function connectPasisWatchBLE() {
 
         return true;
 
-    } catch (err) {
-        console.error('PASIS WATCH BLE 연결 실패:', err);
-        showToast('BLE 연결 실패');
-        return false;
-    }
+    } catch(err) {
+    console.error('PASIS WATCH BLE 연결 실패:', err);
+
+    pasisBleServer = null;
+    pasisBleRx = null;
+    pasisBleTx = null;
+
+    showToast('BLE 연결 실패');
+    return false;
+}
 }
 // PASIS WATCH 연결 후 점수 불러오기
 async function loadScoresFromPasisWatch() {
