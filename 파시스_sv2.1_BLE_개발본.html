@@ -1826,8 +1826,6 @@ async function testCurrentAltitude() {
         return;
     }
 
-    showToast('현재 위치와 고도를 확인하는 중...', 5000);
-
     return await new Promise((resolve) => {
 
         navigator.geolocation.getCurrentPosition(
