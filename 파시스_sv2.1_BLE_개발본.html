@@ -1941,7 +1941,7 @@ async function connectPasisWatchBLE() {
         const devices = await navigator.bluetooth.getDevices();
 
         pasisBleDevice = devices.find(
-            device => device.name === 'PASIS SCORE'
+            device => device.name === 'PASIS-WATCH'
         ) || null;
     }
 
