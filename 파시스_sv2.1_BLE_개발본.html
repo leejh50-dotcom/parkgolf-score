@@ -1946,7 +1946,6 @@ async function connectPasisWatchBLE() {
         if (!pasisBleDevice) {
     if (navigator.bluetooth.getDevices) {
         const devices = await navigator.bluetooth.getDevices();
-      document.body.insertAdjacentHTML('afterbegin', '<div style="position:fixed;top:0;left:0;right:0;z-index:99999;background:yellow;color:black;padding:12px;font-size:18px">BLE 기억된 장치: ' + devices.length + '개</div>');
 
         pasisBleDevice = devices.find(
             device => device.name === 'PASIS SCORE'
