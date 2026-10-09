@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light only">
   <title>파크골프 점수 - sv2.1 클럽용</title>
 
-  <!-- PWA -->
+  <!-- PWA -->ㄹ
   <link rel="manifest" href="manifest-sv2_1.json">
   <link rel="apple-touch-icon" sizes="180x180" href="sv2_1-180.png">
 <style>
@@ -1991,7 +1991,7 @@ async function connectPasisWatchBLE() {
 // PASIS WATCH 연결 후 점수 불러오기
 async function loadScoresFromPasisWatch() {
     try {
-        if (!pasisBleRx) {
+        if (!pasisBleDevice || !pasisBleDevice.gatt || !pasisBleDevice.gatt.connected || !pasisBleRx) {
             const connected = await connectPasisWatchBLE();
 
             if (!connected) {
