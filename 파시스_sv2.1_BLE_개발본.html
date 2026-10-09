@@ -1944,6 +1944,7 @@ async function connectPasisWatchBLE() {
         console.log('PASIS WATCH BLE 검색 시작');
 
         if (!pasisBleDevice) {
+    alert('BLE 기존 장치 검색 기능 확인');
     if (navigator.bluetooth.getDevices) {
         const devices = await navigator.bluetooth.getDevices();
 
