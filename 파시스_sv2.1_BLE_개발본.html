@@ -3712,6 +3712,10 @@ async function clearPlayerNames(confirmed = false) {
         playerNames[i - 1] = '';
     }
 
+     // 조(팀)명도 함께 삭제
+    document.getElementById('teamNameInput').value = '';
+    updateTeamName();
+  
     // 휴대폰 A~D 전체 점수 삭제
     scores = {
         A: { 1: Array(9).fill(''), 2: Array(9).fill(''), 3: Array(9).fill(''), 4: Array(9).fill('') },
