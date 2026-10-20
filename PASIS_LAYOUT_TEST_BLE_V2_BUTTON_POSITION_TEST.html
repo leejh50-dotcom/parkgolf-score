@@ -2175,12 +2175,13 @@ const setupValues = [
     playerValues[1],
     playerValues[2],
     playerValues[3],
-    String(activePlayerCount)
+    String(activePlayerCount),
+    String(window.pasisSelectedWatchLayout === 'grid' ? 1 : 0)
 ];
 
 const encoder = new TextEncoder();
 
-for (let fieldId = 0; fieldId < 5; fieldId++) {
+for (let fieldId = 0; fieldId < 7; fieldId++) {
 
             const textBytes =
                 encoder.encode(setupValues[fieldId]);
