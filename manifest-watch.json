@@ -1,7 +1,7 @@
 {
   "id": "/parkgolf-score/pasis-watch",
-  "name": "파시스2.1워치",
-"short_name": "파시스2.1워치",
+  "name": "파시스워치",
+"short_name": "파시스워치",
   "start_url": "/parkgolf-score/PASIS_2.1_WATCH.html",
   "scope": "/parkgolf-score/",
   "display": "standalone",
