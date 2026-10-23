@@ -1505,12 +1505,6 @@
 <div class="input-group">
 <input id="teamNameInput" type="text" placeholder="조(팀)명 넣기" autocomplete="off" enterkeyhint="done" name="pgSearchTeamField" style="text-align: center; font-size: 16px; font-weight: 600; padding: 12px;" />
 </div>
-<div class="input-group" style="margin-top: 6px !important;">
-<button id="watchLoadBtn" onclick="loadFromWatch()" style="width: 100%; padding: 12px; font-size: 16px; font-weight: 600; background: #1e3c72; color: #fff; border: none; border-radius: 8px;">⌚ 워치에서 불러오기</button>
-</div>
-<div class="input-group" style="margin-top: 6px !important;">
-<button id="watchSendBtn" onclick="sendToWatch()" style="width: 100%; padding: 12px; font-size: 16px; font-weight: 600; background: #28a745; color: #fff; border: none; border-radius: 8px;">⌚ 워치로 보내기</button>
-</div>
 <div class="input-group" style="margin-top: 30px !important;">
 <div class="setup-selectors">
 <div class="setup-row">
@@ -2392,107 +2386,6 @@
             document.getElementById('shareTeamName').textContent = teamName;
         }
 
-        // 파시스워치에서 점수 데이터 불러오기
-        // 사전 조건: 폰의 Wi-Fi가 워치의 "PASIS워치-○조"에 연결되어 있어야 함
-        function loadFromWatch() {
-            const btn = document.getElementById('watchLoadBtn');
-            const originalText = btn.textContent;
-            btn.textContent = '불러오는 중...';
-            btn.disabled = true;
-
-            fetch('http://192.168.4.1/scores')
-                .then(function(response) {
-                    if (!response.ok) throw new Error('워치 응답 오류: ' + response.status);
-                    return response.json();
-                })
-                .then(function(data) {
-                    // 조명 반영
-                    if (data.teamName) {
-                        document.getElementById('teamNameInput').value = data.teamName;
-                        updateTeamName();
-                    }
-
-                    // 선수명 반영
-                    if (Array.isArray(data.playerNames)) {
-                        for (let i = 0; i < 4; i++) {
-                            playerNames[i] = data.playerNames[i] || '';
-                            const input = document.getElementById('player' + (i + 1));
-                            if (input) input.value = playerNames[i];
-                        }
-                    }
-
-                    // 점수 데이터 반영 (구조가 sv2.1과 동일하므로 그대로 대입)
-                    if (data.scores) {
-                        scores = data.scores;
-                    }
-
-                    renderAllCourses();
-                    updateSummary();
-                    autoSave();
-
-                    btn.textContent = '✅ 불러오기 완료';
-                    setTimeout(function() {
-                        btn.textContent = originalText;
-                        btn.disabled = false;
-                    }, 2000);
-                })
-                .catch(function(err) {
-                    console.error(err);
-                    alert('워치에서 데이터를 불러오지 못했습니다.\n\n확인해주세요:\n1) 휴대폰 Wi-Fi가 "PASIS워치-○조"에 연결되어 있는지\n2) 모바일 데이터(셀룰러)를 잠시 꺼두었는지\n\n오류: ' + err.message);
-                    btn.textContent = originalText;
-                    btn.disabled = false;
-                });
-        }
-
-        // 경기 시작 전, 폰에서 등록한 기본정보(조명/장소/경기자수/코스수/경기자이름)를
-        // 워치로 전송해 초기 세팅하는 함수.
-        // 사전 조건: 폰의 Wi-Fi가 워치의 "PASIS워치-○조"에 연결되어 있어야 함
-        function sendToWatch() {
-            const btn = document.getElementById('watchSendBtn');
-            const originalText = btn.textContent;
-            btn.textContent = '보내는 중...';
-            btn.disabled = true;
-
-            const teamName = document.getElementById('teamNameInput').value || '미입력';
-            const location = document.getElementById('locationInput').value || '';
-            const names = [];
-            for (let i = 1; i <= 4; i++) {
-                const input = document.getElementById('player' + i);
-                names.push(input ? (input.value || '') : '');
-            }
-            const courseCount = Math.round(selectedHoles / 9);
-
-            const payload = {
-                teamName: teamName,
-                location: location,
-                playerNames: names,
-                playerCount: activePlayerCount,
-                courseCount: courseCount
-            };
-
-            fetch('http://192.168.4.1/setup', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            })
-                .then(function(response) {
-                    if (!response.ok) throw new Error('워치 응답 오류: ' + response.status);
-                    return response.json();
-                })
-                .then(function(data) {
-                    btn.textContent = '✅ 보내기 완료';
-                    setTimeout(function() {
-                        btn.textContent = originalText;
-                        btn.disabled = false;
-                    }, 2000);
-                })
-                .catch(function(err) {
-                    console.error(err);
-                    alert('워치로 정보를 보내지 못했습니다.\n\n확인해주세요:\n1) 휴대폰 Wi-Fi가 "PASIS워치-○조"에 연결되어 있는지\n2) 모바일 데이터(셀룰러)를 잠시 꺼두었는지\n\n오류: ' + err.message);
-                    btn.textContent = originalText;
-                    btn.disabled = false;
-                });
-        }
         
         function loadData() {
             const saved = localStorage.getItem('parkGolfData_sv21');
