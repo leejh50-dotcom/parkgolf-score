@@ -1,0 +1,22 @@
+{
+  "id": "/parkgolf-score/pasis-watch",
+  "name": "파시스 WATCH",
+  "short_name": "PASIS WATCH",
+  "start_url": "/parkgolf-score/PASIS_2.1_WATCH.html",
+  "scope": "/parkgolf-score/",
+  "display": "standalone",
+  "background_color": "#16a34a",
+  "theme_color": "#16a34a",
+  "icons": [
+    {
+      "src": "sv2_1-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "sv2_1-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
