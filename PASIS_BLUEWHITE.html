@@ -155,7 +155,7 @@
 <div class="teams"><div class="team"><h3>🔵 청팀</h3><div class="entries" id="blueEntries"><div class="empty">👑 결정 전입니다</div></div><div class="totals"><div class="totalrow"><span>합계</span><span id="blueSum">—</span></div><div class="totalrow"><span>평균</span><span id="blueAvg">—</span></div></div></div><div class="team white"><h3>⚪ 백팀</h3><div class="entries" id="whiteEntries"><div class="empty">👑 결정 전입니다</div></div><div class="totals"><div class="totalrow"><span>합계</span><span id="whiteSum">—</span></div><div class="totalrow"><span>평균</span><span id="whiteAvg">—</span></div></div></div></div>
 <div class="winner wait" id="winner">전원 전송 후 별표를 누르면 결과가 표시됩니다.</div><div id="pending" class="hint" style="text-align:center"></div></section>
 <div class="actions"><button class="action red" id="clear" disabled><b>🗑</b>결과삭제</button><button class="action green" id="save" disabled><b>▣</b>저장</button><button class="action blue" id="load"><b>📂</b>불러오기</button></div>
-<div id="modeNotice" class="notice setup"></div><footer>PASIS 청백 게임 1.9 Firebase · 이름·타수 크기 통일</footer></div>
+<div id="modeNotice" class="notice setup"></div><footer>PASIS 청백 게임 1.9 PWA · Firebase 공동 전송</footer></div>
 <dialog id="dialog"><h3 id="dialogTitle"></h3><div id="dialogBody"></div><div class="row"><button class="secondary" id="cancelDialog">닫기</button><button class="secondary" id="confirmDialog">확인</button></div></dialog>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
@@ -401,4 +401,13 @@ onAuthStateChanged(auth,user=>{
     if(clean($('course').value)&&[...clean($('teamName').value)].length>=4)watchRoom().catch(e=>notify(errText(e),true));
   }else signInAnonymously(auth).catch(e=>notify('익명 인증 오류: '+errText(e),true));
 });
-</script></body></html>
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./pasis-bluewhite-sw.js', { scope: './' })
+      .catch(error => console.warn('파시스 청백 PWA 설치 지원:', error));
+  });
+}
+</script>
+</body></html>
