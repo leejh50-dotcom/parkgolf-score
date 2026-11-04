@@ -15,6 +15,31 @@
 @media(max-width:360px){.pair{grid-template-columns:minmax(0,1fr) 73px}.teamcount{grid-template-columns:minmax(0,1fr) 72px}}
 
 .title-text{white-space:nowrap;flex:1;min-width:0}.label{font-size:clamp(16px,4.5vw,18px);white-space:nowrap}.big{font-size:clamp(20px,5.6vw,27px);white-space:nowrap;letter-spacing:-.03em;padding-inline:8px}.title{gap:6px;font-size:clamp(18px,4.7vw,22px);margin-bottom:12px;flex-wrap:nowrap}.counter{font-size:clamp(12px,3.6vw,14px);padding:5px 8px;flex:none}.teams{gap:6px}.team h3{padding:10px 0;font-size:clamp(17px,4.8vw,21px);white-space:nowrap}.entries{padding:8px 6px}.entry{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:4px;padding:8px 0;font-size:clamp(13px,3.25vw,17px)}.entry span:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:4px}.entry span:last-child{white-space:nowrap;text-align:right;min-width:2.7em}.entry span{overflow-wrap:normal}.totals{padding:10px 6px}.totalrow{font-size:clamp(14px,3.8vw,16px)}.winner{font-size:clamp(19px,5.8vw,28px);padding:16px 8px}.actions{gap:6px;margin:12px 8px}.action{font-size:clamp(12px,3.3vw,16px)}.action b{font-size:20px;line-height:1}.submitrow{grid-template-columns:minmax(0,1fr) 92px;gap:8px}.star{font-size:31px}.pair{grid-template-columns:minmax(0,1fr) 98px;gap:8px}.teamcount{grid-template-columns:minmax(0,1fr) 90px;gap:8px}.card{margin:12px 10px;padding:15px}@media(max-width:430px){.card{margin:10px 6px;padding:12px}.date{font-size:clamp(16px,5vw,24px)}.locationbox{padding:0 8px;gap:4px}.locationbox .input{padding:0 4px}.fixedsuffix{font-size:17px}.input{font-size:18px;padding:0 10px}.pair{grid-template-columns:minmax(0,1fr) 92px;gap:7px}.teamcount{grid-template-columns:minmax(0,1fr) 84px;gap:7px}.submitrow{grid-template-columns:minmax(0,1fr) 86px;gap:7px}.team h3{font-size:clamp(16px,4.6vw,20px)}.entry{font-size:clamp(12px,3.15vw,16px)}.winner{font-size:clamp(18px,5.4vw,24px)}}@media(max-width:360px){.pair{grid-template-columns:minmax(0,1fr) 84px}.teamcount{grid-template-columns:minmax(0,1fr) 78px}.submitrow{grid-template-columns:minmax(0,1fr) 80px}.big{font-size:19px}.label{font-size:15px}}
+
+/* V1.6 시니어 가독성 강화: 색 대비 및 굵은 글씨 */
+:root{color:#0b2344;font-weight:650}
+.label{font-weight:900;font-size:clamp(18px,4.5vw,21px);letter-spacing:-.04em}
+.input{font-weight:850;font-size:clamp(19px,4.6vw,22px);color:#071d3e;border-color:#9eb8d8;border-width:2.5px}
+.input::placeholder{font-weight:700;color:#77869a;opacity:1}
+.fixedsuffix{font-weight:950;font-size:clamp(18px,4.5vw,21px)}
+.date{font-weight:950}
+.title{font-weight:950;font-size:clamp(20px,4.9vw,24px)}
+.counter{font-weight:900;font-size:clamp(13px,3.5vw,16px)}
+.big{font-weight:950;font-size:clamp(21px,5.4vw,27px)}
+.team h3{font-weight:950;font-size:clamp(19px,4.7vw,23px)}
+.entry{font-weight:900;font-size:clamp(14px,3.5vw,18px);color:#091e3e}
+.entry span:first-child{letter-spacing:-.055em}
+.totalrow{font-weight:950;font-size:clamp(15px,3.9vw,18px);letter-spacing:-.045em}
+.winner{font-weight:950}
+.action{font-weight:950;font-size:clamp(14px,3.6vw,18px)}
+.count-status,.guide{font-weight:900;font-size:clamp(16px,4vw,20px)}
+/* 전송 성공시에만 중앙 확인창 표시 */
+.send-success-overlay{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(4,22,47,.23);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .18s ease,visibility .18s ease}
+.send-success-overlay.show{opacity:1;visibility:visible}
+.send-success-box{width:min(92vw,420px);padding:30px 15px;border:3px solid #1260b4;border-radius:24px;background:#fff;box-shadow:0 20px 65px #051a3666;text-align:center;color:#073975;font-weight:950;font-size:clamp(25px,7vw,35px);letter-spacing:-.04em;white-space:nowrap;transform:scale(.92);transition:transform .2s ease}
+.send-success-overlay.show .send-success-box{transform:scale(1)}
+.send-success-check{display:block;font-size:48px;line-height:1.2;margin-bottom:9px;color:#15945b}
+@media(max-width:360px){.label{font-size:17px}.team h3{font-size:18px}.totalrow{font-size:14px}.entry{font-size:13px}.input{font-size:18px}}
 </style>
 </head>
 <body><div class="wrap">
@@ -34,12 +59,13 @@
 <div class="submitrow"><button id="send" class="big">✈ 점수 제출</button><button id="star" class="star" disabled title="전원 전송 후 청백 무작위 결정" aria-label="청백 결정">☆</button></div>
 <div class="guide" id="guide" role="status">별표를 누르면 각자 휴대폰에 동일한 결과가 표시됩니다</div>
 <div id="status" class="status" role="status"></div>
+<div id="sendSuccessOverlay" class="send-success-overlay" role="status" aria-live="polite" aria-hidden="true"><div class="send-success-box"><span class="send-success-check">✓</span>점수 전송 완료</div></div>
 </section>
 <section class="card"><div class="title"><span class="title-text">🏆 경기 결과</span><span id="count" class="counter">참가 0명</span></div>
 <div class="teams"><div class="team"><h3>🔵 청팀</h3><div class="entries" id="blueEntries"><div class="empty">👑 결정 전입니다</div></div><div class="totals"><div class="totalrow"><span>합계</span><span id="blueSum">—</span></div><div class="totalrow"><span>평균</span><span id="blueAvg">—</span></div></div></div><div class="team white"><h3>⚪ 백팀</h3><div class="entries" id="whiteEntries"><div class="empty">👑 결정 전입니다</div></div><div class="totals"><div class="totalrow"><span>합계</span><span id="whiteSum">—</span></div><div class="totalrow"><span>평균</span><span id="whiteAvg">—</span></div></div></div></div>
 <div class="winner wait" id="winner">전원 전송 후 별표를 누르면 결과가 표시됩니다.</div><div id="pending" class="hint" style="text-align:center"></div></section>
 <div class="actions"><button class="action red" id="clear" disabled><b>🗑</b>결과삭제</button><button class="action green" id="save" disabled><b>▣</b>저장</button><button class="action blue" id="load"><b>📂</b>불러오기</button></div>
-<div id="modeNotice" class="notice setup"></div><footer>PASIS 청백 게임 1.5 Firebase · 모바일 폭 확장</footer></div>
+<div id="modeNotice" class="notice setup"></div><footer>PASIS 청백 게임 1.6 Firebase · 시니어 가독성 개선</footer></div>
 <dialog id="dialog"><h3 id="dialogTitle"></h3><div id="dialogBody"></div><div class="row"><button class="secondary" id="cancelDialog">닫기</button><button class="secondary" id="confirmDialog">확인</button></div></dialog>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
@@ -76,6 +102,13 @@ const notify = (message,error=false)=>{
   const el=$('status');el.textContent=message;el.className='status '+(error?'error':'ok');
   setTimeout(()=>{if(el.textContent===message)el.textContent=''},5500);
 };
+let sendSuccessTimer=null;
+function showSendSuccess(){
+  const el=$('sendSuccessOverlay');
+  clearTimeout(sendSuccessTimer);
+  el.classList.add('show');el.setAttribute('aria-hidden','false');
+  sendSuccessTimer=setTimeout(()=>{el.classList.remove('show');el.setAttribute('aria-hidden','true');},2100);
+}
 const errText = e => {
   const c=e?.code||'';
   if(c.includes('permission-denied')) return '서버 접근이 거부되었습니다. Firestore 규칙이 게시되었는지 확인하세요.';
@@ -190,7 +223,7 @@ $('send').onclick=()=>{
         if(!r.players?.[uid] && Object.keys(r.players||{}).length>=expected)throw Error('참가 정원이 찼습니다.');
         tx.update(snap.ref,{[`players.${uid}`]:{name,score}});
       }
-    }).then(ok=>{if(ok)notify('점수가 전송되었습니다.');});
+    }).then(ok=>{if(ok)showSendSuccess();});
   }catch(e){notify(errText(e),true)}
 };
 $('star').onclick=async()=>{
