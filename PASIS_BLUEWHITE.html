@@ -18,7 +18,7 @@
  <div><label class="label" for="teamName">👥 팀명</label><input class="input" id="teamName" placeholder="팀명 입력" autocomplete="off" maxlength="40"></div>
  <div><label class="label" for="expected">👥 인원수</label><input class="input" id="expected" type="number" inputmode="numeric" min="2" max="50" placeholder="명"></div>
 </div>
-<div class="hint" style="margin-top:5px;color:#1451a5;font-weight:800">팀명: 6자 이상 (한글·영문·숫자)</div>
+<div class="hint" style="margin-top:5px;color:#1451a5;font-weight:800">팀명: 4자 이상 (한글·영문·숫자)</div>
 <div class="pair">
  <div><label class="label" for="player">👤 내 이름</label><input class="input" id="player" placeholder="이름 입력" autocomplete="name" maxlength="25"></div>
  <div><label class="label" for="score">⛳ 총점</label><input class="input" id="score" type="number" inputmode="numeric" placeholder="타수" min="1" max="500"></div>
@@ -49,7 +49,7 @@ const clean=s=>String(s??'').trim();const key=()=>[date,clean($('course').value)
 const entryInputs=()=>({p_day:date,p_course:clean($('course').value),p_team:clean($('teamName').value)});
 const expected=()=>Number($('expected').value);
 const validExpected=()=>{if(!Number.isInteger(expected())||expected()<2||expected()>50)throw Error('인원수를 2~50명 사이에서 입력하세요.');};
-const validRoom=()=>{if(!clean($('course').value))throw Error('장소를 입력하세요.');if([...clean($('teamName').value)].length<6)throw Error('팀명은 6자 이상 입력하세요.');};
+const validRoom=()=>{if(!clean($('course').value))throw Error('장소를 입력하세요.');if([...clean($('teamName').value)].length<4)throw Error('팀명은 4자 이상 입력하세요.');};
 const state=()=>{let all={};try{all=JSON.parse(localStorage.getItem(demoStorage)||'{}')}catch{};return all};
 const saveDemo=x=>{let all=state();all[key()]=x;localStorage.setItem(demoStorage,JSON.stringify(all));window.dispatchEvent(new Event('storage'))};
 const localId=()=>{let id=localStorage.getItem('pasis_bw_device_id');if(!id){id=crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random();localStorage.setItem('pasis_bw_device_id',id)}return id};
@@ -78,7 +78,7 @@ $('star').classList.toggle('ready',full&&!done);$('star').classList.toggle('acti
 $('clear').disabled=!org||rows.length===0;$('save').disabled=!org||!done;
 let mine=rows.find(x=>x.user_uid===uid);if(mine&&!document.activeElement.matches('input')){$('player').value=mine.player_name;$('score').value=mine.score;}
 };
-const refresh=async(silent=false)=>{if(!clean($('course').value)||[...clean($('teamName').value)].length<6)return;try{await identity();current=await get();await display();if(!silent)notice('최신 결과를 불러왔습니다.')}catch(e){if(!silent)notice(errMsg(e),true)}};
+const refresh=async(silent=false)=>{if(!clean($('course').value)||[...clean($('teamName').value)].length<4)return;try{await identity();current=await get();await display();if(!silent)notice('최신 결과를 불러왔습니다.')}catch(e){if(!silent)notice(errMsg(e),true)}};
 const call=async(action)=>{if(loading)return;loading=true;try{validRoom();await identity();await action();current=await get();await display()}catch(e){notice(errMsg(e),true)}finally{loading=false}};
 $('star').onclick=async()=>{if(!confirm('참가자 전원의 점수를 확인했습니다.\n별표를 눌러 청백팀을 무작위로 결정할까요?'))return;await call(async()=>{if(!current)current=await get();const rows=current.entries||[],cap=current.expected_count;if(!cap||rows.length!==cap)throw Error(`${Math.max(0,(cap||0)-rows.length)}명 미전송입니다.`);if(current.finalized)throw Error('이미 결과가 결정되었습니다.');if(connected){await api('pasis_claim',entryInputs());await api('pasis_draw',entryInputs())}else{const x=state()[key()]||empty(),id=localId();if(!x.entries.some(p=>p.user_uid===id))throw Error('먼저 본인 점수를 제출하세요.');if(x.organizer_uid&&x.organizer_uid!==id)throw Error('이미 다른 회원이 결정하였습니다.');x.organizer_uid=id;const shuffled=[...x.entries];for(let i=shuffled.length-1;i>0;i--){const a=new Uint32Array(1);crypto.getRandomValues(a);const j=a[0]%(i+1);[shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]]}shuffled.forEach((p,i)=>p.side=i<Math.ceil(shuffled.length/2)?'blue':'white');x.entries=shuffled;x.finalized=true;saveDemo(x)}notice('청백팀 결정 완료!')})};
 $('send').onclick=()=>call(async()=>{validExpected();const name=clean($('player').value),score=Number($('score').value),cap=expected();
