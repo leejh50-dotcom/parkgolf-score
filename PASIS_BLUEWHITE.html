@@ -60,6 +60,55 @@
   padding:20px 8px;
   letter-spacing:-.055em;
 }
+
+/* V1.8: 아이폰 경기 결과 명단 - 이름 우선, 점수 단위 생략 */
+.card{margin-left:5px;margin-right:5px;padding-left:10px;padding-right:10px}
+.teams{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
+.team{min-width:0}
+.entries{padding:8px 4px}
+.entry{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  gap:2px;
+  padding:9px 0;
+  font-weight:900;
+  min-width:0;
+}
+.entry .entry-number{
+  font-size:clamp(13px,3.5vw,17px);
+  font-weight:900;
+  letter-spacing:-.045em;
+  white-space:nowrap;
+}
+.entry .entry-name,
+.entry span:first-child:not(.entry-number){
+  min-width:0;
+  font-size:clamp(17px,4.35vw,22px);
+  letter-spacing:-.08em;
+  font-weight:950;
+  white-space:nowrap;
+  text-overflow:clip;
+  overflow:visible;
+  padding:0;
+}
+.entry .entry-name.long-name{font-size:clamp(13px,3.6vw,17px);letter-spacing:-.085em}
+.entry .entry-score{
+  font-size:clamp(13px,3.7vw,18px);
+  letter-spacing:-.055em;
+  text-align:right;
+  white-space:nowrap;
+  min-width:0;
+}
+@media(max-width:380px){
+  .team h3{font-size:clamp(16px,4.4vw,20px)}
+  .entry .entry-name{font-size:clamp(16px,4.1vw,20px)}
+  .entry .entry-score{font-size:clamp(13px,3.6vw,16px)}
+  .entries{padding:8px 3px}
+  .teams{gap:4px}
+}
+/* 화면 양쪽 여백은 줄이되 합계·평균 줄은 유지 */
+.totalrow{white-space:nowrap}
 </style>
 </head>
 <body><div class="wrap">
@@ -85,12 +134,12 @@
 <div class="teams"><div class="team"><h3>🔵 청팀</h3><div class="entries" id="blueEntries"><div class="empty">👑 결정 전입니다</div></div><div class="totals"><div class="totalrow"><span>합계</span><span id="blueSum">—</span></div><div class="totalrow"><span>평균</span><span id="blueAvg">—</span></div></div></div><div class="team white"><h3>⚪ 백팀</h3><div class="entries" id="whiteEntries"><div class="empty">👑 결정 전입니다</div></div><div class="totals"><div class="totalrow"><span>합계</span><span id="whiteSum">—</span></div><div class="totalrow"><span>평균</span><span id="whiteAvg">—</span></div></div></div></div>
 <div class="winner wait" id="winner">전원 전송 후 별표를 누르면 결과가 표시됩니다.</div><div id="pending" class="hint" style="text-align:center"></div></section>
 <div class="actions"><button class="action red" id="clear" disabled><b>🗑</b>결과삭제</button><button class="action green" id="save" disabled><b>▣</b>저장</button><button class="action blue" id="load"><b>📂</b>불러오기</button></div>
-<div id="modeNotice" class="notice setup"></div><footer>PASIS 청백 게임 1.7 Firebase · 결과 이름 및 승리 문구 확대</footer></div>
+<div id="modeNotice" class="notice setup"></div><footer>PASIS 청백 게임 1.8 Firebase · 아이폰 명단 폭 개선</footer></div>
 <dialog id="dialog"><h3 id="dialogTitle"></h3><div id="dialogBody"></div><div class="row"><button class="secondary" id="cancelDialog">닫기</button><button class="secondary" id="confirmDialog">확인</button></div></dialog>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, onSnapshot, runTransaction } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, getDocFromServer, onSnapshot, runTransaction } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
 
 // Firebase 콘솔에서 확인한 공개 웹앱 설정입니다. 비밀 관리자 키는 포함하지 않습니다.
 const firebaseConfig = {
@@ -147,9 +196,11 @@ function addRows(container,items){
   if(!items.length){const d=document.createElement('div');d.className='empty';d.textContent=current?.finalized&&localRevealToken===current.draw_token?'배정 없음':current?.finalized?'빨간 별표를 누르면 공개됩니다':'👑 결정 전입니다';node.append(d);return;}
   items.forEach((p,index)=>{
     const row=document.createElement('div');row.className='entry';
-    const name=document.createElement('span');name.textContent=`${index+1}. ${p.name}`;
-    const score=document.createElement('span');score.textContent=p.score+'타';
-    row.append(name,score);node.append(row);
+    const number=document.createElement('span');number.className='entry-number';number.textContent=`${index+1}.`;
+    const name=document.createElement('span');name.className='entry-name';name.textContent=p.name;
+    if([...p.name].length>=5)name.classList.add('long-name');
+    const score=document.createElement('span');score.className='entry-score';score.textContent=String(p.score);
+    row.append(number,name,score);node.append(row);
   });
 }
 function render(){
@@ -302,6 +353,25 @@ for(const id of ['course','teamName','expected']){
     if(id!=='expected'){stopRoom();watchRoom().catch(e=>notify(errText(e),true));}
   });
 }
+// iOS 홈 화면 복귀 시 서버의 최신 인원수를 즉시 확인합니다.
+// 실시간 onSnapshot은 계속 유지하며 불필요한 반복 폴링은 하지 않습니다.
+let lastForegroundCheck=0;
+async function checkFreshAfterResume(){
+  if(!roomRef || !uid || document.visibilityState==='hidden')return;
+  const now=Date.now();if(now-lastForegroundCheck<1200)return;
+  lastForegroundCheck=now;
+  const ref=roomRef;
+  try{
+    const snap=await getDocFromServer(ref);
+    if(roomRef?.id!==ref.id || busy)return;
+    const fresh=snap.exists()?snap.data():null;
+    const oldCount=Object.keys(current?.players||{}).length;
+    const newCount=Object.keys(fresh?.players||{}).length;
+    if(newCount!==oldCount || fresh?.draw_token!==current?.draw_token || fresh?.expected_count!==current?.expected_count){current=fresh;render();}
+  }catch(e){/* 일시적 오프라인이면 기존 실시간 구독으로 재동기화 */}
+}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')checkFreshAfterResume();});
+window.addEventListener('focus',checkFreshAfterResume);
 $('modeNotice').textContent='☁️ Firebase 공동 서버 · 청백 배정은 모두 동일하며 결과는 각자 별표를 눌러 공개합니다.';
 $('modeNotice').classList.remove('setup');
 $('send').disabled=true;
