@@ -30,14 +30,14 @@
  <div><label class="label" for="score">⛳ 총점</label><input class="input" id="score" type="number" inputmode="numeric" placeholder="타수" min="1" max="500"></div>
 </div>
 <div class="submitrow"><button id="send" class="big">✈ 점수 제출</button><button id="star" class="star" disabled title="전원 전송 후 청백 무작위 결정" aria-label="청백 결정">☆</button></div>
-<div class="guide" id="guide" role="status">별표를 누르면 모든 참가자에게 동일한 결과가 표시됩니다</div>
+<div class="guide" id="guide" role="status">별표를 누르면 각자 휴대폰에 동일한 결과가 표시됩니다</div>
 <div id="status" class="status" role="status"></div>
 </section>
 <section class="card"><div class="title">🏆 경기 결과 <span id="count" class="counter">참가 0명</span></div>
 <div class="teams"><div class="team"><h3>🔵 청팀</h3><div class="entries" id="blueEntries"><div class="empty">👑 결정 전입니다</div></div><div class="totals"><div class="totalrow"><span>합계</span><span id="blueSum">—</span></div><div class="totalrow"><span>평균</span><span id="blueAvg">—</span></div></div></div><div class="team white"><h3>⚪ 백팀</h3><div class="entries" id="whiteEntries"><div class="empty">👑 결정 전입니다</div></div><div class="totals"><div class="totalrow"><span>합계</span><span id="whiteSum">—</span></div><div class="totalrow"><span>평균</span><span id="whiteAvg">—</span></div></div></div></div>
 <div class="winner wait" id="winner">전원 전송 후 별표를 누르면 결과가 표시됩니다.</div><div id="pending" class="hint" style="text-align:center"></div></section>
 <div class="actions"><button class="action red" id="clear" disabled><b>🗑</b>결과삭제</button><button class="action green" id="save" disabled><b>▣</b>저장</button><button class="action blue" id="load"><b>📂</b>불러오기</button></div>
-<div id="modeNotice" class="notice setup"></div><footer>PASIS 청백 게임 1.3 Firebase · 큰 글씨 / 간편 점수 입력 / 공동 경기 결과</footer></div>
+<div id="modeNotice" class="notice setup"></div><footer>PASIS 청백 게임 1.4 Firebase · 각자 별표 눌러 결과 확인</footer></div>
 <dialog id="dialog"><h3 id="dialogTitle"></h3><div id="dialogBody"></div><div class="row"><button class="secondary" id="cancelDialog">닫기</button><button class="secondary" id="confirmDialog">확인</button></div></dialog>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
@@ -60,7 +60,9 @@ const $ = id => document.getElementById(id);
 const clean = v => String(v ?? '').trim();
 const day = (()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`})();
 $('date').textContent = new Date(day+'T12:00:00').toLocaleDateString('ko-KR',{year:'numeric',month:'2-digit',day:'2-digit',weekday:'short'}).replace(/\s+/g,' ');
-let uid=null, roomRef=null, unsubscribe=null, current=null, busy=false, revealTimer=null, lastDrawKey='', snapshotFromServer=false;
+let uid=null, roomRef=null, unsubscribe=null, current=null, busy=false, revealTimer=null, revealTimeouts=[], lastDrawKey='', snapshotFromServer=false;
+// 공동 추첨은 1회만 저장하고, 결과 공개 여부는 각 휴대폰에서 개별 관리합니다.
+let localRevealToken='', wantReveal=false;
 const currentRoom = () => [day,clean($('course').value),clean($('teamName').value)].join('|');
 const count = () => Number($('expected').value);
 const validRoom = () => {
@@ -87,7 +89,7 @@ function playersOf(r){return Object.entries(r?.players||{}).map(([id,x])=>({id,n
 function totalOf(a){const sum=a.reduce((n,x)=>n+x.score,0);return {sum,average:a.length?sum/a.length:0};}
 function addRows(container,items){
   const node=$(container+'Entries');node.replaceChildren();
-  if(!items.length){const d=document.createElement('div');d.className='empty';d.textContent=current?.finalized?'배정 없음':'👑 결정 전입니다';node.append(d);return;}
+  if(!items.length){const d=document.createElement('div');d.className='empty';d.textContent=current?.finalized&&localRevealToken===current.draw_token?'배정 없음':current?.finalized?'빨간 별표를 누르면 공개됩니다':'👑 결정 전입니다';node.append(d);return;}
   items.forEach((p,index)=>{
     const row=document.createElement('div');row.className='entry';
     const name=document.createElement('span');name.textContent=`${index+1}. ${p.name}`;
@@ -98,42 +100,59 @@ function addRows(container,items){
 function render(){
   const r=current;const list=playersOf(r),cap=r?.expected_count??null,done=!!r?.finalized;
   const countNum=list.length,full=cap!==null&&countNum===cap;
+  // 다른 경기가 시작되거나 결과가 삭제되면 각 휴대폰의 공개 상태를 초기화합니다.
+  if(!done){localRevealToken='';wantReveal=false;lastDrawKey='';}
+  const reveal=done&&!!r?.draw_token&&localRevealToken===r.draw_token;
   if(cap!==null&&document.activeElement!==$('expected'))$('expected').value=cap;
   $('count').textContent=`전송 ${countNum}${cap?'/'+cap:''}명`;
   const blue=list.filter(p=>p.side==='blue'),white=list.filter(p=>p.side==='white');
-  addRows('blue',done?blue:[]);addRows('white',done?white:[]);
+  addRows('blue',reveal?blue:[]);addRows('white',reveal?white:[]);
   for(const [side,arr] of [['blue',blue],['white',white]]){
-    $(side+'Sum').textContent=done?totalOf(arr).sum:'—';
-    $(side+'Avg').textContent=done?totalOf(arr).average.toFixed(2):'—';
+    $(side+'Sum').textContent=reveal?totalOf(arr).sum:'—';
+    $(side+'Avg').textContent=reveal?totalOf(arr).average.toFixed(2):'—';
   }
-  const guide=$('guide');guide.classList.toggle('ready',full&&!done);guide.classList.toggle('done',done);
-  guide.textContent=done?'청백 결정 완료 · 모든 참가자에게 동일한 결과가 표시됩니다':
+  const guide=$('guide');guide.classList.toggle('ready',full&&!done);guide.classList.toggle('done',reveal);
+  guide.textContent=reveal?'청백 결과 확인 완료 · 모든 참가자가 동일한 배정을 봅니다':
+    done?'청백 결정 완료! 각자 빨간 별표를 눌러 결과를 확인하세요.':
     !cap?'별표를 누르면 모든 참가자에게 동일한 결과가 표시됩니다':
     !full?`${cap-countNum}명 미전송입니다 (${countNum}/${cap}명)`:
     '전원 전송 완료! 빨간 별표를 누르세요.';
-  $('pending').textContent=(!cap||done)?'':full?'전원 전송 완료 · 별표를 누르면 공동 결과가 표시됩니다.':'전원 점수 전송 후 결정할 수 있습니다.';
-  let result='전원 전송 후 별표를 누르면 결과가 표시됩니다.';
-  if(done){const a=totalOf(blue).average,b=totalOf(white).average;result=Math.abs(a-b)<1e-8?'🏆 무승부':a<b?'🏆 청팀 승리!':'🏆 백팀 승리!';}
-  $('winner').textContent=result;$('winner').classList.toggle('wait',!done);
-  $('star').disabled=!(full&&!done&&uid);$('star').classList.toggle('ready',full&&!done);$('star').textContent='☆';
+  $('pending').textContent=(!cap||reveal)?'':done?'각자의 휴대폰에서 별표를 눌러야 결과가 나타납니다.':full?'전원 전송 완료 · 별표를 누르면 동일한 결과가 표시됩니다.':'전원 점수 전송 후 결정할 수 있습니다.';
+  let result=done?'★ 빨간 별표를 눌러 경기 결과를 확인하세요.':'전원 전송 후 별표를 누르면 결과가 표시됩니다.';
+  if(reveal){const a=totalOf(blue).average,b=totalOf(white).average;result=Math.abs(a-b)<1e-8?'🏆 무승부':a<b?'🏆 청팀 승리!':'🏆 백팀 승리!';}
+  $('winner').textContent=result;$('winner').classList.toggle('wait',!reveal);
+  $('star').disabled=!(full&&uid)||busy;
+  $('star').classList.toggle('ready',full&&!reveal);
+  $('star').classList.toggle('active',reveal);
+  $('star').textContent=reveal?'★':'☆';
+  $('star').title=done?'내 휴대폰에 청백 결과 표시':'전원 전송 후 청백 무작위 결정';
   $('clear').disabled=!(r?.drawn_by===uid&&done);$('save').disabled=!(r?.drawn_by===uid&&done);
   let mine=r?.players?.[uid];if(mine && !['player','score'].includes(document.activeElement?.id)){$('player').value=mine.name;$('score').value=mine.score;}
-  if(done&&r?.draw_token&&r.draw_token!==lastDrawKey){
-    lastDrawKey=r.draw_token;animateRows();
-  }else if(!done)lastDrawKey='';
+  // 다른 사람의 결정은 화면에 자동 공개되지 않습니다. 자신의 별표 클릭만 공개를 허용합니다.
+  if(done&&wantReveal&&r?.draw_token){
+    wantReveal=false;localRevealToken=r.draw_token;render();return;
+  }
+  if(reveal&&r.draw_token!==lastDrawKey){lastDrawKey=r.draw_token;animateRows();}
+  if(!reveal){cancelRevealAnimation();}
+}
+function cancelRevealAnimation(){
+  clearTimeout(revealTimer);for(const t of revealTimeouts)clearTimeout(t);revealTimeouts=[];
+  for(const el of document.querySelectorAll('.entry,.totals,#winner'))el.style.visibility='';
 }
 function animateRows(){
-  clearTimeout(revealTimer);
+  cancelRevealAnimation();
   const left=[...$('blueEntries').querySelectorAll('.entry')];
   const right=[...$('whiteEntries').querySelectorAll('.entry')];
   const rows=Math.max(left.length,right.length);
   for(const e of [...left,...right])e.style.visibility='hidden';
   const summary=[$('winner'),...document.querySelectorAll('.totals')];
   for(const x of summary)x.style.visibility='hidden';
-  for(let i=0;i<rows;i++)setTimeout(()=>{for(const arr of [left,right]){const x=arr[i];if(x){x.style.visibility='visible';x.classList.add('reveal');}}},i*700);
+  for(let i=0;i<rows;i++)revealTimeouts.push(setTimeout(()=>{
+    for(const arr of [left,right]){const x=arr[i];if(x){x.style.visibility='visible';x.classList.add('reveal');}}
+  },i*700));
   revealTimer=setTimeout(()=>{for(const x of summary){x.style.visibility='visible';x.classList.add('summary-reveal');}},rows*700+300);
 }
-function stopRoom(){if(unsubscribe){unsubscribe();unsubscribe=null;}roomRef=null;current=null;snapshotFromServer=false;render();}
+function stopRoom(){if(unsubscribe){unsubscribe();unsubscribe=null;}cancelRevealAnimation();roomRef=null;current=null;snapshotFromServer=false;localRevealToken='';wantReveal=false;lastDrawKey='';render();}
 async function watchRoom(){
   validRoom();
   const id=await roomId();
@@ -173,14 +192,26 @@ $('send').onclick=()=>{
   }catch(e){notify(errText(e),true)}
 };
 $('star').onclick=async()=>{
-  if(!confirm('모든 참가자의 점수 전송이 완료되었습니다.\n청백팀을 무작위로 결정할까요?'))return;
-  await transaction((tx,snap,r)=>{
-    if(!r||r.finalized)throw Error('이미 결과가 확정되었거나 경기가 없습니다.');
+  if(busy)return;
+  // 이미 추첨 결과가 서버에 있으면 새 추첨 없이 자기 휴대폰에만 공개합니다.
+  if(current?.finalized&&current?.draw_token){
+    wantReveal=false;localRevealToken=current.draw_token;lastDrawKey='';render();return;
+  }
+  if(!confirm('모든 참가자의 점수 전송이 완료되었습니다.\n청백팀을 무작위로 결정하고 내 화면에 표시할까요?'))return;
+  wantReveal=true;
+  const ok=await transaction((tx,snap,r)=>{
+    if(!r)throw Error('경기 정보가 없습니다.');
+    // 다른 참가자가 먼저 결정했으면 그 결정 결과를 그대로 사용합니다.
+    if(r.finalized)return;
     const ids=Object.keys(r.players||{});if(ids.length!==r.expected_count)throw Error('전원 점수 전송 후 결정할 수 있습니다.');
     for(let i=ids.length-1;i>0;i--){const a=new Uint32Array(1);crypto.getRandomValues(a);const j=a[0]%(i+1);[ids[i],ids[j]]=[ids[j],ids[i]];}
     const sides={};ids.forEach((id,i)=>sides[id]=i<Math.ceil(ids.length/2)?'blue':'white');
     tx.update(snap.ref,{assignments:sides,finalized:true,drawn_by:uid,draw_token:crypto.randomUUID()});
   });
+  if(!ok){wantReveal=false;render();return;}
+  // 전송 완료 전후의 스냅샷 도착 순서에 관계없이 한 번의 클릭으로 표시합니다.
+  if(current?.finalized&&current.draw_token){wantReveal=false;localRevealToken=current.draw_token;lastDrawKey='';render();}
+  else notify('청백 결정 중입니다. 결과를 받아오면 자동으로 표시됩니다.');
 };
 $('save').onclick=async()=>{
   if(!confirm('확정된 결과를 보관함에 저장할까요?'))return;
@@ -216,7 +247,7 @@ for(const id of ['course','teamName','expected']){
     if(id!=='expected'){stopRoom();watchRoom().catch(e=>notify(errText(e),true));}
   });
 }
-$('modeNotice').textContent='☁️ Firebase 공동 서버 · 각 휴대폰에 동일한 점수와 결과가 실시간으로 표시됩니다.';
+$('modeNotice').textContent='☁️ Firebase 공동 서버 · 청백 배정은 모두 동일하며 결과는 각자 별표를 눌러 공개합니다.';
 $('modeNotice').classList.remove('setup');
 $('send').disabled=true;
 onAuthStateChanged(auth,user=>{
