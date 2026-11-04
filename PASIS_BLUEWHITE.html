@@ -13,6 +13,8 @@
 .pair{grid-template-columns:minmax(0,1fr) 84px}
 .teamcount{grid-template-columns:minmax(0,1fr) 78px}
 @media(max-width:360px){.pair{grid-template-columns:minmax(0,1fr) 73px}.teamcount{grid-template-columns:minmax(0,1fr) 72px}}
+
+.title-text{white-space:nowrap;flex:1;min-width:0}.label{font-size:clamp(16px,4.5vw,18px);white-space:nowrap}.big{font-size:clamp(20px,5.6vw,27px);white-space:nowrap;letter-spacing:-.03em;padding-inline:8px}.title{gap:6px;font-size:clamp(18px,4.7vw,22px);margin-bottom:12px;flex-wrap:nowrap}.counter{font-size:clamp(12px,3.6vw,14px);padding:5px 8px;flex:none}.teams{gap:6px}.team h3{padding:10px 0;font-size:clamp(17px,4.8vw,21px);white-space:nowrap}.entries{padding:8px 6px}.entry{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:4px;padding:8px 0;font-size:clamp(13px,3.25vw,17px)}.entry span:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:4px}.entry span:last-child{white-space:nowrap;text-align:right;min-width:2.7em}.entry span{overflow-wrap:normal}.totals{padding:10px 6px}.totalrow{font-size:clamp(14px,3.8vw,16px)}.winner{font-size:clamp(19px,5.8vw,28px);padding:16px 8px}.actions{gap:6px;margin:12px 8px}.action{font-size:clamp(12px,3.3vw,16px)}.action b{font-size:20px;line-height:1}.submitrow{grid-template-columns:minmax(0,1fr) 92px;gap:8px}.star{font-size:31px}.pair{grid-template-columns:minmax(0,1fr) 98px;gap:8px}.teamcount{grid-template-columns:minmax(0,1fr) 90px;gap:8px}.card{margin:12px 10px;padding:15px}@media(max-width:430px){.card{margin:10px 6px;padding:12px}.date{font-size:clamp(16px,5vw,24px)}.locationbox{padding:0 8px;gap:4px}.locationbox .input{padding:0 4px}.fixedsuffix{font-size:17px}.input{font-size:18px;padding:0 10px}.pair{grid-template-columns:minmax(0,1fr) 92px;gap:7px}.teamcount{grid-template-columns:minmax(0,1fr) 84px;gap:7px}.submitrow{grid-template-columns:minmax(0,1fr) 86px;gap:7px}.team h3{font-size:clamp(16px,4.6vw,20px)}.entry{font-size:clamp(12px,3.15vw,16px)}.winner{font-size:clamp(18px,5.4vw,24px)}}@media(max-width:360px){.pair{grid-template-columns:minmax(0,1fr) 84px}.teamcount{grid-template-columns:minmax(0,1fr) 78px}.submitrow{grid-template-columns:minmax(0,1fr) 80px}.big{font-size:19px}.label{font-size:15px}}
 </style>
 </head>
 <body><div class="wrap">
@@ -33,11 +35,11 @@
 <div class="guide" id="guide" role="status">별표를 누르면 각자 휴대폰에 동일한 결과가 표시됩니다</div>
 <div id="status" class="status" role="status"></div>
 </section>
-<section class="card"><div class="title">🏆 경기 결과 <span id="count" class="counter">참가 0명</span></div>
+<section class="card"><div class="title"><span class="title-text">🏆 경기 결과</span><span id="count" class="counter">참가 0명</span></div>
 <div class="teams"><div class="team"><h3>🔵 청팀</h3><div class="entries" id="blueEntries"><div class="empty">👑 결정 전입니다</div></div><div class="totals"><div class="totalrow"><span>합계</span><span id="blueSum">—</span></div><div class="totalrow"><span>평균</span><span id="blueAvg">—</span></div></div></div><div class="team white"><h3>⚪ 백팀</h3><div class="entries" id="whiteEntries"><div class="empty">👑 결정 전입니다</div></div><div class="totals"><div class="totalrow"><span>합계</span><span id="whiteSum">—</span></div><div class="totalrow"><span>평균</span><span id="whiteAvg">—</span></div></div></div></div>
 <div class="winner wait" id="winner">전원 전송 후 별표를 누르면 결과가 표시됩니다.</div><div id="pending" class="hint" style="text-align:center"></div></section>
 <div class="actions"><button class="action red" id="clear" disabled><b>🗑</b>결과삭제</button><button class="action green" id="save" disabled><b>▣</b>저장</button><button class="action blue" id="load"><b>📂</b>불러오기</button></div>
-<div id="modeNotice" class="notice setup"></div><footer>PASIS 청백 게임 1.4 Firebase · 각자 별표 눌러 결과 확인</footer></div>
+<div id="modeNotice" class="notice setup"></div><footer>PASIS 청백 게임 1.5 Firebase · 모바일 폭 확장</footer></div>
 <dialog id="dialog"><h3 id="dialogTitle"></h3><div id="dialogBody"></div><div class="row"><button class="secondary" id="cancelDialog">닫기</button><button class="secondary" id="confirmDialog">확인</button></div></dialog>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
