@@ -109,6 +109,27 @@
 }
 /* 화면 양쪽 여백은 줄이되 합계·평균 줄은 유지 */
 .totalrow{white-space:nowrap}
+
+/* V1.9: 경기 결과 명단 이름과 타수를 같은 크기로 확대 */
+.entry .entry-name:not(.long-name),
+.entry .entry-score {
+  font-size: clamp(18px, 5vw, 22px);
+  font-weight: 950;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+.entry .entry-name:not(.long-name) {
+  letter-spacing: -.065em;
+}
+.entry .entry-score {
+  letter-spacing: -.05em;
+  font-variant-numeric: tabular-nums;
+}
+/* 이름이 매우 길면 점수와 겹치지 않도록 이전의 축소 규칙 유지 */
+@media (max-width: 360px) {
+  .entry .entry-name:not(.long-name),
+  .entry .entry-score { font-size: clamp(17px, 4.8vw, 19px); }
+}
 </style>
 </head>
 <body><div class="wrap">
@@ -134,7 +155,7 @@
 <div class="teams"><div class="team"><h3>🔵 청팀</h3><div class="entries" id="blueEntries"><div class="empty">👑 결정 전입니다</div></div><div class="totals"><div class="totalrow"><span>합계</span><span id="blueSum">—</span></div><div class="totalrow"><span>평균</span><span id="blueAvg">—</span></div></div></div><div class="team white"><h3>⚪ 백팀</h3><div class="entries" id="whiteEntries"><div class="empty">👑 결정 전입니다</div></div><div class="totals"><div class="totalrow"><span>합계</span><span id="whiteSum">—</span></div><div class="totalrow"><span>평균</span><span id="whiteAvg">—</span></div></div></div></div>
 <div class="winner wait" id="winner">전원 전송 후 별표를 누르면 결과가 표시됩니다.</div><div id="pending" class="hint" style="text-align:center"></div></section>
 <div class="actions"><button class="action red" id="clear" disabled><b>🗑</b>결과삭제</button><button class="action green" id="save" disabled><b>▣</b>저장</button><button class="action blue" id="load"><b>📂</b>불러오기</button></div>
-<div id="modeNotice" class="notice setup"></div><footer>PASIS 청백 게임 1.8 Firebase · 아이폰 명단 폭 개선</footer></div>
+<div id="modeNotice" class="notice setup"></div><footer>PASIS 청백 게임 1.9 Firebase · 이름·타수 크기 통일</footer></div>
 <dialog id="dialog"><h3 id="dialogTitle"></h3><div id="dialogBody"></div><div class="row"><button class="secondary" id="cancelDialog">닫기</button><button class="secondary" id="confirmDialog">확인</button></div></dialog>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
