@@ -1,0 +1,27 @@
+{
+  "id": "/parkgolf-score/bluewhite/",
+  "name": "파시스 청백 게임",
+  "short_name": "파시스청백",
+  "description": "파크골프 청백 친선 경기 점수 전송 및 무작위 팀 결정",
+  "lang": "ko",
+  "start_url": "/parkgolf-score/bluewhite/PASIS_BLUEWHITE.html",
+  "scope": "/parkgolf-score/bluewhite/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#09478c",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "pasis-bluewhite-192-clean.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "pasis-bluewhite-512-clean.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
