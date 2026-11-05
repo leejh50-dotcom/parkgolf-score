@@ -253,7 +253,7 @@ function render(){
   $('star').classList.toggle('active',reveal);
   $('star').textContent=reveal?'★':'☆';
   $('star').title=done?'내 휴대폰에 청백 결과 표시':'전원 전송 후 청백 무작위 결정';
-  $('clear').disabled=!(r?.drawn_by===uid&&done);$('save').disabled=!(r?.drawn_by===uid&&done);
+  $('clear').disabled=false;$('save').disabled=!(r?.drawn_by===uid&&done);
   let mine=r?.players?.[uid];if(mine && !['player','score'].includes(document.activeElement?.id)){$('player').value=mine.name;$('score').value=mine.score;}
   // 다른 사람의 결정은 화면에 자동 공개되지 않습니다. 자신의 별표 클릭만 공개를 허용합니다.
   if(done&&wantReveal&&r?.draw_token){
@@ -348,13 +348,23 @@ $('save').onclick=async()=>{
   });
   if(saved)notify('저장했습니다.');
 };
-$('clear').onclick=async()=>{
-  if(!confirm('현재 경기의 점수와 청백 결과를 모두 삭제할까요?\n보관함에 저장된 기록은 유지합니다.'))return;
-  await transaction((tx,snap,r)=>{
-    if(!r?.finalized||r.drawn_by!==uid)throw Error('결정한 사람만 결과를 삭제할 수 있습니다.');
-    tx.update(snap.ref,{players:{},assignments:{},finalized:false,drawn_by:null,draw_token:null});
-  });
+$('clear').onclick=()=>{
+  if(!confirm('이 휴대폰의 경기 입력과 표시된 결과를 초기화할까요?\\n내 이름과 다른 참가자의 서버 기록은 유지됩니다.'))return;
+  // 서버에는 어떤 삭제 명령도 보내지 않습니다.
+  const myName=clean($('player').value);
+  stopRoom(); // 실시간 구독을 해제해 이전 경기 결과가 다시 표시되지 않도록 합니다.
+  for(const id of ['course','teamName','expected','score'])$(id).value='';
+  $('player').value=myName;
+  for(const key of ['pasis_course','pasis_team','pasis_expected'])localStorage.removeItem(key);
+  localStorage.setItem('pasis_bluewhite_my_name',myName);
+  $('status').textContent='';
+  clearTimeout(sendSuccessTimer);
+  $('sendSuccessOverlay').classList.remove('show');
+  $('sendSuccessOverlay').setAttribute('aria-hidden','true');
+  // stopRoom()의 render()가 참가 0명, 빈 결과, 안내 문구를 복원합니다.
+  render();
 };
+
 const dialog=$('dialog');$('cancelDialog').onclick=()=>dialog.close();$('confirmDialog').onclick=()=>dialog.close();
 $('load').onclick=async()=>{
   try{const ref=await watchRoom();const snap=await getDoc(ref);const a=snap.data()?.archive;if(!a){notify('저장된 경기 결과가 없습니다.',true);return;}
@@ -366,6 +376,10 @@ $('load').onclick=async()=>{
     body.append(content);dialog.showModal();
   }catch(e){notify(errText(e),true)}
 };
+// 내 이름만 이 휴대폰에 보존합니다.
+$('player').value=localStorage.getItem('pasis_bluewhite_my_name')||'';
+$('player').addEventListener('input',()=>localStorage.setItem('pasis_bluewhite_my_name',$('player').value));
+
 for(const id of ['course','teamName','expected']){
   const input=$(id);const storage={course:'pasis_course',teamName:'pasis_team',expected:'pasis_expected'}[id];
   input.value=new URL(location.href).searchParams.get(id==='teamName'?'team':id)||localStorage.getItem(storage)||'';
