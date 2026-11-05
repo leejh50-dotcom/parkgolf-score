@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#09478c"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="파시스 청백">
 <title>파시스 청백 게임</title>
 <style>
-:root{font-family:system-ui,-apple-system,"Malgun Gothic",sans-serif;color:#102341;background:#eaf1fb;font-size:18px}*{box-sizing:border-box}body{margin:0}button,input{font:inherit}button{cursor:pointer;touch-action:manipulation}button:disabled{opacity:.45;cursor:not-allowed}.wrap{max-width:760px;margin:auto;background:#fff;min-height:100dvh;padding-bottom:32px}.hero{background:linear-gradient(125deg,#07396f,#0066ae 70%,#1694c1);color:#fff;padding:26px 17px 24px;text-align:center}.brand{font-weight:900;font-size:clamp(26px,6vw,38px);letter-spacing:-1px}.hero small{font-size:15px}.card{margin:14px 12px;padding:17px;border:1px solid #d9e6f6;border-radius:20px;box-shadow:0 5px 15px #0f39600b}.label{display:block;font-weight:800;font-size:18px;margin:10px 0 6px}.input{height:56px;width:100%;border:2px solid #c4d4e6;border-radius:11px;padding:0 12px;background:#fff;min-width:0;color:#112d55;font-size:19px}.input:focus{outline:3px solid #b8ddff;border-color:#1876d1}.date{background:#edf6ff;border-radius:13px;padding:12px 5px;text-align:center;font-weight:900;font-size:clamp(17px,5.3vw,27px);white-space:nowrap;letter-spacing:-.04em}.pair{display:grid;grid-template-columns:minmax(0,1fr) 94px;gap:9px}.teamcount{display:grid;grid-template-columns:minmax(0,1fr) 86px;gap:9px}.locationbox{display:flex;align-items:center;border:2px solid #b5cce8;border-radius:12px;overflow:hidden;height:58px;padding:0 10px;background:#fff;gap:5px}.locationbox .input{border:0;box-shadow:none;outline:0;width:100%;padding:0 6px}.fixedsuffix{font-size:18px;font-weight:900;white-space:nowrap;color:#0d315f}.date-row{margin-bottom:12px}.submitrow{display:grid;grid-template-columns:minmax(0,1fr) 70px;gap:10px;margin-top:18px}.person{display:flex;gap:8px}.person>.input{flex:1}.star{border:2px solid #e5bd47;border-radius:12px;background:#fff9dc;color:#a77b00;font-size:33px;min-height:62px;flex:none}.star:disabled{opacity:.40}.star.ready{background:#ffdddd;border-color:#e92b29;color:#c7121a;opacity:1;box-shadow:0 0 0 3px #ffecec}.star.active{background:#e92b29;color:#fff;border-color:#bb1111;opacity:1}.big{background:linear-gradient(#147ef3,#0649b1);border:0;border-radius:13px;color:white;min-height:60px;font-size:23px;font-weight:900;width:100%;box-shadow:0 4px 0 #0b3e7a}.hint{font-size:15px;color:#596b82;line-height:1.55;margin-top:8px}.muted{color:#586b83}.status{min-height:20px;font-size:16px;margin:9px 0 0;font-weight:700}.status.error{color:#b52635}.status.ok{color:#117144}.title{display:flex;align-items:center;justify-content:space-between;gap:7px;font-size:22px;font-weight:900;margin-bottom:14px}.counter{font-size:14px;background:#e9f1fc;color:#174f96;padding:6px 9px;border-radius:50px;white-space:nowrap}.teams{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:9px}.team{border:2px solid #c3dfff;border-radius:15px;overflow:hidden}.team.white{border-color:#f2c9d1}.team h3{margin:0;text-align:center;background:#0668cd;color:#fff;padding:12px 0;font-size:21px}.team.white h3{background:#e04768}.entries{min-height:98px;padding:8px}.entry{display:flex;justify-content:space-between;gap:6px;border-bottom:1px solid #e3e9f0;padding:7px 2px;font-size:clamp(13px,3.6vw,18px);font-weight:700}.entry span{overflow-wrap:anywhere}.empty{text-align:center;color:#7c8da2;font-size:14px;padding:23px 3px;line-height:1.6}.totals{background:#e9f4ff;padding:10px 8px;font-weight:800}.white .totals{background:#fff0f3}.totalrow{display:flex;justify-content:space-between;gap:5px;padding:3px 0;font-size:15px}.winner{margin-top:12px;text-align:center;border-radius:15px;background:#fff5d6;padding:18px 8px;font-weight:900;color:#634200;font-size:24px}.winner.wait{background:#eef3f8;color:#65788f;font-size:17px}.actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:12px}.action{border:0;min-height:69px;border-radius:14px;font-size:clamp(12px,3.5vw,17px);font-weight:900;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:7px 2px}.action b{font-size:22px}.gold{background:linear-gradient(#ffdb67,#e99f08);color:#573a00}.red{background:linear-gradient(#ff6379,#d92352)}.green{background:linear-gradient(#25be8c,#087d60)}.blue{background:linear-gradient(#338ff7,#0657b9)}.secondary{background:#f2f6fc;color:#24507b;border:1px solid #c8daef;border-radius:9px;padding:9px;font-weight:800}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.mini{font-size:13px}.count-status{border-radius:12px;background:#fff4d7;color:#8d3900;font-weight:900;padding:12px;text-align:center;font-size:19px;margin-top:12px}.count-status.ready{background:#e5f7e9;color:#176437}.guide{background:#fff8e3;border-radius:12px;padding:10px 8px;font-size:clamp(13px,3.6vw,17px);font-weight:800;text-align:center;margin-top:9px;color:#735017}.guide.ready{background:#ffe5e7;color:#b70f22}.guide.done{background:#e8f5e9;color:#145e36}.status{position:fixed;z-index:30;bottom:18px;left:50%;transform:translateX(-50%);width:min(92vw,520px);padding:12px 16px;background:#e9fff2;border-radius:14px;box-shadow:0 5px 25px #132a4a45;text-align:center;min-height:0;display:none}.status:not(:empty){display:block}.status.error{background:#fff0ef}.entry{opacity:1}.entry.reveal{animation:pairAppear .55s ease both}.summary-reveal{animation:pairAppear .6s ease both}@keyframes pairAppear{from{opacity:0;transform:translateY(11px)}to{opacity:1;transform:translateY(0)}}.notice{background:#f2f7fd;border-left:4px solid #3c85dc;padding:10px 12px;margin:12px;border-radius:6px;font-size:13px;line-height:1.55}.setup{background:#fff7df;color:#684f0a}.hide{display:none!important}dialog{border:none;border-radius:16px;max-width:min(95vw,480px);width:100%;box-shadow:0 18px 70px #0005;padding:21px}dialog::backdrop{background:#07152ca0}dialog h3{margin-top:0}dialog .row{justify-content:flex-end;margin-top:15px}dialog button{min-height:44px}#archiveView{white-space:pre-line;font-size:14px;line-height:1.8;max-height:55vh;overflow:auto;background:#f4f7fa;padding:12px;border-radius:10px}footer{font-size:12px;color:#7a8da1;text-align:center;padding:15px}
+:root{font-family:system-ui,-apple-system,"Malgun Gothic",sans-serif;color:#102341;background:#eaf1fb;font-size:18px}*{box-sizing:border-box}body{margin:0}button,input{font:inherit}button{cursor:pointer;touch-action:manipulation}button:disabled{opacity:.45;cursor:not-allowed}.wrap{max-width:760px;margin:auto;background:#fff;min-height:100dvh;padding-bottom:32px}.hero{background:linear-gradient(125deg,#07396f,#0066ae 70%,#1694c1);color:#fff;padding:26px 17px 24px;text-align:center}.brand{font-weight:900;font-size:clamp(26px,6vw,38px);letter-spacing:-1px}.hero small{font-size:15px}.card{margin:14px 12px;padding:17px;border:1px solid #d9e6f6;border-radius:20px;box-shadow:0 5px 15px #0f39600b}.label{display:block;font-weight:800;font-size:18px;margin:10px 0 6px}.input{height:56px;width:100%;border:2px solid #c4d4e6;border-radius:11px;padding:0 12px;background:#fff;min-width:0;color:#112d55;font-size:19px}.input:focus{outline:3px solid #b8ddff;border-color:#1876d1}.date{background:#edf6ff;border-radius:13px;padding:12px 5px;text-align:center;font-weight:900;font-size:clamp(17px,5.3vw,27px);white-space:nowrap;letter-spacing:-.04em}.pair{display:grid;grid-template-columns:minmax(0,1fr) 94px;gap:9px}.teamcount{display:grid;grid-template-columns:minmax(0,1fr) 86px;gap:9px}.locationbox{display:flex;align-items:center;border:2px solid #b5cce8;border-radius:12px;overflow:hidden;height:58px;padding:0 10px;background:#fff;gap:5px}.locationbox .input{border:0;box-shadow:none;outline:0;width:100%;padding:0 6px}.fixedsuffix{font-size:18px;font-weight:900;white-space:nowrap;color:#0d315f}.date-row{margin-bottom:12px}.submitrow{display:grid;grid-template-columns:minmax(0,1fr) 70px;gap:10px;margin-top:18px}.person{display:flex;gap:8px}.person>.input{flex:1}.star{border:2px solid #e5bd47;border-radius:12px;background:#fff9dc;color:#a77b00;font-size:33px;min-height:62px;flex:none}.star:disabled{opacity:.40}.star.ready{background:#e92b29;border-color:#bb1111;color:#fff;opacity:1;box-shadow:0 0 0 3px #ffecec}.star.active{background:#ffdddd;color:#c7121a;border-color:#e92b29;opacity:1;box-shadow:none}.big{background:linear-gradient(#147ef3,#0649b1);border:0;border-radius:13px;color:white;min-height:60px;font-size:23px;font-weight:900;width:100%;box-shadow:0 4px 0 #0b3e7a}.hint{font-size:15px;color:#596b82;line-height:1.55;margin-top:8px}.muted{color:#586b83}.status{min-height:20px;font-size:16px;margin:9px 0 0;font-weight:700}.status.error{color:#b52635}.status.ok{color:#117144}.title{display:flex;align-items:center;justify-content:space-between;gap:7px;font-size:22px;font-weight:900;margin-bottom:14px}.counter{font-size:14px;background:#e9f1fc;color:#174f96;padding:6px 9px;border-radius:50px;white-space:nowrap}.teams{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:9px}.team{border:2px solid #c3dfff;border-radius:15px;overflow:hidden}.team.white{border-color:#f2c9d1}.team h3{margin:0;text-align:center;background:#0668cd;color:#fff;padding:12px 0;font-size:21px}.team.white h3{background:#e04768}.entries{min-height:98px;padding:8px}.entry{display:flex;justify-content:space-between;gap:6px;border-bottom:1px solid #e3e9f0;padding:7px 2px;font-size:clamp(13px,3.6vw,18px);font-weight:700}.entry span{overflow-wrap:anywhere}.empty{text-align:center;color:#7c8da2;font-size:14px;padding:23px 3px;line-height:1.6}.totals{background:#e9f4ff;padding:10px 8px;font-weight:800}.white .totals{background:#fff0f3}.totalrow{display:flex;justify-content:space-between;gap:5px;padding:3px 0;font-size:15px}.winner{margin-top:12px;text-align:center;border-radius:15px;background:#fff5d6;padding:18px 8px;font-weight:900;color:#634200;font-size:24px}.winner.wait{background:#eef3f8;color:#65788f;font-size:17px}.actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:12px}.action{border:0;min-height:69px;border-radius:14px;font-size:clamp(12px,3.5vw,17px);font-weight:900;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:7px 2px}.action b{font-size:22px}.gold{background:linear-gradient(#ffdb67,#e99f08);color:#573a00}.red{background:linear-gradient(#ff6379,#d92352)}.green{background:linear-gradient(#25be8c,#087d60)}.blue{background:linear-gradient(#338ff7,#0657b9)}.secondary{background:#f2f6fc;color:#24507b;border:1px solid #c8daef;border-radius:9px;padding:9px;font-weight:800}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.mini{font-size:13px}.count-status{border-radius:12px;background:#fff4d7;color:#8d3900;font-weight:900;padding:12px;text-align:center;font-size:19px;margin-top:12px}.count-status.ready{background:#e5f7e9;color:#176437}.guide{background:#fff8e3;border-radius:12px;padding:10px 8px;font-size:clamp(13px,3.6vw,17px);font-weight:800;text-align:center;margin-top:9px;color:#735017}.guide.ready{background:#ffe5e7;color:#b70f22}.guide.done{background:#e8f5e9;color:#145e36}.status{position:fixed;z-index:30;bottom:18px;left:50%;transform:translateX(-50%);width:min(92vw,520px);padding:12px 16px;background:#e9fff2;border-radius:14px;box-shadow:0 5px 25px #132a4a45;text-align:center;min-height:0;display:none}.status:not(:empty){display:block}.status.error{background:#fff0ef}.entry{opacity:1}.entry.reveal{animation:pairAppear .55s ease both}.summary-reveal{animation:pairAppear .6s ease both}@keyframes pairAppear{from{opacity:0;transform:translateY(11px)}to{opacity:1;transform:translateY(0)}}.notice{background:#f2f7fd;border-left:4px solid #3c85dc;padding:10px 12px;margin:12px;border-radius:6px;font-size:13px;line-height:1.55}.setup{background:#fff7df;color:#684f0a}.hide{display:none!important}dialog{border:none;border-radius:16px;max-width:min(95vw,480px);width:100%;box-shadow:0 18px 70px #0005;padding:21px}dialog::backdrop{background:#07152ca0}dialog h3{margin-top:0}dialog .row{justify-content:flex-end;margin-top:15px}dialog button{min-height:44px}#archiveView{white-space:pre-line;font-size:14px;line-height:1.8;max-height:55vh;overflow:auto;background:#f4f7fa;padding:12px;border-radius:10px}footer{font-size:12px;color:#7a8da1;text-align:center;padding:15px}
 /* 입력칸 가운데 정렬 및 이름/팀명 너비 확대 */
 #teamName,#expected,#player,#score{text-align:center}
 .pair{grid-template-columns:minmax(0,1fr) 84px}
@@ -253,7 +253,7 @@ function render(){
   $('star').classList.toggle('active',reveal);
   $('star').textContent=reveal?'★':'☆';
   $('star').title=done?'내 휴대폰에 청백 결과 표시':'전원 전송 후 청백 무작위 결정';
-  $('clear').disabled=false;$('save').disabled=!(r?.drawn_by===uid&&done);
+  $('clear').disabled=false;$('save').disabled=!(done&&reveal);
   let mine=r?.players?.[uid];if(mine && !['player','score'].includes(document.activeElement?.id)){$('player').value=mine.name;$('score').value=mine.score;}
   // 다른 사람의 결정은 화면에 자동 공개되지 않습니다. 자신의 별표 클릭만 공개를 허용합니다.
   if(done&&wantReveal&&r?.draw_token){
@@ -340,13 +340,37 @@ $('star').onclick=async()=>{
   if(current?.finalized&&current.draw_token){wantReveal=false;localRevealToken=current.draw_token;lastDrawKey='';render();}
   else notify('청백 결정 중입니다. 결과를 받아오면 자동으로 표시됩니다.');
 };
-$('save').onclick=async()=>{
-  if(!confirm('확정된 결과를 보관함에 저장할까요?'))return;
-  const saved=await transaction((tx,snap,r)=>{
-    if(!r?.finalized||r.drawn_by!==uid)throw Error('결정한 사람만 저장할 수 있습니다.');
-    tx.update(snap.ref,{archive:{date:r.date,course:r.course,team:r.team,players:r.players,assignments:r.assignments,expected_count:r.expected_count,saved_at:new Date().toISOString()}});
-  });
-  if(saved)notify('저장했습니다.');
+// 보관함은 Firebase 공동 기록과 별도로 각 휴대폰 브라우저에만 저장합니다.
+const LOCAL_ARCHIVE_KEY='pasis_bluewhite_local_archive_v1';
+const MAX_LOCAL_ARCHIVES=20;
+function readLocalArchives(){
+  try{
+    const data=JSON.parse(localStorage.getItem(LOCAL_ARCHIVE_KEY)||'[]');
+    return Array.isArray(data)?data.filter(x=>x&&x.draw_token&&x.players&&x.assignments).slice(0,MAX_LOCAL_ARCHIVES):[];
+  }catch(e){return [];}
+}
+function formatArchive(a){
+  const members=Object.entries(a.players||{}).map(([id,p])=>({...p,side:a.assignments?.[id]}));
+  const blue=members.filter(x=>x.side==='blue'),white=members.filter(x=>x.side==='white');
+  const b=totalOf(blue),w=totalOf(white);
+  const winner=Math.abs(b.average-w.average)<1e-8?'무승부':b.average<w.average?'청팀 승리':'백팀 승리';
+  return `${a.date} · ${a.course}파크골프장 · ${a.team}\n저장: ${new Date(a.saved_at).toLocaleString('ko-KR')}\n\n🔵 청팀\n${blue.map((p,i)=>`${i+1}. ${p.name}  ${p.score}타`).join('\n')}\n합계 ${b.sum} / 평균 ${b.average.toFixed(2)}\n\n⚪ 백팀\n${white.map((p,i)=>`${i+1}. ${p.name}  ${p.score}타`).join('\n')}\n합계 ${w.sum} / 평균 ${w.average.toFixed(2)}\n\n🏆 ${winner}`;
+}
+$('save').onclick=()=>{
+  const r=current;
+  if(!r?.finalized||!r.draw_token||localRevealToken!==r.draw_token){
+    notify('빨간 별표로 결과를 확인한 뒤 저장하세요.',true);return;
+  }
+  if(!confirm('이 휴대폰에 청백 경기 결과를 저장할까요?\n최근 20경기까지 보관됩니다.'))return;
+  try{
+    const saved=readLocalArchives();
+    const record={date:r.date,course:r.course,team:r.team,expected_count:r.expected_count,
+      players:r.players,assignments:r.assignments,draw_token:r.draw_token,saved_at:new Date().toISOString()};
+    // 같은 경기 결과를 다시 저장하면 중복을 만들지 않고 최신 위치로 옮깁니다.
+    const next=[record,...saved.filter(x=>x.draw_token!==r.draw_token)].slice(0,MAX_LOCAL_ARCHIVES);
+    localStorage.setItem(LOCAL_ARCHIVE_KEY,JSON.stringify(next));
+    notify(`이 휴대폰에 저장했습니다. (${next.length}/20경기)`);
+  }catch(e){notify('휴대폰 저장 공간을 확인하세요: '+errText(e),true);}
 };
 $('clear').onclick=()=>{
   if(!confirm('이 휴대폰의 경기 입력과 표시된 결과를 초기화할까요?\\n내 이름과 다른 참가자의 서버 기록은 유지됩니다.'))return;
@@ -366,15 +390,23 @@ $('clear').onclick=()=>{
 };
 
 const dialog=$('dialog');$('cancelDialog').onclick=()=>dialog.close();$('confirmDialog').onclick=()=>dialog.close();
-$('load').onclick=async()=>{
-  try{const ref=await watchRoom();const snap=await getDoc(ref);const a=snap.data()?.archive;if(!a){notify('저장된 경기 결과가 없습니다.',true);return;}
-    const members=Object.entries(a.players||{}).map(([id,p])=>({...p,side:a.assignments[id]}));
-    const b=members.filter(x=>x.side==='blue'),w=members.filter(x=>x.side==='white');
-    $('dialogTitle').textContent='저장된 경기 결과';
-    const body=$('dialogBody');body.replaceChildren();const content=document.createElement('div');content.id='archiveView';
-    content.textContent=`${a.date} · ${a.course}파크골프장 · ${a.team}\n저장: ${a.saved_at?.slice(0,19)||''}\n\n청팀\n${b.map(p=>p.name+'  '+p.score+'타').join('\n')}\n합계 ${totalOf(b).sum} / 평균 ${totalOf(b).average.toFixed(2)}\n\n백팀\n${w.map(p=>p.name+'  '+p.score+'타').join('\n')}\n합계 ${totalOf(w).sum} / 평균 ${totalOf(w).average.toFixed(2)}`;
-    body.append(content);dialog.showModal();
-  }catch(e){notify(errText(e),true)}
+$('load').onclick=()=>{
+  const archives=readLocalArchives();
+  if(!archives.length){notify('이 휴대폰에 저장된 경기 결과가 없습니다.',true);return;}
+  $('dialogTitle').textContent=`저장된 경기 결과 (${archives.length}/20)`;
+  const body=$('dialogBody');body.replaceChildren();
+  const choose=document.createElement('select');
+  choose.setAttribute('aria-label','저장된 경기 선택');
+  choose.style.cssText='width:100%;font-size:17px;padding:12px;border:2px solid #9eb8d8;border-radius:10px;margin-bottom:12px;background:white;color:#102341';
+  archives.forEach((a,i)=>{
+    const opt=document.createElement('option');opt.value=String(i);
+    opt.textContent=`${a.date} · ${a.course} · ${a.team}`;
+    choose.append(opt);
+  });
+  const content=document.createElement('div');content.id='archiveView';
+  const display=()=>{content.textContent=formatArchive(archives[Number(choose.value)]);};
+  choose.addEventListener('change',display);
+  body.append(choose,content);display();dialog.showModal();
 };
 // 내 이름만 이 휴대폰에 보존합니다.
 $('player').value=localStorage.getItem('pasis_bluewhite_my_name')||'';
