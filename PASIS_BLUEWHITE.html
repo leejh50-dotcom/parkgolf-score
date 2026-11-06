@@ -469,6 +469,24 @@ onAuthStateChanged(auth,user=>{
 });
 </script>
 <script>
+// iPhone 홈 화면 앱에서는 외부 링크가 앱 화면을 대체할 수 있어 이동을 막습니다.
+// 주소를 선택/복사해 Safari에서 열도록 안내합니다. 일반 Safari/Android 링크는 기존대로 유지.
+(function(){
+  const isiOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const isStandalone = navigator.standalone === true ||
+    (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+  if (!isiOS || !isStandalone) return;
+  document.querySelectorAll('.external-links a').forEach(link => {
+    link.addEventListener('click', event => {
+      event.preventDefault();
+      const url = link.href;
+      window.prompt('청백 게임 화면을 유지합니다.\n아래 주소를 길게 눌러 복사한 뒤 Safari 주소창에 붙여넣으세요.', url);
+    });
+  });
+})();
+</script>
+<script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./pasis-bluewhite-sw.js', { scope: './' })
