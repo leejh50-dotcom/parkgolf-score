@@ -469,19 +469,19 @@ onAuthStateChanged(auth,user=>{
 });
 </script>
 <script>
-// iPhone 홈 화면 앱에서는 외부 링크가 앱 화면을 대체할 수 있어 이동을 막습니다.
-// 주소를 선택/복사해 Safari에서 열도록 안내합니다. 일반 Safari/Android 링크는 기존대로 유지.
+// 외부 링크는 사용자의 클릭 순간 새 창으로 열고, 청백 게임 자체는 이동시키지 않습니다.
+// iOS 홈 화면 웹앱의 새 창 동작은 iOS 버전에 따라 달라질 수 있습니다.
 (function(){
-  const isiOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
-    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  const isStandalone = navigator.standalone === true ||
-    (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
-  if (!isiOS || !isStandalone) return;
   document.querySelectorAll('.external-links a').forEach(link => {
     link.addEventListener('click', event => {
       event.preventDefault();
-      const url = link.href;
-      window.prompt('청백 게임 화면을 유지합니다.\n아래 주소를 길게 눌러 복사한 뒤 Safari 주소창에 붙여넣으세요.', url);
+      const url = link.href.replace(/^http:\/\//i, 'https://');
+      // _blank는 현재 청백 게임 문서를 변경하지 않고 별도 창을 요청합니다.
+      const opened = window.open(url, '_blank', 'noopener,noreferrer');
+      if (opened === null) {
+        // 팝업 차단 시에도 청백 게임을 점수판으로 바꾸지 않습니다.
+        window.prompt('새 창이 차단되었습니다. Safari에서 열 주소:', url);
+      }
     });
   });
 })();
