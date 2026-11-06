@@ -134,10 +134,12 @@
 /* 청백 앱 내부 점수판 전용 화면: 원본 앱의 URL을 변경하지 않음 */
 #pasisInnerView{position:fixed;inset:0;z-index:2000;background:#fff;display:none;flex-direction:column}
 #pasisInnerView.open{display:flex}
-.pasis-back-bar{position:absolute;z-index:5;top:calc(env(safe-area-inset-top) + 6px);left:6px;background:transparent;padding:0;display:block;pointer-events:none}
-.pasis-back{pointer-events:auto;border:1px solid #9ba9b7;background:rgba(255,255,255,.9);color:#263d55;border-radius:7px;font-size:25px;font-weight:600;width:36px;height:36px;line-height:1;cursor:pointer;padding:0;box-shadow:0 1px 4px #0002}
+/* 점수판 위에 독립적으로 떠 있는 복귀 아이콘 — 상하 배경 막대 없음 */
+.pasis-back-bar{position:absolute;z-index:5;top:calc(env(safe-area-inset-top) + 8px);left:8px;background:none!important;border:0!important;padding:0;margin:0;display:block;width:auto;height:auto;pointer-events:none;box-shadow:none!important}
+.pasis-back{pointer-events:auto;display:flex;align-items:center;justify-content:center;width:54px;height:54px;border-radius:50%;border:1px solid rgba(160,170,180,.55);background:rgba(255,255,255,.88);color:#101010;font-size:35px;font-weight:500;line-height:1;cursor:pointer;padding:0;box-shadow:0 1px 4px rgba(0,0,0,.09);-webkit-tap-highlight-color:transparent}
+.pasis-back-bar.bottom{top:auto;bottom:calc(env(safe-area-inset-bottom) + 8px)}
 #pasisInnerFrame{flex:1;width:100%;border:0;background:#fff;min-height:0}
-.pasis-back-bar.bottom{top:auto;bottom:calc(env(safe-area-inset-bottom) + 6px)}
+
 body.pasis-inner-open{overflow:hidden}
 .pasis-frame-area{position:relative;flex:1;min-height:0;background:#fff}
 #pasisInnerFrame{height:100%;display:block}
