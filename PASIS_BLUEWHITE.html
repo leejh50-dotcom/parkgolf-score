@@ -147,6 +147,7 @@ body.pasis-inner-open{overflow:hidden}
 .pasis-loading[hidden]{display:none}
 .pasis-retry{border:0;background:#1765b9;color:#fff;padding:12px 22px;border-radius:12px;font-weight:900}
 
+.share-row{margin:14px 12px 2px}.share-result{display:block;width:100%;min-height:58px;border:0;border-radius:13px;background:linear-gradient(#ffdc56,#efb92c);color:#392d0a;font-weight:950;font-size:clamp(19px,5vw,24px);box-shadow:0 3px 0 #bb8a19}.share-result:disabled{opacity:.45;box-shadow:none}
 </style>
 </head>
 <body><div class="wrap">
@@ -164,13 +165,14 @@ body.pasis-inner-open{overflow:hidden}
  <div><label class="label" for="score">⛳ 총점</label><input class="input" id="score" type="number" inputmode="numeric" placeholder="타수" min="1" max="500"></div>
 </div>
 <div class="submitrow"><button id="send" class="big">✈ 점수 제출</button><button id="star" class="star" disabled title="전원 전송 후 청백 무작위 결정" aria-label="청백 결정">☆</button></div>
-<div class="guide" id="guide" role="status">별표를 누르면 각자 휴대폰에 동일한 결과가 표시됩니다</div>
+<div class="guide" id="guide" role="status">별표를 누르면 결과가 표시됩니다</div>
 <div id="status" class="status" role="status"></div>
 <div id="sendSuccessOverlay" class="send-success-overlay" role="status" aria-live="polite" aria-hidden="true"><div class="send-success-box"><span class="send-success-check">✓</span>점수 전송 완료</div></div>
 </section>
 <section class="card"><div class="title"><span class="title-text">🏆 경기 결과</span><span id="count" class="counter">참가 0명</span></div>
 <div class="teams"><div class="team"><h3>🔵 청팀</h3><div class="entries" id="blueEntries"><div class="empty">👑 결정 전입니다</div></div><div class="totals"><div class="totalrow"><span>합계</span><span id="blueSum">—</span></div><div class="totalrow"><span>평균</span><span id="blueAvg">—</span></div></div></div><div class="team white"><h3>⚪ 백팀</h3><div class="entries" id="whiteEntries"><div class="empty">👑 결정 전입니다</div></div><div class="totals"><div class="totalrow"><span>합계</span><span id="whiteSum">—</span></div><div class="totalrow"><span>평균</span><span id="whiteAvg">—</span></div></div></div></div>
 <div class="winner wait" id="winner">전원 점수 전송 후 결정됩니다</div><div id="pending" class="hint" style="text-align:center"></div></section>
+<div class="share-row"><button type="button" id="shareResult" class="share-result" disabled>📤 공유하기</button></div>
 <div class="actions"><button class="action red" id="clear" disabled><b>🗑</b>결과삭제</button><button class="action green" id="save" disabled><b>▣</b>저장</button><button class="action blue" id="load"><b>📂</b>불러오기</button></div>
 <div id="modeNotice" class="notice setup"></div><nav class="external-links" aria-label="관련 안내"><a href="http://songeun25.tistory.com/578" target="_blank" rel="noopener noreferrer">설명글 보러가기</a><a href="http://leejh50-dotcom.github.io/parkgolf-score/sv2_1.html" target="_blank" rel="noopener noreferrer">파시스2.1 점수판 열기</a></nav><footer>PASIS 청백 게임 1.9 PWA · Firebase 공동 전송</footer></div>
 <section id="pasisInnerView" aria-label="청백 게임 내부 점수판 화면" aria-hidden="true">
@@ -273,7 +275,7 @@ function render(){
   $('star').classList.toggle('active',reveal);
   $('star').textContent=reveal?'★':'☆';
   $('star').title=done?'내 휴대폰에 청백 결과 표시':'전원 전송 후 청백 무작위 결정';
-  $('clear').disabled=false;$('save').disabled=!(done&&reveal);
+  $('clear').disabled=false;$('save').disabled=!(done&&reveal);$('shareResult').disabled=!(done&&reveal);
   let mine=r?.players?.[uid];if(mine && !['player','score'].includes(document.activeElement?.id)){$('player').value=mine.name;$('score').value=mine.score;}
   // 다른 사람의 결정은 화면에 자동 공개되지 않습니다. 자신의 별표 클릭만 공개를 허용합니다.
   if(done&&wantReveal&&r?.draw_token){
@@ -399,6 +401,36 @@ function formatArchive(a){
   const winner=Math.abs(b.average-w.average)<1e-8?'무승부':b.average<w.average?'청팀 승리':'백팀 승리';
   return `${a.date} · ${a.course}파크골프장 · ${a.team}\n저장: ${new Date(a.saved_at).toLocaleString('ko-KR')}\n\n🔵 청팀\n${blue.map((p,i)=>`${i+1}. ${p.name}  ${p.score}타`).join('\n')}\n합계 ${b.sum} / 평균 ${b.average.toFixed(2)}\n\n⚪ 백팀\n${white.map((p,i)=>`${i+1}. ${p.name}  ${p.score}타`).join('\n')}\n합계 ${w.sum} / 평균 ${w.average.toFixed(2)}\n\n🏆 ${winner}`;
 }
+// 공개된 오늘 경기 결과를 휴대폰 공유 메뉴(카카오톡 등)로 전달합니다.
+function makeShareText(r){
+  const members=playersOf(r);
+  const blue=members.filter(p=>p.side==='blue');
+  const white=members.filter(p=>p.side==='white');
+  const lines=(arr)=>arr.map((p,i)=>`${i+1}. ${p.name}  ${p.score}`).join('\n') || '(없음)';
+  const b=totalOf(blue),w=totalOf(white);
+  const outcome=Math.abs(b.average-w.average)<1e-8?'무승부':b.average<w.average?'청팀 승리':'백팀 승리';
+  const place=String(r.course||'').trim();
+  return `🏆 파시스 청백 게임 결과\n경기일: ${r.date||day}\n장소: ${place}${place.endsWith('파크골프장')?'':'파크골프장'}\n팀명: ${r.team||''}\n참가: ${members.length}명\n\n🔵 청팀 (${blue.length}명)\n${lines(blue)}\n합계: ${b.sum}  평균: ${b.average.toFixed(2)}\n\n⚪ 백팀 (${white.length}명)\n${lines(white)}\n합계: ${w.sum}  평균: ${w.average.toFixed(2)}\n\n🏆 ${outcome}`;
+}
+$('shareResult').onclick=async()=>{
+  const r=current;
+  if(!r?.finalized||!r.draw_token||localRevealToken!==r.draw_token){notify('별표로 오늘의 결과를 표시한 뒤 공유하세요.',true);return;}
+  const text=makeShareText(r);
+  // iPhone/Android 공유 시트에서 카카오톡을 선택할 수 있습니다(설치·기기 설정에 따라 다름).
+  if(navigator.share){
+    try{await navigator.share({title:'파시스 청백 게임 결과',text});return;}
+    catch(e){if(e?.name==='AbortError')return;}
+  }
+  try{await navigator.clipboard.writeText(text);notify('결과를 복사했습니다. 카카오톡 대화창에 붙여넣으세요.');}
+  catch(e){
+    $('dialogTitle').textContent='청백 경기 결과 공유';
+    const body=$('dialogBody');body.replaceChildren();
+    const area=document.createElement('textarea');area.value=text;area.readOnly=true;
+    area.style.cssText='width:100%;min-height:280px;font-size:16px;line-height:1.6';
+    body.append(area);dialog.showModal();area.focus();area.select();
+    notify('내용을 복사하여 카카오톡에 붙여넣으세요.');
+  }
+};
 $('save').onclick=()=>{
   const r=current;
   if(!r?.finalized||!r.draw_token||localRevealToken!==r.draw_token){
