@@ -130,6 +130,15 @@
   .entry .entry-name:not(.long-name),
   .entry .entry-score { font-size: clamp(17px, 4.8vw, 19px); }
 }
+
+/* 청백 앱 내부 점수판 전용 화면: 원본 앱의 URL을 변경하지 않음 */
+#pasisInnerView{position:fixed;inset:0;z-index:2000;background:#fff;display:none;flex-direction:column;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+#pasisInnerView.open{display:flex}
+.pasis-back-bar{flex:none;display:flex;align-items:center;gap:12px;background:#07396f;color:#fff;padding:6px 12px;min-height:52px;font-weight:900;font-size:17px}
+.pasis-back{border:0;background:#fff;color:#07396f;border-radius:10px;font-size:29px;font-weight:900;min-width:54px;min-height:42px;line-height:1;cursor:pointer}
+#pasisInnerFrame{flex:1;width:100%;border:0;background:#fff;min-height:0}
+.pasis-back-bar.bottom{justify-content:flex-start}
+body.pasis-inner-open{overflow:hidden}
 </style>
 </head>
 <body><div class="wrap">
@@ -156,6 +165,11 @@
 <div class="winner wait" id="winner">전원 전송 후 별표를 누르면 결과가 표시됩니다.</div><div id="pending" class="hint" style="text-align:center"></div></section>
 <div class="actions"><button class="action red" id="clear" disabled><b>🗑</b>결과삭제</button><button class="action green" id="save" disabled><b>▣</b>저장</button><button class="action blue" id="load"><b>📂</b>불러오기</button></div>
 <div id="modeNotice" class="notice setup"></div><nav class="external-links" aria-label="관련 안내"><a href="http://songeun25.tistory.com/578" target="_blank" rel="noopener noreferrer">설명글 보러가기</a><a href="http://leejh50-dotcom.github.io/parkgolf-score/sv2_1.html" target="_blank" rel="noopener noreferrer">파시스2.1 점수판 열기</a></nav><footer>PASIS 청백 게임 1.9 PWA · Firebase 공동 전송</footer></div>
+<section id="pasisInnerView" aria-label="청백 게임 내부 점수판 화면" aria-hidden="true">
+ <div class="pasis-back-bar"><button type="button" class="pasis-back" aria-label="청백 게임으로 돌아가기">←</button><span>파시스2.1 점수판</span></div>
+ <iframe id="pasisInnerFrame" title="파시스2.1 점수판" allow="geolocation" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+ <div class="pasis-back-bar bottom"><button type="button" class="pasis-back" aria-label="청백 게임으로 돌아가기">←</button><span>청백 게임으로 돌아가기</span></div>
+</section>
 <dialog id="dialog"><h3 id="dialogTitle"></h3><div id="dialogBody"></div><div class="row"><button class="secondary" id="cancelDialog">닫기</button><button class="secondary" id="confirmDialog">확인</button></div></dialog>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
@@ -469,19 +483,30 @@ onAuthStateChanged(auth,user=>{
 });
 </script>
 <script>
-// 외부 링크는 사용자의 클릭 순간 새 창으로 열고, 청백 게임 자체는 이동시키지 않습니다.
-// iOS 홈 화면 웹앱의 새 창 동작은 iOS 버전에 따라 달라질 수 있습니다.
+// 점수판을 동일 페이지의 iframe으로 표시하므로 청백 홈 아이콘의 URL은 유지됩니다.
 (function(){
-  document.querySelectorAll('.external-links a').forEach(link => {
-    link.addEventListener('click', event => {
+  const overlay=document.getElementById('pasisInnerView');
+  const frame=document.getElementById('pasisInnerFrame');
+  const scoreUrl='https://leejh50-dotcom.github.io/parkgolf-score/sv2_1.html';
+  const show=()=>{
+    overlay.classList.add('open');overlay.setAttribute('aria-hidden','false');
+    document.body.classList.add('pasis-inner-open');
+    if(!frame.getAttribute('src')) frame.setAttribute('src',scoreUrl);
+  };
+  const hide=()=>{
+    overlay.classList.remove('open');overlay.setAttribute('aria-hidden','true');
+    document.body.classList.remove('pasis-inner-open');
+    // 화면을 닫을 때만 점수판 iframe을 해제합니다. 청백 앱은 그대로 남습니다.
+    frame.removeAttribute('src');
+  };
+  overlay.querySelectorAll('.pasis-back').forEach(btn=>btn.addEventListener('click',hide));
+  document.querySelectorAll('.external-links a').forEach(link=>{
+    link.addEventListener('click',event=>{
       event.preventDefault();
-      const url = link.href.replace(/^http:\/\//i, 'https://');
-      // _blank는 현재 청백 게임 문서를 변경하지 않고 별도 창을 요청합니다.
-      const opened = window.open(url, '_blank', 'noopener,noreferrer');
-      if (opened === null) {
-        // 팝업 차단 시에도 청백 게임을 점수판으로 바꾸지 않습니다.
-        window.prompt('새 창이 차단되었습니다. Safari에서 열 주소:', url);
-      }
+      if(link.textContent.includes('점수판')){show();return;}
+      // 외부 블로그는 iframe 표시를 거부할 수 있어 기존의 안전한 주소 안내를 유지합니다.
+      const url=link.href.replace(/^http:\/\//i,'https://');
+      window.prompt('청백 게임은 그대로 유지됩니다. Safari에서 열 주소:',url);
     });
   });
 })();
