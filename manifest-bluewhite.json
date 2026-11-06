@@ -5,7 +5,7 @@
   "description": "파크골프 청백 친선 경기 점수 전송 및 무작위 팀 결정",
   "lang": "ko",
   "start_url": "/parkgolf-score/PASIS_BLUEWHITE.html",
-  "scope": "/parkgolf-score/",
+  "scope": "/parkgolf-score/PASIS_BLUEWHITE.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#09478c",
