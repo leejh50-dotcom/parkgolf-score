@@ -132,12 +132,12 @@
 }
 
 /* 청백 앱 내부 점수판 전용 화면: 원본 앱의 URL을 변경하지 않음 */
-#pasisInnerView{position:fixed;inset:0;z-index:2000;background:#fff;display:none;flex-direction:column;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+#pasisInnerView{position:fixed;inset:0;z-index:2000;background:#fff;display:none;flex-direction:column}
 #pasisInnerView.open{display:flex}
-.pasis-back-bar{flex:none;display:flex;align-items:center;gap:12px;background:#07396f;color:#fff;padding:6px 12px;min-height:52px;font-weight:900;font-size:17px}
-.pasis-back{border:0;background:#fff;color:#07396f;border-radius:10px;font-size:29px;font-weight:900;min-width:54px;min-height:42px;line-height:1;cursor:pointer}
+.pasis-back-bar{position:absolute;z-index:5;top:calc(env(safe-area-inset-top) + 6px);left:6px;background:transparent;padding:0;display:block;pointer-events:none}
+.pasis-back{pointer-events:auto;border:1px solid #9ba9b7;background:rgba(255,255,255,.9);color:#263d55;border-radius:7px;font-size:25px;font-weight:600;width:36px;height:36px;line-height:1;cursor:pointer;padding:0;box-shadow:0 1px 4px #0002}
 #pasisInnerFrame{flex:1;width:100%;border:0;background:#fff;min-height:0}
-.pasis-back-bar.bottom{justify-content:flex-start}
+.pasis-back-bar.bottom{top:auto;bottom:calc(env(safe-area-inset-bottom) + 6px)}
 body.pasis-inner-open{overflow:hidden}
 .pasis-frame-area{position:relative;flex:1;min-height:0;background:#fff}
 #pasisInnerFrame{height:100%;display:block}
@@ -172,10 +172,10 @@ body.pasis-inner-open{overflow:hidden}
 <div class="actions"><button class="action red" id="clear" disabled><b>🗑</b>결과삭제</button><button class="action green" id="save" disabled><b>▣</b>저장</button><button class="action blue" id="load"><b>📂</b>불러오기</button></div>
 <div id="modeNotice" class="notice setup"></div><nav class="external-links" aria-label="관련 안내"><a href="http://songeun25.tistory.com/578" target="_blank" rel="noopener noreferrer">설명글 보러가기</a><a href="http://leejh50-dotcom.github.io/parkgolf-score/sv2_1.html" target="_blank" rel="noopener noreferrer">파시스2.1 점수판 열기</a></nav><footer>PASIS 청백 게임 1.9 PWA · Firebase 공동 전송</footer></div>
 <section id="pasisInnerView" aria-label="청백 게임 내부 점수판 화면" aria-hidden="true">
- <div class="pasis-back-bar"><button type="button" class="pasis-back" aria-label="청백 게임으로 돌아가기">←</button></div>
+ <div class="pasis-back-bar"><button type="button" class="pasis-back" aria-label="청백 게임으로 돌아가기">×</button></div>
  <div class="pasis-frame-area"><iframe id="pasisInnerFrame" title="파시스2.1 점수판" allow="geolocation" referrerpolicy="strict-origin-when-cross-origin"></iframe>
  <div id="pasisLoading" class="pasis-loading" role="status"><span id="pasisLoadingText">점수판을 불러오는 중입니다…</span><button type="button" id="pasisRetry" class="pasis-retry" hidden>점수판 다시 표시</button></div></div>
- <div class="pasis-back-bar bottom"><button type="button" class="pasis-back" aria-label="청백 게임으로 돌아가기">←</button></div>
+ <div class="pasis-back-bar bottom"><button type="button" class="pasis-back" aria-label="청백 게임으로 돌아가기">‹</button></div>
 </section>
 <dialog id="dialog"><h3 id="dialogTitle"></h3><div id="dialogBody"></div><div class="row"><button class="secondary" id="cancelDialog">닫기</button><button class="secondary" id="confirmDialog">확인</button></div></dialog>
 <script type="module">
