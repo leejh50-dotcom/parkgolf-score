@@ -139,6 +139,12 @@
 #pasisInnerFrame{flex:1;width:100%;border:0;background:#fff;min-height:0}
 .pasis-back-bar.bottom{justify-content:flex-start}
 body.pasis-inner-open{overflow:hidden}
+.pasis-frame-area{position:relative;flex:1;min-height:0;background:#fff}
+#pasisInnerFrame{height:100%;display:block}
+.pasis-loading{position:absolute;inset:0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:20px;z-index:1;font-weight:800;color:#174a83}
+.pasis-loading[hidden]{display:none}
+.pasis-retry{border:0;background:#1765b9;color:#fff;padding:12px 22px;border-radius:12px;font-weight:900}
+
 </style>
 </head>
 <body><div class="wrap">
@@ -167,7 +173,8 @@ body.pasis-inner-open{overflow:hidden}
 <div id="modeNotice" class="notice setup"></div><nav class="external-links" aria-label="관련 안내"><a href="http://songeun25.tistory.com/578" target="_blank" rel="noopener noreferrer">설명글 보러가기</a><a href="http://leejh50-dotcom.github.io/parkgolf-score/sv2_1.html" target="_blank" rel="noopener noreferrer">파시스2.1 점수판 열기</a></nav><footer>PASIS 청백 게임 1.9 PWA · Firebase 공동 전송</footer></div>
 <section id="pasisInnerView" aria-label="청백 게임 내부 점수판 화면" aria-hidden="true">
  <div class="pasis-back-bar"><button type="button" class="pasis-back" aria-label="청백 게임으로 돌아가기">←</button><span>파시스2.1 점수판</span></div>
- <iframe id="pasisInnerFrame" title="파시스2.1 점수판" allow="geolocation" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+ <div class="pasis-frame-area"><iframe id="pasisInnerFrame" title="파시스2.1 점수판" allow="geolocation" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+ <div id="pasisLoading" class="pasis-loading" role="status"><span id="pasisLoadingText">점수판을 불러오는 중입니다…</span><button type="button" id="pasisRetry" class="pasis-retry" hidden>점수판 다시 표시</button></div></div>
  <div class="pasis-back-bar bottom"><button type="button" class="pasis-back" aria-label="청백 게임으로 돌아가기">←</button><span>청백 게임으로 돌아가기</span></div>
 </section>
 <dialog id="dialog"><h3 id="dialogTitle"></h3><div id="dialogBody"></div><div class="row"><button class="secondary" id="cancelDialog">닫기</button><button class="secondary" id="confirmDialog">확인</button></div></dialog>
@@ -483,20 +490,41 @@ onAuthStateChanged(auth,user=>{
 });
 </script>
 <script>
-// 점수판을 동일 페이지의 iframe으로 표시하므로 청백 홈 아이콘의 URL은 유지됩니다.
+// 점수판은 청백 게임 내부에만 표시합니다. 최초 로딩 중 백지 화면 대신 안내를 표시합니다.
 (function(){
   const overlay=document.getElementById('pasisInnerView');
   const frame=document.getElementById('pasisInnerFrame');
+  const loading=document.getElementById('pasisLoading');
+  const loadingText=document.getElementById('pasisLoadingText');
+  const retry=document.getElementById('pasisRetry');
   const scoreUrl='https://leejh50-dotcom.github.io/parkgolf-score/sv2_1.html';
+  let waitTimer=null;
+  const clearWait=()=>{if(waitTimer!==null){clearTimeout(waitTimer);waitTimer=null;}};
+  const beginLoad=()=>{
+    clearWait();loading.hidden=false;retry.hidden=true;
+    loadingText.textContent='점수판을 불러오는 중입니다…';
+    // 연결 지연 시 수동 재표시 버튼을 제공합니다. 자동 재로드로 입력값을 지우지 않습니다.
+    waitTimer=setTimeout(()=>{
+      if(overlay.classList.contains('open')&&!loading.hidden){
+        loadingText.textContent='표시가 늦어지고 있습니다. 아래 버튼을 눌러 주세요.';
+        retry.hidden=false;
+      }
+    },7000);
+    frame.src=scoreUrl;
+  };
+  frame.addEventListener('load',()=>{
+    clearWait();
+    if(overlay.classList.contains('open'))loading.hidden=true;
+  });
+  retry.addEventListener('click',beginLoad);
   const show=()=>{
     overlay.classList.add('open');overlay.setAttribute('aria-hidden','false');
     document.body.classList.add('pasis-inner-open');
-    if(!frame.getAttribute('src')) frame.setAttribute('src',scoreUrl);
+    beginLoad();
   };
   const hide=()=>{
-    overlay.classList.remove('open');overlay.setAttribute('aria-hidden','true');
+    clearWait();overlay.classList.remove('open');overlay.setAttribute('aria-hidden','true');
     document.body.classList.remove('pasis-inner-open');
-    // 화면을 닫을 때만 점수판 iframe을 해제합니다. 청백 앱은 그대로 남습니다.
     frame.removeAttribute('src');
   };
   overlay.querySelectorAll('.pasis-back').forEach(btn=>btn.addEventListener('click',hide));
@@ -504,7 +532,6 @@ onAuthStateChanged(auth,user=>{
     link.addEventListener('click',event=>{
       event.preventDefault();
       if(link.textContent.includes('점수판')){show();return;}
-      // 외부 블로그는 iframe 표시를 거부할 수 있어 기존의 안전한 주소 안내를 유지합니다.
       const url=link.href.replace(/^http:\/\//i,'https://');
       window.prompt('청백 게임은 그대로 유지됩니다. Safari에서 열 주소:',url);
     });
