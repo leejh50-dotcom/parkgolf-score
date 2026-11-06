@@ -107,6 +107,8 @@
   .entries{padding:8px 3px}
   .teams{gap:4px}
 }
+/* 합계·평균도 참가자 이름과 같은 크기로 표시 */
+.totalrow{font-size:clamp(18px,5vw,22px);font-weight:950;line-height:1.3}
 /* 화면 양쪽 여백은 줄이되 합계·평균 줄은 유지 */
 .totalrow{white-space:nowrap}
 
@@ -206,6 +208,18 @@ $('date').textContent = new Date(day+'T12:00:00').toLocaleDateString('ko-KR',{ye
 let uid=null, roomRef=null, unsubscribe=null, current=null, busy=false, revealTimer=null, revealTimeouts=[], lastDrawKey='', snapshotFromServer=false;
 // 공동 추첨은 1회만 저장하고, 결과 공개 여부는 각 휴대폰에서 개별 관리합니다.
 let localRevealToken='', wantReveal=false;
+// 각 휴대폰의 결과 공개 여부만 보존합니다. 서버의 청백 배정은 변경하지 않습니다.
+const REVEAL_STORAGE_PREFIX='pasis_bluewhite_reveal_v1_';
+let restoredReveal=false;
+function revealStorageKey(){return roomRef&&uid?REVEAL_STORAGE_PREFIX+uid+'_'+roomRef.id:null;}
+function saveRevealState(){
+  const key=revealStorageKey();if(!key||!localRevealToken)return;
+  try{localStorage.setItem(key,localRevealToken);}catch(e){}
+}
+function clearRevealState(){
+  const key=revealStorageKey();if(key)try{localStorage.removeItem(key);}catch(e){}
+}
+
 const currentRoom = () => [day,clean($('course').value),clean($('teamName').value)].join('|');
 const count = () => Number($('expected').value);
 const validRoom = () => {
@@ -254,7 +268,14 @@ function render(){
   const r=current;const list=playersOf(r),cap=r?.expected_count??null,done=!!r?.finalized;
   const countNum=list.length,full=cap!==null&&countNum===cap;
   // 다른 경기가 시작되거나 결과가 삭제되면 각 휴대폰의 공개 상태를 초기화합니다.
-  if(!done){localRevealToken='';wantReveal=false;lastDrawKey='';}
+  if(!done){clearRevealState();localRevealToken='';wantReveal=false;lastDrawKey='';restoredReveal=false;}
+  // 앱을 종료했다가 열어도 같은 경기의 이미 공개한 결과를 즉시 복원합니다.
+  if(done&&r?.draw_token&&!localRevealToken){
+    const key=revealStorageKey();let saved='';
+    try{if(key)saved=localStorage.getItem(key)||'';}catch(e){}
+    if(saved===r.draw_token){localRevealToken=saved;restoredReveal=true;lastDrawKey=r.draw_token;}
+    else if(saved&&key){try{localStorage.removeItem(key);}catch(e){}}
+  }
   const reveal=done&&!!r?.draw_token&&localRevealToken===r.draw_token;
   if(cap!==null&&document.activeElement!==$('expected'))$('expected').value=cap;
   $('count').textContent=`전송 ${countNum}${cap?'/'+cap:''}명`;
@@ -268,7 +289,7 @@ function render(){
   guide.textContent=!cap?'별표를 누르면 결과가 표시됩니다':!full?`${cap-countNum}명 미전송입니다 (${countNum}/${cap}명)`:'별표를 누르면 결과가 표시됩니다';
   $('pending').textContent='';
   let result='전원 점수 전송 후 결정됩니다';
-  if(reveal){const a=totalOf(blue).average,b=totalOf(white).average;result=Math.abs(a-b)<1e-8?'무 승 부':a<b?'청 팀 우 승':'백 팀 우 승';}
+  if(reveal){const a=totalOf(blue).average,b=totalOf(white).average;result=Math.abs(a-b)<1e-8?'무 승 부':a<b?'우 승 청 팀':'우 승 백 팀';}
   $('winner').textContent=result;$('winner').classList.toggle('wait',!reveal);
   $('star').disabled=!(full&&uid)||busy;
   $('star').classList.toggle('ready',full&&!reveal);
@@ -279,9 +300,10 @@ function render(){
   let mine=r?.players?.[uid];if(mine && !['player','score'].includes(document.activeElement?.id)){$('player').value=mine.name;$('score').value=mine.score;}
   // 다른 사람의 결정은 화면에 자동 공개되지 않습니다. 자신의 별표 클릭만 공개를 허용합니다.
   if(done&&wantReveal&&r?.draw_token){
-    wantReveal=false;localRevealToken=r.draw_token;render();return;
+    wantReveal=false;localRevealToken=r.draw_token;saveRevealState();render();return;
   }
   if(reveal&&r.draw_token!==lastDrawKey){lastDrawKey=r.draw_token;animateRows();}
+  if(restoredReveal){restoredReveal=false;cancelRevealAnimation();}
   if(!reveal){cancelRevealAnimation();}
 }
 function cancelRevealAnimation(){
@@ -367,7 +389,7 @@ $('star').onclick=async()=>{
   if(busy)return;
   // 이미 추첨 결과가 서버에 있으면 새 추첨 없이 자기 휴대폰에만 공개합니다.
   if(current?.finalized&&current?.draw_token){
-    wantReveal=false;localRevealToken=current.draw_token;lastDrawKey='';render();return;
+    wantReveal=false;localRevealToken=current.draw_token;saveRevealState();lastDrawKey='';render();return;
   }
   if(!confirm('모든 참가자의 점수 전송이 완료되었습니다.\n청백팀을 무작위로 결정하고 내 화면에 표시할까요?'))return;
   wantReveal=true;
@@ -382,7 +404,7 @@ $('star').onclick=async()=>{
   });
   if(!ok){wantReveal=false;render();return;}
   // 전송 완료 전후의 스냅샷 도착 순서에 관계없이 한 번의 클릭으로 표시합니다.
-  if(current?.finalized&&current.draw_token){wantReveal=false;localRevealToken=current.draw_token;lastDrawKey='';render();}
+  if(current?.finalized&&current.draw_token){wantReveal=false;localRevealToken=current.draw_token;saveRevealState();lastDrawKey='';render();}
   else notify('청백 결정 중입니다. 결과를 받아오면 자동으로 표시됩니다.');
 };
 // 보관함은 Firebase 공동 기록과 별도로 각 휴대폰 브라우저에만 저장합니다.
@@ -451,6 +473,7 @@ $('clear').onclick=()=>{
   if(!confirm('이 휴대폰의 경기 입력과 표시된 결과를 초기화할까요?\\n내 이름과 다른 참가자의 서버 기록은 유지됩니다.'))return;
   // 서버에는 어떤 삭제 명령도 보내지 않습니다.
   const myName=clean($('player').value);
+  clearRevealState();
   stopRoom(); // 실시간 구독을 해제해 이전 경기 결과가 다시 표시되지 않도록 합니다.
   for(const id of ['course','teamName','expected','score'])$(id).value='';
   $('player').value=myName;
