@@ -170,7 +170,7 @@ body.pasis-inner-open{overflow:hidden}
 </section>
 <section class="card"><div class="title"><span class="title-text">🏆 경기 결과</span><span id="count" class="counter">참가 0명</span></div>
 <div class="teams"><div class="team"><h3>🔵 청팀</h3><div class="entries" id="blueEntries"><div class="empty">👑 결정 전입니다</div></div><div class="totals"><div class="totalrow"><span>합계</span><span id="blueSum">—</span></div><div class="totalrow"><span>평균</span><span id="blueAvg">—</span></div></div></div><div class="team white"><h3>⚪ 백팀</h3><div class="entries" id="whiteEntries"><div class="empty">👑 결정 전입니다</div></div><div class="totals"><div class="totalrow"><span>합계</span><span id="whiteSum">—</span></div><div class="totalrow"><span>평균</span><span id="whiteAvg">—</span></div></div></div></div>
-<div class="winner wait" id="winner">전원 전송 후 별표를 누르면 결과가 표시됩니다.</div><div id="pending" class="hint" style="text-align:center"></div></section>
+<div class="winner wait" id="winner">전원 점수 전송 후 결정됩니다</div><div id="pending" class="hint" style="text-align:center"></div></section>
 <div class="actions"><button class="action red" id="clear" disabled><b>🗑</b>결과삭제</button><button class="action green" id="save" disabled><b>▣</b>저장</button><button class="action blue" id="load"><b>📂</b>불러오기</button></div>
 <div id="modeNotice" class="notice setup"></div><nav class="external-links" aria-label="관련 안내"><a href="http://songeun25.tistory.com/578" target="_blank" rel="noopener noreferrer">설명글 보러가기</a><a href="http://leejh50-dotcom.github.io/parkgolf-score/sv2_1.html" target="_blank" rel="noopener noreferrer">파시스2.1 점수판 열기</a></nav><footer>PASIS 청백 게임 1.9 PWA · Firebase 공동 전송</footer></div>
 <section id="pasisInnerView" aria-label="청백 게임 내부 점수판 화면" aria-hidden="true">
@@ -265,7 +265,7 @@ function render(){
   const guide=$('guide');guide.classList.toggle('ready',full&&!done);guide.classList.toggle('done',reveal);
   guide.textContent=!cap?'별표를 누르면 결과가 표시됩니다':!full?`${cap-countNum}명 미전송입니다 (${countNum}/${cap}명)`:'별표를 누르면 결과가 표시됩니다';
   $('pending').textContent='';
-  let result='별표를 누르면 결과가 표시됩니다';
+  let result='전원 점수 전송 후 결정됩니다';
   if(reveal){const a=totalOf(blue).average,b=totalOf(white).average;result=Math.abs(a-b)<1e-8?'무 승 부':a<b?'청 팀 우 승':'백 팀 우 승';}
   $('winner').textContent=result;$('winner').classList.toggle('wait',!reveal);
   $('star').disabled=!(full&&uid)||busy;
