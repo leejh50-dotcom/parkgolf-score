@@ -1,0 +1,26 @@
+
+{
+  "id": "/parkgolf-score/pasis-club-group/",
+  "name": "파시스조편성",
+  "short_name": "파시스조편성",
+  "description": "파시스 파크골프 클럽 조편성",
+  "start_url": "./PASIS_CLUB_GROUP_V2_4_홈화면아이콘.html",
+  "scope": "/parkgolf-score/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#07518f",
+  "icons": [
+    {
+      "src": "./pasis-group-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./pasis-group-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
