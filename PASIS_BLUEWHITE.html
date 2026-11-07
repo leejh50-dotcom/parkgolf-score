@@ -150,6 +150,9 @@ body.pasis-inner-open{overflow:hidden}
 .pasis-retry{border:0;background:#1765b9;color:#fff;padding:12px 22px;border-radius:12px;font-weight:900}
 
 .share-row{margin:14px 12px 2px}.share-result{display:block;width:100%;min-height:58px;border:0;border-radius:13px;background:linear-gradient(#ffdc56,#efb92c);color:#392d0a;font-weight:950;font-size:clamp(19px,5vw,24px);box-shadow:0 3px 0 #bb8a19}.share-result:disabled{opacity:.45;box-shadow:none}
+/* 제출 준비 전에는 연한 파랑, 입력 완료 시 기존 진한 파랑 */
+#send.submit-incomplete{background:#c5d8ee;color:#6c829e;box-shadow:none;opacity:1;cursor:not-allowed}
+#send.submit-incomplete:disabled{opacity:1}
 </style>
 </head>
 <body><div class="wrap">
@@ -166,7 +169,7 @@ body.pasis-inner-open{overflow:hidden}
  <div><label class="label" for="player">👤 내 이름</label><input class="input" id="player" placeholder="이름 입력" autocomplete="name" maxlength="25"></div>
  <div><label class="label" for="score">⛳ 총점</label><input class="input" id="score" type="number" inputmode="numeric" placeholder="타수" min="1" max="500"></div>
 </div>
-<div class="submitrow"><button id="send" class="big">✈ 점수 제출</button><button id="star" class="star" disabled title="전원 전송 후 청백 무작위 결정" aria-label="청백 결정">☆</button></div>
+<div class="submitrow"><button id="send" class="big submit-incomplete" disabled>✈ 제출</button><button id="star" class="star" disabled title="전원 전송 후 청백 무작위 결정" aria-label="청백 결정">☆</button></div>
 <div class="guide" id="guide" role="status">별표가 빨간색으로 변하면 누르세요. 아래에 결과가 표시됩니다</div>
 <div id="status" class="status" role="status"></div>
 <div id="sendSuccessOverlay" class="send-success-overlay" role="status" aria-live="polite" aria-hidden="true"><div class="send-success-box"><span class="send-success-check">✓</span>점수 전송 완료</div></div>
@@ -227,6 +230,21 @@ const validRoom = () => {
   if ([...clean($('teamName').value)].length < 4) throw Error('팀명은 4자 이상 입력하세요.');
 };
 const validCount = () => {if(!Number.isInteger(count())||count()<2||count()>50)throw Error('인원수를 2~50명으로 입력하세요.');};
+// 다섯 가지 입력이 모두 유효하고 Firebase 인증이 준비되면 제출 버튼을 진한 파랑으로 표시합니다.
+function updateSubmitButton(){
+  const n=count(),scoreText=clean($('score').value),score=Number(scoreText);
+  const ready=!!uid && !!clean($('course').value)
+    && [...clean($('teamName').value)].length>=4
+    && Number.isInteger(n)&&n>=2&&n<=50
+    && !!clean($('player').value)&&[...clean($('player').value)].length<=25
+    && !!scoreText&&Number.isInteger(score)&&score>=1&&score<=500;
+  $('send').disabled=!ready;
+  $('send').classList.toggle('submit-incomplete',!ready);
+}
+for(const id of ['course','teamName','expected','player','score']){
+  $(id).addEventListener('input',updateSubmitButton);
+  $(id).addEventListener('change',updateSubmitButton);
+}
 const notify = (message,error=false)=>{
   const el=$('status');el.textContent=message;el.className='status '+(error?'error':'ok');
   setTimeout(()=>{if(el.textContent===message)el.textContent=''},5500);
@@ -278,6 +296,7 @@ function render(){
   }
   const reveal=done&&!!r?.draw_token&&localRevealToken===r.draw_token;
   if(cap!==null&&document.activeElement!==$('expected'))$('expected').value=cap;
+  updateSubmitButton();
   $('count').textContent=`전송 ${countNum}${cap?'/'+cap:''}명`;
   const blue=list.filter(p=>p.side==='blue'),white=list.filter(p=>p.side==='white');
   addRows('blue',reveal?blue:[]);addRows('white',reveal?white:[]);
@@ -521,10 +540,19 @@ for(const id of ['course','teamName','expected']){
 // iOS 홈 화면 복귀 시 서버의 최신 인원수를 즉시 확인합니다.
 // 실시간 onSnapshot은 계속 유지하며 불필요한 반복 폴링은 하지 않습니다.
 let lastForegroundCheck=0;
+let checkingFresh=false;
+// 실시간 알림이 지연되는 일부 모바일 환경에서만 보조 서버 확인을 수행합니다.
+// 제출 대기 또는 청백 결정 대기 중에만 3초 간격으로 확인하고, 결정 후 중단합니다.
+setInterval(()=>{
+  if(!roomRef||!uid||busy||document.visibilityState==='hidden'||checkingFresh)return;
+  if(current?.finalized)return;
+  checkFreshAfterResume();
+},3000);
 async function checkFreshAfterResume(){
-  if(!roomRef || !uid || document.visibilityState==='hidden')return;
+  if(!roomRef || !uid || document.visibilityState==='hidden'||checkingFresh)return;
   const now=Date.now();if(now-lastForegroundCheck<1200)return;
   lastForegroundCheck=now;
+  checkingFresh=true;
   const ref=roomRef;
   try{
     const snap=await getDocFromServer(ref);
@@ -534,16 +562,17 @@ async function checkFreshAfterResume(){
     const newCount=Object.keys(fresh?.players||{}).length;
     if(newCount!==oldCount || fresh?.draw_token!==current?.draw_token || fresh?.expected_count!==current?.expected_count){current=fresh;render();}
   }catch(e){/* 일시적 오프라인이면 기존 실시간 구독으로 재동기화 */}
+  finally{checkingFresh=false;}
 }
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')checkFreshAfterResume();});
 window.addEventListener('focus',checkFreshAfterResume);
 $('modeNotice').textContent='☁️ Firebase 공동 서버 · 청백 배정은 모두 동일하며 결과는 각자 별표를 눌러 공개합니다.';
 $('modeNotice').classList.remove('setup');
-$('send').disabled=true;
+updateSubmitButton();
 onAuthStateChanged(auth,user=>{
-  if(user){uid=user.uid;$('send').disabled=false;
+  if(user){uid=user.uid;updateSubmitButton();
     if(clean($('course').value)&&[...clean($('teamName').value)].length>=4)watchRoom().catch(e=>notify(errText(e),true));
-  }else signInAnonymously(auth).catch(e=>notify('익명 인증 오류: '+errText(e),true));
+  }else{uid=null;updateSubmitButton();signInAnonymously(auth).catch(e=>notify('익명 인증 오류: '+errText(e),true));}
 });
 </script>
 <script>
