@@ -1,0 +1,107 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#07518f"><title>파시스조편성</title><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="파시스조편성"><meta name="application-name" content="파시스조편성"><link rel="apple-touch-icon" sizes="180x180" href="./pasis-group-pink-v2-180.png"><link rel="icon" type="image/png" sizes="192x192" href="./pasis-group-pink-v2-192.png"><link rel="manifest" href="./pasis-group-manifest-v2.json"><style>
+:root{font-family:system-ui,-apple-system,'Malgun Gothic',sans-serif;color:#122b48;background:#eaf1fa}*{box-sizing:border-box}body{margin:0}.wrap{max-width:740px;margin:auto;background:white;min-height:100vh;padding-bottom:32px}.hero{background:linear-gradient(120deg,#073d76,#0878b2);padding:25px 12px;text-align:center;color:white}.hero h1{margin:0;font-size:clamp(25px,6vw,35px)}.hero small{font-size:14px}.card{margin:12px 9px;padding:15px;border:1px solid #d9e4f1;border-radius:17px;box-shadow:0 3px 12px #15385b0b}h2{font-size:21px;margin:0 0 13px}.hint{font-size:14px;color:#596b7f;line-height:1.5}.field{width:100%;height:49px;border:2px solid #a9bfd8;border-radius:10px;font-size:19px;padding:6px 10px;color:#123455;background:white}label{font-weight:850;display:block;margin:8px 0 5px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.stat{background:#edf5ff;border-radius:10px;text-align:center;padding:9px 4px;font-size:14px}.stat b{display:block;font-size:25px;color:#0757a7}.entryform{display:grid;grid-template-columns:minmax(0,1fr) 88px;gap:8px}.buttons{display:flex;gap:8px;flex-wrap:wrap}.btn{border:0;border-radius:11px;background:#0866bd;color:white;padding:12px 16px;font-weight:900;font-size:17px;cursor:pointer;min-height:48px}.btn.secondary{background:#e7f0fb;color:#16548e}.btn.green{background:#168264}.btn.danger{background:#b43b4b}.btn:disabled{opacity:.45;cursor:not-allowed}.btn.full{width:100%;margin-top:12px;font-size:22px;min-height:58px}.modes{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.mode{border:2px solid #c6d7e9;border-radius:11px;background:#f6f9fd;padding:12px 3px;font-size:16px;font-weight:850;color:#285275}.mode.selected{background:#0959b0;border-color:#0959b0;color:white}.memberlist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:12px}.member{display:flex;align-items:center;gap:5px;padding:8px 5px;border:1px solid #d9e3ed;border-radius:9px;min-width:0}.member.absent{opacity:.52;background:#f5f5f5}.member input{width:21px;height:21px;flex:none;accent-color:#0866bd}.member .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:800;font-size:clamp(13px,3.6vw,17px)}.member .mini{border:0;background:transparent;color:#627a94;font-size:17px;padding:2px 3px}.groupgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.group{border:2px solid #bed8f3;border-radius:12px;overflow:hidden}.group h3{background:#0768bc;color:white;margin:0;padding:10px;text-align:center;font-size:20px}.group:nth-child(even) h3{background:#14816d}.group ul{list-style:none;margin:0;padding:9px 7px}.group li{padding:8px 1px;border-bottom:1px solid #e6ebf0;font-size:clamp(14px,4vw,19px);font-weight:850;white-space:nowrap;letter-spacing:-.04em}.group li:last-child{border:0}.row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.note{background:#fff6de;color:#754d0c;border-radius:9px;padding:10px;font-size:14px;line-height:1.5}.hide{display:none!important}#toast{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);max-width:92vw;background:#103a68;color:white;padding:12px 20px;border-radius:12px;box-shadow:0 4px 22px #0004;display:none;text-align:center;z-index:5}@media(max-width:360px){.card{padding:11px 8px}.group li{font-size:14px}.member .nm{font-size:13px}}
+
+/* V1.1: 고정 회원명부 편집 */
+.roster-head,.roster-line{display:grid;grid-template-columns:25px minmax(0,1fr) 48px minmax(0,.8fr) 42px;gap:7px;align-items:center}
+.roster-head{font-size:14px;font-weight:900;color:#345d86;text-align:center;padding:5px 2px}
+.roster-line{padding:5px 2px;border-bottom:1px solid #e0e8f1}
+.roster-num{text-align:center;font-size:16px;font-weight:800;color:#647e9b}
+.roster-line .field{height:42px;font-size:18px;padding:4px 8px}
+.roster-line select.field{padding:4px 3px;text-align:center}
+.add-small{font-size:14px;min-height:35px;padding:6px 12px;margin-top:11px;background:#e7f0fb;color:#16548e}
+.roster-line .remark{font-size:15px;padding:4px 5px}.roster-line .absent-check{width:23px;height:23px;justify-self:center;accent-color:#c13d4a}.roster-line.is-absent{background:#fff1f1}.roster-line.is-absent .roster-num{color:#a33}.roster-empty{font-size:14px;color:#70839b;padding:14px 4px}
+
+/* V2: 가독성 중심의 한 조 두 줄 배치 */
+.groupgrid{display:flex;flex-direction:column;gap:11px}
+.group{display:grid;grid-template-columns:62px minmax(0,1fr);align-items:stretch;border:1.5px solid #a8cdef;border-radius:13px;background:#e8f3ff;overflow:hidden;min-height:72px}
+.group:nth-child(even){background:#e9f6e9;border-color:#b0d8b2}
+.group h3,.group:nth-child(even) h3{background:#174e88;color:#fff;margin:0;padding:5px 3px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:22px;white-space:nowrap}
+.group h3 small{font-size:13px;font-weight:700;margin-top:3px;color:#e2efff}
+.group ul{list-style:none;margin:0;padding:6px 6px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px 3px;align-items:center}
+.group li{border:0;padding:0 2px;font-size:clamp(18px,4.7vw,23px);font-weight:900;white-space:nowrap;letter-spacing:-.055em;color:#102b4b}
+.meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.meta-grid .datefield{background:#edf5ff;font-weight:900;text-align:center;padding:11px 4px;border-radius:10px;font-size:clamp(15px,4vw,19px);min-height:49px}
+.bottom-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.bottom-actions .btn{padding:12px 3px;font-size:clamp(15px,4vw,18px)}
+.roster-head,.roster-line{grid-template-columns:25px minmax(0,1fr) 48px minmax(0,.8fr) 42px;gap:5px}
+@media(max-width:380px){.group{grid-template-columns:53px minmax(0,1fr)}.group h3{font-size:19px}.group li{font-size:clamp(16px,4.4vw,19px)}.group ul{padding:5px 3px;gap:5px 1px}}
+
+/* V2.2: 좁은 휴대폰에서 회원 이름 입력폭 확보 */
+.card{margin-left:5px;margin-right:5px;padding-left:9px;padding-right:9px}
+.roster-head,.roster-line{grid-template-columns:18px minmax(0,1fr) 45px 48px 30px;gap:3px;padding-left:0;padding-right:0}
+.roster-line .field{width:100%;min-width:0;height:43px;border-width:1.5px;border-radius:8px;font-size:18px}
+.roster-line input.field:not(.remark){padding-left:6px;padding-right:3px;font-weight:750}
+.roster-line select.field{padding-left:0;padding-right:0;font-size:17px}
+.roster-line .remark{padding-left:3px;padding-right:2px;font-size:14px}
+.roster-line .absent-check{width:23px;height:23px;margin:0}
+.roster-num{font-size:15px}
+.roster-head{font-size:13px}
+#club,#course{text-align:center}
+@media(max-width:360px){.card{padding-left:7px;padding-right:7px}.roster-head,.roster-line{grid-template-columns:16px minmax(0,1fr) 43px 43px 27px;gap:2px}.roster-line .field{font-size:17px}}
+
+/* V2.3: 이름칸을 적정 폭으로 줄이고 성별·비고·결석 칸에 여유 배분 */
+.roster-head,.roster-line{grid-template-columns:20px minmax(0,1fr) 57px 62px 35px;gap:4px}
+.roster-line input.field:not(.remark){text-align:center;padding-left:2px;padding-right:2px}
+.roster-line select.field{font-size:17px;text-align:center;text-align-last:center}
+.roster-line .remark{text-align:center;font-size:15px;padding-left:2px;padding-right:2px}
+.roster-line .absent-check{justify-self:center}
+@media(max-width:360px){.roster-head,.roster-line{grid-template-columns:18px minmax(0,1fr) 52px 55px 31px;gap:3px}}
+</style></head><body><div class="wrap"><header class="hero"><h1>파시스 클럽 조편성</h1><small>파크골프 클럽 · 공정한 무작위 조편성</small></header>
+<section class="card"><label for="club">클럽명</label><input id="club" class="field" placeholder="클럽명 입력"><div class="meta-grid"><div><label>경기 날짜 (자동)</label><div id="gameDate" class="datefield"></div></div><div><label for="course">장소 (구장명)</label><input id="course" class="field" placeholder="구장명 입력"></div></div><div class="stats"><div class="stat">전체 회원<b id="total">0</b></div><div class="stat">오늘 참석<b id="attend">0</b></div><div class="stat">남 / 여<b id="sexcount">0 / 0</b></div></div></section>
+<section class="card"><div class="row"><h2 style="margin:0">등록 회원</h2><span class="hint" id="membercount">0/100명</span></div>
+
+<div class="roster-head"><span>순</span><span>이름</span><span>성별</span><span>비고</span><span>결석</span></div>
+<div id="roster"></div><button id="add" class="btn add-small">회원 추가</button>
+</section>
+<section class="card"><h2>조편성 조건</h2><div class="modes"><button class="mode" data-mode="남">남성만</button><button class="mode" data-mode="여">여성만</button><button class="mode selected" data-mode="혼성">혼성</button></div><div class="note" id="preview">참석할 회원을 선택하세요.</div><button id="draw" class="btn full">조편성하기</button></section>
+<section class="card"><div class="row"><h2>조편성 결과</h2><button id="redraw" class="btn secondary hide">다시 편성</button></div><div id="results" class="groupgrid"><p class="hint" style="grid-column:1/-1;text-align:center">조편성하기 버튼을 누르면 결과가 표시됩니다.</p></div><div class="buttons" style="margin-top:13px"><button id="share" class="btn green hide" style="flex:1">결과 공유</button><button id="copy" class="btn secondary hide">복사</button></div></section><section class="card"><div class="bottom-actions"><button id="clear" class="btn danger">삭제</button><button id="saveResult" class="btn green">저장</button><button id="loadResult" class="btn secondary">불러오기</button></div><p class="hint">삭제는 현재 조편성 결과만 초기화합니다. 등록 회원은 유지됩니다. 저장한 경기 기록은 이 휴대폰에서 불러올 수 있습니다.</p></section><p class="hint" style="text-align:center">파시스 클럽 조편성 V2.4 · 회원 명단은 이 휴대폰에 저장됩니다.</p></div><div id="toast" role="status"></div>
+<script>
+(()=>{'use strict';const $=id=>document.getElementById(id),KEY='pasis_club_group_v1',modes=[...document.querySelectorAll('.mode')];let members=[],mode='혼성',groups=[],club='';const ARCHIVE_KEY='pasis_club_group_archives_v2';let nextId=1;const clean=v=>String(v||'').trim();const randomShuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};let toastTimer;function toast(s){$('toast').textContent=s;$('toast').style.display='block';clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').style.display='none',2800);}function save(){try{localStorage.setItem(KEY,JSON.stringify({club:$('club').value,course:$('course').value,members}));}catch(e){toast('저장 공간을 확인하세요.');}}function load(){try{const d=JSON.parse(localStorage.getItem(KEY)||'{}');club=clean(d.club)||'';members=Array.isArray(d.members)?d.members.filter(x=>x&&x.name&&(x.gender==='남'||x.gender==='여')).slice(0,100).map(x=>({id:Number(x.id)||nextId++,name:clean(x.name),gender:x.gender,remark:clean(x.remark||''),attend:x.attend!==false})):[];nextId=Math.max(1,...members.map(x=>x.id+1));}catch(e){members=[];}$('club').value=club;try{$('course').value=JSON.parse(localStorage.getItem(KEY)||'{}').course||'';}catch(e){} }
+function eligible(){return members.filter(x=>x.attend&&(mode==='혼성'||x.gender===mode));}
+function plan(n){if(n<3)return n?[n]:[];if(n===5)return [3,2];let fours=Math.floor(n/4),rem=n%4;if(rem===0)return Array(fours).fill(4);if(rem===3)return [...Array(fours).fill(4),3];if(rem===2){if(fours>=1)return [...Array(fours-1).fill(4),3,3];return [2];}if(fours>=2)return [...Array(fours-2).fill(4),3,3,3];return [n];}
+function preview(){const a=eligible(),sizes=plan(a.length),men=a.filter(x=>x.gender==='남').length,women=a.length-men;$('preview').textContent=`편성 대상 ${a.length}명 (남 ${men} · 여 ${women}) / ${sizes.length}개 조`+(sizes.length?' / '+sizes.map((n,i)=>`${i+1}조 ${n}명`).join(' · '):'');}
+function renderRoster(focusId=null){
+ const box=$('roster');box.replaceChildren();
+ if(!members.length){const empty=document.createElement('div');empty.className='roster-empty';empty.textContent='등록 회원이 없습니다. 아래 회원 추가 버튼을 누르세요.';box.append(empty);}
+ members.forEach((m,i)=>{
+  const row=document.createElement('div');row.className='roster-line'+(m.attend?'':' is-absent');
+  const num=document.createElement('span');num.className='roster-num';num.textContent=String(i+1);
+  const input=document.createElement('input');input.className='field';input.value=m.name;input.maxLength=25;input.placeholder='이름 입력';input.setAttribute('aria-label',`${i+1}번 회원 이름`);
+  input.onchange=()=>{
+   const v=clean(input.value);
+   if(!v){members=members.filter(x=>x.id!==m.id);save();renderRoster();renderMembers();invalidate();toast('빈 이름의 회원 줄을 삭제했습니다.');return;}
+   if(members.some(x=>x.id!==m.id&&x.name===v)){input.value=m.name;toast('같은 이름이 이미 등록되어 있습니다.');return;}
+   m.name=v;save();renderMembers();invalidate();
+  };
+  input.onblur=()=>{if(!clean(input.value)){members=members.filter(x=>x.id!==m.id);save();renderRoster();renderMembers();invalidate();}};
+  const sex=document.createElement('select');sex.className='field';sex.setAttribute('aria-label',`${i+1}번 회원 성별`);
+  for(const value of ['남','여']){const opt=document.createElement('option');opt.value=value;opt.textContent=value;sex.append(opt);}sex.value=m.gender;
+  sex.onchange=()=>{m.gender=sex.value;save();renderMembers();invalidate();};
+  const remark=document.createElement('input');remark.className='field remark';remark.value=m.remark||'';remark.maxLength=50;remark.placeholder='비고';remark.setAttribute('aria-label',`${i+1}번 회원 비고`);remark.oninput=()=>{m.remark=remark.value;save();};
+  const absent=document.createElement('input');absent.type='checkbox';absent.className='absent-check';absent.checked=!m.attend;absent.setAttribute('aria-label',`${m.name||i+1} 결석`);absent.onchange=()=>{m.attend=!absent.checked;row.classList.toggle('is-absent',absent.checked);save();renderMembers();invalidate();};
+  row.append(num,input,sex,remark,absent);box.append(row);
+  if(m.id===focusId)requestAnimationFrame(()=>input.focus());
+ });
+ $('membercount').textContent=members.length+'/100명';
+}
+function renderMembers(){const a=$('members');if(a)a.replaceChildren();for(const m of members){
+ const row=document.createElement('label');row.className='member'+(m.attend?'':' absent');
+ const check=document.createElement('input');check.type='checkbox';check.checked=m.attend;check.setAttribute('aria-label',m.name+' 참석');check.onchange=()=>{m.attend=check.checked;save();renderMembers();invalidate();};
+ const label=document.createElement('span');label.className='nm';label.textContent=`${m.name} (${m.gender})`;
+ row.append(check,label);if(a)a.append(row);
+ }const attendees=members.filter(x=>x.attend);$('total').textContent=members.length;$('attend').textContent=attendees.length;$('sexcount').textContent=attendees.filter(x=>x.gender==='남').length+' / '+attendees.filter(x=>x.gender==='여').length;$('membercount').textContent=members.length+'/100명';preview();}
+function invalidate(){groups=[];renderResults();preview();}function renderResults(){const box=$('results');box.replaceChildren();$('redraw').classList.toggle('hide',!groups.length);$('share').classList.toggle('hide',!groups.length);$('copy').classList.toggle('hide',!groups.length);if(!groups.length){const p=document.createElement('p');p.className='hint';p.style.cssText='grid-column:1/-1;text-align:center';p.textContent='조편성하기 버튼을 누르면 결과가 표시됩니다.';box.append(p);return;}groups.forEach((group,i)=>{const el=document.createElement('div');el.className='group';const h=document.createElement('h3');h.textContent=`${i+1}조`;const small=document.createElement('small');small.textContent=`${group.length}명`;h.append(small);const ul=document.createElement('ul');group.forEach((p,j)=>{const li=document.createElement('li');li.textContent=`${p.name}(${p.gender})`;ul.append(li);});el.append(h,ul);box.append(el);});}
+function draw(){const people=eligible();if(people.length<3){toast('조편성은 최소 3명이 필요합니다.');return;}const sizes=plan(people.length);groups=sizes.map(()=>[]);if(mode==='혼성'){// 각 성별을 조별로 최대한 고르게 분산
+ const men=randomShuffle(people.filter(x=>x.gender==='남')),women=randomShuffle(people.filter(x=>x.gender==='여'));for(const pool of [men,women])for(const p of pool){let candidates=groups.map((g,i)=>({g,i,room:sizes[i]-g.length,same:g.filter(x=>x.gender===p.gender).length})).filter(x=>x.room>0);candidates.sort((a,b)=>a.same-b.same||b.room-a.room||a.i-b.i);candidates[0].g.push(p);}groups=groups.map(randomShuffle);
+ }else{const shuffled=randomShuffle(people);let k=0;groups=sizes.map(n=>{const g=shuffled.slice(k,k+n);k+=n;return g;});}renderResults();toast(`${people.length}명 ${groups.length}개 조 편성 완료`);}
+function resultText(){const now=$('gameDate').textContent;return `파시스 클럽 조편성\n${clean($('club').value)||'클럽'}\n날짜: ${now}\n장소: ${clean($('course').value)||'미입력'}\n조건: ${mode} / ${groups.reduce((a,g)=>a+g.length,0)}명\n\n`+groups.map((g,i)=>`${i+1}조 - `+g.map(p=>`${p.name}(${p.gender})`).join(' ')).join('\n');}
+$('club').oninput=save;$('course').oninput=save;$('gameDate').textContent=`${new Date().getFullYear()}. ${new Date().getMonth()+1}. ${new Date().getDate()}(${['일','월','화','수','목','금','토'][new Date().getDay()]})`;$('add').onclick=()=>{
+ if(members.length>=100){toast('최대 100명까지 등록 가능합니다.');return;}
+ const m={id:nextId++,name:'',gender:'남',remark:'',attend:true};members.push(m);
+ renderRoster(m.id);renderMembers();invalidate();
+};
+modes.forEach(b=>b.onclick=()=>{mode=b.dataset.mode;modes.forEach(x=>x.classList.toggle('selected',x===b));invalidate();});$('draw').onclick=draw;$('redraw').onclick=draw;$('share').onclick=async()=>{if(!groups.length)return;const text=resultText();if(navigator.share){try{await navigator.share({title:'파시스 클럽 조편성',text});return;}catch(e){if(e.name==='AbortError')return;}}try{await navigator.clipboard.writeText(text);toast('결과를 복사했습니다.');}catch(e){prompt('결과를 복사하세요.',text);}};$('copy').onclick=async()=>{try{await navigator.clipboard.writeText(resultText());toast('조편성 결과를 복사했습니다.');}catch(e){prompt('결과를 복사하세요.',resultText());}};
+function archives(){try{const a=JSON.parse(localStorage.getItem(ARCHIVE_KEY)||'[]');return Array.isArray(a)?a:[];}catch(e){return [];}}
+$('clear').onclick=()=>{if(!groups.length){toast('삭제할 조편성 결과가 없습니다.');return;}if(!confirm('현재 조편성 결과를 삭제할까요?\n등록 회원은 유지됩니다.'))return;groups=[];renderResults();toast('현재 결과를 삭제했습니다.');};
+$('saveResult').onclick=()=>{if(!groups.length){toast('먼저 조편성을 해 주세요.');return;}const record={id:Date.now(),club:$('club').value,course:$('course').value,date:$('gameDate').textContent,mode,groups:groups.map(g=>g.map(p=>({name:p.name,gender:p.gender}))),saved:new Date().toLocaleString('ko-KR')};try{localStorage.setItem(ARCHIVE_KEY,JSON.stringify([record,...archives()].slice(0,20)));toast('조편성 결과를 저장했습니다. (최대 20건)');}catch(e){toast('저장 공간을 확인하세요.');}};
+$('loadResult').onclick=()=>{const a=archives();if(!a.length){toast('저장된 조편성 결과가 없습니다.');return;}const lines=a.map((r,i)=>`${i+1}. ${r.date} / ${r.club||'클럽'} / ${r.course||'장소 미입력'} (${r.groups.length}조)`).join('\n');const value=prompt('불러올 기록 번호를 입력하세요.\n\n'+lines,'1');if(value===null)return;const n=Number(value);if(!Number.isInteger(n)||n<1||n>a.length){toast('올바른 번호를 입력하세요.');return;}const r=a[n-1];groups=r.groups;mode=r.mode;modes.forEach(b=>b.classList.toggle('selected',b.dataset.mode===mode));$('club').value=r.club||'';$('course').value=r.course||'';$('gameDate').textContent=r.date;renderResults();preview();toast('저장된 조편성 결과를 불러왔습니다.');};
+load();renderRoster();renderMembers();renderResults();})();
+</script></body></html>
