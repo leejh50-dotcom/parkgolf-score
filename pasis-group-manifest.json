@@ -4,7 +4,7 @@
   "name": "파시스조편성",
   "short_name": "파시스조편성",
   "description": "파시스 파크골프 클럽 조편성",
-  "start_url": "./PASIS_CLUB_GROUP_V2_5_핑크아이콘_수정.html",
+  "start_url": "./PASIS_CLUB_GROUP.html",
   "scope": "/parkgolf-score/",
   "display": "standalone",
   "background_color": "#0066ee",
