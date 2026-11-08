@@ -1481,11 +1481,21 @@
   justify-content: center !important;
 }
   
-/* 파시스 조편성에서 진입한 경우에만 표시하는 간단한 복귀 기호 */
-.pasis-group-return { display:none; position:fixed; left:10px; z-index:10050; border:0; background:transparent; color:#000; padding:0; width:40px; height:40px; font:normal 32px/40px Arial,sans-serif; text-align:center; cursor:pointer; -webkit-tap-highlight-color:transparent; }
-.pasis-group-return.top { top:calc(env(safe-area-inset-top, 0px) + 6px); }
-.pasis-group-return.bottom { bottom:calc(env(safe-area-inset-bottom, 0px) + 8px); }
-.pasis-group-return.visible { display:block; }
+/* 조편성 복귀: 청백 게임과 같은 흰 원형 아이콘 */
+.pasis-group-return {
+ display:none !important; position:fixed !important; left:12px !important;
+ z-index:10050 !important; width:64px !important; height:64px !important;
+ padding:0 !important; margin:0 !important; border-radius:50% !important;
+ background:rgba(255,255,255,.93) !important;
+ border:2px solid #d9dfe5 !important; color:#000 !important;
+ box-shadow:0 2px 8px rgba(0,0,0,.12) !important;
+ font:700 38px/1 Arial,sans-serif !important;
+ align-items:center !important; justify-content:center !important;
+ cursor:pointer !important; -webkit-tap-highlight-color:transparent;
+}
+.pasis-group-return.top { top:calc(env(safe-area-inset-top, 0px) + 12px) !important; }
+.pasis-group-return.bottom { bottom:calc(env(safe-area-inset-bottom, 0px) + 18px) !important; }
+.pasis-group-return.visible { display:flex !important; }
 </style>
 </head>
 
@@ -3252,7 +3262,7 @@ function openPasisYoutube(){
  
 
 <button type="button" id="pasisGroupClose" class="pasis-group-return top" aria-label="조편성으로 돌아가기">×</button>
-<button type="button" id="pasisGroupBack" class="pasis-group-return bottom" aria-label="조편성으로 돌아가기">←</button>
+<button type="button" id="pasisGroupBack" class="pasis-group-return bottom" aria-label="조편성으로 돌아가기">❮</button>
 <script>
 (function(){
   var origin = window.location.origin;
@@ -3262,7 +3272,7 @@ function openPasisYoutube(){
   var ref = document.referrer || '';
   var fromGroup = /^(group|pasis-group|PASIS_GROUP)$/i.test(from) || /\/PASIS_(?:CLUB_)?GROUP\.html(?:[?#]|$)/i.test(ref);
   if (!fromGroup) return;
-  function goGroup(){ window.location.assign(origin + base + 'PASIS_CLUB_GROUP.html'); }
+  function goGroup(){ window.location.replace(origin + base + 'PASIS_CLUB_GROUP.html'); }
   ['pasisGroupClose','pasisGroupBack'].forEach(function(id){
     var btn = document.getElementById(id);
     btn.classList.add('visible');
