@@ -1480,7 +1480,13 @@
   align-items: center !important;
   justify-content: center !important;
 }
-  </style>
+  
+/* 파시스 조편성에서 진입한 경우에만 표시하는 간단한 복귀 기호 */
+.pasis-group-return { display:none; position:fixed; left:10px; z-index:10050; border:0; background:transparent; color:#000; padding:0; width:40px; height:40px; font:normal 32px/40px Arial,sans-serif; text-align:center; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+.pasis-group-return.top { top:calc(env(safe-area-inset-top, 0px) + 6px); }
+.pasis-group-return.bottom { bottom:calc(env(safe-area-inset-bottom, 0px) + 8px); }
+.pasis-group-return.visible { display:block; }
+</style>
 </head>
 
 <body>
@@ -3244,5 +3250,25 @@ function openPasisYoutube(){
 })();
 </script>
  
+
+<button type="button" id="pasisGroupClose" class="pasis-group-return top" aria-label="조편성으로 돌아가기">×</button>
+<button type="button" id="pasisGroupBack" class="pasis-group-return bottom" aria-label="조편성으로 돌아가기">←</button>
+<script>
+(function(){
+  var origin = window.location.origin;
+  var base = '/parkgolf-score/';
+  var params = new URLSearchParams(window.location.search);
+  var from = params.get('from') || params.get('source') || '';
+  var ref = document.referrer || '';
+  var fromGroup = /^(group|pasis-group|PASIS_GROUP)$/i.test(from) || /\/PASIS_(?:CLUB_)?GROUP\.html(?:[?#]|$)/i.test(ref);
+  if (!fromGroup) return;
+  function goGroup(){ window.location.assign(origin + base + 'PASIS_CLUB_GROUP.html'); }
+  ['pasisGroupClose','pasisGroupBack'].forEach(function(id){
+    var btn = document.getElementById(id);
+    btn.classList.add('visible');
+    btn.addEventListener('click',goGroup);
+  });
+})();
+</script>
 </body>
 </html>
