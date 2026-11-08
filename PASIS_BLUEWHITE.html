@@ -645,7 +645,12 @@ if ('serviceWorker' in navigator) {
 <script>
 (function(){
   const params=new URLSearchParams(location.search);
-  if(params.get('from')!=='group')return;
+  
+if(
+  params.get('from')!=='group' &&
+  !/\/PASIS_(?:CLUB_)?GROUP\.html(?:[?#]|$)/i.test(document.referrer)
+) return;
+
   document.body.classList.add('group-return-enabled');
   const back=()=>location.replace('https://leejh50-dotcom.github.io/parkgolf-score/PASIS_CLUB_GROUP.html');
   document.querySelectorAll('.group-return-button').forEach(b=>b.addEventListener('click',back));
