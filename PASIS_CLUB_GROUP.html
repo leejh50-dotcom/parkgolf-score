@@ -44,6 +44,15 @@
 .roster-line .remark{text-align:center;font-size:15px;padding-left:2px;padding-right:2px}
 .roster-line .absent-check{justify-self:center}
 @media(max-width:360px){.roster-head,.roster-line{grid-template-columns:18px minmax(0,1fr) 52px 55px 31px;gap:3px}}
+
+/* V2.6: 섹션별 은은한 배경색 - 기능 및 데이터 저장 로직 변경 없음 */
+.wrap > section.card:nth-of-type(1){background:#eaf3ff;border-color:#c9def5}
+.wrap > section.card:nth-of-type(2){background:#edf8ee;border-color:#cbe7ce}
+.wrap > section.card:nth-of-type(3){background:#fff5e5;border-color:#f0dfbd}
+.wrap > section.card:nth-of-type(4){background:#f1edff;border-color:#ddd4f5}
+.wrap > section.card:nth-of-type(5){background:#eef4fb;border-color:#d2e1f1}
+.wrap > section.card{box-shadow:0 3px 12px #15385b12}
+.wrap > section.card:nth-of-type(4) .group{box-shadow:0 2px 5px #1c36601a}
 </style></head><body><div class="wrap"><header class="hero"><h1>파시스 클럽 조편성</h1><small>파크골프 클럽 · 공정한 무작위 조편성</small></header>
 <section class="card"><label for="club">클럽명</label><input id="club" class="field" placeholder="클럽명 입력"><div class="meta-grid"><div><label>경기 날짜 (자동)</label><div id="gameDate" class="datefield"></div></div><div><label for="course">장소 (구장명)</label><input id="course" class="field" placeholder="구장명 입력"></div></div><div class="stats"><div class="stat">전체 회원<b id="total">0</b></div><div class="stat">오늘 참석<b id="attend">0</b></div><div class="stat">남 / 여<b id="sexcount">0 / 0</b></div></div></section>
 <section class="card"><div class="row"><h2 style="margin:0">등록 회원</h2><span class="hint" id="membercount">0/100명</span></div>
