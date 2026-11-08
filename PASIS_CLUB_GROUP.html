@@ -58,8 +58,15 @@
 .pasis-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:15px 9px 8px}
 .pasis-links a{display:flex;align-items:center;justify-content:center;min-height:58px;padding:9px 5px;border-radius:12px;color:#fff;text-decoration:none;font-size:clamp(15px,4vw,19px);font-weight:900;text-align:center;box-shadow:0 3px 8px #163b5d20}
 .pasis-links .score-link{background:#155eb5}.pasis-links .bluewhite-link{background:#168064}
+
+/* 상단 정보: 날짜와 장소를 각각 한 줄에 표시 */
+.meta-rows{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+.meta-row{display:grid;grid-template-columns:58px minmax(0,1fr);align-items:center;gap:10px}
+.meta-row label{margin:0;font-size:18px;text-align:center;white-space:nowrap}
+.meta-row .datefield{background:#edf5ff;font-weight:900;text-align:center;padding:11px 4px;border-radius:10px;font-size:clamp(16px,4.4vw,20px);min-height:49px}
+.meta-row #course{min-width:0}
 </style></head><body><div class="wrap"><header class="hero"><h1>파시스 클럽 조편성</h1><small>파크골프 클럽 · 공정한 무작위 조편성</small></header>
-<section class="card"><label for="club">클럽명</label><input id="club" class="field" placeholder="클럽명 입력"><div class="meta-grid"><div><label>경기 날짜 (자동)</label><div id="gameDate" class="datefield"></div></div><div><label for="course">장소 (구장명)</label><input id="course" class="field" placeholder="구장명 입력"></div></div><div class="stats"><div class="stat">전체 회원<b id="total">0</b></div><div class="stat">오늘 참석<b id="attend">0</b></div><div class="stat">남 / 여<b id="sexcount">0 / 0</b></div></div></section>
+<section class="card"><label for="club">나의 클럽명</label><input id="club" class="field" placeholder="클럽명 입력"><div class="meta-rows"><div class="meta-row"><label for="gameDate">날짜</label><div id="gameDate" class="datefield"></div></div><div class="meta-row"><label for="course">장소</label><input id="course" class="field" placeholder="구장명 입력"></div></div><div class="stats"><div class="stat">전체 회원<b id="total">0</b></div><div class="stat">오늘 참석<b id="attend">0</b></div><div class="stat">남 / 여<b id="sexcount">0 / 0</b></div></div></section>
 <section class="card"><div class="row"><h2 style="margin:0">등록 회원</h2><span class="hint" id="membercount">0/100명</span></div>
 
 <div class="roster-head"><span>순</span><span>이름</span><span>성별</span><span>비고</span><span>결석</span></div>
