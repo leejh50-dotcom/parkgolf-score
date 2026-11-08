@@ -1481,21 +1481,26 @@
   justify-content: center !important;
 }
   
-/* 조편성 복귀: 청백 게임과 같은 흰 원형 아이콘 */
-.pasis-group-return {
+/* 조편성 복귀: 흰 원형, 검정색 큰 기호 */
+button.pasis-group-return {
  display:none !important; position:fixed !important; left:12px !important;
  z-index:10050 !important; width:64px !important; height:64px !important;
- padding:0 !important; margin:0 !important; border-radius:50% !important;
- background:rgba(255,255,255,.93) !important;
+ min-width:64px !important; min-height:64px !important;
+ padding:0 !important; margin:0 !important;
+ border-radius:9999px !important; -webkit-border-radius:9999px !important;
+ -webkit-appearance:none !important; appearance:none !important;
+ background:rgba(255,255,255,.94) !important;
  border:2px solid #d9dfe5 !important; color:#000 !important;
  box-shadow:0 2px 8px rgba(0,0,0,.12) !important;
- font:700 38px/1 Arial,sans-serif !important;
- align-items:center !important; justify-content:center !important;
+ font-family:Arial,sans-serif !important; font-size:44px !important;
+ font-weight:900 !important; line-height:1 !important;
+ text-align:center !important; align-items:center !important;
+ justify-content:center !important; flex-shrink:0 !important;
  cursor:pointer !important; -webkit-tap-highlight-color:transparent;
 }
-.pasis-group-return.top { top:calc(env(safe-area-inset-top, 0px) + 12px) !important; }
-.pasis-group-return.bottom { bottom:calc(env(safe-area-inset-bottom, 0px) + 18px) !important; }
-.pasis-group-return.visible { display:flex !important; }
+button.pasis-group-return.pasis-return-top { top:calc(env(safe-area-inset-top, 0px) + 12px) !important; }
+button.pasis-group-return.pasis-return-bottom { bottom:calc(env(safe-area-inset-bottom, 0px) + 18px) !important; }
+button.pasis-group-return.visible { display:flex !important; }
 </style>
 </head>
 
@@ -3261,8 +3266,8 @@ function openPasisYoutube(){
 </script>
  
 
-<button type="button" id="pasisGroupClose" class="pasis-group-return top" aria-label="조편성으로 돌아가기">×</button>
-<button type="button" id="pasisGroupBack" class="pasis-group-return bottom" aria-label="조편성으로 돌아가기">❮</button>
+<button type="button" id="pasisGroupClose" class="pasis-group-return pasis-return-top" style="border-radius:9999px!important;-webkit-border-radius:9999px!important;" aria-label="조편성으로 돌아가기">×</button>
+<button type="button" id="pasisGroupBack" class="pasis-group-return pasis-return-bottom" style="border-radius:9999px!important;-webkit-border-radius:9999px!important;" aria-label="조편성으로 돌아가기">❮</button>
 <script>
 (function(){
   var origin = window.location.origin;
