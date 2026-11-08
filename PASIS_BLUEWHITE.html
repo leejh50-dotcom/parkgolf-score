@@ -1,635 +1,142 @@
-<!doctype html>
-<html lang="ko">
-<head>
-<link rel="manifest" href="manifest-bluewhite.json">
-<link rel="apple-touch-icon" sizes="180x180" href="pasis-bluewhite-180-clean.png">
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#09478c"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="파시스 청백">
-<title>파시스 청백 게임</title>
-<style>
-:root{font-family:system-ui,-apple-system,"Malgun Gothic",sans-serif;color:#102341;background:#eaf1fb;font-size:18px}*{box-sizing:border-box}body{margin:0}button,input{font:inherit}button{cursor:pointer;touch-action:manipulation}button:disabled{opacity:.45;cursor:not-allowed}.wrap{max-width:760px;margin:auto;background:#fff;min-height:100dvh;padding-bottom:32px}.hero{background:linear-gradient(125deg,#07396f,#0066ae 70%,#1694c1);color:#fff;padding:26px 17px 24px;text-align:center}.brand{font-weight:900;font-size:clamp(26px,6vw,38px);letter-spacing:-1px}.hero small{font-size:15px}.card{margin:14px 12px;padding:17px;border:1px solid #d9e6f6;border-radius:20px;box-shadow:0 5px 15px #0f39600b}.label{display:block;font-weight:800;font-size:18px;margin:10px 0 6px}.input{height:56px;width:100%;border:2px solid #c4d4e6;border-radius:11px;padding:0 12px;background:#fff;min-width:0;color:#112d55;font-size:19px}.input:focus{outline:3px solid #b8ddff;border-color:#1876d1}.date{background:#edf6ff;border-radius:13px;padding:12px 5px;text-align:center;font-weight:900;font-size:clamp(17px,5.3vw,27px);white-space:nowrap;letter-spacing:-.04em}.pair{display:grid;grid-template-columns:minmax(0,1fr) 94px;gap:9px}.teamcount{display:grid;grid-template-columns:minmax(0,1fr) 86px;gap:9px}.locationbox{display:flex;align-items:center;border:2px solid #b5cce8;border-radius:12px;overflow:hidden;height:58px;padding:0 10px;background:#fff;gap:5px}.locationbox .input{border:0;box-shadow:none;outline:0;width:100%;padding:0 6px}.fixedsuffix{font-size:18px;font-weight:900;white-space:nowrap;color:#0d315f}.date-row{margin-bottom:12px}.submitrow{display:grid;grid-template-columns:minmax(0,1fr) 70px;gap:10px;margin-top:18px}.person{display:flex;gap:8px}.person>.input{flex:1}.star{border:2px solid #e5bd47;border-radius:12px;background:#fff9dc;color:#a77b00;font-size:33px;min-height:62px;flex:none}.star:disabled{opacity:.40}.star.ready{background:#e92b29;border-color:#bb1111;color:#fff;opacity:1;box-shadow:0 0 0 3px #ffecec}.star.active{background:#ffdddd;color:#c7121a;border-color:#e92b29;opacity:1;box-shadow:none}.big{background:linear-gradient(#147ef3,#0649b1);border:0;border-radius:13px;color:white;min-height:60px;font-size:23px;font-weight:900;width:100%;box-shadow:0 4px 0 #0b3e7a}.hint{font-size:15px;color:#596b82;line-height:1.55;margin-top:8px}.muted{color:#586b83}.status{min-height:20px;font-size:16px;margin:9px 0 0;font-weight:700}.status.error{color:#b52635}.status.ok{color:#117144}.title{display:flex;align-items:center;justify-content:space-between;gap:7px;font-size:22px;font-weight:900;margin-bottom:14px}.counter{font-size:14px;background:#e9f1fc;color:#174f96;padding:6px 9px;border-radius:50px;white-space:nowrap}.teams{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:9px}.team{border:2px solid #c3dfff;border-radius:15px;overflow:hidden}.team.white{border-color:#f2c9d1}.team h3{margin:0;text-align:center;background:#0668cd;color:#fff;padding:12px 0;font-size:21px}.team.white h3{background:#e04768}.entries{min-height:98px;padding:8px}.entry{display:flex;justify-content:space-between;gap:6px;border-bottom:1px solid #e3e9f0;padding:7px 2px;font-size:clamp(13px,3.6vw,18px);font-weight:700}.entry span{overflow-wrap:anywhere}.empty{text-align:center;color:#7c8da2;font-size:14px;padding:23px 3px;line-height:1.6}.totals{background:#e9f4ff;padding:10px 8px;font-weight:800}.white .totals{background:#fff0f3}.totalrow{display:flex;justify-content:space-between;gap:5px;padding:3px 0;font-size:15px}.winner{margin-top:12px;text-align:center;border-radius:15px;background:#fff5d6;padding:18px 8px;font-weight:900;color:#634200;font-size:24px}.winner.wait{background:#eef3f8;color:#65788f;font-size:17px}.actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:12px}.action{border:0;min-height:69px;border-radius:14px;font-size:clamp(12px,3.5vw,17px);font-weight:900;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:7px 2px}.action b{font-size:22px}.gold{background:linear-gradient(#ffdb67,#e99f08);color:#573a00}.red{background:linear-gradient(#ff6379,#d92352)}.green{background:linear-gradient(#25be8c,#087d60)}.blue{background:linear-gradient(#338ff7,#0657b9)}.secondary{background:#f2f6fc;color:#24507b;border:1px solid #c8daef;border-radius:9px;padding:9px;font-weight:800}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.mini{font-size:13px}.count-status{border-radius:12px;background:#fff4d7;color:#8d3900;font-weight:900;padding:12px;text-align:center;font-size:19px;margin-top:12px}.count-status.ready{background:#e5f7e9;color:#176437}.guide{background:#fff8e3;border-radius:12px;padding:10px 8px;font-size:clamp(13px,3.6vw,17px);font-weight:800;text-align:center;margin-top:9px;color:#735017}.guide.ready{background:#ffe5e7;color:#b70f22}.guide.done{background:#e8f5e9;color:#145e36}.status{position:fixed;z-index:30;bottom:18px;left:50%;transform:translateX(-50%);width:min(92vw,520px);padding:12px 16px;background:#e9fff2;border-radius:14px;box-shadow:0 5px 25px #132a4a45;text-align:center;min-height:0;display:none}.status:not(:empty){display:block}.status.error{background:#fff0ef}.entry{opacity:1}.entry.reveal{animation:pairAppear .55s ease both}.summary-reveal{animation:pairAppear .6s ease both}@keyframes pairAppear{from{opacity:0;transform:translateY(11px)}to{opacity:1;transform:translateY(0)}}.notice{background:#f2f7fd;border-left:4px solid #3c85dc;padding:10px 12px;margin:12px;border-radius:6px;font-size:13px;line-height:1.55}.setup{background:#fff7df;color:#684f0a}.hide{display:none!important}dialog{border:none;border-radius:16px;max-width:min(95vw,480px);width:100%;box-shadow:0 18px 70px #0005;padding:21px}dialog::backdrop{background:#07152ca0}dialog h3{margin-top:0}dialog .row{justify-content:flex-end;margin-top:15px}dialog button{min-height:44px}#archiveView{white-space:pre-line;font-size:14px;line-height:1.8;max-height:55vh;overflow:auto;background:#f4f7fa;padding:12px;border-radius:10px}footer{font-size:12px;color:#7a8da1;text-align:center;padding:15px}.external-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:18px 9px 4px}.external-links a{display:flex;align-items:center;justify-content:center;min-height:56px;padding:8px 5px;border-radius:12px;text-decoration:none;text-align:center;font-size:clamp(13px,3.7vw,17px);font-weight:900;color:white;background:#1765b9}.external-links a:last-child{background:#168260}.winner-letter{display:inline-block;animation:pairAppear .55s ease both}
-/* 입력칸 가운데 정렬 및 이름/팀명 너비 확대 */
-#teamName,#expected,#player,#score{text-align:center}
-.pair{grid-template-columns:minmax(0,1fr) 84px}
-.teamcount{grid-template-columns:minmax(0,1fr) 78px}
-@media(max-width:360px){.pair{grid-template-columns:minmax(0,1fr) 73px}.teamcount{grid-template-columns:minmax(0,1fr) 72px}}
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#07518f"><title>파시스조편성</title><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="파시스조편성"><meta name="application-name" content="파시스조편성"><link rel="apple-touch-icon" sizes="180x180" href="./pasis-group-pink-v2-180.png"><link rel="icon" type="image/png" sizes="192x192" href="./pasis-group-pink-v2-192.png"><link rel="manifest" href="./pasis-group-manifest.json"><style>
+:root{font-family:system-ui,-apple-system,'Malgun Gothic',sans-serif;color:#122b48;background:#eaf1fa}*{box-sizing:border-box}body{margin:0}.wrap{max-width:740px;margin:auto;background:white;min-height:100vh;padding-bottom:32px}.hero{background:linear-gradient(120deg,#073d76,#0878b2);padding:25px 12px;text-align:center;color:white}.hero h1{margin:0;font-size:clamp(25px,6vw,35px)}.hero small{font-size:14px}.card{margin:12px 9px;padding:15px;border:1px solid #d9e4f1;border-radius:17px;box-shadow:0 3px 12px #15385b0b}h2{font-size:21px;margin:0 0 13px}.hint{font-size:14px;color:#596b7f;line-height:1.5}.field{width:100%;height:49px;border:2px solid #a9bfd8;border-radius:10px;font-size:19px;padding:6px 10px;color:#123455;background:white}label{font-weight:850;display:block;margin:8px 0 5px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.stat{background:#edf5ff;border-radius:10px;text-align:center;padding:9px 4px;font-size:14px}.stat b{display:block;font-size:25px;color:#0757a7}.entryform{display:grid;grid-template-columns:minmax(0,1fr) 88px;gap:8px}.buttons{display:flex;gap:8px;flex-wrap:wrap}.btn{border:0;border-radius:11px;background:#0866bd;color:white;padding:12px 16px;font-weight:900;font-size:17px;cursor:pointer;min-height:48px}.btn.secondary{background:#e7f0fb;color:#16548e}.btn.green{background:#168264}.btn.danger{background:#b43b4b}.btn:disabled{opacity:.45;cursor:not-allowed}.btn.full{width:100%;margin-top:12px;font-size:22px;min-height:58px}.modes{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}.mode{border:2px solid #c6d7e9;border-radius:11px;background:#f6f9fd;padding:12px 3px;font-size:16px;font-weight:850;color:#285275}.mode.selected{background:#0959b0;border-color:#0959b0;color:white}.memberlist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:12px}.member{display:flex;align-items:center;gap:5px;padding:8px 5px;border:1px solid #d9e3ed;border-radius:9px;min-width:0}.member.absent{opacity:.52;background:#f5f5f5}.member input{width:21px;height:21px;flex:none;accent-color:#0866bd}.member .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:800;font-size:clamp(13px,3.6vw,17px)}.member .mini{border:0;background:transparent;color:#627a94;font-size:17px;padding:2px 3px}.groupgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.group{border:2px solid #bed8f3;border-radius:12px;overflow:hidden}.group h3{background:#0768bc;color:white;margin:0;padding:10px;text-align:center;font-size:20px}.group:nth-child(even) h3{background:#14816d}.group ul{list-style:none;margin:0;padding:9px 7px}.group li{padding:8px 1px;border-bottom:1px solid #e6ebf0;font-size:clamp(14px,4vw,19px);font-weight:850;white-space:nowrap;letter-spacing:-.04em}.group li:last-child{border:0}.row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.note{background:#fff6de;color:#754d0c;border-radius:9px;padding:10px;font-size:14px;line-height:1.5}.hide{display:none!important}#toast{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);max-width:92vw;background:#103a68;color:white;padding:12px 20px;border-radius:12px;box-shadow:0 4px 22px #0004;display:none;text-align:center;z-index:5}@media(max-width:360px){.card{padding:11px 8px}.group li{font-size:14px}.member .nm{font-size:13px}}
 
-.title-text{white-space:nowrap;flex:1;min-width:0}.label{font-size:clamp(16px,4.5vw,18px);white-space:nowrap}.big{font-size:clamp(20px,5.6vw,27px);white-space:nowrap;letter-spacing:-.03em;padding-inline:8px}.title{gap:6px;font-size:clamp(18px,4.7vw,22px);margin-bottom:12px;flex-wrap:nowrap}.counter{font-size:clamp(12px,3.6vw,14px);padding:5px 8px;flex:none}.teams{gap:6px}.team h3{padding:10px 0;font-size:clamp(17px,4.8vw,21px);white-space:nowrap}.entries{padding:8px 6px}.entry{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:4px;padding:8px 0;font-size:clamp(13px,3.25vw,17px)}.entry span:first-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:4px}.entry span:last-child{white-space:nowrap;text-align:right;min-width:2.7em}.entry span{overflow-wrap:normal}.totals{padding:10px 6px}.totalrow{font-size:clamp(14px,3.8vw,16px)}.winner{font-size:clamp(19px,5.8vw,28px);padding:16px 8px}.actions{gap:6px;margin:12px 8px}.action{font-size:clamp(12px,3.3vw,16px)}.action b{font-size:20px;line-height:1}.submitrow{grid-template-columns:minmax(0,1fr) 92px;gap:8px}.star{font-size:31px}.pair{grid-template-columns:minmax(0,1fr) 98px;gap:8px}.teamcount{grid-template-columns:minmax(0,1fr) 90px;gap:8px}.card{margin:12px 10px;padding:15px}@media(max-width:430px){.card{margin:10px 6px;padding:12px}.date{font-size:clamp(16px,5vw,24px)}.locationbox{padding:0 8px;gap:4px}.locationbox .input{padding:0 4px}.fixedsuffix{font-size:17px}.input{font-size:18px;padding:0 10px}.pair{grid-template-columns:minmax(0,1fr) 92px;gap:7px}.teamcount{grid-template-columns:minmax(0,1fr) 84px;gap:7px}.submitrow{grid-template-columns:minmax(0,1fr) 86px;gap:7px}.team h3{font-size:clamp(16px,4.6vw,20px)}.entry{font-size:clamp(12px,3.15vw,16px)}.winner{font-size:clamp(18px,5.4vw,24px)}}@media(max-width:360px){.pair{grid-template-columns:minmax(0,1fr) 84px}.teamcount{grid-template-columns:minmax(0,1fr) 78px}.submitrow{grid-template-columns:minmax(0,1fr) 80px}.big{font-size:19px}.label{font-size:15px}}
+/* V1.1: 고정 회원명부 편집 */
+.roster-head,.roster-line{display:grid;grid-template-columns:25px minmax(0,1fr) 48px minmax(0,.8fr) 42px;gap:7px;align-items:center}
+.roster-head{font-size:14px;font-weight:900;color:#345d86;text-align:center;padding:5px 2px}
+.roster-line{padding:5px 2px;border-bottom:1px solid #e0e8f1}
+.roster-num{text-align:center;font-size:16px;font-weight:800;color:#647e9b}
+.roster-line .field{height:42px;font-size:18px;padding:4px 8px}
+.roster-line select.field{padding:4px 3px;text-align:center}
+.add-small{font-size:14px;min-height:35px;padding:6px 12px;margin-top:11px;background:#e7f0fb;color:#16548e}
+.roster-line .remark{font-size:15px;padding:4px 5px}.roster-line .absent-check{width:23px;height:23px;justify-self:center;accent-color:#c13d4a}.roster-line.is-absent{background:#fff1f1}.roster-line.is-absent .roster-num{color:#a33}.roster-empty{font-size:14px;color:#70839b;padding:14px 4px}
 
-/* V1.6 시니어 가독성 강화: 색 대비 및 굵은 글씨 */
-:root{color:#0b2344;font-weight:650}
-.label{font-weight:900;font-size:clamp(18px,4.5vw,21px);letter-spacing:-.04em}
-.input{font-weight:850;font-size:clamp(19px,4.6vw,22px);color:#071d3e;border-color:#9eb8d8;border-width:2.5px}
-.input::placeholder{font-weight:700;color:#77869a;opacity:1}
-.fixedsuffix{font-weight:950;font-size:clamp(18px,4.5vw,21px)}
-.date{font-weight:950}
-.title{font-weight:950;font-size:clamp(20px,4.9vw,24px)}
-.counter{font-weight:900;font-size:clamp(13px,3.5vw,16px)}
-.big{font-weight:950;font-size:clamp(21px,5.4vw,27px)}
-.team h3{font-weight:950;font-size:clamp(19px,4.7vw,23px)}
-.entry{font-weight:900;font-size:clamp(14px,3.5vw,18px);color:#091e3e}
-.entry span:first-child{letter-spacing:-.055em}
-.totalrow{font-weight:950;font-size:clamp(15px,3.9vw,18px);letter-spacing:-.045em}
-.winner{font-weight:950}
-.action{font-weight:950;font-size:clamp(14px,3.6vw,18px)}
-.count-status,.guide{font-weight:900;font-size:clamp(16px,4vw,20px)}
-/* 전송 성공시에만 중앙 확인창 표시 */
-.send-success-overlay{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(4,22,47,.23);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .18s ease,visibility .18s ease}
-.send-success-overlay.show{opacity:1;visibility:visible}
-.send-success-box{width:min(92vw,420px);padding:30px 15px;border:3px solid #1260b4;border-radius:24px;background:#fff;box-shadow:0 20px 65px #051a3666;text-align:center;color:#073975;font-weight:950;font-size:clamp(25px,7vw,35px);letter-spacing:-.04em;white-space:nowrap;transform:scale(.92);transition:transform .2s ease}
-.send-success-overlay.show .send-success-box{transform:scale(1)}
-.send-success-check{display:block;font-size:48px;line-height:1.2;margin-bottom:9px;color:#15945b}
-@media(max-width:360px){.label{font-size:17px}.team h3{font-size:18px}.totalrow{font-size:14px}.entry{font-size:13px}.input{font-size:18px}}
+/* V2: 가독성 중심의 한 조 두 줄 배치 */
+.groupgrid{display:flex;flex-direction:column;gap:11px}
+.group{display:grid;grid-template-columns:62px minmax(0,1fr);align-items:stretch;border:1.5px solid #a8cdef;border-radius:13px;background:#e8f3ff;overflow:hidden;min-height:72px}
+.group:nth-child(even){background:#e9f6e9;border-color:#b0d8b2}
+.group h3,.group:nth-child(even) h3{background:#174e88;color:#fff;margin:0;padding:5px 3px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:22px;white-space:nowrap}
+.group h3 small{font-size:13px;font-weight:700;margin-top:3px;color:#e2efff}
+.group ul{list-style:none;margin:0;padding:6px 6px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px 3px;align-items:center}
+.group li{border:0;padding:0 2px;font-size:clamp(18px,4.7vw,23px);font-weight:900;white-space:nowrap;letter-spacing:-.055em;color:#102b4b}
+.meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.meta-grid .datefield{background:#edf5ff;font-weight:900;text-align:center;padding:11px 4px;border-radius:10px;font-size:clamp(15px,4vw,19px);min-height:49px}
+.bottom-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.bottom-actions .btn{padding:12px 3px;font-size:clamp(15px,4vw,18px)}
+.roster-head,.roster-line{grid-template-columns:25px minmax(0,1fr) 48px minmax(0,.8fr) 42px;gap:5px}
+@media(max-width:380px){.group{grid-template-columns:53px minmax(0,1fr)}.group h3{font-size:19px}.group li{font-size:clamp(16px,4.4vw,19px)}.group ul{padding:5px 3px;gap:5px 1px}}
 
-/* V1.7: 경기 결과의 이름만 크게, 타수 크기는 기존대로 유지 */
-.entry span:first-child{
-  font-size:clamp(19px,5.2vw,23px);
-  font-weight:950;
-  letter-spacing:-.07em;
-  min-width:0;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-/* 승리팀 안내를 더욱 크고 선명하게 */
-.winner:not(.wait){
-  font-size:clamp(27px,7.5vw,38px);
-  font-weight:950;
-  color:#503300;
-  line-height:1.3;
-  padding:20px 8px;
-  letter-spacing:-.055em;
-}
+/* V2.2: 좁은 휴대폰에서 회원 이름 입력폭 확보 */
+.card{margin-left:5px;margin-right:5px;padding-left:9px;padding-right:9px}
+.roster-head,.roster-line{grid-template-columns:18px minmax(0,1fr) 45px 48px 30px;gap:3px;padding-left:0;padding-right:0}
+.roster-line .field{width:100%;min-width:0;height:43px;border-width:1.5px;border-radius:8px;font-size:18px}
+.roster-line input.field:not(.remark){padding-left:6px;padding-right:3px;font-weight:750}
+.roster-line select.field{padding-left:0;padding-right:0;font-size:17px}
+.roster-line .remark{padding-left:3px;padding-right:2px;font-size:14px}
+.roster-line .absent-check{width:23px;height:23px;margin:0}
+.roster-num{font-size:15px}
+.roster-head{font-size:13px}
+#club,#course{text-align:center}
+@media(max-width:360px){.card{padding-left:7px;padding-right:7px}.roster-head,.roster-line{grid-template-columns:16px minmax(0,1fr) 43px 43px 27px;gap:2px}.roster-line .field{font-size:17px}}
 
-/* V1.8: 아이폰 경기 결과 명단 - 이름 우선, 점수 단위 생략 */
-.card{margin-left:5px;margin-right:5px;padding-left:10px;padding-right:10px}
-.teams{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
-.team{min-width:0}
-.entries{padding:8px 4px}
-.entry{
-  display:grid;
-  grid-template-columns:auto minmax(0,1fr) auto;
-  align-items:center;
-  gap:2px;
-  padding:9px 0;
-  font-weight:900;
-  min-width:0;
-}
-.entry .entry-number{
-  font-size:clamp(13px,3.5vw,17px);
-  font-weight:900;
-  letter-spacing:-.045em;
-  white-space:nowrap;
-}
-.entry .entry-name,
-.entry span:first-child:not(.entry-number){
-  min-width:0;
-  font-size:clamp(17px,4.35vw,22px);
-  letter-spacing:-.08em;
-  font-weight:950;
-  white-space:nowrap;
-  text-overflow:clip;
-  overflow:visible;
-  padding:0;
-}
-.entry .entry-name.long-name{font-size:clamp(13px,3.6vw,17px);letter-spacing:-.085em}
-.entry .entry-score{
-  font-size:clamp(13px,3.7vw,18px);
-  letter-spacing:-.055em;
-  text-align:right;
-  white-space:nowrap;
-  min-width:0;
-}
-@media(max-width:380px){
-  .team h3{font-size:clamp(16px,4.4vw,20px)}
-  .entry .entry-name{font-size:clamp(16px,4.1vw,20px)}
-  .entry .entry-score{font-size:clamp(13px,3.6vw,16px)}
-  .entries{padding:8px 3px}
-  .teams{gap:4px}
-}
-/* 합계·평균도 참가자 이름과 같은 크기로 표시 */
-.totalrow{font-size:clamp(18px,5vw,22px);font-weight:950;line-height:1.3}
-/* 화면 양쪽 여백은 줄이되 합계·평균 줄은 유지 */
-.totalrow{white-space:nowrap}
+/* V2.3: 이름칸을 적정 폭으로 줄이고 성별·비고·결석 칸에 여유 배분 */
+.roster-head,.roster-line{grid-template-columns:20px minmax(0,1fr) 57px 62px 35px;gap:4px}
+.roster-line input.field:not(.remark){text-align:center;padding-left:2px;padding-right:2px}
+.roster-line select.field{font-size:17px;text-align:center;text-align-last:center}
+.roster-line .remark{text-align:center;font-size:15px;padding-left:2px;padding-right:2px}
+.roster-line .absent-check{justify-self:center}
+@media(max-width:360px){.roster-head,.roster-line{grid-template-columns:18px minmax(0,1fr) 52px 55px 31px;gap:3px}}
 
-/* V1.9: 경기 결과 명단 이름과 타수를 같은 크기로 확대 */
-.entry .entry-name:not(.long-name),
-.entry .entry-score {
-  font-size: clamp(18px, 5vw, 22px);
-  font-weight: 950;
-  line-height: 1.3;
-  white-space: nowrap;
-}
-.entry .entry-name:not(.long-name) {
-  letter-spacing: -.065em;
-}
-.entry .entry-score {
-  letter-spacing: -.05em;
-  font-variant-numeric: tabular-nums;
-}
-/* 이름이 매우 길면 점수와 겹치지 않도록 이전의 축소 규칙 유지 */
-@media (max-width: 360px) {
-  .entry .entry-name:not(.long-name),
-  .entry .entry-score { font-size: clamp(17px, 4.8vw, 19px); }
-}
+/* V2.6: 섹션별 은은한 배경색 - 기능 및 데이터 저장 로직 변경 없음 */
+.wrap > section.card:nth-of-type(1){background:#eaf3ff;border-color:#c9def5}
+.wrap > section.card:nth-of-type(2){background:#edf8ee;border-color:#cbe7ce}
+.wrap > section.card:nth-of-type(3){background:#fff5e5;border-color:#f0dfbd}
+.wrap > section.card:nth-of-type(4){background:#f1edff;border-color:#ddd4f5}
+.wrap > section.card:nth-of-type(5){background:#eef4fb;border-color:#d2e1f1}
+.wrap > section.card{box-shadow:0 3px 12px #15385b12}
+.wrap > section.card:nth-of-type(4) .group{box-shadow:0 2px 5px #1c36601a}
 
-/* 청백 앱 내부 점수판 전용 화면: 원본 앱의 URL을 변경하지 않음 */
-#pasisInnerView{position:fixed;inset:0;z-index:2000;background:#fff;display:none;flex-direction:column}
-#pasisInnerView.open{display:flex}
-/* 점수판 위에 독립적으로 떠 있는 복귀 아이콘 — 상하 배경 막대 없음 */
-.pasis-back-bar{position:absolute;z-index:5;top:calc(env(safe-area-inset-top) + 8px);left:8px;background:none!important;border:0!important;padding:0;margin:0;display:block;width:auto;height:auto;pointer-events:none;box-shadow:none!important}
-.pasis-back{pointer-events:auto;display:flex;align-items:center;justify-content:center;width:54px;height:54px;border-radius:50%;border:1px solid rgba(160,170,180,.55);background:rgba(255,255,255,.88);color:#101010;font-size:35px;font-weight:500;line-height:1;cursor:pointer;padding:0;box-shadow:0 1px 4px rgba(0,0,0,.09);-webkit-tap-highlight-color:transparent}
-.pasis-back-bar.bottom{top:auto;bottom:calc(env(safe-area-inset-bottom) + 8px)}
-#pasisInnerFrame{flex:1;width:100%;border:0;background:#fff;min-height:0}
+/* V2.7: 파시스 앱 바로가기 */
+.pasis-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:15px 9px 8px}
+.pasis-links a{display:flex;align-items:center;justify-content:center;min-height:58px;padding:9px 5px;border-radius:12px;color:#fff;text-decoration:none;font-size:clamp(15px,4vw,19px);font-weight:900;text-align:center;box-shadow:0 3px 8px #163b5d20}
+.pasis-links .score-link{background:#155eb5}.pasis-links .bluewhite-link{background:#168064}
+</style></head><body><div class="wrap"><header class="hero"><h1>파시스 클럽 조편성</h1><small>파크골프 클럽 · 공정한 무작위 조편성</small></header>
+<section class="card"><label for="club">클럽명</label><input id="club" class="field" placeholder="클럽명 입력"><div class="meta-grid"><div><label>경기 날짜 (자동)</label><div id="gameDate" class="datefield"></div></div><div><label for="course">장소 (구장명)</label><input id="course" class="field" placeholder="구장명 입력"></div></div><div class="stats"><div class="stat">전체 회원<b id="total">0</b></div><div class="stat">오늘 참석<b id="attend">0</b></div><div class="stat">남 / 여<b id="sexcount">0 / 0</b></div></div></section>
+<section class="card"><div class="row"><h2 style="margin:0">등록 회원</h2><span class="hint" id="membercount">0/100명</span></div>
 
-body.pasis-inner-open{overflow:hidden}
-.pasis-frame-area{position:relative;flex:1;min-height:0;background:#fff}
-#pasisInnerFrame{height:100%;display:block}
-.pasis-loading{position:absolute;inset:0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:20px;z-index:1;font-weight:800;color:#174a83}
-.pasis-loading[hidden]{display:none}
-.pasis-retry{border:0;background:#1765b9;color:#fff;padding:12px 22px;border-radius:12px;font-weight:900}
-
-.share-row{margin:14px 12px 2px}.share-result{display:block;width:100%;min-height:58px;border:0;border-radius:13px;background:linear-gradient(#ffdc56,#efb92c);color:#392d0a;font-weight:950;font-size:clamp(19px,5vw,24px);box-shadow:0 3px 0 #bb8a19}.share-result:disabled{opacity:.45;box-shadow:none}
-/* 제출 준비 전에는 연한 파랑, 입력 완료 시 기존 진한 파랑 */
-#send.submit-incomplete{background:#c5d8ee;color:#6c829e;box-shadow:none;opacity:1;cursor:not-allowed}
-#send.submit-incomplete:disabled{opacity:1}
-</style>
-</head>
-<body><div class="wrap">
-<header class="hero"><div class="brand">🏌️ 파시스 <span style="color:#ffe064">청백</span> 게임</div><small>파크골프 친선경기 · 함께 즐기는 오늘의 운수</small></header>
-<section class="card">
-<div class="date-row"><div id="date" class="date" aria-label="자동 경기 날짜"></div></div>
-<div class="locationbox"><span style="font-size:24px">📍</span><input class="input" id="course" placeholder="(　　　　　)" autocomplete="off" maxlength="45" aria-label="장소 이름"><span class="fixedsuffix">파크골프장</span></div>
-<div class="teamcount">
- <div><label class="label" for="teamName">👥 팀명</label><input class="input" id="teamName" placeholder="팀명 입력" autocomplete="off" maxlength="40"></div>
- <div><label class="label" for="expected">👥 인원수</label><input class="input" id="expected" type="number" inputmode="numeric" min="2" max="50" placeholder="명"></div>
-</div>
-<div class="hint" style="margin-top:5px;color:#1451a5;font-weight:800">팀명: 4자 이상 (한글·영문·숫자)</div>
-<div class="pair">
- <div><label class="label" for="player">👤 내 이름</label><input class="input" id="player" placeholder="이름 입력" autocomplete="name" maxlength="25"></div>
- <div><label class="label" for="score">⛳ 총점</label><input class="input" id="score" type="number" inputmode="numeric" placeholder="타수" min="1" max="500"></div>
-</div>
-<div class="submitrow"><button id="send" class="big submit-incomplete" disabled>✈ 제출</button><button id="star" class="star" disabled title="전원 전송 후 청백 무작위 결정" aria-label="청백 결정">☆</button></div>
-<div class="guide" id="guide" role="status">별표가 빨간색으로 변하면 누르세요. 아래에 결과가 표시됩니다</div>
-<div id="status" class="status" role="status"></div>
-<div id="sendSuccessOverlay" class="send-success-overlay" role="status" aria-live="polite" aria-hidden="true"><div class="send-success-box"><span class="send-success-check">✓</span>전송 완료</div></div>
+<div class="roster-head"><span>순</span><span>이름</span><span>성별</span><span>비고</span><span>결석</span></div>
+<div id="roster"></div><button id="add" class="btn add-small">회원 추가</button>
 </section>
-<section class="card"><div class="title"><span class="title-text">🏆 경기 결과</span><span id="count" class="counter">참가 0명</span></div>
-<div class="teams"><div class="team"><h3>🔵 청팀</h3><div class="entries" id="blueEntries"><div class="empty">👑 결정 전입니다</div></div><div class="totals"><div class="totalrow"><span>합계</span><span id="blueSum">—</span></div><div class="totalrow"><span>평균</span><span id="blueAvg">—</span></div></div></div><div class="team white"><h3>⚪ 백팀</h3><div class="entries" id="whiteEntries"><div class="empty">👑 결정 전입니다</div></div><div class="totals"><div class="totalrow"><span>합계</span><span id="whiteSum">—</span></div><div class="totalrow"><span>평균</span><span id="whiteAvg">—</span></div></div></div></div>
-<div class="winner wait" id="winner">전원 점수 전송 후 결정됩니다</div><div id="pending" class="hint" style="text-align:center"></div></section>
-<div class="share-row"><button type="button" id="shareResult" class="share-result" disabled>📤 공유하기</button></div>
-<div class="actions"><button class="action red" id="clear" disabled><b>🗑</b>결과삭제</button><button class="action green" id="save" disabled><b>▣</b>저장</button><button class="action blue" id="load"><b>📂</b>불러오기</button></div>
-<div id="modeNotice" class="notice setup"></div><nav class="external-links" aria-label="관련 안내"><a href="http://songeun25.tistory.com/578" target="_blank" rel="noopener noreferrer">설명글 보러가기</a><a href="http://leejh50-dotcom.github.io/parkgolf-score/sv2_1.html" target="_blank" rel="noopener noreferrer">파시스2.1 점수판 열기</a></nav><footer>PASIS 청백 게임 1.9 PWA · Firebase 공동 전송</footer></div>
-<section id="pasisInnerView" aria-label="청백 게임 내부 점수판 화면" aria-hidden="true">
- <div class="pasis-back-bar"><button type="button" class="pasis-back" aria-label="청백 게임으로 돌아가기">×</button></div>
- <div class="pasis-frame-area"><iframe id="pasisInnerFrame" title="파시스2.1 점수판" allow="geolocation" referrerpolicy="strict-origin-when-cross-origin"></iframe>
- <div id="pasisLoading" class="pasis-loading" role="status"><span id="pasisLoadingText">점수판을 불러오는 중입니다…</span><button type="button" id="pasisRetry" class="pasis-retry" hidden>점수판 다시 표시</button></div></div>
- <div class="pasis-back-bar bottom"><button type="button" class="pasis-back" aria-label="청백 게임으로 돌아가기">‹</button></div>
-</section>
-<dialog id="dialog"><h3 id="dialogTitle"></h3><div id="dialogBody"></div><div class="row"><button class="secondary" id="cancelDialog">닫기</button><button class="secondary" id="confirmDialog">확인</button></div></dialog>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-app.js";
-import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, getDocFromServer, onSnapshot, runTransaction } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-firestore.js";
-
-// Firebase 콘솔에서 확인한 공개 웹앱 설정입니다. 비밀 관리자 키는 포함하지 않습니다.
-const firebaseConfig = {
-  apiKey: "AIzaSyBNbq2FrhYat_vAtgfGbNzl mZW9xtWeKsI".replace(' ',''),
-  authDomain: "pasis-bluewhite.firebaseapp.com",
-  projectId: "pasis-bluewhite",
-  storageBucket: "pasis-bluewhite.firebasestorage.app",
-  messagingSenderId: "746057462418",
-  appId: "1:746057462418:web:4bf8fbc99bf588fb13ac4b"
-};
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const $ = id => document.getElementById(id);
-const clean = v => String(v ?? '').trim();
-const day = (()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`})();
-$('date').textContent = new Date(day+'T12:00:00').toLocaleDateString('ko-KR',{year:'numeric',month:'2-digit',day:'2-digit',weekday:'short'}).replace(/\s+/g,' ');
-let uid=null, roomRef=null, unsubscribe=null, current=null, busy=false, revealTimer=null, revealTimeouts=[], lastDrawKey='', snapshotFromServer=false;
-// 공동 추첨은 1회만 저장하고, 결과 공개 여부는 각 휴대폰에서 개별 관리합니다.
-let localRevealToken='', wantReveal=false;
-// 각 휴대폰의 결과 공개 여부만 보존합니다. 서버의 청백 배정은 변경하지 않습니다.
-const REVEAL_STORAGE_PREFIX='pasis_bluewhite_reveal_v1_';
-let restoredReveal=false;
-function revealStorageKey(){return roomRef&&uid?REVEAL_STORAGE_PREFIX+uid+'_'+roomRef.id:null;}
-function saveRevealState(){
-  const key=revealStorageKey();if(!key||!localRevealToken)return;
-  try{localStorage.setItem(key,localRevealToken);}catch(e){}
-}
-function clearRevealState(){
-  const key=revealStorageKey();if(key)try{localStorage.removeItem(key);}catch(e){}
-}
-
-const currentRoom = () => [day,clean($('course').value),clean($('teamName').value)].join('|');
-const count = () => Number($('expected').value);
-const validRoom = () => {
-  if (!clean($('course').value)) throw Error('장소를 입력하세요.');
-  if ([...clean($('teamName').value)].length < 4) throw Error('팀명은 4자 이상 입력하세요.');
-};
-const validCount = () => {if(!Number.isInteger(count())||count()<2||count()>50)throw Error('인원수를 2~50명으로 입력하세요.');};
-// 다섯 가지 입력이 모두 유효하고 Firebase 인증이 준비되면 제출 버튼을 진한 파랑으로 표시합니다.
-function updateSubmitButton(){
-  const n=count(),scoreText=clean($('score').value),score=Number(scoreText);
-  const ready=!!uid && !!clean($('course').value)
-    && [...clean($('teamName').value)].length>=4
-    && Number.isInteger(n)&&n>=2&&n<=50
-    && !!clean($('player').value)&&[...clean($('player').value)].length<=25
-    && !!scoreText&&Number.isInteger(score)&&score>=1&&score<=500;
-  $('send').disabled=!ready;
-  $('send').classList.toggle('submit-incomplete',!ready);
-}
-for(const id of ['course','teamName','expected','player','score']){
-  $(id).addEventListener('input',updateSubmitButton);
-  $(id).addEventListener('change',updateSubmitButton);
-}
-const notify = (message,error=false)=>{
-  const el=$('status');el.textContent=message;el.className='status '+(error?'error':'ok');
-  setTimeout(()=>{if(el.textContent===message)el.textContent=''},5500);
-};
-let sendSuccessTimer=null;
-function showSendSuccess(){
-  const el=$('sendSuccessOverlay');
-  clearTimeout(sendSuccessTimer);
-  el.classList.add('show');el.setAttribute('aria-hidden','false');
-  sendSuccessTimer=setTimeout(()=>{el.classList.remove('show');el.setAttribute('aria-hidden','true');},2100);
-}
-const errText = e => {
-  if(e?.message==='ALREADY_SUBMITTED')return '이미 제출되었습니다';
-   const c=e?.code||'';
-  if(c.includes('permission-denied')) return '서버 접근이 거부되었습니다. Firestore 규칙이 게시되었는지 확인하세요.';
-  if(c.includes('unavailable'))return '인터넷 또는 Firebase 연결 상태를 확인하세요.';
-  return e?.message || '작업에 실패했습니다.';
-};
-async function roomId(){
-  const bytes=new TextEncoder().encode(currentRoom());
-  const hash=await crypto.subtle.digest('SHA-256',bytes);
-  return Array.from(new Uint8Array(hash),b=>b.toString(16).padStart(2,'0')).join('');
-}
-function playersOf(r){return Object.entries(r?.players||{}).map(([id,x])=>({id,name:x.name,score:x.score,side:r?.assignments?.[id]||null}));}
-function totalOf(a){const sum=a.reduce((n,x)=>n+x.score,0);return {sum,average:a.length?sum/a.length:0};}
-function addRows(container,items){
-  const node=$(container+'Entries');node.replaceChildren();
-  if(!items.length){const d=document.createElement('div');d.className='empty';d.textContent=current?.finalized&&localRevealToken===current.draw_token?'배정 없음':current?.finalized?'빨간 별표를 누르면 공개됩니다':'👑 결정 전입니다';node.append(d);return;}
-  items.forEach((p,index)=>{
-    const row=document.createElement('div');row.className='entry';
-    const number=document.createElement('span');number.className='entry-number';number.textContent=`${index+1}.`;
-    const name=document.createElement('span');name.className='entry-name';name.textContent=p.name;
-    if([...p.name].length>=5)name.classList.add('long-name');
-    const score=document.createElement('span');score.className='entry-score';score.textContent=String(p.score);
-    row.append(number,name,score);node.append(row);
-  });
-}
-function render(){
-  const r=current;const list=playersOf(r),cap=r?.expected_count??null,done=!!r?.finalized;
-  const countNum=list.length,full=cap!==null&&countNum===cap;
-  // 다른 경기가 시작되거나 결과가 삭제되면 각 휴대폰의 공개 상태를 초기화합니다.
-  if(!done){clearRevealState();localRevealToken='';wantReveal=false;lastDrawKey='';restoredReveal=false;}
-  // 앱을 종료했다가 열어도 같은 경기의 이미 공개한 결과를 즉시 복원합니다.
-  if(done&&r?.draw_token&&!localRevealToken){
-    const key=revealStorageKey();let saved='';
-    try{if(key)saved=localStorage.getItem(key)||'';}catch(e){}
-    if(saved===r.draw_token){localRevealToken=saved;restoredReveal=true;lastDrawKey=r.draw_token;}
-    else if(saved&&key){try{localStorage.removeItem(key);}catch(e){}}
-  }
-  const reveal=done&&!!r?.draw_token&&localRevealToken===r.draw_token;
-  if(cap!==null&&document.activeElement!==$('expected'))$('expected').value=cap;
-  updateSubmitButton();
-  $('count').textContent=`전송 ${countNum}${cap?'/'+cap:''}명`;
-  const blue=list.filter(p=>p.side==='blue'),white=list.filter(p=>p.side==='white');
-  addRows('blue',reveal?blue:[]);addRows('white',reveal?white:[]);
-  for(const [side,arr] of [['blue',blue],['white',white]]){
-    $(side+'Sum').textContent=reveal?totalOf(arr).sum:'—';
-    $(side+'Avg').textContent=reveal?totalOf(arr).average.toFixed(2):'—';
-  }
-  const guide=$('guide');guide.classList.toggle('ready',full&&!done);guide.classList.toggle('done',reveal);
-  guide.textContent=!cap?'별표를 누르면 결과가 표시됩니다':!full?`${cap-countNum}명 미전송입니다 (${countNum}/${cap}명)`:'별표를 누르면 결과가 표시됩니다';
-  $('pending').textContent='';
-  let result='전원 점수 전송 후 결정됩니다';
-  if(reveal){const a=totalOf(blue).average,b=totalOf(white).average;result=Math.abs(a-b)<1e-8?'무 승 부':a<b?'우 승 청 팀':'우 승 백 팀';}
-  $('winner').textContent=result;$('winner').classList.toggle('wait',!reveal);
-  $('star').disabled=!(full&&uid)||busy;
-  $('star').classList.toggle('ready',full&&!reveal);
-  $('star').classList.toggle('active',reveal);
-  $('star').textContent=reveal?'★':'☆';
-  $('star').title=done?'내 휴대폰에 청백 결과 표시':'전원 전송 후 청백 무작위 결정';
-  $('clear').disabled=false;$('save').disabled=!(done&&reveal);$('shareResult').disabled=!(done&&reveal);
-  let mine=r?.players?.[uid];if(mine && !['player','score'].includes(document.activeElement?.id)){$('player').value=mine.name;$('score').value=mine.score;}
-  // 다른 사람의 결정은 화면에 자동 공개되지 않습니다. 자신의 별표 클릭만 공개를 허용합니다.
-  if(done&&wantReveal&&r?.draw_token){
-    wantReveal=false;localRevealToken=r.draw_token;saveRevealState();render();return;
-  }
-  if(reveal&&r.draw_token!==lastDrawKey){lastDrawKey=r.draw_token;animateRows();}
-  if(restoredReveal){restoredReveal=false;cancelRevealAnimation();}
-  if(!reveal){cancelRevealAnimation();}
-}
-function cancelRevealAnimation(){
-  clearTimeout(revealTimer);for(const t of revealTimeouts)clearTimeout(t);revealTimeouts=[];
-  for(const el of document.querySelectorAll('.entry,.totals,#winner'))el.style.visibility='';
-}
-function animateRows(){
-  cancelRevealAnimation();
-  const left=[...$('blueEntries').querySelectorAll('.entry')];
-  const right=[...$('whiteEntries').querySelectorAll('.entry')];
-  const rows=Math.max(left.length,right.length);
-  const sums=[...document.querySelectorAll('.totalrow:first-child')];
-  const averages=[...document.querySelectorAll('.totalrow:nth-child(2)')];
-  const winner=$('winner');
-  const winnerText=winner.textContent.replace(/\s/g,'');
-  for(const el of [...left,...right,...sums,...averages,winner])el.style.visibility='hidden';
-  const rowDelay=850;
-  for(let i=0;i<rows;i++)revealTimeouts.push(setTimeout(()=>{
-    for(const arr of [left,right]){const el=arr[i];if(el){el.style.visibility='visible';el.classList.add('reveal');}}
-  },(i+1)*rowDelay));
-  const sumsAt=(rows+1)*rowDelay;
-  revealTimeouts.push(setTimeout(()=>{
-    for(const el of sums){el.style.visibility='visible';el.classList.add('summary-reveal');}
-  },sumsAt));
-  const averagesAt=sumsAt+1000;
-  revealTimeouts.push(setTimeout(()=>{
-    for(const el of averages){el.style.visibility='visible';el.classList.add('summary-reveal');}
-  },averagesAt));
-  const winnerAt=averagesAt+1100;
-  winner.replaceChildren();winner.style.visibility='visible';
-  [...winnerText].forEach((letter,i)=>{
-    const span=document.createElement('span');span.className='winner-letter';
-    span.textContent=letter;span.style.visibility='hidden';
-    if(i)span.style.marginLeft='.25em';
-    winner.append(span);
-    revealTimeouts.push(setTimeout(()=>{span.style.visibility='visible';},winnerAt+i*650));
-  });
-}
-
-function stopRoom(){if(unsubscribe){unsubscribe();unsubscribe=null;}cancelRevealAnimation();roomRef=null;current=null;snapshotFromServer=false;localRevealToken='';wantReveal=false;lastDrawKey='';render();}
-async function watchRoom(){
-  validRoom();
-  const id=await roomId();
-  if(roomRef?.id===id)return roomRef;
-  stopRoom();roomRef=doc(db,'pasis_rooms',id);
-  const chosen=roomRef;
-  unsubscribe=onSnapshot(chosen,snap=>{
-    if(roomRef?.id!==chosen.id)return;
-    snapshotFromServer=!snap.metadata.fromCache;
-    current=snap.exists()?snap.data():null;
-    render();
-  },err=>notify('동기화 오류: '+errText(err),true));
-  return roomRef;
-}
-async function transaction(action){
-  if(busy)return false;busy=true;
-  try{if(!uid)throw Error('Firebase 연결 중입니다. 다시 시도하세요.');const ref=await watchRoom();await runTransaction(db,async tx=>{
-    const snap=await tx.get(ref);return action(tx,snap,snap.exists()?snap.data():null);
-  });return true;}catch(e){if(e?.message==='ALREADY_SUBMITTED')alert('이미 제출되었습니다');else notify(errText(e),true);return false;}finally{busy=false;}
-}
-$('send').onclick=()=>{
-  if(busy)return;
-  try{validRoom();validCount();const name=clean($('player').value),score=Number($('score').value),expected=count();
-    if(current?.players?.[uid]){alert('이미 제출되었습니다');return;}
-    if(!name||name.length>25)throw Error('이름을 입력하세요.');
-    if(!Number.isInteger(score)||score<1||score>500)throw Error('총점을 1~500 사이의 숫자로 입력하세요.');
-    transaction((tx,snap,r)=>{
-      if(!r){
-        tx.set(snap.ref,{date:day,course:clean($('course').value),team:clean($('teamName').value),expected_count:expected,
-          players:{[uid]:{name,score}},assignments:{},finalized:false,drawn_by:null,draw_token:null,archive:null});
-      }else{
-        if(r.players?.[uid])throw Error('ALREADY_SUBMITTED');
-        if(r.finalized)throw Error('이미 결정된 경기입니다.');
-        if(r.expected_count!==expected)throw Error(`이 경기는 ${r.expected_count}명으로 등록되어 있습니다. 인원수를 맞춰 주세요.`);
-        if(Object.entries(r.players||{}).some(([id,p])=>id!==uid&&p.name===name))throw Error('같은 이름이 이미 등록되어 있습니다.');
-        if(Object.keys(r.players||{}).length>=expected)throw Error('참가 정원이 찼습니다.');
-        tx.update(snap.ref,{[`players.${uid}`]:{name,score}});
-      }
-    }).then(ok=>{if(ok)showSendSuccess();});
-  }catch(e){notify(errText(e),true)}
-};
-$('star').onclick=async()=>{
-  if(busy)return;
-  // 이미 추첨 결과가 서버에 있으면 새 추첨 없이 자기 휴대폰에만 공개합니다.
-  if(current?.finalized&&current?.draw_token){
-    wantReveal=false;localRevealToken=current.draw_token;saveRevealState();lastDrawKey='';render();return;
-  }
-  if(!confirm('모든 참가자의 점수 전송이 완료되었습니다.\n청백팀을 무작위로 결정하고 내 화면에 표시할까요?'))return;
-  wantReveal=true;
-  const ok=await transaction((tx,snap,r)=>{
-    if(!r)throw Error('경기 정보가 없습니다.');
-    // 다른 참가자가 먼저 결정했으면 그 결정 결과를 그대로 사용합니다.
-    if(r.finalized)return;
-    const ids=Object.keys(r.players||{});if(ids.length!==r.expected_count)throw Error('전원 점수 전송 후 결정할 수 있습니다.');
-    for(let i=ids.length-1;i>0;i--){const a=new Uint32Array(1);crypto.getRandomValues(a);const j=a[0]%(i+1);[ids[i],ids[j]]=[ids[j],ids[i]];}
-    const sides={};ids.forEach((id,i)=>sides[id]=i<Math.ceil(ids.length/2)?'blue':'white');
-    tx.update(snap.ref,{assignments:sides,finalized:true,drawn_by:uid,draw_token:crypto.randomUUID()});
-  });
-  if(!ok){wantReveal=false;render();return;}
-  // 전송 완료 전후의 스냅샷 도착 순서에 관계없이 한 번의 클릭으로 표시합니다.
-  if(current?.finalized&&current.draw_token){wantReveal=false;localRevealToken=current.draw_token;saveRevealState();lastDrawKey='';render();}
-  else notify('청백 결정 중입니다. 결과를 받아오면 자동으로 표시됩니다.');
-};
-// 보관함은 Firebase 공동 기록과 별도로 각 휴대폰 브라우저에만 저장합니다.
-const LOCAL_ARCHIVE_KEY='pasis_bluewhite_local_archive_v1';
-const MAX_LOCAL_ARCHIVES=20;
-function readLocalArchives(){
-  try{
-    const data=JSON.parse(localStorage.getItem(LOCAL_ARCHIVE_KEY)||'[]');
-    return Array.isArray(data)?data.filter(x=>x&&x.draw_token&&x.players&&x.assignments).slice(0,MAX_LOCAL_ARCHIVES):[];
-  }catch(e){return [];}
-}
-function formatArchive(a){
-  const members=Object.entries(a.players||{}).map(([id,p])=>({...p,side:a.assignments?.[id]}));
-  const blue=members.filter(x=>x.side==='blue'),white=members.filter(x=>x.side==='white');
-  const b=totalOf(blue),w=totalOf(white);
-  const winner=Math.abs(b.average-w.average)<1e-8?'무승부':b.average<w.average?'청팀 승리':'백팀 승리';
-  return `${a.date} · ${a.course}파크골프장 · ${a.team}\n저장: ${new Date(a.saved_at).toLocaleString('ko-KR')}\n\n🔵 청팀\n${blue.map((p,i)=>`${i+1}. ${p.name}  ${p.score}타`).join('\n')}\n합계 ${b.sum} / 평균 ${b.average.toFixed(2)}\n\n⚪ 백팀\n${white.map((p,i)=>`${i+1}. ${p.name}  ${p.score}타`).join('\n')}\n합계 ${w.sum} / 평균 ${w.average.toFixed(2)}\n\n🏆 ${winner}`;
-}
-// 공개된 오늘 경기 결과를 휴대폰 공유 메뉴(카카오톡 등)로 전달합니다.
-function makeShareText(r){
-  const members=playersOf(r);
-  const blue=members.filter(p=>p.side==='blue');
-  const white=members.filter(p=>p.side==='white');
-  const lines=(arr)=>arr.map((p,i)=>`${i+1}. ${p.name}  ${p.score}`).join('\n') || '(없음)';
-  const b=totalOf(blue),w=totalOf(white);
-  const outcome=Math.abs(b.average-w.average)<1e-8?'무승부':b.average<w.average?'청팀 승리':'백팀 승리';
-  const place=String(r.course||'').trim();
-  return `🏆 파시스 청백 게임 결과\n경기일: ${r.date||day}\n장소: ${place}${place.endsWith('파크골프장')?'':'파크골프장'}\n팀명: ${r.team||''}\n참가: ${members.length}명\n\n🔵 청팀 (${blue.length}명)\n${lines(blue)}\n합계: ${b.sum}  평균: ${b.average.toFixed(2)}\n\n⚪ 백팀 (${white.length}명)\n${lines(white)}\n합계: ${w.sum}  평균: ${w.average.toFixed(2)}\n\n🏆 ${outcome}`;
-}
-$('shareResult').onclick=async()=>{
-  const r=current;
-  if(!r?.finalized||!r.draw_token||localRevealToken!==r.draw_token){notify('별표로 오늘의 결과를 표시한 뒤 공유하세요.',true);return;}
-  const text=makeShareText(r);
-  // iPhone/Android 공유 시트에서 카카오톡을 선택할 수 있습니다(설치·기기 설정에 따라 다름).
-  if(navigator.share){
-    try{await navigator.share({title:'파시스 청백 게임 결과',text});return;}
-    catch(e){if(e?.name==='AbortError')return;}
-  }
-  try{await navigator.clipboard.writeText(text);notify('결과를 복사했습니다. 카카오톡 대화창에 붙여넣으세요.');}
-  catch(e){
-    $('dialogTitle').textContent='청백 경기 결과 공유';
-    const body=$('dialogBody');body.replaceChildren();
-    const area=document.createElement('textarea');area.value=text;area.readOnly=true;
-    area.style.cssText='width:100%;min-height:280px;font-size:16px;line-height:1.6';
-    body.append(area);dialog.showModal();area.focus();area.select();
-    notify('내용을 복사하여 카카오톡에 붙여넣으세요.');
-  }
-};
-$('save').onclick=()=>{
-  const r=current;
-  if(!r?.finalized||!r.draw_token||localRevealToken!==r.draw_token){
-    notify('빨간 별표로 결과를 확인한 뒤 저장하세요.',true);return;
-  }
-  if(!confirm('이 휴대폰에 청백 경기 결과를 저장할까요?\n최근 20경기까지 보관됩니다.'))return;
-  try{
-    const saved=readLocalArchives();
-    const record={date:r.date,course:r.course,team:r.team,expected_count:r.expected_count,
-      players:r.players,assignments:r.assignments,draw_token:r.draw_token,saved_at:new Date().toISOString()};
-    // 같은 경기 결과를 다시 저장하면 중복을 만들지 않고 최신 위치로 옮깁니다.
-    const next=[record,...saved.filter(x=>x.draw_token!==r.draw_token)].slice(0,MAX_LOCAL_ARCHIVES);
-    localStorage.setItem(LOCAL_ARCHIVE_KEY,JSON.stringify(next));
-    notify(`이 휴대폰에 저장했습니다. (${next.length}/20경기)`);
-  }catch(e){notify('휴대폰 저장 공간을 확인하세요: '+errText(e),true);}
-};
-$('clear').onclick=()=>{
-  if(!confirm('이 휴대폰의 경기 입력과 표시된 결과를 초기화할까요?\\n내 이름과 다른 참가자의 서버 기록은 유지됩니다.'))return;
-  // 서버에는 어떤 삭제 명령도 보내지 않습니다.
-  const myName=clean($('player').value);
-  clearRevealState();
-  stopRoom(); // 실시간 구독을 해제해 이전 경기 결과가 다시 표시되지 않도록 합니다.
-  for(const id of ['course','teamName','expected','score'])$(id).value='';
-  $('player').value=myName;
-  for(const key of ['pasis_course','pasis_team','pasis_expected'])localStorage.removeItem(key);
-  localStorage.setItem('pasis_bluewhite_my_name',myName);
-  $('status').textContent='';
-  clearTimeout(sendSuccessTimer);
-  $('sendSuccessOverlay').classList.remove('show');
-  $('sendSuccessOverlay').setAttribute('aria-hidden','true');
-  // stopRoom()의 render()가 참가 0명, 빈 결과, 안내 문구를 복원합니다.
-  render();
-};
-
-const dialog=$('dialog');$('cancelDialog').onclick=()=>dialog.close();$('confirmDialog').onclick=()=>dialog.close();
-$('load').onclick=()=>{
-  const archives=readLocalArchives();
-  if(!archives.length){notify('이 휴대폰에 저장된 경기 결과가 없습니다.',true);return;}
-  $('dialogTitle').textContent=`저장된 경기 결과 (${archives.length}/20)`;
-  const body=$('dialogBody');body.replaceChildren();
-  const choose=document.createElement('select');
-  choose.setAttribute('aria-label','저장된 경기 선택');
-  choose.style.cssText='width:100%;font-size:17px;padding:12px;border:2px solid #9eb8d8;border-radius:10px;margin-bottom:12px;background:white;color:#102341';
-  archives.forEach((a,i)=>{
-    const opt=document.createElement('option');opt.value=String(i);
-    opt.textContent=`${a.date} · ${a.course} · ${a.team}`;
-    choose.append(opt);
-  });
-  const content=document.createElement('div');content.id='archiveView';
-  const display=()=>{content.textContent=formatArchive(archives[Number(choose.value)]);};
-  choose.addEventListener('change',display);
-  body.append(choose,content);display();dialog.showModal();
-};
-// 내 이름만 이 휴대폰에 보존합니다.
-$('player').value=localStorage.getItem('pasis_bluewhite_my_name')||'';
-$('player').addEventListener('input',()=>localStorage.setItem('pasis_bluewhite_my_name',$('player').value));
-
-for(const id of ['course','teamName','expected']){
-  const input=$(id);const storage={course:'pasis_course',teamName:'pasis_team',expected:'pasis_expected'}[id];
-  input.value=new URL(location.href).searchParams.get(id==='teamName'?'team':id)||localStorage.getItem(storage)||'';
-  input.addEventListener('change',()=>{
-    localStorage.setItem(storage,clean(input.value));
-    if(id!=='expected'){stopRoom();watchRoom().catch(e=>notify(errText(e),true));}
-  });
-}
-// iOS 홈 화면 복귀 시 서버의 최신 인원수를 즉시 확인합니다.
-// 실시간 onSnapshot은 계속 유지하며 불필요한 반복 폴링은 하지 않습니다.
-let lastForegroundCheck=0;
-let checkingFresh=false;
-// 실시간 알림이 지연되는 일부 모바일 환경에서만 보조 서버 확인을 수행합니다.
-// 제출 대기 또는 청백 결정 대기 중에만 3초 간격으로 확인하고, 결정 후 중단합니다.
-setInterval(()=>{
-  if(!roomRef||!uid||busy||document.visibilityState==='hidden'||checkingFresh)return;
-  if(current?.finalized)return;
-  checkFreshAfterResume();
-},3000);
-async function checkFreshAfterResume(){
-  if(!roomRef || !uid || document.visibilityState==='hidden'||checkingFresh)return;
-  const now=Date.now();if(now-lastForegroundCheck<1200)return;
-  lastForegroundCheck=now;
-  checkingFresh=true;
-  const ref=roomRef;
-  try{
-    const snap=await getDocFromServer(ref);
-    if(roomRef?.id!==ref.id || busy)return;
-    const fresh=snap.exists()?snap.data():null;
-    const oldCount=Object.keys(current?.players||{}).length;
-    const newCount=Object.keys(fresh?.players||{}).length;
-    if(newCount!==oldCount || fresh?.draw_token!==current?.draw_token || fresh?.expected_count!==current?.expected_count){current=fresh;render();}
-  }catch(e){/* 일시적 오프라인이면 기존 실시간 구독으로 재동기화 */}
-  finally{checkingFresh=false;}
-}
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')checkFreshAfterResume();});
-window.addEventListener('focus',checkFreshAfterResume);
-$('modeNotice').textContent='☁️ Firebase 공동 서버 · 청백 배정은 모두 동일하며 결과는 각자 별표를 눌러 공개합니다.';
-$('modeNotice').classList.remove('setup');
-updateSubmitButton();
-onAuthStateChanged(auth,user=>{
-  if(user){uid=user.uid;updateSubmitButton();
-    if(clean($('course').value)&&[...clean($('teamName').value)].length>=4)watchRoom().catch(e=>notify(errText(e),true));
-  }else{uid=null;updateSubmitButton();signInAnonymously(auth).catch(e=>notify('익명 인증 오류: '+errText(e),true));}
-});
-</script>
+<section class="card"><h2>조편성 조건</h2><div class="modes"><button class="mode" data-mode="남여분리">남여분리</button><button class="mode selected" data-mode="혼성">혼성</button></div><div class="note" id="preview">참석할 회원을 선택하세요.</div><button id="draw" class="btn full">조편성하기</button></section>
+<section class="card"><div class="row"><h2>조편성 결과</h2><button id="redraw" class="btn secondary hide">다시 편성</button></div><div id="results" class="groupgrid"><p class="hint" style="grid-column:1/-1;text-align:center">조편성하기 버튼을 누르면 결과가 표시됩니다.</p></div><div class="buttons" style="margin-top:13px"><button id="share" class="btn green hide" style="flex:1">결과 공유</button><button id="copy" class="btn secondary hide">복사</button></div></section><section class="card"><div class="bottom-actions"><button id="clear" class="btn danger">삭제</button><button id="saveResult" class="btn green">저장</button><button id="loadResult" class="btn">불러오기</button></div><p class="hint">삭제는 현재 조편성 결과만 초기화합니다. 등록 회원은 유지됩니다. 저장한 경기 기록은 이 휴대폰에서 불러올 수 있습니다.</p></section><p class="hint" style="text-align:center">회원 명단은 이 휴대폰에서만 저장됩니다</p><nav class="pasis-links" aria-label="다른 파시스 앱 바로가기"><a class="score-link" href="https://leejh50-dotcom.github.io/parkgolf-score/sv2_1.html?from=group" target="_blank" rel="noopener noreferrer">파시스2.1 바로가기</a><a class="bluewhite-link" href="https://leejh50-dotcom.github.io/parkgolf-score/PASIS_BLUEWHITE.html?from=group" target="_blank" rel="noopener noreferrer">파시스 청백 게임</a></nav></div><div id="toast" role="status"></div>
 <script>
-// 점수판은 청백 게임 내부에만 표시합니다. 최초 로딩 중 백지 화면 대신 안내를 표시합니다.
-(function(){
-  const overlay=document.getElementById('pasisInnerView');
-  const frame=document.getElementById('pasisInnerFrame');
-  const loading=document.getElementById('pasisLoading');
-  const loadingText=document.getElementById('pasisLoadingText');
-  const retry=document.getElementById('pasisRetry');
-  const scoreUrl='https://leejh50-dotcom.github.io/parkgolf-score/sv2_1.html';
-  let waitTimer=null;
-  const clearWait=()=>{if(waitTimer!==null){clearTimeout(waitTimer);waitTimer=null;}};
-  const beginLoad=()=>{
-    clearWait();loading.hidden=false;retry.hidden=true;
-    loadingText.textContent='점수판을 불러오는 중입니다…';
-    // 연결 지연 시 수동 재표시 버튼을 제공합니다. 자동 재로드로 입력값을 지우지 않습니다.
-    waitTimer=setTimeout(()=>{
-      if(overlay.classList.contains('open')&&!loading.hidden){
-        loadingText.textContent='표시가 늦어지고 있습니다. 아래 버튼을 눌러 주세요.';
-        retry.hidden=false;
-      }
-    },7000);
-    frame.src=scoreUrl;
+(()=>{'use strict';const $=id=>document.getElementById(id),KEY='pasis_club_group_v1',modes=[...document.querySelectorAll('.mode')];let members=[],mode='혼성',groups=[],club='';const ARCHIVE_KEY='pasis_club_group_archives_v2';let nextId=1;const clean=v=>String(v||'').trim();const randomShuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};let toastTimer;function toast(s){$('toast').textContent=s;$('toast').style.display='block';clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').style.display='none',2800);}function save(){try{localStorage.setItem(KEY,JSON.stringify({club:$('club').value,course:$('course').value,members}));}catch(e){toast('저장 공간을 확인하세요.');}}function load(){try{const d=JSON.parse(localStorage.getItem(KEY)||'{}');club=clean(d.club)||'';members=Array.isArray(d.members)?d.members.filter(x=>x&&x.name&&(x.gender==='남'||x.gender==='여')).slice(0,100).map(x=>({id:Number(x.id)||nextId++,name:clean(x.name),gender:x.gender,remark:clean(x.remark||''),attend:x.attend!==false})):[];nextId=Math.max(1,...members.map(x=>x.id+1));}catch(e){members=[];}$('club').value=club;try{$('course').value=JSON.parse(localStorage.getItem(KEY)||'{}').course||'';}catch(e){} }
+function eligible(){return members.filter(x=>x.attend);}
+function plan(n){if(n<3)return n?[n]:[];if(n===5)return [3,2];let fours=Math.floor(n/4),rem=n%4;if(rem===0)return Array(fours).fill(4);if(rem===3)return [...Array(fours).fill(4),3];if(rem===2){if(fours>=1)return [...Array(fours-1).fill(4),3,3];return [2];}if(fours>=2)return [...Array(fours-2).fill(4),3,3,3];return [n];}
+function preview(){const a=eligible(),men=a.filter(x=>x.gender==='남').length,women=a.length-men,sizes=mode==='남여분리'?[...plan(men),...plan(women)]:plan(a.length);$('preview').textContent=`편성 대상 ${a.length}명 (남 ${men} · 여 ${women}) / ${sizes.length}개 조`+(sizes.length?' / '+sizes.map((n,i)=>`${i+1}조 ${n}명`).join(' · '):'');}
+function renderRoster(focusId=null){
+ const box=$('roster');box.replaceChildren();
+ if(!members.length){const empty=document.createElement('div');empty.className='roster-empty';empty.textContent='등록 회원이 없습니다. 아래 회원 추가 버튼을 누르세요.';box.append(empty);}
+ members.forEach((m,i)=>{
+  const row=document.createElement('div');row.className='roster-line'+(m.attend?'':' is-absent');
+  const num=document.createElement('span');num.className='roster-num';num.textContent=String(i+1);
+  const input=document.createElement('input');input.className='field';input.value=m.name;input.maxLength=25;input.placeholder='이름 입력';input.setAttribute('aria-label',`${i+1}번 회원 이름`);
+  input.onchange=()=>{
+   const v=clean(input.value);
+   if(!v){members=members.filter(x=>x.id!==m.id);save();renderRoster();renderMembers();invalidate();toast('빈 이름의 회원 줄을 삭제했습니다.');return;}
+   if(members.some(x=>x.id!==m.id&&x.name===v)){input.value=m.name;toast('같은 이름이 이미 등록되어 있습니다.');return;}
+   m.name=v;save();renderMembers();invalidate();
   };
-  frame.addEventListener('load',()=>{
-    clearWait();
-    if(overlay.classList.contains('open'))loading.hidden=true;
-  });
-  retry.addEventListener('click',beginLoad);
-  const show=()=>{
-    overlay.classList.add('open');overlay.setAttribute('aria-hidden','false');
-    document.body.classList.add('pasis-inner-open');
-    beginLoad();
-  };
-  const hide=()=>{
-    clearWait();overlay.classList.remove('open');overlay.setAttribute('aria-hidden','true');
-    document.body.classList.remove('pasis-inner-open');
-    frame.removeAttribute('src');
-  };
-  overlay.querySelectorAll('.pasis-back').forEach(btn=>btn.addEventListener('click',hide));
-  document.querySelectorAll('.external-links a').forEach(link=>{
-    link.addEventListener('click',event=>{
-      event.preventDefault();
-      if(link.textContent.includes('점수판')){show();return;}
-      const url=link.href.replace(/^http:\/\//i,'https://');
-      window.prompt('청백 게임은 그대로 유지됩니다. Safari에서 열 주소:',url);
-    });
-  });
-})();
-</script>
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./pasis-bluewhite-sw.js', { scope: './' })
-      .catch(error => console.warn('파시스 청백 PWA 설치 지원:', error));
-  });
+  input.onblur=()=>{if(!clean(input.value)){members=members.filter(x=>x.id!==m.id);save();renderRoster();renderMembers();invalidate();}};
+  const sex=document.createElement('select');sex.className='field';sex.setAttribute('aria-label',`${i+1}번 회원 성별`);
+  for(const value of ['남','여']){const opt=document.createElement('option');opt.value=value;opt.textContent=value;sex.append(opt);}sex.value=m.gender;
+  sex.onchange=()=>{m.gender=sex.value;save();renderMembers();invalidate();};
+  const remark=document.createElement('input');remark.className='field remark';remark.value=m.remark||'';remark.maxLength=50;remark.placeholder='비고';remark.setAttribute('aria-label',`${i+1}번 회원 비고`);remark.oninput=()=>{m.remark=remark.value;save();};
+  const absent=document.createElement('input');absent.type='checkbox';absent.className='absent-check';absent.checked=!m.attend;absent.setAttribute('aria-label',`${m.name||i+1} 결석`);absent.onchange=()=>{m.attend=!absent.checked;row.classList.toggle('is-absent',absent.checked);save();renderMembers();invalidate();};
+  row.append(num,input,sex,remark,absent);box.append(row);
+  if(m.id===focusId)requestAnimationFrame(()=>input.focus());
+ });
+ $('membercount').textContent=members.length+'/100명';
 }
-</script>
-</body></html>
+function renderMembers(){const a=$('members');if(a)a.replaceChildren();for(const m of members){
+ const row=document.createElement('label');row.className='member'+(m.attend?'':' absent');
+ const check=document.createElement('input');check.type='checkbox';check.checked=m.attend;check.setAttribute('aria-label',m.name+' 참석');check.onchange=()=>{m.attend=check.checked;save();renderMembers();invalidate();};
+ const label=document.createElement('span');label.className='nm';label.textContent=`${m.name} (${m.gender})`;
+ row.append(check,label);if(a)a.append(row);
+ }const attendees=members.filter(x=>x.attend);$('total').textContent=members.length;$('attend').textContent=attendees.length;$('sexcount').textContent=attendees.filter(x=>x.gender==='남').length+' / '+attendees.filter(x=>x.gender==='여').length;$('membercount').textContent=members.length+'/100명';preview();}
+function invalidate(){groups=[];renderResults();preview();}function renderResults(){const box=$('results');box.replaceChildren();$('redraw').classList.toggle('hide',!groups.length);$('share').classList.toggle('hide',!groups.length);$('copy').classList.toggle('hide',!groups.length);if(!groups.length){const p=document.createElement('p');p.className='hint';p.style.cssText='grid-column:1/-1;text-align:center';p.textContent='조편성하기 버튼을 누르면 결과가 표시됩니다.';box.append(p);return;}groups.forEach((group,i)=>{const el=document.createElement('div');el.className='group';const h=document.createElement('h3');h.textContent=`${i+1}조`;const small=document.createElement('small');small.textContent=`${group.length}명`;h.append(small);const ul=document.createElement('ul');group.forEach((p,j)=>{const li=document.createElement('li');li.textContent=`${p.name}(${p.gender})`;ul.append(li);});el.append(h,ul);box.append(el);});}
+function draw(){const people=eligible();if(people.length<5){toast('조편성은 최소 5명입니다');return;}
+ if(mode==='혼성'){
+  const sizes=plan(people.length);groups=sizes.map(()=>[]);
+  const men=randomShuffle(people.filter(x=>x.gender==='남'));
+  const women=randomShuffle(people.filter(x=>x.gender==='여'));
+  // 소수 성별을 먼저 서로 다른 조에 분산. 조 수보다 많으면 균등하게 배치.
+  const pools=men.length<=women.length?[men,women]:[women,men];
+  for(const pool of pools){for(const p of pool){
+   const candidates=groups.map((g,i)=>({g,i,room:sizes[i]-g.length,same:g.filter(x=>x.gender===p.gender).length})).filter(x=>x.room>0);
+   const shuffled=randomShuffle(candidates);
+   shuffled.sort((a,b)=>a.same-b.same||b.room-a.room);
+   shuffled[0].g.push(p);
+  }}
+  groups=groups.map(randomShuffle);
+ }else{
+  // 남여분리: 성별별로 조를 따로 구성하며 같은 조에 남녀를 섞지 않음.
+  groups=[];
+  for(const gender of ['남','여']){
+   const pool=randomShuffle(people.filter(x=>x.gender===gender));
+   let k=0;for(const n of plan(pool.length)){groups.push(pool.slice(k,k+n));k+=n;}
+  }
+ }
+ renderResults();toast(`${people.length}명 ${groups.length}개 조 편성 완료`);
+}
+function resultText(){const now=$('gameDate').textContent;return `파시스 클럽 조편성\n${clean($('club').value)||'클럽'}\n날짜: ${now}\n장소: ${clean($('course').value)||'미입력'}\n조건: ${mode} / ${groups.reduce((a,g)=>a+g.length,0)}명\n\n`+groups.map((g,i)=>`${i+1}조 - `+g.map(p=>`${p.name}(${p.gender})`).join(' ')).join('\n');}
+$('club').oninput=save;$('course').oninput=save;$('gameDate').textContent=`${new Date().getFullYear()}. ${new Date().getMonth()+1}. ${new Date().getDate()}(${['일','월','화','수','목','금','토'][new Date().getDay()]})`;$('add').onclick=()=>{
+ if(members.length>=100){toast('최대 100명까지 등록 가능합니다.');return;}
+ const m={id:nextId++,name:'',gender:'남',remark:'',attend:true};members.push(m);
+ renderRoster(m.id);renderMembers();invalidate();
+};
+modes.forEach(b=>b.onclick=()=>{mode=b.dataset.mode;modes.forEach(x=>x.classList.toggle('selected',x===b));invalidate();});$('draw').onclick=draw;$('redraw').onclick=draw;$('share').onclick=async()=>{if(!groups.length)return;const text=resultText();if(navigator.share){try{await navigator.share({title:'파시스 클럽 조편성',text});return;}catch(e){if(e.name==='AbortError')return;}}try{await navigator.clipboard.writeText(text);toast('결과를 복사했습니다.');}catch(e){prompt('결과를 복사하세요.',text);}};$('copy').onclick=async()=>{try{await navigator.clipboard.writeText(resultText());toast('조편성 결과를 복사했습니다.');}catch(e){prompt('결과를 복사하세요.',resultText());}};
+function archives(){try{const a=JSON.parse(localStorage.getItem(ARCHIVE_KEY)||'[]');return Array.isArray(a)?a:[];}catch(e){return [];}}
+$('clear').onclick=()=>{if(!groups.length){toast('삭제할 조편성 결과가 없습니다.');return;}if(!confirm('현재 조편성 결과를 삭제할까요?\n등록 회원은 유지됩니다.'))return;groups=[];renderResults();toast('현재 결과를 삭제했습니다.');};
+$('saveResult').onclick=()=>{if(!groups.length){toast('먼저 조편성을 해 주세요.');return;}const record={id:Date.now(),club:$('club').value,course:$('course').value,date:$('gameDate').textContent,mode,groups:groups.map(g=>g.map(p=>({name:p.name,gender:p.gender}))),saved:new Date().toLocaleString('ko-KR')};try{localStorage.setItem(ARCHIVE_KEY,JSON.stringify([record,...archives()].slice(0,20)));toast('조편성 결과를 저장했습니다. (최대 20건)');}catch(e){toast('저장 공간을 확인하세요.');}};
+$('loadResult').onclick=()=>{const a=archives();if(!a.length){toast('저장된 조편성 결과가 없습니다.');return;}const lines=a.map((r,i)=>`${i+1}. ${r.date} / ${r.club||'클럽'} / ${r.course||'장소 미입력'} (${r.groups.length}조)`).join('\n');const value=prompt('불러올 기록 번호를 입력하세요.\n\n'+lines,'1');if(value===null)return;const n=Number(value);if(!Number.isInteger(n)||n<1||n>a.length){toast('올바른 번호를 입력하세요.');return;}const r=a[n-1];groups=r.groups;mode=r.mode==='남'||r.mode==='여'?'남여분리':r.mode;modes.forEach(b=>b.classList.toggle('selected',b.dataset.mode===mode));$('club').value=r.club||'';$('course').value=r.course||'';$('gameDate').textContent=r.date;renderResults();preview();toast('저장된 조편성 결과를 불러왔습니다.');};
+load();renderRoster();renderMembers();renderResults();})();
+</script></body></html>
