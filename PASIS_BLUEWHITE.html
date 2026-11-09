@@ -288,7 +288,14 @@ async function roomId(){
 function playersOf(r){return Object.entries(r?.players||{}).map(([id,x])=>({id,name:x.name,score:x.score,side:r?.assignments?.[id]||null}));}
 function totalOf(a){const sum=a.reduce((n,x)=>n+x.score,0);return {sum,average:a.length?sum/a.length:0};}
 function addRows(container,items){
-  const node=$(container+'Entries');node.replaceChildren();
+  const node=$(container+'Entries');
+  // 같은 결과의 재렌더링에서는 기존 행 DOM을 유지합니다.
+  // Android에서 첫 별표 클릭 직후 서버 알림/마지막 render가 진행 중인
+  // 순차 발표 행을 삭제하여 첫 클릭이 무효처럼 보이던 문제를 방지합니다.
+  const signature=JSON.stringify(items.map(p=>[p.id,p.name,p.score,p.side]));
+  if(node.dataset.rowsSignature===signature)return;
+  node.dataset.rowsSignature=signature;
+  node.replaceChildren();
   if(!items.length){const d=document.createElement('div');d.className='empty';d.textContent=current?.finalized&&localRevealToken===current.draw_token?'배정 없음':current?.finalized?'빨간 별표를 누르면 공개됩니다':'👑 결정 전입니다';node.append(d);return;}
   items.forEach((p,index)=>{
     const row=document.createElement('div');row.className='entry';
