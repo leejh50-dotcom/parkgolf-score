@@ -354,7 +354,7 @@ function render(){
 }
 function cancelRevealAnimation(){
   clearTimeout(revealTimer);for(const t of revealTimeouts)clearTimeout(t);revealTimeouts=[];
-  for(const el of document.querySelectorAll('.entry,.totals,#winner'))el.style.visibility='';
+  for(const el of document.querySelectorAll('.entry,.totals,#winner,.victory-caption,.victory-line > *'))el.style.visibility='';
 }
 function animateRows(){
   cancelRevealAnimation();
@@ -381,11 +381,21 @@ function animateRows(){
   },averagesAt));
   const winnerAt=averagesAt+1100;
   if(isVictory){
+    // 결과 박스 구조는 유지하고, 발표할 요소만 차례대로 보입니다.
+    const caption=winner.querySelector('.victory-caption');
+    const line=winner.querySelector('.victory-line');
+    const parts=line?[...line.children]:[];
+    if(caption)caption.style.visibility='hidden';
+    for(const part of parts)part.style.visibility='hidden';
     revealTimeouts.push(setTimeout(()=>{
-      winner.style.visibility='visible';winner.classList.add('summary-reveal');
-      // 발표 효과가 끝난 후에도 우승 결과를 계속 고정 표시합니다.
-      revealTimeouts.push(setTimeout(()=>{winner.style.visibility='visible';winner.classList.remove('summary-reveal');},700));
+      winner.style.visibility='visible';
+      if(caption)caption.style.visibility='visible';
     },winnerAt));
+    // 양쪽 트로피, 우승, 화살표, 승리팀을 순차 발표합니다.
+    const order=[0,1,2,3,4];
+    order.forEach((index,i)=>revealTimeouts.push(setTimeout(()=>{
+      if(parts[index])parts[index].style.visibility='visible';
+    },winnerAt+350+(i*550))));
   }else{
     winner.replaceChildren();winner.style.visibility='visible';
     [...winnerText].forEach((letter,i)=>{
@@ -446,7 +456,6 @@ $('star').onclick=async()=>{
   if(current?.finalized&&current?.draw_token){
     wantReveal=false;localRevealToken=current.draw_token;saveRevealState();lastDrawKey='';render();return;
   }
-  if(!confirm('모든 참가자의 점수 전송이 완료되었습니다.\n청백팀을 무작위로 결정하고 내 화면에 표시할까요?'))return;
   wantReveal=true;
   const ok=await transaction((tx,snap,r)=>{
     if(!r)throw Error('경기 정보가 없습니다.');
