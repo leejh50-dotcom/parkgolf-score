@@ -310,7 +310,7 @@ function render(){
   const r=current;const list=playersOf(r),cap=r?.expected_count??null,done=!!r?.finalized;
   const countNum=list.length,full=cap!==null&&countNum===cap;
   // 다른 경기가 시작되거나 결과가 삭제되면 각 휴대폰의 공개 상태를 초기화합니다.
-  if(!done){clearRevealState();localRevealToken='';wantReveal=false;lastDrawKey='';restoredReveal=false;}
+  if(!done){clearRevealState();localRevealToken='';if(!busy)wantReveal=false;lastDrawKey='';restoredReveal=false;}
   // 앱을 종료했다가 열어도 같은 경기의 이미 공개한 결과를 즉시 복원합니다.
   if(done&&r?.draw_token&&!localRevealToken){
     const key=revealStorageKey();let saved='';
@@ -470,6 +470,12 @@ $('send').onclick=()=>{
 };
 $('star').onclick=async()=>{
   if(busy)return;
+  // 이미 다른 휴대폰에서 추첨이 끝났으면 네트워크 재조회 없이 첫 터치에 즉시 공개합니다.
+  if(current?.finalized&&current.draw_token){
+    localRevealToken=current.draw_token;
+    saveRevealState();wantReveal=false;lastDrawKey='';render();
+    return;
+  }
   // 한 번 누르면 서버의 최신 상태를 먼저 확인합니다.
   // 다른 폰에서 이미 결정한 경우에도 추가 클릭 없이 바로 결과를 표시합니다.
   busy=true;
@@ -487,6 +493,7 @@ $('star').onclick=async()=>{
     const ids=Object.keys(current.players||{});
     if(ids.length!==current.expected_count){render();throw Error('전원 점수 전송 후 결정할 수 있습니다.');}
     wantReveal=true;
+    notify('청백 결과를 결정하고 있습니다. 잠시 기다려 주세요.');
     await runTransaction(db,async tx=>{
       const latest=await tx.get(ref);
       if(!latest.exists())throw Error('경기 정보가 없습니다.');
