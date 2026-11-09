@@ -168,6 +168,10 @@ body.group-return-enabled>.group-return-button{display:flex!important}
 .winner.victory .victory-team{color:#b52339}
 .winner.victory .victory-team.blue-win{color:#075ab5}
 .winner.victory .victory-arrow{color:#b57c15;font-size:clamp(22px,6vw,30px)}
+/* 홀인원 표시: 점수와 조편성은 변경하지 않습니다. */
+.holeinone-guide{font-size:clamp(12px,3.25vw,14px);color:#65758a;margin:6px 0 0 2px;white-space:nowrap;letter-spacing:-.035em}
+.holeinone-award{margin-top:9px;padding:11px 6px;border:1px solid #e9c779;border-radius:11px;background:#fffaf0;text-align:center;color:#81551c;font-weight:850;font-size:clamp(13px,3.65vw,18px);line-height:1.45;overflow-wrap:anywhere}
+.holeinone-award[hidden]{display:none!important}
 </style>
 </head>
 <body><div class="wrap">
@@ -180,7 +184,7 @@ body.group-return-enabled>.group-return-button{display:flex!important}
  <div><label class="label" for="expected">👥 인원수</label><input class="input" id="expected" type="number" inputmode="numeric" min="2" max="50" placeholder="명"></div>
 </div>
 <div class="pair">
- <div><label class="label" for="player">👤 내 이름</label><input class="input" id="player" placeholder="이름 입력" autocomplete="name" maxlength="25"></div>
+ <div><label class="label" for="player">👤 내 이름</label><input class="input" id="player" placeholder="이름 입력" autocomplete="name" maxlength="25"><div class="holeinone-guide">홀인원 수는 이름옆에 표기-예, 홍길동(1)</div></div>
  <div><label class="label" for="score">⛳ 총점</label><input class="input" id="score" type="number" inputmode="numeric" placeholder="타수" min="1" max="500"></div>
 </div>
 <div class="submitrow"><button id="send" class="big submit-incomplete" disabled>✈ 제출</button><button id="star" class="star" disabled title="전원 전송 후 청백 무작위 결정" aria-label="청백 결정">☆</button></div>
@@ -190,7 +194,7 @@ body.group-return-enabled>.group-return-button{display:flex!important}
 </section>
 <section class="card"><div class="title"><span class="title-text">🏆 경기 결과</span><span id="count" class="counter">참가 0명</span></div>
 <div class="teams"><div class="team"><h3>🔵 청팀</h3><div class="entries" id="blueEntries"><div class="empty">👑 결정 전입니다</div></div><div class="totals"><div class="totalrow"><span>합계</span><span id="blueSum">—</span></div><div class="totalrow"><span>평균</span><span id="blueAvg">—</span></div></div></div><div class="team white"><h3>⚪ 백팀</h3><div class="entries" id="whiteEntries"><div class="empty">👑 결정 전입니다</div></div><div class="totals"><div class="totalrow"><span>합계</span><span id="whiteSum">—</span></div><div class="totalrow"><span>평균</span><span id="whiteAvg">—</span></div></div></div></div>
-<div class="winner wait" id="winner">전원 점수 전송 후 결정됩니다</div><div id="pending" class="hint" style="text-align:center"></div></section>
+<div class="winner wait" id="winner">전원 점수 전송 후 결정됩니다</div><div id="holeinoneAward" class="holeinone-award" hidden></div><div id="pending" class="hint" style="text-align:center"></div></section>
 <div class="share-row"><button type="button" id="shareResult" class="share-result" disabled>📤 공유하기</button></div>
 <div class="actions"><button class="action red" id="clear" disabled><b>🗑</b>결과삭제</button><button class="action green" id="save" disabled><b>▣</b>저장</button><button class="action blue" id="load"><b>📂</b>불러오기</button></div>
 <div id="modeNotice" class="notice setup"></div><nav class="external-links" aria-label="관련 안내"><a href="https://songgeun25.tistory.com/578" target="_blank" rel="noopener noreferrer">설명글 보러가기</a><a href="http://leejh50-dotcom.github.io/parkgolf-score/sv2_1.html" target="_blank" rel="noopener noreferrer">파시스2.1 점수판 열기</a></nav><footer>PASIS 청백 게임 1.9 PWA · Firebase 공동 전송</footer></div>
@@ -337,6 +341,11 @@ function render(){
   }else{
     if(winnerBox.textContent!==result || winnerBox.dataset.winningTeam){winnerBox.textContent=result;delete winnerBox.dataset.winningTeam;}
   }
+  // 이름 끝의 (1), (2) 등 홀인원 수만 인식합니다. 점수/승패/팀 배정은 그대로입니다.
+  const holeinoneNames=reveal?list.filter(p=>/\([1-9]\d*\)$/.test(String(p.name||'').trim())).map(p=>p.name):[];
+  const holeinoneBox=$('holeinoneAward');
+  holeinoneBox.hidden=holeinoneNames.length===0;
+  if(holeinoneNames.length)holeinoneBox.textContent='⛳ 오늘의 홀인원 상-'+holeinoneNames.join(' ');
   $('star').disabled=!(full&&uid)||busy;
   $('star').classList.toggle('ready',full&&!reveal);
   $('star').classList.toggle('active',reveal);
@@ -354,7 +363,7 @@ function render(){
 }
 function cancelRevealAnimation(){
   clearTimeout(revealTimer);for(const t of revealTimeouts)clearTimeout(t);revealTimeouts=[];
-  for(const el of document.querySelectorAll('.entry,.totals,#winner,.victory-caption,.victory-line > *'))el.style.visibility='';
+  for(const el of document.querySelectorAll('.entry,.totals,#winner,.victory-caption,.victory-line > *,#holeinoneAward'))el.style.visibility='';
 }
 function animateRows(){
   cancelRevealAnimation();
@@ -364,9 +373,10 @@ function animateRows(){
   const sums=[...document.querySelectorAll('.totalrow:first-child')];
   const averages=[...document.querySelectorAll('.totalrow:nth-child(2)')];
   const winner=$('winner');
+  const holeinoneAward=$('holeinoneAward');
   const isVictory=winner.classList.contains('victory');
   const winnerText=isVictory?'':winner.textContent.replace(/\s/g,'');
-  for(const el of [...left,...right,...sums,...averages,winner])el.style.visibility='hidden';
+  for(const el of [...left,...right,...sums,...averages,winner,holeinoneAward])el.style.visibility='hidden';
   const rowDelay=850;
   for(let i=0;i<rows;i++)revealTimeouts.push(setTimeout(()=>{
     for(const arr of [left,right]){const el=arr[i];if(el){el.style.visibility='visible';el.classList.add('reveal');}}
@@ -406,6 +416,7 @@ function animateRows(){
       revealTimeouts.push(setTimeout(()=>{span.style.visibility='visible';},winnerAt+i*650));
     });
   }
+  if(!holeinoneAward.hidden)revealTimeouts.push(setTimeout(()=>{holeinoneAward.style.visibility='visible';},winnerAt+3400));
 }
 
 function stopRoom(){if(unsubscribe){unsubscribe();unsubscribe=null;}cancelRevealAnimation();roomRef=null;current=null;snapshotFromServer=false;localRevealToken='';wantReveal=false;lastDrawKey='';render();}
