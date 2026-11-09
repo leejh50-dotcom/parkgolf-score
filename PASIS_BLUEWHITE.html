@@ -193,7 +193,7 @@ body.group-return-enabled>.group-return-button{display:flex!important}
 <div class="winner wait" id="winner">전원 점수 전송 후 결정됩니다</div><div id="pending" class="hint" style="text-align:center"></div></section>
 <div class="share-row"><button type="button" id="shareResult" class="share-result" disabled>📤 공유하기</button></div>
 <div class="actions"><button class="action red" id="clear" disabled><b>🗑</b>결과삭제</button><button class="action green" id="save" disabled><b>▣</b>저장</button><button class="action blue" id="load"><b>📂</b>불러오기</button></div>
-<div id="modeNotice" class="notice setup"></div><nav class="external-links" aria-label="관련 안내"><a href="http://songeun25.tistory.com/578" target="_blank" rel="noopener noreferrer">설명글 보러가기</a><a href="http://leejh50-dotcom.github.io/parkgolf-score/sv2_1.html" target="_blank" rel="noopener noreferrer">파시스2.1 점수판 열기</a></nav><footer>PASIS 청백 게임 1.9 PWA · Firebase 공동 전송</footer></div>
+<div id="modeNotice" class="notice setup"></div><nav class="external-links" aria-label="관련 안내"><a href="https://songgeun25.tistory.com/578" target="_blank" rel="noopener noreferrer">설명글 보러가기</a><a href="http://leejh50-dotcom.github.io/parkgolf-score/sv2_1.html" target="_blank" rel="noopener noreferrer">파시스2.1 점수판 열기</a></nav><footer>PASIS 청백 게임 1.9 PWA · Firebase 공동 전송</footer></div>
 <section id="pasisInnerView" aria-label="청백 게임 내부 점수판 화면" aria-hidden="true">
  <div class="pasis-back-bar"><button type="button" class="pasis-back" aria-label="청백 게임으로 돌아가기">×</button></div>
  <div class="pasis-frame-area"><iframe id="pasisInnerFrame" title="파시스2.1 점수판" allow="geolocation" referrerpolicy="strict-origin-when-cross-origin"></iframe>
@@ -682,10 +682,13 @@ onAuthStateChanged(auth,user=>{
   overlay.querySelectorAll('.pasis-back').forEach(btn=>btn.addEventListener('click',hide));
   document.querySelectorAll('.external-links a').forEach(link=>{
     link.addEventListener('click',event=>{
-      event.preventDefault();
-      if(link.textContent.includes('점수판')){show();return;}
-      const url=link.href.replace(/^http:\/\//i,'https://');
-      window.prompt('청백 게임은 그대로 유지됩니다. Safari에서 열 주소:',url);
+      if(link.textContent.includes('점수판')){
+        event.preventDefault();
+        show();
+        return;
+      }
+      // 설명글은 링크의 기본 동작으로 Safari/브라우저에서 바로 엽니다.
+      // 사용자 클릭을 가로채거나 주소 입력 팝업을 띄우지 않습니다.
     });
   });
 })();
