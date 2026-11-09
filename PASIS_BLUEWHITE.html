@@ -167,10 +167,9 @@ body.group-return-enabled>.group-return-button{display:flex!important}
 <div class="date-row"><div id="date" class="date" aria-label="자동 경기 날짜"></div></div>
 <div class="locationbox"><span style="font-size:24px">📍</span><input class="input" id="course" placeholder="(　　　　　)" autocomplete="off" maxlength="45" aria-label="장소 이름"><span class="fixedsuffix">파크골프장</span></div>
 <div class="teamcount">
- <div><label class="label" for="teamName">👥 팀명</label><input class="input" id="teamName" placeholder="팀명 입력" autocomplete="off" maxlength="40"></div>
+ <div><label class="label" for="teamName">👥 팀명</label><input class="input" id="teamName" placeholder="팀명 입력(3자 이상)" autocomplete="off" maxlength="40"></div>
  <div><label class="label" for="expected">👥 인원수</label><input class="input" id="expected" type="number" inputmode="numeric" min="2" max="50" placeholder="명"></div>
 </div>
-<div class="hint" style="margin-top:5px;color:#1451a5;font-weight:800">팀명: 4자 이상 (한글·영문·숫자)</div>
 <div class="pair">
  <div><label class="label" for="player">👤 내 이름</label><input class="input" id="player" placeholder="이름 입력" autocomplete="name" maxlength="25"></div>
  <div><label class="label" for="score">⛳ 총점</label><input class="input" id="score" type="number" inputmode="numeric" placeholder="타수" min="1" max="500"></div>
@@ -232,15 +231,14 @@ function clearRevealState(){
 const currentRoom = () => [day,clean($('course').value),clean($('teamName').value)].join('|');
 const count = () => Number($('expected').value);
 const validRoom = () => {
-  if (!clean($('course').value)) throw Error('장소를 입력하세요.');
-  if ([...clean($('teamName').value)].length < 4) throw Error('팀명은 4자 이상 입력하세요.');
+  if ([...clean($('teamName').value)].length < 3) throw Error('팀명은 3자 이상 입력하세요.');
 };
 const validCount = () => {if(!Number.isInteger(count())||count()<2||count()>50)throw Error('인원수를 2~50명으로 입력하세요.');};
 // 다섯 가지 입력이 모두 유효하고 Firebase 인증이 준비되면 제출 버튼을 진한 파랑으로 표시합니다.
 function updateSubmitButton(){
   const n=count(),scoreText=clean($('score').value),score=Number(scoreText);
-  const ready=!!uid && !!clean($('course').value)
-    && [...clean($('teamName').value)].length>=4
+  const ready=!!uid
+    && [...clean($('teamName').value)].length>=3
     && Number.isInteger(n)&&n>=2&&n<=50
     && !!clean($('player').value)&&[...clean($('player').value)].length<=25
     && !!scoreText&&Number.isInteger(score)&&score>=1&&score<=500;
@@ -446,7 +444,7 @@ function formatArchive(a){
   const blue=members.filter(x=>x.side==='blue'),white=members.filter(x=>x.side==='white');
   const b=totalOf(blue),w=totalOf(white);
   const winner=Math.abs(b.average-w.average)<1e-8?'무승부':b.average<w.average?'청팀 승리':'백팀 승리';
-  return `${a.date} · ${a.course}파크골프장 · ${a.team}\n저장: ${new Date(a.saved_at).toLocaleString('ko-KR')}\n\n🔵 청팀\n${blue.map((p,i)=>`${i+1}. ${p.name}  ${p.score}타`).join('\n')}\n합계 ${b.sum} / 평균 ${b.average.toFixed(2)}\n\n⚪ 백팀\n${white.map((p,i)=>`${i+1}. ${p.name}  ${p.score}타`).join('\n')}\n합계 ${w.sum} / 평균 ${w.average.toFixed(2)}\n\n🏆 ${winner}`;
+  return `${a.date} · ${a.course ? a.course+'파크골프장 · ' : ''}${a.team}\n저장: ${new Date(a.saved_at).toLocaleString('ko-KR')}\n\n🔵 청팀\n${blue.map((p,i)=>`${i+1}. ${p.name}  ${p.score}타`).join('\n')}\n합계 ${b.sum} / 평균 ${b.average.toFixed(2)}\n\n⚪ 백팀\n${white.map((p,i)=>`${i+1}. ${p.name}  ${p.score}타`).join('\n')}\n합계 ${w.sum} / 평균 ${w.average.toFixed(2)}\n\n🏆 ${winner}`;
 }
 // 공개된 오늘 경기 결과를 휴대폰 공유 메뉴(카카오톡 등)로 전달합니다.
 function makeShareText(r){
@@ -457,7 +455,8 @@ function makeShareText(r){
   const b=totalOf(blue),w=totalOf(white);
   const outcome=Math.abs(b.average-w.average)<1e-8?'무승부':b.average<w.average?'청팀 승리':'백팀 승리';
   const place=String(r.course||'').trim();
-  return `🏆 파시스 청백 게임 결과\n경기일: ${r.date||day}\n장소: ${place}${place.endsWith('파크골프장')?'':'파크골프장'}\n팀명: ${r.team||''}\n참가: ${members.length}명\n\n🔵 청팀 (${blue.length}명)\n${lines(blue)}\n합계: ${b.sum}  평균: ${b.average.toFixed(2)}\n\n⚪ 백팀 (${white.length}명)\n${lines(white)}\n합계: ${w.sum}  평균: ${w.average.toFixed(2)}\n\n🏆 ${outcome}`;
+  const placeLine=place ? `장소: ${place}${place.endsWith('파크골프장')?'':'파크골프장'}\n` : '';
+  return `🏆 파시스 청백 게임 결과\n경기일: ${r.date||day}\n${placeLine}팀명: ${r.team||''}\n참가: ${members.length}명\n\n🔵 청팀 (${blue.length}명)\n${lines(blue)}\n합계: ${b.sum}  평균: ${b.average.toFixed(2)}\n\n⚪ 백팀 (${white.length}명)\n${lines(white)}\n합계: ${w.sum}  평균: ${w.average.toFixed(2)}\n\n🏆 ${outcome}`;
 }
 $('shareResult').onclick=async()=>{
   const r=current;
@@ -523,7 +522,7 @@ $('load').onclick=()=>{
   choose.style.cssText='width:100%;font-size:17px;padding:12px;border:2px solid #9eb8d8;border-radius:10px;margin-bottom:12px;background:white;color:#102341';
   archives.forEach((a,i)=>{
     const opt=document.createElement('option');opt.value=String(i);
-    opt.textContent=`${a.date} · ${a.course} · ${a.team}`;
+    opt.textContent=`${a.date} · ${a.course ? a.course+' · ' : ''}${a.team}`;
     choose.append(opt);
   });
   const content=document.createElement('div');content.id='archiveView';
@@ -577,7 +576,7 @@ $('modeNotice').classList.remove('setup');
 updateSubmitButton();
 onAuthStateChanged(auth,user=>{
   if(user){uid=user.uid;updateSubmitButton();
-    if(clean($('course').value)&&[...clean($('teamName').value)].length>=4)watchRoom().catch(e=>notify(errText(e),true));
+    if([...clean($('teamName').value)].length>=3)watchRoom().catch(e=>notify(errText(e),true));
   }else{uid=null;updateSubmitButton();signInAnonymously(auth).catch(e=>notify('익명 인증 오류: '+errText(e),true));}
 });
 </script>
