@@ -1822,9 +1822,39 @@ let pasisBleDevice = null;
 let pasisBleServer = null;
 let pasisBleRx = null;
 let pasisBleTx = null;
-let pasisSyncScores = new Uint8Array(144);
-let pasisSyncReceived = new Array(144).fill(false);
-let pasisSyncReceivedCount = 0;
+let pasisSync = null;
+let pasisMatchStatus = null;
+let pasisWatchSending = false;
+
+async function writePasisPacket(packet) {
+    const rx = pasisBleRx;
+    if (typeof rx.writeValueWithResponse === 'function') {
+        await rx.writeValueWithResponse(packet);
+    } else {
+        await rx.writeValue(packet);
+    }
+}
+
+async function setPasisMatchMode(command, active, syncHeader = []) {
+    const packet = new Uint8Array([0x01, command, syncHeader.length, 0, ...syncHeader]);
+    let timer;
+    let cancelWait;
+    const status = new Promise(resolve => {
+        pasisMatchStatus = { active, resolve };
+        cancelWait = () => resolve(false);
+        timer = setTimeout(cancelWait, 4000);
+    });
+
+    try {
+        await writePasisPacket(packet);
+        if (!await status) throw new Error('워치의 경기 모드 응답 시간 초과');
+    } finally {
+        clearTimeout(timer);
+        cancelWait();
+        pasisMatchStatus = null;
+    }
+}
+
 // ========================================
 // 현재 위치 실제 지형 고도 시험
 // ========================================
@@ -1993,121 +2023,100 @@ async function connectPasisWatchBLE() {
 }
 // PASIS WATCH 연결 후 점수 불러오기
 async function loadScoresFromPasisWatch() {
-    try {
-        if (!pasisBleDevice || !pasisBleDevice.gatt || !pasisBleDevice.gatt.connected || !pasisBleRx) {
-            const connected = await connectPasisWatchBLE();
+    if (pasisWatchSending || pasisSync) return;
+    const sync = {
+        scores: new Uint8Array(144),
+        received: new Uint8Array(144),
+        count: 0,
+        header: null,
+        timer: null,
+        applying: false
+    };
+    pasisSync = sync;
 
-            if (!connected) {
+    try {
+        if (!pasisBleDevice?.gatt?.connected || !pasisBleRx) {
+            if (!await connectPasisWatchBLE()) {
+                pasisSync = null;
                 return;
             }
         }
-
-        // 이전 수신 상태 초기화
-        pasisSyncScores = new Uint8Array(144);
-        pasisSyncReceived = new Array(144).fill(false);
-        pasisSyncReceivedCount = 0;
-
-        // WATCH에 전체 점수 요청
-        await requestPasisWatchSync();
-
+        sync.timer = setTimeout(() => {
+            if (pasisSync !== sync || sync.applying) return;
+            pasisSync = null;
+            showToast('점수를 모두 받지 못했습니다. 다시 불러와 주세요.', 4000);
+        }, 8000);
+        await writePasisPacket(new Uint8Array([0x01, 0x30, 0x00, 0x00]));
     } catch (err) {
+        clearTimeout(sync.timer);
+        if (pasisSync === sync) pasisSync = null;
         console.error('WATCH 점수 불러오기 실패:', err);
         showToast('점수 불러오기 실패');
     }
-}  
-// PASIS WATCH BLE 데이터 수신
-function handlePasisSyncData(event) {
+}
+
+async function handlePasisSyncData(event) {
     const value = event.target.value;
-    const data = new Uint8Array(
-        value.buffer,
-        value.byteOffset,
-        value.byteLength
-    );
+    const data = new Uint8Array(value.buffer, value.byteOffset, value.byteLength);
+    if (data.length < 4 || data[0] !== 0x01) return;
+    if (data.length !== 4 + (data[2] | (data[3] << 8))) return;
 
-    console.log(
-        'BLE RX:',
-        Array.from(data)
-            .map(function(b) {
-                return b.toString(16).padStart(2, '0');
-            })
-            .join(' ')
-    );
+    if (data[1] === 0x36 && data.length === 5) {
+        if (pasisMatchStatus?.active === data[4]) pasisMatchStatus.resolve(true);
+        return;
+    }
 
-// SYNC_DATA(0x31) 수신
-if (data.length >= 14 && data[0] === 0x01 && data[1] === 0x31) {
-
+    const sync = pasisSync;
+    if (data[1] !== 0x31 || data.length < 15 || !sync || sync.applying) return;
     const offset = data[12];
     const count = data[13];
+    if (count === 0 || data.length !== 14 + count || offset + count > 144) return;
+
+    const header = data.slice(4, 12);
+    if (!sync.header) sync.header = header;
+    if (!header.every((byte, index) => byte === sync.header[index])) return;
 
     for (let i = 0; i < count; i++) {
         const index = offset + i;
-
-        if (index < 144) {
-            pasisSyncScores[index] = data[14 + i];
-
-            if (!pasisSyncReceived[index]) {
-                pasisSyncReceived[index] = true;
-                pasisSyncReceivedCount++;
-            }
+        sync.scores[index] = data[14 + i];
+        if (!sync.received[index]) {
+            sync.received[index] = 1;
+            sync.count++;
         }
     }
+    if (sync.count !== 144) return;
 
-    console.log(
-        'SYNC DATA:',
-        offset,
-        count,
-        'TOTAL:',
-        pasisSyncReceivedCount
-    );
-
-if (pasisSyncReceivedCount === 144) {
-
-    const courses = ['A', 'B', 'C', 'D'];
-
-    for (let player = 0; player < 4; player++) {
-        for (let course = 0; course < 4; course++) {
-            for (let hole = 0; hole < 9; hole++) {
-
-                const index =
-                    player * 36 +
-                    course * 9 +
-                    hole;
-
-                const raw = pasisSyncScores[index];
-                const score = raw & 0x0F;
-                const ob = (raw & 0x10) !== 0;
-
-    scores[courses[course]][player + 1][hole] =
-    score === 0 ? '' : String(score) + (ob ? ')' : '');
-            }
-        }
-    }
-
-    renderAllCourses();
-    updateSummary();
-    autoSave();
-    showToast('워치에서 불러오기 완료');
-}
-}
-}
-// PASIS WATCH 점수 동기화 요청
-async function requestPasisWatchSync() {
+    sync.applying = true;
+    clearTimeout(sync.timer);
     try {
-        if (!pasisBleRx) {
-            alert('먼저 PASIS WATCH BLE를 연결해주세요.');
-            return;
+        const courses = ['A', 'B', 'C', 'D'];
+        for (let player = 0; player < 4; player++) {
+            for (let course = 0; course < 4; course++) {
+                for (let hole = 0; hole < 9; hole++) {
+                    const raw = sync.scores[player * 36 + course * 9 + hole];
+                    const score = raw & 0x0F;
+                    const ob = (raw & 0x10) !== 0;
+                    scores[courses[course]][player + 1][hole] =
+                        score === 0 ? '' : String(score) + (ob ? ')' : '');
+                }
+            }
         }
+        renderAllCourses();
+        updateSummary();
+        autoSave();
 
-        // VERSION=01, CMD_SYNC_REQUEST=30, LENGTH=0000
-        const packet = new Uint8Array([0x01, 0x30, 0x00, 0x00]);
-
-        await pasisBleRx.writeValue(packet);
-
-        console.log('SYNC REQUEST 전송: 01 30 00 00');
-
+        try {
+            await setPasisMatchMode(0x35, 0, sync.header);
+            showToast('워치에서 불러오기 완료');
+        } catch (err) {
+            console.error('워치 경기 모드 종료 확인 실패:', err);
+            showToast('점수 불러오기 완료. 워치의 경기 모드 종료를 확인하지 못했습니다.', 5000);
+        }
     } catch (err) {
-        console.error('SYNC REQUEST 전송 실패:', err);
-        showToast('워치로 전송 실패', 3000);
+        console.error('WATCH 점수 반영 실패:', err);
+        showToast('불러온 점수를 반영하지 못했습니다.', 4000);
+    } finally {
+        pasisSync = null;
     }
 }
 // PASIS 2.1 점수 -> WATCH 전송
@@ -2130,24 +2139,13 @@ function choosePasisWatchLayoutAndSend(layout) {
     sendScoresToPasisWatchNow();
 }
 async function sendScoresToPasisWatchNow() {
+    if (pasisWatchSending || pasisSync) return;
+    pasisWatchSending = true;
     try {
         // BLE 연결
 if (!pasisBleDevice || !pasisBleDevice.gatt || !pasisBleDevice.gatt.connected || !pasisBleRx) {            const connected = await connectPasisWatchBLE();
             if (!connected) return;
         }
-
-      // await testCurrentAltitude();
-      // await new Promise(resolve => setTimeout(resolve, 500));
-        async function writePasisPacket(packet) {
-            if (
-                typeof pasisBleRx.writeValueWithResponse === 'function'
-            ) {
-                await pasisBleRx.writeValueWithResponse(packet);
-            } else {
-                await pasisBleRx.writeValue(packet);
-            }
-        }
-
 
         // =====================================================
         // 1. 조명 + 선수 4명 텍스트 전송
@@ -2555,7 +2553,13 @@ console.log('WATCH CLEAR GAME SENT');
       
         await testCurrentAltitude();
 
-      showToast('워치로 보내기 완료', 3000);
+        try {
+            await setPasisMatchMode(0x34, 1);
+            showToast('워치로 보내기 완료', 3000);
+        } catch (err) {
+            console.error('워치 경기 모드 시작 확인 실패:', err);
+            showToast('워치 전송 완료. 경기 모드 시작을 확인하지 못했습니다.', 5000);
+        }
       
     } catch (err) {
       
@@ -2565,6 +2569,8 @@ console.log('WATCH CLEAR GAME SENT');
         );
 
         showToast('워치로 전송 실패', 3000);
+    } finally {
+        pasisWatchSending = false;
     }
 }
 
