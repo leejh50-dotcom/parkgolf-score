@@ -1575,6 +1575,7 @@
     <button id="watchLoadBtn" onclick="loadScoresFromPasisWatch()" style="width: 100%; height:100%; padding: 12px 2px; font-size: 14px !important; font-weight: 600; background: #1e3c72; color: #fff; border: none; border-radius: 8px; white-space:nowrap;">⌚ 워치에서 불러오기</button>
   </div>
 </div>
+<div id="watchLoadStatus" role="status" aria-live="polite" style="font-size: 13px;"></div>
 <div class="input-group" style="margin-bottom: 2px !important;"><label style="display: block; margin-top: 0px !important; margin-bottom: 0px !important; font-size: 21px !important; text-align: center; font-weight: 900;">코스별 점수 기록</label>
 </div>
 </div>
@@ -1826,12 +1827,47 @@ let pasisSync = null;
 let pasisMatchStatus = null;
 let pasisWatchSending = false;
 
+function pasisBleTimeout(operation, message, ms = 8000) {
+    let timer;
+    const timeout = new Promise((resolve, reject) => {
+        timer = setTimeout(() => reject(new Error(message)), ms);
+    });
+    return Promise.race([operation, timeout]).finally(() => clearTimeout(timer));
+}
+
+function showPasisLoadStatus(message) {
+    document.getElementById('watchLoadStatus').textContent = message;
+}
+
+function releasePasisConnection(device) {
+    if (!device || pasisBleDevice !== device) return;
+    if (pasisBleTx) {
+        pasisBleTx.removeEventListener('characteristicvaluechanged', handlePasisSyncData);
+    }
+    pasisBleDevice = null;
+    pasisBleServer = null;
+    pasisBleRx = null;
+    pasisBleTx = null;
+    if (device.gatt?.connected) device.gatt.disconnect();
+}
+
+function handlePasisDisconnect(event) {
+    const device = event.target;
+    if (pasisBleDevice !== device) return;
+    releasePasisConnection(device);
+    if (pasisSync && !pasisSync.applying) {
+        clearTimeout(pasisSync.timer);
+        pasisSync = null;
+        showPasisLoadStatus('워치 연결이 끊겼습니다. 불러오기를 다시 눌러 주세요.');
+    }
+}
+
 async function writePasisPacket(packet) {
     const rx = pasisBleRx;
     if (typeof rx.writeValueWithResponse === 'function') {
-        await rx.writeValueWithResponse(packet);
+        await pasisBleTimeout(rx.writeValueWithResponse(packet), '워치 요청 전송 시간 초과');
     } else {
-        await rx.writeValue(packet);
+        await pasisBleTimeout(rx.writeValue(packet), '워치 요청 전송 시간 초과');
     }
 }
 
@@ -1975,55 +2011,70 @@ async function testCurrentAltitude() {
 
 // ========================================
 // PASIS WATCH BLE 연결
-async function connectPasisWatchBLE() {
+async function connectPasisWatchBLE(onStatus = () => {}) {
+    let device;
     try {
         if (!navigator.bluetooth) {
-            showToast('Chrome 브라우저의 블루투스 기능을 사용할 수 없습니다.');
-            return false;
+            throw new Error('아이폰에서 Bluefy로 이 페이지를 열어 주세요.');
         }
-        // 이전 연결이 살아 있다면 불필요한 재연결을 피한다.
         if (pasisBleDevice?.gatt?.connected && pasisBleRx && pasisBleTx) return true;
-        console.log('PASIS WATCH BLE 검색 시작');
-        // 워치 광고명은 PASIS WATCH-송근처럼 팀명이 붙을 수 있다.
-        // 기존에 권한을 허용한 PASIS 워치만 재사용한다.
-        if (!pasisBleDevice && typeof navigator.bluetooth.getDevices === 'function') {
-            const devices = await navigator.bluetooth.getDevices();
-            pasisBleDevice = devices.find(device =>
-                /PASIS[\s-]*WATCH/i.test(device.name || '')
-            ) || null;
+
+        onStatus('목록에서 PASIS WATCH를 선택해 주세요.');
+        // Open the chooser from the tap, before awaiting another Bluetooth call.
+        device = await navigator.bluetooth.requestDevice({
+            filters: [{ namePrefix: 'PASIS' }],
+            optionalServices: [PASIS_BLE_SERVICE_UUID]
+        });
+        onStatus('워치 블루투스 연결 중…');
+        const connection = device.gatt.connect();
+        let server;
+        try {
+            server = await pasisBleTimeout(connection, '워치 연결 시간 초과');
+        } catch (err) {
+            if (device.gatt.connected) device.gatt.disconnect();
+            throw err;
         }
-        if (!pasisBleDevice) {
-            pasisBleDevice = await navigator.bluetooth.requestDevice({
-                filters: [{ namePrefix: 'PASIS' }],
-                optionalServices: [PASIS_BLE_SERVICE_UUID]
-            });
+        pasisBleDevice = device;
+        pasisBleServer = server;
+        device.removeEventListener('gattserverdisconnected', handlePasisDisconnect);
+        device.addEventListener('gattserverdisconnected', handlePasisDisconnect);
+        const service = await pasisBleTimeout(
+            server.getPrimaryService(PASIS_BLE_SERVICE_UUID), '워치 서비스 확인 시간 초과'
+        );
+        const rx = await pasisBleTimeout(
+            service.getCharacteristic(PASIS_BLE_RX_UUID), '워치 요청 채널 확인 시간 초과'
+        );
+        const tx = await pasisBleTimeout(
+            service.getCharacteristic(PASIS_BLE_TX_UUID), '워치 수신 채널 확인 시간 초과'
+        );
+        await pasisBleTimeout(tx.startNotifications(), '워치 수신 준비 시간 초과');
+        if (!device.gatt.connected || pasisBleDevice !== device) {
+            throw new Error('워치 연결이 끊겼습니다.');
         }
-        console.log('BLE 장치 선택:', pasisBleDevice.name);
-        pasisBleServer = await pasisBleDevice.gatt.connect();
-        const service = await pasisBleServer.getPrimaryService(PASIS_BLE_SERVICE_UUID);
-        pasisBleRx = await service.getCharacteristic(PASIS_BLE_RX_UUID);
-        pasisBleTx = await service.getCharacteristic(PASIS_BLE_TX_UUID);
-        await pasisBleTx.startNotifications();
-        pasisBleTx.removeEventListener('characteristicvaluechanged', handlePasisSyncData);
-        pasisBleTx.addEventListener('characteristicvaluechanged', handlePasisSyncData);
-        console.log('PASIS WATCH BLE 연결 성공');
+        tx.removeEventListener('characteristicvaluechanged', handlePasisSyncData);
+        tx.addEventListener('characteristicvaluechanged', handlePasisSyncData);
+        pasisBleRx = rx;
+        pasisBleTx = tx;
         return true;
     } catch (err) {
         console.error('PASIS WATCH BLE 연결 실패:', err);
-        pasisBleServer = null;
-        pasisBleRx = null;
-        pasisBleTx = null;
-        // 연결 실패 후 다음 시도에서 장치를 다시 선택할 수 있도록 한다.
-        pasisBleDevice = null;
-        if (err?.name !== 'NotFoundError') {
-            showToast('BLE 연결 실패: ' + (err?.message || err?.name || '원인 미상'));
-        }
+        releasePasisConnection(device);
+        const message = err?.name === 'NotFoundError'
+            ? '워치 선택이 취소됐거나 검색 결과가 없습니다.'
+            : '워치 연결 실패: ' + (err?.message || err?.name || '원인 미상');
+        onStatus(message);
+        if (err?.name !== 'NotFoundError') showToast(message);
         return false;
     }
 }
 // PASIS WATCH 연결 후 점수 불러오기
 async function loadScoresFromPasisWatch() {
-    if (pasisWatchSending || pasisSync) return;
+    if (pasisWatchSending) {
+        showPasisLoadStatus('워치로 보내는 중입니다.');
+        return;
+    }
+    if (pasisSync) return;
+    showPasisLoadStatus('워치에서 불러오는 중…');
     const sync = {
         scores: new Uint8Array(144),
         received: new Uint8Array(144),
@@ -2036,22 +2087,30 @@ async function loadScoresFromPasisWatch() {
 
     try {
         if (!pasisBleDevice?.gatt?.connected || !pasisBleRx) {
-            if (!await connectPasisWatchBLE()) {
-                pasisSync = null;
+            if (!await connectPasisWatchBLE(showPasisLoadStatus)) {
+                if (pasisSync === sync) pasisSync = null;
                 return;
             }
         }
+        if (pasisSync !== sync) return;
+        showPasisLoadStatus('워치에 점수를 요청하는 중…');
         sync.timer = setTimeout(() => {
             if (pasisSync !== sync || sync.applying) return;
             pasisSync = null;
-            showToast('점수를 모두 받지 못했습니다. 다시 불러와 주세요.', 4000);
-        }, 8000);
+            releasePasisConnection(pasisBleDevice);
+            showPasisLoadStatus(`점수 수신 시간 초과 (${sync.count}/144). 다시 불러와 주세요.`);
+        }, 10000);
         await writePasisPacket(new Uint8Array([0x01, 0x30, 0x00, 0x00]));
+        if (pasisSync === sync && sync.count === 0) {
+            showPasisLoadStatus('워치에 점수를 요청했습니다. 수신 대기 중…');
+        }
     } catch (err) {
         clearTimeout(sync.timer);
-        if (pasisSync === sync) pasisSync = null;
+        if (pasisSync !== sync) return;
+        pasisSync = null;
+        releasePasisConnection(pasisBleDevice);
         console.error('WATCH 점수 불러오기 실패:', err);
-        showToast('점수 불러오기 실패');
+        showPasisLoadStatus('워치 요청 실패: ' + (err?.message || '다시 불러와 주세요.'));
     }
 }
 
@@ -2084,6 +2143,7 @@ async function handlePasisSyncData(event) {
             sync.count++;
         }
     }
+    showPasisLoadStatus(`워치 점수 수신 중 (${sync.count}/144)`);
     if (sync.count !== 144) return;
 
     sync.applying = true;
@@ -2107,14 +2167,15 @@ async function handlePasisSyncData(event) {
 
         try {
             await setPasisMatchMode(0x35, 0, sync.header);
+            showPasisLoadStatus('워치에서 불러오기 완료');
             showToast('워치에서 불러오기 완료');
         } catch (err) {
             console.error('워치 경기 모드 종료 확인 실패:', err);
-            showToast('점수 불러오기 완료. 워치의 경기 모드 종료를 확인하지 못했습니다.', 5000);
+            showPasisLoadStatus('점수를 불러왔습니다. 워치의 경기 모드 종료는 확인되지 않았습니다.');
         }
     } catch (err) {
         console.error('WATCH 점수 반영 실패:', err);
-        showToast('불러온 점수를 반영하지 못했습니다.', 4000);
+        showPasisLoadStatus('불러온 점수를 반영하지 못했습니다.');
     } finally {
         pasisSync = null;
     }
