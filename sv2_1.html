@@ -418,6 +418,15 @@
     box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4) !important;
 }
 
+.parkgolf-app #shareResultBtn {
+    background: #1e3c72 !important;
+    box-shadow: 0 2px 8px rgba(30, 60, 114, 0.3) !important;
+}
+
+.parkgolf-app #shareResultBtn:hover {
+    background: #162d56 !important;
+}
+
 .parkgolf-app .load-btn {
     background: #17a2b8 !important;
     color: white !important;
@@ -1684,7 +1693,7 @@ button.pasis-group-return.visible { display:flex !important; }
 </div>
 </div>
 <div class="button-group" style="margin-top: 20px;"><button class="save-btn" onclick="saveData()">저장하기</button> <button class="history-btn" onclick="openHistoryModal()">저장된 기록<br>(<span id="historyCount">0</span>)</button></div>
-<div style="margin-top: 10px; padding: 0;"><button class="share-btn" onclick="shareResult()" style="width: 100% !important; padding: 10px 8px !important; font-size: 16px !important;">결과 공유하기</button></div>
+<div style="margin-top: 10px; padding: 0;"><button id="shareResultBtn" class="share-btn" onclick="shareResult()" style="width: 100% !important; padding: 10px 8px !important; font-size: 16px !important;">결과 공유하기</button></div>
 
 <!-- ✅ 도움말/사용가이드(티스토리/유튜브) : 기존 4개 버튼 아래 -->
 <div class="guide-divider"></div>
@@ -2818,22 +2827,8 @@ button.pasis-group-return.visible { display:flex !important; }
             for (let player = 1; player <= 4; player++) {
                 const rankCell = document.getElementById('rank-new-' + player);
                 if (rankCell) {
-                    if (ranks[player]) {
-                        rankCell.textContent = ranks[player] + '위';
-                        // 1위는 금색, 2위는 은색, 3위는 동색
-                        if (ranks[player] === 1) {
-                            rankCell.style.color = '#FFD700';
-                        } else if (ranks[player] === 2) {
-                            rankCell.style.color = '#C0C0C0';
-                        } else if (ranks[player] === 3) {
-                            rankCell.style.color = '#CD7F32';
-                        } else {
-                            rankCell.style.color = '#1e3c72';
-                        }
-                    } else {
-                        rankCell.textContent = '-';
-                        rankCell.style.color = '#1e3c72';
-                    }
+                    rankCell.textContent = ranks[player] ? ranks[player] + '위' : '-';
+                    rankCell.style.color = '#000000';
                 }
             }
         }
