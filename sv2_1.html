@@ -2646,6 +2646,10 @@ button.pasis-group-return.visible { display:flex !important; }
         }
         
         function confirmScore() {
+            if (tempScore && !/^(?:[1-9]|10)$/.test(tempScore)) {
+                showToast('점수는 1~10타만 입력할 수 있습니다.', 3000);
+                return;
+            }          
             if (tempScore) {
                 scores[currentScoreCourse][currentScorePlayer][currentScoreHole] = tempScore + (isPenalty ? ')' : '');
             } else {
