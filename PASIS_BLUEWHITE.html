@@ -172,6 +172,35 @@ body.group-return-enabled>.group-return-button{display:flex!important}
 .holeinone-guide{font-size:clamp(12px,3.25vw,14px);color:#65758a;margin:6px 0 0 2px;white-space:nowrap;letter-spacing:-.035em}
 .holeinone-award{margin-top:9px;padding:11px 6px;border:1px solid #e9c779;border-radius:11px;background:#fffaf0;text-align:center;color:#81551c;font-weight:850;font-size:clamp(13px,3.65vw,18px);line-height:1.45;overflow-wrap:anywhere}
 .holeinone-award[hidden]{display:none!important}
+
+/* 2026-11-19: 청백 게임 화면 세로 압축 — 표시/배치만 수정 */
+.hero{padding:11px 12px 10px}
+.brand{font-size:clamp(23px,6.2vw,32px);line-height:1.18;letter-spacing:-1.1px}
+.hero small{display:block;margin-top:3px;font-size:clamp(10px,3.1vw,13px);white-space:nowrap;letter-spacing:-.055em;line-height:1.25}
+.card{margin-top:7px;margin-bottom:7px;padding-top:9px;padding-bottom:9px}
+.date-row{margin-bottom:7px}
+.date{padding:7px 4px;border-radius:10px;line-height:1.25}
+.locationbox{height:43px;border-radius:10px}
+.locationbox .input{height:39px}
+.input{height:43px;border-radius:10px}
+/* 레이블은 화면에서만 숨김: label-for 연결 및 접근성 유지 */
+.teamcount .label,.pair .label{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.teamcount{margin-top:7px}
+.pair{margin-top:7px}
+.holeinone-guide{margin-top:3px;line-height:1.2;font-size:clamp(11px,3.05vw,13px)}
+.submitrow{margin-top:9px}
+.big{min-height:46px;font-size:clamp(19px,5.1vw,24px);border-radius:11px}
+.star{min-height:46px;font-size:29px;border-radius:11px}
+.guide{margin-top:6px;padding:7px 5px;line-height:1.25;border-radius:10px;font-size:clamp(13px,3.6vw,16px)}
+.title{margin-bottom:7px}
+.team h3{padding:7px 0}
+.entries{min-height:60px;padding-top:3px;padding-bottom:3px}
+.empty{padding:11px 2px;line-height:1.3}
+.totals{padding-top:6px;padding-bottom:6px}
+.totalrow{padding:1px 0}
+.winner.wait{margin-top:7px;padding:10px 5px;font-size:clamp(14px,3.9vw,17px)}
+@media(max-width:430px){.card{margin-top:6px;margin-bottom:6px;padding-top:8px;padding-bottom:8px}.hero{padding:10px 9px 9px}.date{font-size:clamp(17px,5vw,22px)}.input{font-size:clamp(17px,4.5vw,20px)}.fixedsuffix{font-size:clamp(15px,4.3vw,18px)}}
+@media(max-width:350px){.hero small{font-size:10px}.brand{font-size:22px}.holeinone-guide{font-size:10px}}
 </style>
 </head>
 <body><div class="wrap">
@@ -180,7 +209,7 @@ body.group-return-enabled>.group-return-button{display:flex!important}
 <div class="date-row"><div id="date" class="date" aria-label="자동 경기 날짜"></div></div>
 <div class="locationbox"><span style="font-size:24px">📍</span><input class="input" id="course" placeholder="(　　　　　)" autocomplete="off" maxlength="45" aria-label="장소 이름"><span class="fixedsuffix">파크골프장</span></div>
 <div class="teamcount">
- <div><label class="label" for="teamName">👥 팀명</label><input class="input" id="teamName" placeholder="팀명 입력(3자 이상)" autocomplete="off" maxlength="40"></div>
+ <div><label class="label" for="teamName">👥 팀명</label><input class="input" id="teamName" placeholder="클럽명(3자 이상)" autocomplete="off" maxlength="40"></div>
  <div><label class="label" for="expected">👥 인원수</label><input class="input" id="expected" type="number" inputmode="numeric" min="2" max="50" placeholder="명"></div>
 </div>
 <div class="pair">
