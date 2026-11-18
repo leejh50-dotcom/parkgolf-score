@@ -181,7 +181,8 @@ body.group-return-enabled>.group-return-button{display:flex!important}
 .date-row{margin-bottom:7px}
 .date{padding:7px 4px;border-radius:10px;line-height:1.25}
 .locationbox{height:43px;border-radius:10px}
-.locationbox .input{height:39px}
+.locationbox .input{height:39px;flex:1;min-width:0;padding-left:2px;padding-right:2px}
+.course-paren{font-size:20px;font-weight:900;color:#0d315f;flex:none;line-height:1}
 .input{height:43px;border-radius:10px}
 /* 레이블은 화면에서만 숨김: label-for 연결 및 접근성 유지 */
 .teamcount .label,.pair .label{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
@@ -207,7 +208,7 @@ body.group-return-enabled>.group-return-button{display:flex!important}
 <header class="hero"><div class="brand">🏌️ 파시스 <span style="color:#ffe064">청백</span> 게임</div><small>파크골프 친선경기 · 함께 즐기는 오늘의 운수</small></header>
 <section class="card">
 <div class="date-row"><div id="date" class="date" aria-label="자동 경기 날짜"></div></div>
-<div class="locationbox"><span style="font-size:24px">📍</span><input class="input" id="course" placeholder="(　　　　　)" autocomplete="off" maxlength="45" aria-label="장소 이름"><span class="fixedsuffix">파크골프장</span></div>
+<div class="locationbox"><span style="font-size:24px">📍</span><span class="course-paren" aria-hidden="true">(</span><input class="input" id="course" placeholder="" autocomplete="off" maxlength="45" aria-label="장소 이름"><span class="course-paren" aria-hidden="true">)</span><span class="fixedsuffix">파크골프장</span></div>
 <div class="teamcount">
  <div><label class="label" for="teamName">👥 팀명</label><input class="input" id="teamName" placeholder="클럽명(3자 이상)" autocomplete="off" maxlength="40"></div>
  <div><label class="label" for="expected">👥 인원수</label><input class="input" id="expected" type="number" inputmode="numeric" min="2" max="50" placeholder="명"></div>
