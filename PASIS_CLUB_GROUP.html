@@ -68,8 +68,18 @@
 
 /* 조편성 설명글 링크: 작고 차분한 회색 버튼 */
 .roster-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:11px}.roster-actions .btn{width:100%;margin-top:0}.roster-delete{background:#f4e7e9!important;color:#a33e4b!important}.group-help-link{display:flex;align-items:center;justify-content:center;width:100%;min-height:34px;margin-top:10px;padding:6px 10px;background:#dfe3e8;border:1px solid #d0d5db;border-radius:8px;color:#4b5563;text-align:center;text-decoration:none;font-size:14px;font-weight:600;line-height:1.35}
+
+/* 상단 정보 압축: 날짜 / 클럽명 / 장소 각 한 줄 */
+.wrap > section.card:first-of-type{padding-top:11px;padding-bottom:12px}
+.wrap > section.card:first-of-type .meta-rows{gap:6px;margin-top:0}
+.wrap > section.card:first-of-type .meta-row{grid-template-columns:76px minmax(0,1fr);gap:6px}
+.wrap > section.card:first-of-type .meta-row label{font-size:17px;font-weight:850;text-align:left;padding-left:3px}
+.wrap > section.card:first-of-type .meta-row .field,
+.wrap > section.card:first-of-type .meta-row .datefield{height:43px;min-height:43px;font-size:18px;border-radius:9px}
+.wrap > section.card:first-of-type .meta-row .datefield{padding:9px 3px}
+.wrap > section.card:first-of-type .stats{margin-top:9px}
 </style></head><body><div class="wrap"><header class="hero"><h1>파시스 클럽 조편성</h1><small>파크골프 클럽 · 공정한 무작위 조편성</small></header>
-<section class="card"><label for="club">나의 클럽명</label><input id="club" class="field" placeholder="클럽명 입력"><div class="meta-rows"><div class="meta-row"><label for="gameDate">날짜</label><div id="gameDate" class="datefield"></div></div><div class="meta-row"><label for="course">장소</label><input id="course" class="field" placeholder="구장명 입력"></div></div><div class="stats"><div class="stat">전체 회원<b id="total">0</b></div><div class="stat">오늘 참석<b id="attend">0</b></div><div class="stat">남 / 여<b id="sexcount">0 / 0</b></div></div></section>
+<section class="card"><div class="meta-rows"><div class="meta-row"><label for="gameDate">날짜</label><div id="gameDate" class="datefield"></div></div><div class="meta-row"><label for="club">클럽명</label><input id="club" class="field" placeholder="클럽명 입력"></div></div><div class="meta-row"><label for="course">장소</label><input id="course" class="field" placeholder="구장명 입력"></div></div><div class="stats"><div class="stat">전체 회원<b id="total">0</b></div><div class="stat">오늘 참석<b id="attend">0</b></div><div class="stat">남 / 여<b id="sexcount">0 / 0</b></div></div></section>
 <section class="card"><div class="row"><h2 style="margin:0">등록 회원</h2><span class="hint" id="membercount">0/100명</span></div>
 
 <div class="roster-head"><span>순</span><span>이름</span><span>성별</span><span>비고</span><span>결석</span></div>
