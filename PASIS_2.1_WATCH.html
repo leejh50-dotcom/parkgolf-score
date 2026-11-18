@@ -417,6 +417,15 @@
     box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4) !important;
 }
 
+.parkgolf-app #shareResultBtn {
+    background: #1e3c72 !important;
+    box-shadow: 0 2px 8px rgba(30, 60, 114, 0.3) !important;
+}
+
+.parkgolf-app #shareResultBtn:hover {
+    background: #162d56 !important;
+}
+
 .parkgolf-app .load-btn {
     background: #17a2b8 !important;
     color: white !important;
@@ -1685,7 +1694,7 @@
 </div>
 </div>
 <div class="button-group" style="margin-top: 20px;"><button class="save-btn" onclick="saveData()">저장하기</button> <button class="history-btn" onclick="openHistoryModal()">저장된 기록<br>(<span id="historyCount">0</span>)</button></div>
-<div style="margin-top: 10px; padding: 0;"><button class="share-btn" onclick="shareResult()" style="width: 100% !important; padding: 10px 8px !important; font-size: 16px !important;">결과 공유하기</button></div>
+<div style="margin-top: 10px; padding: 0;"><button id="shareResultBtn" class="share-btn" onclick="shareResult()" style="width: 100% !important; padding: 10px 8px !important; font-size: 16px !important;">결과 공유하기</button></div>
 
 <!-- ✅ 도움말/사용가이드(티스토리/유튜브) : 기존 4개 버튼 아래 -->
 <div class="guide-divider"></div>
@@ -1773,6 +1782,16 @@
 <div style="font-size: 48px; margin-bottom: 20px;">📸</div>
 <h3>이미지 생성 중...</h3>
 <p style="color: #6c757d; margin-top: 10px;">잠시만 기다려주세요</p>
+</div>
+</div>
+
+<div id="shareReadyModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="shareReadyTitle">
+<div class="modal-content">
+<h3 id="shareReadyTitle">경기 결과 이미지</h3>
+<p id="shareReadyMessage" aria-live="polite"></p>
+<button id="openResultShareBtn" type="button" class="share-btn" style="width: 100%; margin-bottom: 10px;" onclick="openResultShareMenu()">공유 메뉴 열기</button>
+<button type="button" class="modal-close" style="margin-bottom: 10px;" onclick="downloadResultImage()">이미지 내려받기</button>
+<button type="button" class="modal-close" onclick="closeShareReadyModal()">닫기</button>
 </div>
 </div>
 
@@ -2846,7 +2865,7 @@ function confirmDeleteHistory() {
         
         // 결과 공유 기능
         function shareResult() {
-            // iOS/PC/Android 모두 공유 선택 모달 열기
+            // 공유할 점수표 선택
             document.getElementById('shareSelectModal').classList.add('show');
         }
         
@@ -2876,414 +2895,164 @@ function confirmDeleteHistory() {
             });
         }
 
-        function shareOnlySummary() {
-            closeShareSelectModal();
+        let pendingResultImage = null;
 
-            // html2canvas 로드 확인
-            if (typeof html2canvas === 'undefined') {
-                alert('⚠️ 이미지 생성 기능을 로드할 수 없습니다.\n\n해결 방법:\n1. 페이지를 완전히 새로고침(Ctrl+F5 또는 Cmd+R)\n2. 브라우저 캐시 삭제 후 재시도\n3. 다른 브라우저로 시도\n\n문제가 계속되면 관리자에게 문의하세요.');
+        function shareOnlySummary() {
+            prepareResultImage(false);
+        }
+
+        function shareAll() {
+            prepareResultImage(true);
+        }
+
+        async function prepareResultImage(includeCourses) {
+            closeShareSelectModal();
+            pendingResultImage = null;
+            if (typeof html2canvas !== 'function') {
+                showToast('이미지 생성 기능을 불러오지 못했습니다. 새로고침 후 다시 시도해 주세요.', 4500);
                 return;
             }
 
-            // 안드로이드: 버튼을 누른 "이 순간"(사용자 제스처가 살아있을 때) 클립보드 쓰기를 미리 예약한다.
-            // html2canvas가 끝난 뒤에 clipboard.write()를 호출하면 그 사이 시간차 때문에
-            // 브라우저가 사용자 제스처로 인정하지 않아 조용히 실패하고 텍스트로만 복사되던 문제 수정.
-            var isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-            var androidClipboardReady = false;
-            var resolveShareBlob, rejectShareBlob;
-            if (!isIOS && navigator.clipboard && typeof ClipboardItem !== 'undefined') {
-                try {
-                    var shareBlobPromise = new Promise(function(res, rej) {
-                        resolveShareBlob = res;
-                        rejectShareBlob = rej;
-                    });
-                    navigator.clipboard.write([
-                        new ClipboardItem({ 'image/png': shareBlobPromise })
-                    ]).then(function() {
-                        showToast('이미지가 복사되었습니다!\n카카오톡 대화창에 붙여넣기 하세요.', 4500);
-                    }).catch(function(error) {
-                        console.log('클립보드 이미지 복사 실패, 텍스트로 전환:', error);
-                        tryAndroidTextShare();
-                    });
-                    androidClipboardReady = true;
-                } catch(e) {
-                    console.log('ClipboardItem 사전 준비 오류:', e);
-                    androidClipboardReady = false;
-                }
-            }
-            
-            document.getElementById('loadingModal').classList.add('show');
-            
-            // 코스별 카드들을 임시로 숨기기
-            const coursesContainer = document.getElementById('coursesContainer');
-            const originalDisplay = coursesContainer.style.display;
-            coursesContainer.style.display = 'none';
-            
-            setTimeout(function() {
-                fixOklchColors(document.getElementById('resultCapture'));
-                html2canvas(document.getElementById('resultCapture'), {
-                    backgroundColor: '#ffffff',
-                    scale: 2,
-                    logging: false,
-                    useCORS: true,
-                    allowTaint: true,
-                    foreignObjectRendering: false,
-                    imageTimeout: 0
-                }).then(function(canvas) {
-                    // 코스별 카드 다시 표시
-                    coursesContainer.style.display = originalDisplay;
-                    document.getElementById('loadingModal').classList.remove('show');
-                    
-                    // Blob 생성
-                    canvas.toBlob(function(blob) {
-                        if (!blob) {
-                            if (androidClipboardReady) { rejectShareBlob(new Error('이미지 생성 실패')); return; }
-                            alert('이미지 생성에 실패했습니다.');
-                            return;
-                        }
-
-                        if (androidClipboardReady) {
-                            // 위에서 미리 예약해둔 클립보드 쓰기에 실제 이미지를 채워 완료시킨다.
-                            resolveShareBlob(blob);
-                            return;
-                        }
-                        
-                        var fileName = 'parkgolf_summary_' + new Date().getTime() + '.png';
-                        
-                        try {
-                            var file = new File([blob], fileName, { type: 'image/png' });
-
-                            if (isIOS) {
-                                // iOS: 파일 직접 공유
-                                navigator.share({
-                                    files: [file],
-                                    title: '파크골프 경기 결과',
-                                    text: '파크골프 경기 결과를 공유합니다.'
-                                }).then(function() {
-                                    console.log('공유 완료');
-                                }).catch(function(error) {
-                                    if (error.name !== 'AbortError') {
-                                        console.log('공유 오류:', error);
-                                        tryClipboardShare(blob, canvas);
-                                    }
-                                });
-                            } else {
-                                // 클립보드 API 미지원 구형 브라우저: 기존 방식(텍스트 fallback)
-                                tryClipboardShare(blob, canvas);
-                            }
-                        } catch(e) {
-                            console.log('File 생성 오류:', e);
-                            tryClipboardShare(blob, canvas);
-                        }
-                    }, 'image/png', 0.95);
-                }).catch(function(error) {
-                    coursesContainer.style.display = originalDisplay;
-                    document.getElementById('loadingModal').classList.remove('show');
-                    console.log('이미지 생성 오류:', error);
-                    if (androidClipboardReady) { rejectShareBlob(error); return; }
-                    // oklch 등 색상 파싱 오류 시 텍스트 공유로 대체
-                    if (error.message && error.message.indexOf('oklch') !== -1 || error.message.indexOf('unsupported color') !== -1 || error.message.indexOf('parse') !== -1) {
-                        showToast('이미지 생성 불가 — 결과 텍스트로 공유합니다.', 3000);
-                        setTimeout(function(){ tryAndroidTextShare(); }, 500);
-                    } else {
-                        alert('⚠️ 이미지 생성에 실패했습니다.\n\n오류: ' + error.message + '\n\n해결 방법:\n1. 페이지 새로고침(F5 또는 Ctrl+R)\n2. 점수를 다시 입력한 후 재시도\n3. 다른 브라우저로 시도');
-                    }
-                });
-            }, 500);
-        }
-        
-        function buildResultText() {
-            var date = document.getElementById('shareDate').textContent || '';
-            var location = document.getElementById('shareLocation').textContent || '';
-            var teamName = document.getElementById('shareTeamName').textContent || '';
-            var allCourses = ['A','B','C','D'];
-            var courseCount = Math.round(selectedHoles / 9);
-            var activeCourses = allCourses.slice(0, courseCount);
-            var lines = [];
-            lines.push('🏌️ 파크골프 경기 결과');
-            lines.push('━━━━━━━━━━━━━━━');
-            if (date) lines.push('📅 ' + date);
-            if (location && location !== '미입력') lines.push('📍 ' + location + ' 파크골프장');
-            if (teamName && teamName !== '미입력') lines.push('👥 ' + teamName + '조');
-            lines.push('');
-            // 선수별 합계
-            for (var i = 0; i < 4; i++) {
-                var name = playerNames[i];
-                if (!name) continue;
-                var total = 0;
-                var parTotal = 0;
-                activeCourses.forEach(function(c){
-                    scores[c][i+1].forEach(function(s){ if(s !== '') total += parseInt(s)||0; });
-                    coursePars[c].forEach(function(p){ parTotal += parseInt(p)||0; });
-                });
-                var diff = total - parTotal;
-                var diffStr = diff > 0 ? '+' + diff : (diff === 0 ? 'E' : String(diff));
-                lines.push('• ' + name + ' : ' + total + '타 (' + diffStr + ')');
-            }
-            lines.push('━━━━━━━━━━━━━━━');
-            lines.push('📱 PASIS sv2.1 클럽용');
-            return lines.join('\n');
-        }
-
-        function tryAndroidTextShare() {
-            var text = buildResultText();
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(text).then(function() {
-                    showToast('결과가 복사되었습니다!\n카카오톡을 열고 대화창에 붙여넣기 하세요.', 4500);
-                }).catch(function() {
-                    androidTextFallback(text);
-                });
-            } else {
-                androidTextFallback(text);
-            }
-        }
-
-        function androidTextFallback(text) {
-            var ta = document.createElement('textarea');
-            ta.value = text;
-            ta.style.position = 'fixed';
-            ta.style.opacity = '0';
-            document.body.appendChild(ta);
-            ta.focus();
-            ta.select();
+            const loadingModal = document.getElementById('loadingModal');
+            loadingModal.classList.add('show');
             try {
-                document.execCommand('copy');
-                showToast('결과가 복사되었습니다!\n카카오톡을 열고 대화창에 붙여넣기 하세요.', 4500);
-            } catch(e) {
-                alert('결과 텍스트:\n\n' + text + '\n\n위 내용을 복사해서 카카오톡에 붙여넣으세요.');
+                const canvas = await captureResultImage(includeCourses);
+                const blob = await new Promise(function(resolve, reject) {
+                    canvas.toBlob(function(image) {
+                        if (image) resolve(image);
+                        else reject(new Error('PNG 생성 실패'));
+                    }, 'image/png');
+                });
+                const filename = 'parkgolf_' + (includeCourses ? 'full_' : 'summary_') + Date.now() + '.png';
+                const file = typeof File === 'function' ? new File([blob], filename, { type: 'image/png' }) : null;
+                pendingResultImage = { blob, filename, file };
+            } catch (error) {
+                console.error('경기 결과 이미지 생성 실패:', error);
+                showToast('점수표 이미지를 만들지 못했습니다. 다시 시도해 주세요.', 4500);
+                return;
+            } finally {
+                loadingModal.classList.remove('show');
             }
-            document.body.removeChild(ta);
+
+            if (!canShareResultImage()) {
+                showShareReadyModal(false);
+            } else if (navigator.userActivation && !navigator.userActivation.isActive) {
+                showShareReadyModal(true);
+            } else {
+                await openResultShareMenu();
+            }
         }
 
-        function tryClipboardShare(blob, canvas) {
-            // 클립보드에 이미지 복사 시도
-            if (navigator.clipboard && typeof ClipboardItem !== 'undefined') {
+        async function captureResultImage(includeCourses) {
+            const resultCapture = document.getElementById('resultCapture');
+            const coursesContainer = document.getElementById('coursesContainer');
+            const captureOptions = {
+                backgroundColor: '#ffffff',
+                scale: 2,
+                logging: false,
+                useCORS: true,
+                allowTaint: true,
+                foreignObjectRendering: false,
+                imageTimeout: 0
+            };
+
+            fixOklchColors(resultCapture);
+            if (!includeCourses) {
+                const originalDisplay = coursesContainer.style.display;
+                coursesContainer.style.display = 'none';
                 try {
-                    navigator.clipboard.write([
-                        new ClipboardItem({
-                            'image/png': blob
-                        })
-                    ]).then(function() {
-                        showToast('이미지가 복사되었습니다!\n카카오톡 대화창에 붙여넣기 하세요.', 4500);
-                    }).catch(function(error) {
-                        console.log('클립보드 이미지 복사 실패, 텍스트로 전환:', error);
-                        tryAndroidTextShare();
-                    });
-                } catch(e) {
-                    console.log('ClipboardItem 오류, 텍스트로 전환:', e);
-                    tryAndroidTextShare();
+                    return await html2canvas(resultCapture, captureOptions);
+                } finally {
+                    coursesContainer.style.display = originalDisplay;
                 }
-            } else {
-                // ClipboardItem 미지원 시 텍스트 공유
-                tryAndroidTextShare();
+            }
+
+            const fullOptions = { ...captureOptions, scrollY: 0, scrollX: 0 };
+            const summaryCanvas = await html2canvas(resultCapture, fullOptions);
+            let totalContentHeight = 0;
+            coursesContainer.querySelectorAll('.course-card').forEach(function(card) {
+                totalContentHeight += card.offsetHeight + 20;
+            });
+            const captureHeight = Math.max(totalContentHeight, coursesContainer.scrollHeight) + 200;
+
+            const coursesCanvas = await html2canvas(coursesContainer, {
+                ...fullOptions,
+                windowHeight: captureHeight + 300,
+                height: captureHeight,
+                onclone: function(clonedDoc) {
+                    const clonedContainer = clonedDoc.getElementById('coursesContainer');
+                    if (clonedContainer) {
+                        clonedContainer.style.height = captureHeight + 'px';
+                        clonedContainer.style.overflow = 'visible';
+                        clonedContainer.style.paddingBottom = '50px';
+                    }
+                }
+            });
+
+            const combinedCanvas = document.createElement('canvas');
+            combinedCanvas.width = Math.max(summaryCanvas.width, coursesCanvas.width);
+            combinedCanvas.height = summaryCanvas.height + coursesCanvas.height + 40;
+            const ctx = combinedCanvas.getContext('2d');
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, combinedCanvas.width, combinedCanvas.height);
+            ctx.drawImage(summaryCanvas, (combinedCanvas.width - summaryCanvas.width) / 2, 0);
+            ctx.drawImage(coursesCanvas, (combinedCanvas.width - coursesCanvas.width) / 2, summaryCanvas.height + 40);
+            return combinedCanvas;
+        }
+
+        function canShareResultImage() {
+            if (!pendingResultImage.file || typeof navigator.share !== 'function') return false;
+            return typeof navigator.canShare !== 'function' || navigator.canShare({ files: [pendingResultImage.file] });
+        }
+
+        function showShareReadyModal(canRetry) {
+            const openButton = document.getElementById('openResultShareBtn');
+            openButton.style.display = canRetry ? 'block' : 'none';
+            document.getElementById('shareReadyMessage').textContent = canRetry
+                ? '점수표 이미지가 준비되었습니다.'
+                : '이 브라우저에서 이미지 공유 메뉴를 열 수 없습니다. 이미지를 내려받아 카카오톡 등에 첨부해 주세요.';
+            document.getElementById('shareReadyModal').classList.add('show');
+        }
+
+        function closeShareReadyModal() {
+            document.getElementById('shareReadyModal').classList.remove('show');
+            pendingResultImage = null;
+        }
+
+        async function openResultShareMenu() {
+            if (!pendingResultImage) return;
+            const image = pendingResultImage;
+            const modal = document.getElementById('shareReadyModal');
+            const openedFromButton = modal.classList.contains('show');
+            modal.classList.remove('show');
+            try {
+                await navigator.share({ files: [image.file] });
+                if (pendingResultImage === image) closeShareReadyModal();
+            } catch (error) {
+                if (pendingResultImage !== image) return;
+                if (error.name === 'AbortError') {
+                    closeShareReadyModal();
+                    return;
+                }
+                console.warn('경기 결과 공유 메뉴 호출 실패:', error);
+                showShareReadyModal(!openedFromButton && canShareResultImage());
             }
         }
-        
-        function fallbackDownload(canvasElement) {
-            var dataUrl = canvasElement.toDataURL('image/png', 0.95);
-            var link = document.createElement('a');
-            link.download = 'parkgolf_summary_' + new Date().getTime() + '.png';
-            link.href = dataUrl;
+
+        function downloadResultImage() {
+            if (!pendingResultImage) return;
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(pendingResultImage.blob);
+            link.href = url;
+            link.download = pendingResultImage.filename;
             document.body.appendChild(link);
             link.click();
-            document.body.removeChild(link);
-            setTimeout(function() {
-                showToast('이미지가 저장되었습니다!\n갤러리에서 이미지를 선택해 공유하세요.', 4500);
-            }, 500);
+            link.remove();
+            setTimeout(function() { URL.revokeObjectURL(url); }, 30000);
+            closeShareReadyModal();
+            showToast('내려받은 이미지를 카카오톡 등에 첨부해 주세요.', 4500);
         }
-        
-        function shareAll() {
-            closeShareSelectModal();
 
-            // html2canvas 로드 확인
-            if (typeof html2canvas === 'undefined') {
-                alert('⚠️ 이미지 생성 기능을 로드할 수 없습니다.\n\n해결 방법:\n1. 페이지를 완전히 새로고침(Ctrl+F5 또는 Cmd+R)\n2. 브라우저 캐시 삭제 후 재시도\n3. 다른 브라우저로 시도\n\n문제가 계속되면 관리자에게 문의하세요.');
-                return;
-            }
-
-            // 안드로이드: 버튼을 누른 "이 순간"(사용자 제스처가 살아있을 때) 클립보드 쓰기를 미리 예약한다.
-            var isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-            var androidClipboardReady = false;
-            var resolveShareBlob, rejectShareBlob;
-            if (!isIOS && navigator.clipboard && typeof ClipboardItem !== 'undefined') {
-                try {
-                    var shareBlobPromise = new Promise(function(res, rej) {
-                        resolveShareBlob = res;
-                        rejectShareBlob = rej;
-                    });
-                    navigator.clipboard.write([
-                        new ClipboardItem({ 'image/png': shareBlobPromise })
-                    ]).then(function() {
-                        showToast('이미지가 복사되었습니다!\n카카오톡 대화창에 붙여넣기 하세요.', 4500);
-                    }).catch(function(error) {
-                        console.log('클립보드 이미지 복사 실패, 텍스트로 전환:', error);
-                        tryAndroidTextShare();
-                    });
-                    androidClipboardReady = true;
-                } catch(e) {
-                    console.log('ClipboardItem 사전 준비 오류:', e);
-                    androidClipboardReady = false;
-                }
-            }
-            
-            document.getElementById('loadingModal').classList.add('show');
-            
-            // 충분한 렌더링 시간 확보
-            setTimeout(function() {
-                // 1. 합계표 캡처
-                fixOklchColors(document.getElementById('resultCapture'));
-                html2canvas(document.getElementById('resultCapture'), {
-                    backgroundColor: '#ffffff',
-                    scale: 2,
-                    logging: false,
-                    useCORS: true,
-                    allowTaint: true,
-                    foreignObjectRendering: false,
-                    imageTimeout: 0,
-                    scrollY: 0,
-                    scrollX: 0
-                }).then(function(summaryCanvas) {
-                    
-                    // 2. 코스별 카드들 캡처
-                    const coursesContainer = document.getElementById('coursesContainer');
-                    
-                    // 실제 콘텐츠 높이 계산 (모든 자식 요소 + margin 포함)
-                    let totalContentHeight = 0;
-                    const courseCards = coursesContainer.querySelectorAll('.course-card');
-                    courseCards.forEach(function(card) {
-                        totalContentHeight += card.offsetHeight + 20; // margin-bottom 20px 추가
-                    });
-                    
-                    // 충분한 여유 높이 추가 (200px)
-                    const captureHeight = Math.max(totalContentHeight, coursesContainer.scrollHeight) + 200;
-                    
-                    html2canvas(coursesContainer, {
-                        backgroundColor: '#ffffff',
-                        scale: 2,
-                        logging: false,
-                        useCORS: true,
-                        allowTaint: true,
-                        foreignObjectRendering: false,
-                        imageTimeout: 0,
-                        scrollY: 0,
-                        scrollX: 0,
-                        windowHeight: captureHeight + 300,
-                        height: captureHeight,
-                        onclone: function(clonedDoc) {
-                            const clonedContainer = clonedDoc.getElementById('coursesContainer');
-                            if (clonedContainer) {
-                                clonedContainer.style.height = captureHeight + 'px';
-                                clonedContainer.style.overflow = 'visible';
-                                clonedContainer.style.paddingBottom = '50px';
-                            }
-                        }
-                    }).then(function(coursesCanvas) {
-                        
-                        // 3. 두 캔버스를 하나로 합치기
-                        const totalHeight = summaryCanvas.height + coursesCanvas.height + 40;
-                        const maxWidth = Math.max(summaryCanvas.width, coursesCanvas.width);
-                        
-                        const combinedCanvas = document.createElement('canvas');
-                        combinedCanvas.width = maxWidth;
-                        combinedCanvas.height = totalHeight;
-                        const ctx = combinedCanvas.getContext('2d');
-                        
-                        // 흰색 배경
-                        ctx.fillStyle = '#ffffff';
-                        ctx.fillRect(0, 0, maxWidth, totalHeight);
-                        
-                        // 합계표 그리기
-                        ctx.drawImage(summaryCanvas, (maxWidth - summaryCanvas.width) / 2, 0);
-                        
-                        // 코스별 카드 그리기
-                        ctx.drawImage(coursesCanvas, (maxWidth - coursesCanvas.width) / 2, summaryCanvas.height + 40);
-                        
-                        document.getElementById('loadingModal').classList.remove('show');
-                        
-                        // Blob 생성
-                        combinedCanvas.toBlob(function(blob) {
-                            if (!blob) {
-                                if (androidClipboardReady) { rejectShareBlob(new Error('이미지 생성 실패')); return; }
-                                alert('이미지 생성에 실패했습니다.');
-                                return;
-                            }
-
-                            if (androidClipboardReady) {
-                                // 위에서 미리 예약해둔 클립보드 쓰기에 실제 이미지를 채워 완료시킨다.
-                                resolveShareBlob(blob);
-                                return;
-                            }
-                            
-                            var fileName = 'parkgolf_full_' + new Date().getTime() + '.png';
-                            
-                            try {
-                                var file = new File([blob], fileName, { type: 'image/png' });
-
-                                if (isIOS) {
-                                    // iOS: 파일 직접 공유
-                                    navigator.share({
-                                        files: [file],
-                                        title: '파크골프 경기 결과',
-                                        text: '파크골프 경기 결과를 공유합니다.'
-                                    }).then(function() {
-                                        console.log('공유 완료');
-                                    }).catch(function(error) {
-                                        if (error.name !== 'AbortError') {
-                                            console.log('공유 오류:', error);
-                                            tryClipboardShare(blob, combinedCanvas);
-                                        }
-                                    });
-                                } else {
-                                    // 클립보드 API 미지원 구형 브라우저: 기존 방식(텍스트 fallback)
-                                    tryClipboardShare(blob, combinedCanvas);
-                                }
-                            } catch(e) {
-                                console.log('File 생성 오류:', e);
-                                tryClipboardShare(blob, combinedCanvas);
-                            }
-                        }, 'image/png', 0.95);
-                    }).catch(function(error) {
-                        document.getElementById('loadingModal').classList.remove('show');
-                        console.log('코스별 카드 이미지 생성 오류:', error);
-                        if (androidClipboardReady) { rejectShareBlob(error); return; }
-                        if (error.message && error.message.indexOf('oklch') !== -1 || error.message.indexOf('unsupported color') !== -1 || error.message.indexOf('parse') !== -1) {
-                            showToast('이미지 생성 불가 — 결과 텍스트로 공유합니다.', 3000);
-                            setTimeout(function(){ tryAndroidTextShare(); }, 500);
-                        } else {
-                            alert('⚠️ 이미지 생성에 실패했습니다.\n\n오류: ' + error.message + '\n\n해결 방법:\n1. 페이지 새로고침(F5 또는 Ctrl+R)\n2. 점수를 다시 입력한 후 재시도\n3. 다른 브라우저로 시도');
-                        }
-                    });
-                }).catch(function(error) {
-                    document.getElementById('loadingModal').classList.remove('show');
-                    console.log('합계표 이미지 생성 오류:', error);
-                    if (androidClipboardReady) { rejectShareBlob(error); return; }
-                    if (error.message && error.message.indexOf('oklch') !== -1 || error.message.indexOf('unsupported color') !== -1 || error.message.indexOf('parse') !== -1) {
-                        showToast('이미지 생성 불가 — 결과 텍스트로 공유합니다.', 3000);
-                        setTimeout(function(){ tryAndroidTextShare(); }, 500);
-                    } else {
-                        alert('⚠️ 이미지 생성에 실패했습니다.\n\n오류: ' + error.message + '\n\n해결 방법:\n1. 페이지 새로고침(F5 또는 Ctrl+R)\n2. 점수를 다시 입력한 후 재시도\n3. 다른 브라우저로 시도');
-                    }
-                });
-            }, 500);
-        }
-        
-        function fallbackShare(canvas) {
-            // 공유 API를 지원하지 않는 경우 이미지 다운로드
-            canvas.toBlob(function(blob) {
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'parkgolf-result-' + new Date().getTime() + '.png';
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-                
-                document.getElementById('loadingModal').classList.remove('show');
-                showToast('이미지가 저장되었습니다!\n갤러리에서 확인 후 공유해주세요.');
-            });
-        }
-        
         function initDate() {
             updateDateTime();
             setInterval(updateDateTime, 1000);
@@ -3930,6 +3699,10 @@ async function clearPlayerNames(confirmed = false) {
         }
         
         function confirmScore() {
+            if (tempScore && !/^(?:[1-9]|10)$/.test(tempScore)) {
+                showToast('점수는 1~10타만 입력할 수 있습니다.', 3000);
+                return;
+            }
             if (tempScore) {
                 scores[currentScoreCourse][currentScorePlayer][currentScoreHole] = tempScore + (isPenalty ? ')' : '');
             } else {
@@ -4111,22 +3884,8 @@ async function clearPlayerNames(confirmed = false) {
             for (let player = 1; player <= 4; player++) {
                 const rankCell = document.getElementById('rank-new-' + player);
                 if (rankCell) {
-                    if (ranks[player]) {
-                        rankCell.textContent = ranks[player] + '위';
-                        // 1위는 금색, 2위는 은색, 3위는 동색
-                        if (ranks[player] === 1) {
-                            rankCell.style.color = '#FFD700';
-                        } else if (ranks[player] === 2) {
-                            rankCell.style.color = '#C0C0C0';
-                        } else if (ranks[player] === 3) {
-                            rankCell.style.color = '#CD7F32';
-                        } else {
-                            rankCell.style.color = '#1e3c72';
-                        }
-                    } else {
-                        rankCell.textContent = '-';
-                        rankCell.style.color = '#1e3c72';
-                    }
+                    rankCell.textContent = ranks[player] ? ranks[player] + '위' : '-';
+                    rankCell.style.color = '#000000';
                 }
             }
         }
