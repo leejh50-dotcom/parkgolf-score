@@ -221,6 +221,11 @@ body.group-return-enabled>.group-return-button{display:flex!important}
 }
 /* 이미 서버에 등록된 참가자는 재제출하지 않도록 완료 상태를 유지 */
 #send.submit-complete,#send.submit-complete:disabled{background:#1c6c50!important;color:#fff!important;border:3px solid #125039!important;opacity:1!important;box-shadow:none!important;cursor:default!important}
+
+/* 개인 청백팀 먼저 발표: 기존 제출 완료 버튼 자리 사용 */
+#send.submit-complete.my-blue{background:#0766ca;border:2px solid #003f89;color:#fff;box-shadow:0 3px 0 #00366c}
+#send.submit-complete.my-white{background:#f8f8f8;border:2px solid #727d90;color:#222f42;box-shadow:0 3px 0 #aab0ba}
+#send.submit-complete.my-blue:disabled,#send.submit-complete.my-white:disabled{opacity:1}
 </style>
 </head>
 <body><div class="wrap">
@@ -281,6 +286,18 @@ let localRevealToken='', wantReveal=false;
 // 각 휴대폰의 결과 공개 여부만 보존합니다. 서버의 청백 배정은 변경하지 않습니다.
 const REVEAL_STORAGE_PREFIX='pasis_bluewhite_reveal_v1_';
 let restoredReveal=false;
+// 개인 청백 소속을 먼저 보여준 뒤 2.2초 후 전체 결과를 발표합니다.
+let personalRevealWaiting=false, personalRevealTimer=null;
+function beginPersonalReveal(token){
+  if(personalRevealTimer)clearTimeout(personalRevealTimer);
+  localRevealToken=token;saveRevealState();wantReveal=false;lastDrawKey='';
+  personalRevealWaiting=true;render();
+  personalRevealTimer=setTimeout(()=>{
+    personalRevealTimer=null;personalRevealWaiting=false;
+    if(current?.draw_token===token)render();
+  },2200);
+}
+
 function revealStorageKey(){return roomRef&&uid?REVEAL_STORAGE_PREFIX+uid+'_'+roomRef.id:null;}
 function saveRevealState(){
   const key=revealStorageKey();if(!key||!localRevealToken)return;
@@ -304,14 +321,18 @@ function updateSubmitButton(){
   const button=$('send');
   const submitted=!!uid && (!!current?.players?.[uid] || justSubmittedRoom===currentRoom());
   if(submitted){
-    button.textContent='✓ 제출 완료';
+    const mySide=current?.finalized&&localRevealToken===current?.draw_token
+      ?current?.assignments?.[uid]:null;
+    button.textContent=mySide==='blue'?'🔵 청팀':mySide==='white'?'⚪ 백팀':'✓ 제출 완료';
+    button.classList.toggle('my-blue',mySide==='blue');
+    button.classList.toggle('my-white',mySide==='white');
     button.disabled=true;
     button.classList.remove('submit-incomplete');
     button.classList.add('submit-complete');
     return;
   }
   button.textContent='✈ 제출';
-  button.classList.remove('submit-complete');
+  button.classList.remove('submit-complete','my-blue','my-white');
   const n=count(),scoreText=clean($('score').value),score=Number(scoreText);
   const ready=!!uid
     && [...clean($('teamName').value)].length>=3
@@ -381,7 +402,7 @@ function render(){
     if(saved===r.draw_token){localRevealToken=saved;restoredReveal=true;lastDrawKey=r.draw_token;}
     else if(saved&&key){try{localStorage.removeItem(key);}catch(e){}}
   }
-  const reveal=done&&!!r?.draw_token&&localRevealToken===r.draw_token;
+  const reveal=done&&!!r?.draw_token&&localRevealToken===r.draw_token&&!personalRevealWaiting;
   if(cap!==null&&document.activeElement!==$('expected'))$('expected').value=cap;
   updateSubmitButton();
   $('count').textContent=`전송 ${countNum}${cap?'/'+cap:''}명`;
@@ -392,7 +413,7 @@ function render(){
     $(side+'Avg').textContent=reveal?totalOf(arr).average.toFixed(2):'—';
   }
   const guide=$('guide');guide.classList.toggle('ready',full&&!done);guide.classList.toggle('done',reveal);
-  guide.textContent=!cap?'별표를 누르면 결과가 표시됩니다':!full?`${cap-countNum}명 미전송입니다 (${countNum}/${cap}명)`:'별표를 누르면 결과가 표시됩니다';
+  guide.textContent=personalRevealWaiting?'내 청백팀을 확인하세요. 잠시 후 경기 결과가 공개됩니다':!cap?'별표를 누르면 결과가 표시됩니다':!full?`${cap-countNum}명 미전송입니다 (${countNum}/${cap}명)`:'별표를 누르면 결과가 표시됩니다';
   $('pending').textContent='';
   let result='전원 점수 전송 후 결정됩니다';
   if(reveal){const a=totalOf(blue).average,b=totalOf(white).average;result=Math.abs(a-b)<1e-8?'무 승 부':a<b?'우 승 청 팀':'우 승 백 팀';}
@@ -416,7 +437,7 @@ function render(){
   const holeinoneBox=$('holeinoneAward');
   holeinoneBox.hidden=holeinoneNames.length===0;
   if(holeinoneNames.length)holeinoneBox.textContent='⛳ 오늘의 홀인원 상-'+holeinoneNames.join(' ');
-  $('star').disabled=!(full&&uid)||busy;
+  $('star').disabled=!(full&&uid)||busy||personalRevealWaiting;
   $('star').classList.toggle('ready',full&&!reveal);
   $('star').classList.toggle('active',reveal);
   $('star').textContent=reveal?'★':'☆';
@@ -425,7 +446,7 @@ function render(){
   let mine=r?.players?.[uid];if(mine && !['player','score'].includes(document.activeElement?.id)){$('player').value=mine.name;$('score').value=mine.score;}
   // 다른 사람의 결정은 화면에 자동 공개되지 않습니다. 자신의 별표 클릭만 공개를 허용합니다.
   if(done&&wantReveal&&r?.draw_token){
-    wantReveal=false;localRevealToken=r.draw_token;saveRevealState();render();return;
+    beginPersonalReveal(r.draw_token);return;
   }
   if(reveal&&r.draw_token!==lastDrawKey){lastDrawKey=r.draw_token;animateRows();}
   if(restoredReveal){restoredReveal=false;cancelRevealAnimation();}
@@ -489,7 +510,7 @@ function animateRows(){
   if(!holeinoneAward.hidden)revealTimeouts.push(setTimeout(()=>{holeinoneAward.style.visibility='visible';},winnerAt+3400));
 }
 
-function stopRoom(){justSubmittedRoom='';if(unsubscribe){unsubscribe();unsubscribe=null;}cancelRevealAnimation();roomRef=null;current=null;snapshotFromServer=false;localRevealToken='';wantReveal=false;lastDrawKey='';render();}
+function stopRoom(){if(personalRevealTimer)clearTimeout(personalRevealTimer);personalRevealTimer=null;personalRevealWaiting=false;justSubmittedRoom='';if(unsubscribe){unsubscribe();unsubscribe=null;}cancelRevealAnimation();roomRef=null;current=null;snapshotFromServer=false;localRevealToken='';wantReveal=false;lastDrawKey='';render();}
 async function watchRoom(){
   validRoom();
   const id=await roomId();
@@ -535,8 +556,7 @@ $('star').onclick=async()=>{
   if(busy)return;
   // 이미 다른 휴대폰에서 추첨이 끝났으면 네트워크 재조회 없이 첫 터치에 즉시 공개합니다.
   if(current?.finalized&&current.draw_token){
-    localRevealToken=current.draw_token;
-    saveRevealState();wantReveal=false;lastDrawKey='';render();
+    beginPersonalReveal(current.draw_token);
     return;
   }
   // 한 번 누르면 서버의 최신 상태를 먼저 확인합니다.
@@ -549,9 +569,7 @@ $('star').onclick=async()=>{
     current=snap.exists()?snap.data():null;
     if(!current)throw Error('경기 정보가 없습니다.');
     if(current.finalized&&current.draw_token){
-      localRevealToken=current.draw_token;
-      saveRevealState();lastDrawKey='';wantReveal=false;
-      render();return;
+      beginPersonalReveal(current.draw_token);return;
     }
     const ids=Object.keys(current.players||{});
     if(ids.length!==current.expected_count){render();throw Error('전원 점수 전송 후 결정할 수 있습니다.');}
@@ -573,8 +591,7 @@ $('star').onclick=async()=>{
     if(roomRef?.id!==ref.id)return;
     current=result.exists()?result.data():null;
     if(current?.finalized&&current.draw_token){
-      wantReveal=false;localRevealToken=current.draw_token;
-      saveRevealState();lastDrawKey='';render();
+      beginPersonalReveal(current.draw_token);
     }else{notify('청백 결정 내용을 동기화하고 있습니다.');}
   }catch(e){wantReveal=false;notify(errText(e),true);}
   finally{busy=false;render();}
