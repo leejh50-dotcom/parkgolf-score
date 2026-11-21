@@ -228,6 +228,15 @@ body.group-return-enabled>.group-return-button{display:flex!important}
 #send.submit-complete.my-blue:disabled,#send.submit-complete.my-white:disabled{opacity:1}
 /* 경기 결과 전송 인원: 시니어 가독성 향상 */
 .counter{font-size:clamp(17px,4.5vw,21px)!important;font-weight:900;padding:6px 10px}
+
+/* 개인 청백 확인 후 체크 버튼으로 결과 공개 */
+.personal-team-row{display:grid;grid-template-columns:minmax(0,1fr) 86px;gap:8px;margin-top:8px}
+.personal-team-row[hidden]{display:none!important}
+.personal-team-label{display:flex;align-items:center;justify-content:center;min-height:47px;border-radius:11px;color:#fff;font-size:clamp(20px,5.2vw,26px);font-weight:900}
+.personal-team-label.blue{background:#0668cd;border:3px solid #004c9b}
+.personal-team-label.white{background:#e04768;border:3px solid #b82d4a}
+.confirm-result{min-height:47px;border:3px solid #146b3b;border-radius:11px;background:#22a05b;color:#fff;font-size:31px;font-weight:900;line-height:1}
+.confirm-result:active{filter:brightness(.9)}
 </style>
 </head>
 <body><div class="wrap">
@@ -245,6 +254,10 @@ body.group-return-enabled>.group-return-button{display:flex!important}
 </div>
 <div class="submitrow"><button id="send" class="big submit-incomplete" disabled>✈ 제출</button><button id="star" class="star" disabled title="전원 전송 후 청백 무작위 결정" aria-label="청백 결정">☆</button></div>
 <div class="guide" id="guide" role="status">별표가 빨간색으로 변하면 누르세요. 아래에 결과가 표시됩니다</div>
+<div id="personalTeamRow" class="personal-team-row" hidden>
+  <div id="personalTeamLabel" class="personal-team-label" aria-live="polite"></div>
+  <button id="confirmResult" class="confirm-result" type="button" aria-label="청백 확인 후 경기 결과 보기" title="확인 후 경기 결과 보기">✔</button>
+</div>
 <div id="status" class="status" role="status"></div>
 <div id="sendSuccessOverlay" class="send-success-overlay" role="status" aria-live="polite" aria-hidden="true"><div class="send-success-box"><span class="send-success-check">✓</span>전송 완료</div></div>
 </section>
@@ -288,17 +301,33 @@ let localRevealToken='', wantReveal=false;
 // 각 휴대폰의 결과 공개 여부만 보존합니다. 서버의 청백 배정은 변경하지 않습니다.
 const REVEAL_STORAGE_PREFIX='pasis_bluewhite_reveal_v1_';
 let restoredReveal=false;
-// 개인 청백 소속을 먼저 보여준 뒤 2.2초 후 전체 결과를 발표합니다.
-let personalRevealWaiting=false, personalRevealTimer=null;
+// 별표를 누르면 개인 청백만 표시하고, 확인 버튼을 눌러야 결과를 공개합니다.
+let personalRevealWaiting=false, personalRevealTimer=null, personalTeamToken='';
+const TEAM_STAGE_PREFIX='pasis_bluewhite_team_stage_v1_';
+function teamStageKey(){return roomRef&&uid?TEAM_STAGE_PREFIX+uid+'_'+roomRef.id:null;}
+function saveTeamStage(token){const key=teamStageKey();if(key)try{localStorage.setItem(key,token);}catch(e){}}
+function clearTeamStage(){const key=teamStageKey();if(key)try{localStorage.removeItem(key);}catch(e){}}
 function beginPersonalReveal(token){
-  if(personalRevealTimer)clearTimeout(personalRevealTimer);
-  localRevealToken=token;saveRevealState();wantReveal=false;lastDrawKey='';
-  personalRevealWaiting=true;render();
-  personalRevealTimer=setTimeout(()=>{
-    personalRevealTimer=null;personalRevealWaiting=false;
-    if(current?.draw_token===token)render();
-  },2200);
+  if(!token)return;
+  personalTeamToken=token;
+  personalRevealWaiting=true;
+  wantReveal=false;
+  saveTeamStage(token);
+  render();
 }
+function confirmPersonalReveal(){
+  if(!current?.finalized||!current.draw_token||personalTeamToken!==current.draw_token)return;
+  const token=personalTeamToken;
+  personalTeamToken='';
+  personalRevealWaiting=false;
+  clearTeamStage();
+  localRevealToken=token;
+  saveRevealState();
+  wantReveal=false;
+  lastDrawKey='';
+  render();
+}
+$('confirmResult').onclick=confirmPersonalReveal;
 
 function revealStorageKey(){return roomRef&&uid?REVEAL_STORAGE_PREFIX+uid+'_'+roomRef.id:null;}
 function saveRevealState(){
@@ -323,11 +352,8 @@ function updateSubmitButton(){
   const button=$('send');
   const submitted=!!uid && (!!current?.players?.[uid] || justSubmittedRoom===currentRoom());
   if(submitted){
-    const mySide=current?.finalized&&localRevealToken===current?.draw_token
-      ?current?.assignments?.[uid]:null;
-    button.textContent=mySide==='blue'?'🔵 청팀':mySide==='white'?'⚪ 백팀':'✓ 제출 완료';
-    button.classList.toggle('my-blue',mySide==='blue');
-    button.classList.toggle('my-white',mySide==='white');
+    button.textContent='✓ 제출 완료';
+    button.classList.remove('my-blue','my-white');
     button.disabled=true;
     button.classList.remove('submit-incomplete');
     button.classList.add('submit-complete');
@@ -396,7 +422,7 @@ function render(){
   const r=current;const list=playersOf(r),cap=r?.expected_count??null,done=!!r?.finalized;
   const countNum=list.length,full=cap!==null&&countNum===cap;
   // 다른 경기가 시작되거나 결과가 삭제되면 각 휴대폰의 공개 상태를 초기화합니다.
-  if(!done){clearRevealState();localRevealToken='';if(!busy)wantReveal=false;lastDrawKey='';restoredReveal=false;}
+  if(!done){clearRevealState();clearTeamStage();personalTeamToken='';personalRevealWaiting=false;localRevealToken='';if(!busy)wantReveal=false;lastDrawKey='';restoredReveal=false;}
   // 앱을 종료했다가 열어도 같은 경기의 이미 공개한 결과를 즉시 복원합니다.
   if(done&&r?.draw_token&&!localRevealToken){
     const key=revealStorageKey();let saved='';
@@ -404,6 +430,18 @@ function render(){
     if(saved===r.draw_token){localRevealToken=saved;restoredReveal=true;lastDrawKey=r.draw_token;}
     else if(saved&&key){try{localStorage.removeItem(key);}catch(e){}}
   }
+  if(done&&r?.draw_token&&!localRevealToken&&!personalTeamToken){
+    const key=teamStageKey();let saved='';
+    try{if(key)saved=localStorage.getItem(key)||'';}catch(e){}
+    if(saved===r.draw_token){personalTeamToken=saved;personalRevealWaiting=true;}
+    else if(saved&&key){try{localStorage.removeItem(key);}catch(e){}}
+  }
+  const personalSide=done&&personalTeamToken===r?.draw_token?r?.assignments?.[uid]:null;
+  const teamRow=$('personalTeamRow'),teamLabel=$('personalTeamLabel');
+  teamRow.hidden=!(personalSide==='blue'||personalSide==='white');
+  teamLabel.textContent=personalSide==='blue'?'🔵 청팀':personalSide==='white'?'⚪ 백팀':'';
+  teamLabel.classList.toggle('blue',personalSide==='blue');
+  teamLabel.classList.toggle('white',personalSide==='white');
   const reveal=done&&!!r?.draw_token&&localRevealToken===r.draw_token&&!personalRevealWaiting;
   if(cap!==null&&document.activeElement!==$('expected'))$('expected').value=cap;
   updateSubmitButton();
@@ -415,7 +453,7 @@ function render(){
     $(side+'Avg').textContent=reveal?totalOf(arr).average.toFixed(2):'—';
   }
   const guide=$('guide');guide.classList.toggle('ready',full&&!done);guide.classList.toggle('done',reveal);
-  guide.textContent=personalRevealWaiting?'내 청백팀을 확인하세요. 잠시 후 경기 결과가 공개됩니다':!cap?'별표를 누르면 결과가 표시됩니다':!full?`${cap-countNum}명 미전송입니다 (${countNum}/${cap}명)`:'별표를 누르면 결과가 표시됩니다';
+  guide.textContent=personalRevealWaiting?'본인의 청백팀을 확인하고 오른쪽 ✔ 버튼을 누르세요':!cap?'별표를 누르면 결과가 표시됩니다':!full?`${cap-countNum}명 미전송입니다 (${countNum}/${cap}명)`:'별표를 누르면 결과가 표시됩니다';
   $('pending').textContent='';
   let result='전원 점수 전송 후 결정됩니다';
   if(reveal){const a=totalOf(blue).average,b=totalOf(white).average;result=Math.abs(a-b)<1e-8?'무 승 부':a<b?'우 승 청 팀':'우 승 백 팀';}
@@ -512,7 +550,7 @@ function animateRows(){
   if(!holeinoneAward.hidden)revealTimeouts.push(setTimeout(()=>{holeinoneAward.style.visibility='visible';},winnerAt+3400));
 }
 
-function stopRoom(){if(personalRevealTimer)clearTimeout(personalRevealTimer);personalRevealTimer=null;personalRevealWaiting=false;justSubmittedRoom='';if(unsubscribe){unsubscribe();unsubscribe=null;}cancelRevealAnimation();roomRef=null;current=null;snapshotFromServer=false;localRevealToken='';wantReveal=false;lastDrawKey='';render();}
+function stopRoom(){if(personalRevealTimer)clearTimeout(personalRevealTimer);personalRevealTimer=null;personalRevealWaiting=false;personalTeamToken='';justSubmittedRoom='';if(unsubscribe){unsubscribe();unsubscribe=null;}cancelRevealAnimation();roomRef=null;current=null;snapshotFromServer=false;localRevealToken='';wantReveal=false;lastDrawKey='';render();}
 async function watchRoom(){
   validRoom();
   const id=await roomId();
