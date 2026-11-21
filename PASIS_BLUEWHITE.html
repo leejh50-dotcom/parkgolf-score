@@ -559,6 +559,9 @@ async function watchRoom(){
   const chosen=roomRef;
   unsubscribe=onSnapshot(chosen,snap=>{
     if(roomRef?.id!==chosen.id)return;
+    // 서버에서 확정된 추첨 결과를 캐시의 이전 상태로 덮어쓰지 않습니다.
+    if(snap.metadata.fromCache && snapshotFromServer && current && snap.exists() && Object.keys(snap.data()?.players||{}).length<Object.keys(current.players||{}).length)return;
+    if(snap.metadata.fromCache && current?.finalized && current?.draw_token && (!snap.exists() || snap.data()?.draw_token!==current.draw_token))return;
     snapshotFromServer=!snap.metadata.fromCache;
     current=snap.exists()?snap.data():null;
     render();
@@ -592,48 +595,42 @@ $('send').onclick=()=>{
     }).then(ok=>{if(ok){justSubmittedRoom=currentRoom();updateSubmitButton();showSendSuccess();}});
   }catch(e){notify(errText(e),true)}
 };
+// 빨간 별표는 단 한 번의 터치로 추첨·개인 청백 확인까지 진행합니다.
+// Firestore 트랜잭션의 반환값을 직접 사용하여 모바일 서버 재조회 지연을 제거합니다.
 $('star').onclick=async()=>{
-  if(busy)return;
-  // 이미 다른 휴대폰에서 추첨이 끝났으면 네트워크 재조회 없이 첫 터치에 즉시 공개합니다.
-  if(current?.finalized&&current.draw_token){
-    beginPersonalReveal(current.draw_token);
-    return;
-  }
-  // 한 번 누르면 서버의 최신 상태를 먼저 확인합니다.
-  // 다른 폰에서 이미 결정한 경우에도 추가 클릭 없이 바로 결과를 표시합니다.
+  if(busy||personalRevealWaiting)return;
+  if(current?.finalized&&current.draw_token){beginPersonalReveal(current.draw_token);return;}
   busy=true;
+  const initialRoom=roomRef?.id;
   try{
     const ref=await watchRoom();
     const snap=await getDocFromServer(ref);
     if(roomRef?.id!==ref.id)return;
-    current=snap.exists()?snap.data():null;
-    if(!current)throw Error('경기 정보가 없습니다.');
-    if(current.finalized&&current.draw_token){
-      beginPersonalReveal(current.draw_token);return;
-    }
-    const ids=Object.keys(current.players||{});
-    if(ids.length!==current.expected_count){render();throw Error('전원 점수 전송 후 결정할 수 있습니다.');}
-    wantReveal=true;
-    notify('청백 결과를 결정하고 있습니다. 잠시 기다려 주세요.');
-    await runTransaction(db,async tx=>{
-      const latest=await tx.get(ref);
-      if(!latest.exists())throw Error('경기 정보가 없습니다.');
-      const r=latest.data();
-      if(r.finalized)return;
+    const latest=snap.exists()?snap.data():null;
+    if(!latest)throw Error('경기 정보가 없습니다.');
+    current=latest;
+    if(latest.finalized&&latest.draw_token){beginPersonalReveal(latest.draw_token);return;}
+    if(Object.keys(latest.players||{}).length!==latest.expected_count){render();throw Error('전원 점수 전송 후 결정할 수 있습니다.');}
+    notify('청백팀을 결정하고 있습니다. 잠시 기다려 주세요.');
+    const decided=await runTransaction(db,async tx=>{
+      const docSnap=await tx.get(ref);
+      if(!docSnap.exists())throw Error('경기 정보가 없습니다.');
+      const r=docSnap.data();
+      if(r.finalized&&r.draw_token)return r;
       const members=Object.keys(r.players||{});
       if(members.length!==r.expected_count)throw Error('전원 점수 전송 후 결정할 수 있습니다.');
       for(let i=members.length-1;i>0;i--){const a=new Uint32Array(1);crypto.getRandomValues(a);const j=a[0]%(i+1);[members[i],members[j]]=[members[j],members[i]];}
       const sides={};members.forEach((id,i)=>sides[id]=i<Math.ceil(members.length/2)?'blue':'white');
-      tx.update(ref,{assignments:sides,finalized:true,drawn_by:uid,draw_token:crypto.randomUUID()});
+      const draw_token=crypto.randomUUID();
+      tx.update(ref,{assignments:sides,finalized:true,drawn_by:uid,draw_token});
+      return {...r,assignments:sides,finalized:true,drawn_by:uid,draw_token};
     });
-    // 서버 저장 결과를 직접 읽어 즉시 공개합니다. 실시간 알림을 기다리지 않습니다.
-    const result=await getDocFromServer(ref);
     if(roomRef?.id!==ref.id)return;
-    current=result.exists()?result.data():null;
-    if(current?.finalized&&current.draw_token){
-      beginPersonalReveal(current.draw_token);
-    }else{notify('청백 결정 내용을 동기화하고 있습니다.');}
-  }catch(e){wantReveal=false;notify(errText(e),true);}
+    if(decided?.finalized&&decided.draw_token){
+      current=decided;
+      beginPersonalReveal(decided.draw_token);
+    }else throw Error('추첨 결과를 확인하지 못했습니다. 잠시 후 다시 시도하세요.');
+  }catch(e){notify(errText(e),true);}
   finally{busy=false;render();}
 };
 // 보관함은 Firebase 공동 기록과 별도로 각 휴대폰 브라우저에만 저장합니다.
@@ -756,18 +753,19 @@ let checkingFresh=false;
 // 결과를 자기 화면에 공개하기 전까지 1.5초 간격으로 서버 상태를 보조 확인합니다.
 setInterval(()=>{
   if(!roomRef||!uid||busy||document.visibilityState==='hidden'||checkingFresh)return;
-  if(current?.finalized&&localRevealToken===current.draw_token)return;
+  if(current?.finalized)return;
   checkFreshAfterResume();
-},1500);
+},850);
 async function checkFreshAfterResume(){
   if(!roomRef || !uid || document.visibilityState==='hidden'||checkingFresh)return;
-  const now=Date.now();if(now-lastForegroundCheck<1200)return;
+  const now=Date.now();if(now-lastForegroundCheck<750)return;
   lastForegroundCheck=now;
   checkingFresh=true;
   const ref=roomRef;
   try{
     const snap=await getDocFromServer(ref);
     if(roomRef?.id!==ref.id || busy)return;
+    if(current?.finalized&&current.draw_token && (!snap.exists() || snap.data()?.draw_token!==current.draw_token))return;
     const fresh=snap.exists()?snap.data():null;
     const oldCount=Object.keys(current?.players||{}).length;
     const newCount=Object.keys(fresh?.players||{}).length;
