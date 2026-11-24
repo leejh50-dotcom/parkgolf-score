@@ -237,6 +237,11 @@ body.group-return-enabled>.group-return-button{display:flex!important}
 .personal-team-label.white{background:#e04768;border:3px solid #b82d4a}
 .confirm-result{min-height:47px;border:3px solid #146b3b;border-radius:11px;background:#22a05b;color:#fff;font-size:31px;font-weight:900;line-height:1}
 .confirm-result:active{filter:brightness(.9)}
+
+/* Align team totals at the same height for odd player counts. */
+.teams > .team{display:flex;flex-direction:column}
+.teams > .team > .entries{flex:1 0 auto}
+.teams > .team > h3,.teams > .team > .totals{flex-shrink:0}
 </style>
 </head>
 <body><div class="wrap">
