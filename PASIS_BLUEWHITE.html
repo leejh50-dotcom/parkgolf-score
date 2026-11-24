@@ -242,6 +242,8 @@ body.group-return-enabled>.group-return-button{display:flex!important}
 .teams > .team{display:flex;flex-direction:column}
 .teams > .team > .entries{flex:1 0 auto}
 .teams > .team > h3,.teams > .team > .totals{flex-shrink:0}
+
+#confirmDialog.archive-delete{background:#d92352;color:#fff;border-color:#b51b40}
 </style>
 </head>
 <body><div class="wrap">
@@ -677,6 +679,7 @@ $('shareResult').onclick=async()=>{
   }
   try{await navigator.clipboard.writeText(text);notify('결과를 복사했습니다. 카카오톡 대화창에 붙여넣으세요.');}
   catch(e){
+    resetArchiveDialogButton();
     $('dialogTitle').textContent='청백 경기 결과 공유';
     const body=$('dialogBody');body.replaceChildren();
     const area=document.createElement('textarea');area.value=text;area.readOnly=true;
@@ -720,6 +723,8 @@ $('clear').onclick=()=>{
 };
 
 const dialog=$('dialog');$('cancelDialog').onclick=()=>dialog.close();$('confirmDialog').onclick=()=>dialog.close();
+function resetArchiveDialogButton(){const btn=$('confirmDialog');btn.textContent='확인';btn.classList.remove('archive-delete');btn.onclick=()=>dialog.close();}
+dialog.addEventListener('close',resetArchiveDialogButton);
 $('load').onclick=()=>{
   const archives=readLocalArchives().sort((a,b)=>String(b.date||'').localeCompare(String(a.date||''))||String(b.saved_at||'').localeCompare(String(a.saved_at||'')));
   if(!archives.length){notify('이 휴대폰에 저장된 경기 결과가 없습니다.',true);return;}
@@ -736,7 +741,21 @@ $('load').onclick=()=>{
   const content=document.createElement('div');content.id='archiveView';
   const display=()=>{content.textContent=formatArchive(archives[Number(choose.value)]);};
   choose.addEventListener('change',display);
-  body.append(choose,content);display();dialog.showModal();
+  body.append(choose,content);display();
+  const deleteButton=$('confirmDialog');
+  deleteButton.textContent='삭제';deleteButton.classList.add('archive-delete');
+  deleteButton.onclick=()=>{
+    const selected=archives[Number(choose.value)];
+    if(!selected)return;
+    if(!confirm(`${selected.date} · ${selected.course||'장소 미입력'} 경기 기록을 삭제할까요?\n이 휴대폰의 저장 기록만 삭제됩니다.`))return;
+    try{
+      const remaining=readLocalArchives().filter(a=>a.draw_token!==selected.draw_token);
+      localStorage.setItem(LOCAL_ARCHIVE_KEY,JSON.stringify(remaining));
+      if(!remaining.length){dialog.close();notify('저장된 경기 기록을 삭제했습니다. (0/50)');return;}
+      $('load').onclick();
+    }catch(e){alert('저장 기록을 삭제하지 못했습니다. 다시 시도하세요.');}
+  };
+  if(!dialog.open)dialog.showModal();
 };
 // 내 이름만 이 휴대폰에 보존합니다.
 $('player').value=localStorage.getItem('pasis_bluewhite_my_name')||'';
