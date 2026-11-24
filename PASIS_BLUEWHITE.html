@@ -640,7 +640,7 @@ $('star').onclick=async()=>{
 };
 // 보관함은 Firebase 공동 기록과 별도로 각 휴대폰 브라우저에만 저장합니다.
 const LOCAL_ARCHIVE_KEY='pasis_bluewhite_local_archive_v1';
-const MAX_LOCAL_ARCHIVES=20;
+const MAX_LOCAL_ARCHIVES=50;
 function readLocalArchives(){
   try{
     const data=JSON.parse(localStorage.getItem(LOCAL_ARCHIVE_KEY)||'[]');
@@ -690,15 +690,15 @@ $('save').onclick=()=>{
   if(!r?.finalized||!r.draw_token||localRevealToken!==r.draw_token){
     notify('빨간 별표로 결과를 확인한 뒤 저장하세요.',true);return;
   }
-  if(!confirm('이 휴대폰에 청백 경기 결과를 저장할까요?\n최근 20경기까지 보관됩니다.'))return;
+  if(!confirm('이 휴대폰에 청백 경기 결과를 저장할까요?\n최근 50경기까지 보관됩니다.'))return;
   try{
     const saved=readLocalArchives();
-    const record={date:r.date,course:r.course,team:r.team,expected_count:r.expected_count,
+    const record={date:r.date,course:clean($('course').value),team:r.team,expected_count:r.expected_count,
       players:r.players,assignments:r.assignments,draw_token:r.draw_token,saved_at:new Date().toISOString()};
     // 같은 경기 결과를 다시 저장하면 중복을 만들지 않고 최신 위치로 옮깁니다.
     const next=[record,...saved.filter(x=>x.draw_token!==r.draw_token)].slice(0,MAX_LOCAL_ARCHIVES);
     localStorage.setItem(LOCAL_ARCHIVE_KEY,JSON.stringify(next));
-    notify(`이 휴대폰에 저장했습니다. (${next.length}/20경기)`);
+    notify(`이 휴대폰에 저장했습니다. (${next.length}/${MAX_LOCAL_ARCHIVES}경기)`);
   }catch(e){notify('휴대폰 저장 공간을 확인하세요: '+errText(e),true);}
 };
 $('clear').onclick=()=>{
@@ -721,16 +721,16 @@ $('clear').onclick=()=>{
 
 const dialog=$('dialog');$('cancelDialog').onclick=()=>dialog.close();$('confirmDialog').onclick=()=>dialog.close();
 $('load').onclick=()=>{
-  const archives=readLocalArchives();
+  const archives=readLocalArchives().sort((a,b)=>String(b.date||'').localeCompare(String(a.date||''))||String(b.saved_at||'').localeCompare(String(a.saved_at||'')));
   if(!archives.length){notify('이 휴대폰에 저장된 경기 결과가 없습니다.',true);return;}
-  $('dialogTitle').textContent=`저장된 경기 결과 (${archives.length}/20)`;
+  $('dialogTitle').textContent=`저장된 경기 결과 (${archives.length}/${MAX_LOCAL_ARCHIVES})`;
   const body=$('dialogBody');body.replaceChildren();
   const choose=document.createElement('select');
   choose.setAttribute('aria-label','저장된 경기 선택');
   choose.style.cssText='width:100%;font-size:17px;padding:12px;border:2px solid #9eb8d8;border-radius:10px;margin-bottom:12px;background:white;color:#102341';
   archives.forEach((a,i)=>{
     const opt=document.createElement('option');opt.value=String(i);
-    opt.textContent=`${a.date} · ${a.course ? a.course+' · ' : ''}${a.team}`;
+    opt.textContent=`${a.date} · ${String(a.course||'').trim().replace(/파크골프장$/,'').trim()||'장소 미입력'}`;
     choose.append(opt);
   });
   const content=document.createElement('div');content.id='archiveView';
