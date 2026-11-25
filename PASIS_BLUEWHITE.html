@@ -246,6 +246,13 @@ body.group-return-enabled>.group-return-button{display:flex!important}
 #confirmDialog.archive-delete{background:#d92352;color:#fff;border-color:#b51b40}
 
 .hero{position:relative}.hero .brand{padding-right:30px}.pasis-share-icon{position:absolute;right:7px;top:8px;width:34px;height:34px;border:1px solid #b9d5f5;border-radius:8px;background:#ffffff18;color:white;display:grid;place-items:center;padding:4px}.pasis-install-dialog{width:min(92vw,440px);max-height:85vh;overflow:auto;border:0;border-radius:18px;padding:18px;color:#102341;background:white}.pasis-install-dialog::backdrop{background:#0008}.pasis-install-dialog h2{font-size:23px;margin:0 0 12px;text-align:center}.pasis-install-dialog button{display:block;width:100%;padding:12px 6px;margin:8px 0;border:1px solid #b6cce6;border-radius:10px;background:#eef5ff;color:#174779;font-weight:800}.pasis-install-dialog #pasisInstallNow{background:#0965c4;color:white}.pasis-install-dialog p{font-size:16px;line-height:1.5;white-space:pre-line}.pasis-install-dialog input{width:100%;font-size:14px;padding:8px;border:1px solid #aabbd0;border-radius:6px}
+
+.pasis-install-dialog .pasis-install-heading,.pasis-install-dialog #pasisShareUrl{box-sizing:border-box;width:100%;background:#eaf3fd;border:2px solid #285580;border-radius:10px;color:#194c80;font-size:19px;font-weight:800;text-align:center;padding:12px 6px;margin:8px 0}
+.pasis-install-dialog #pasisCopyUrl{background:#f3f6fa;color:#194c80;font-size:18px}
+.pasis-install-dialog p{margin:10px 0;font-size:16px;line-height:1.5}
+.pasis-install-dialog #pasisInstallMessage:empty{display:none}
+.pasis-install-dialog input[hidden]{display:none!important}
+.pasis-install-divider{border:0;border-top:1px solid #d6e1ed;margin:15px 0}
 </style>
 </head>
 <body><div class="wrap">
@@ -889,21 +896,32 @@ if(
 })();
 </script>
 
-<dialog class="pasis-install-dialog" id="pasisInstallDialog"><h2>앱 설치 및 공유</h2><button type="button" id="pasisInstallNow">＋ 홈 화면에 설치</button><button type="button" id="pasisBrowserHelp">크롬·사파리에서 열기 안내</button><button type="button" id="pasisCopyUrl">앱 주소 복사</button><button type="button" id="pasisShareUrl">카카오톡·메일로 공유</button><input id="pasisPublicUrl" readonly aria-label="앱 주소" value="https://leejh50-dotcom.github.io/parkgolf-score/PASIS_BLUEWHITE.html"><p id="pasisInstallMessage" role="status" aria-live="polite"></p><button type="button" id="pasisInstallClose">닫기</button></dialog>
+<dialog class="pasis-install-dialog" id="pasisInstallDialog">
+<h2>앱 설치 및 공유</h2>
+<h3 class="pasis-install-heading">홈 화면 설치 방법</h3>
+<p>앱 주소를 복사하여 Chrome 또는 Safari 주소창에 붙여넣으세요.</p>
+<button type="button" id="pasisCopyUrl">▣ 앱 주소 복사</button>
+<p><strong>삼성폰</strong><br>Chrome → 점 3개(⋮) → 설치 및 바로가기 만들기</p>
+<p><strong>아이폰</strong><br>Safari → 공유(↑) → 홈 화면에 추가</p>
+<hr class="pasis-install-divider">
+<button type="button" id="pasisShareUrl">카카오톡·메일로 공유</button>
+<input id="pasisPublicUrl" hidden readonly aria-label="앱 주소" value="https://leejh50-dotcom.github.io/parkgolf-score/PASIS_BLUEWHITE.html">
+<p id="pasisInstallMessage" role="status" aria-live="polite"></p>
+<button type="button" id="pasisInstallClose">닫기</button>
+</dialog>
 <script>
 (()=>{
-const el=id=>document.getElementById(id), url=el('pasisPublicUrl').value, dlg=el('pasisInstallDialog'), msg=el('pasisInstallMessage');
-let promptEvent=null;
-const installed=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
-const ios=()=>/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
-window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();promptEvent=e;});
-window.addEventListener('appinstalled',()=>{promptEvent=null;msg.textContent='홈 화면에 앱이 설치되었습니다.';});
-function help(){msg.textContent=installed()?'현재 독립 앱 화면으로 열려 있습니다. 홈 화면 또는 앱 목록에서 파시스 청백 게임 아이콘을 확인하세요.':ios()?'Safari 앱을 직접 열고 아래 주소를 붙여넣으세요. 공유 버튼 → 홈 화면에 추가 → 추가를 누르세요.':'Chrome 앱을 직접 열고 복사한 주소를 주소창에 붙여넣으세요. 점 3개 → 설치 및 바로가기 만들기(또는 홈 화면에 추가)를 선택하세요. 내부 브라우저에서는 설치가 제한될 수 있습니다.';}
-async function copy(){try{await navigator.clipboard.writeText(url);msg.textContent='주소를 복사했습니다. Chrome 또는 Safari 주소창에 붙여넣으세요.';}catch(e){const field=el('pasisPublicUrl');field.focus();field.select();field.setSelectionRange(0,url.length);try{if(document.execCommand('copy')){msg.textContent='주소를 복사했습니다.';return;}}catch(e){}msg.textContent='주소 입력칸을 길게 눌러 복사하세요.';}}
-el('pasisInstallOpen').onclick=()=>{msg.textContent=installed()?'현재 독립 앱 화면입니다.':'설치하거나 다른 회원에게 앱을 공유할 수 있습니다.';dlg.showModal();};
-el('pasisInstallClose').onclick=()=>dlg.close();el('pasisBrowserHelp').onclick=help;el('pasisCopyUrl').onclick=copy;
-el('pasisInstallNow').onclick=async()=>{if(installed()){help();return;}if(!promptEvent){help();return;}const p=promptEvent;promptEvent=null;try{await p.prompt();const result=await p.userChoice;msg.textContent=result.outcome==='accepted'?'설치를 요청했습니다. 홈 화면을 확인하세요.':'설치가 취소되었습니다.';}catch(e){help();}};
-el('pasisShareUrl').onclick=async()=>{if(navigator.share){try{await navigator.share({title:'파시스 청백 게임',url});return;}catch(e){if(e.name==='AbortError')return;}}await copy();};
+const el=id=>document.getElementById(id), field=el('pasisPublicUrl'), url=field.value, dlg=el('pasisInstallDialog'), msg=el('pasisInstallMessage');
+async function copy(){
+ try{await navigator.clipboard.writeText(url);msg.textContent='주소를 복사했습니다. Chrome 또는 Safari 주소창에 붙여넣으세요.';return;}catch(e){}
+ field.hidden=false;field.focus();field.select();field.setSelectionRange(0,url.length);
+ try{if(document.execCommand('copy')){field.hidden=true;msg.textContent='주소를 복사했습니다. Chrome 또는 Safari 주소창에 붙여넣으세요.';return;}}catch(e){}
+ msg.textContent='주소 입력칸을 길게 눌러 복사하세요.';
+}
+el('pasisInstallOpen').onclick=()=>{msg.textContent='';field.hidden=true;dlg.showModal();};
+el('pasisInstallClose').onclick=()=>dlg.close();
+el('pasisCopyUrl').onclick=copy;
+el('pasisShareUrl').onclick=async()=>{if(navigator.share){try{await navigator.share({title:'파시스 청백 게임',url});return;}catch(e){if(e.name==='AbortError')return;}}await copy();msg.textContent+=' 카카오톡 또는 메일에 붙여넣어 공유할 수 있습니다.';};
 })();
 </script>
 </body></html>
