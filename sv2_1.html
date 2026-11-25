@@ -1512,12 +1512,23 @@ button.pasis-group-return.pasis-return-top { top:calc(env(safe-area-inset-top, 0
 button.pasis-group-return.pasis-return-bottom { bottom:calc(env(safe-area-inset-bottom, 0px) + 18px) !important; }
 button.pasis-group-return.visible { display:flex !important; }
 </style>
+<style>
+.parkgolf-app button.pasis-share-icon{position:absolute;right:7px;top:8px;width:34px;height:34px;border:1px solid #b9d5f5;border-radius:8px;background:#ffffff18;color:white;display:grid;place-items:center;padding:4px}.pasis-install-dialog{width:min(92vw,440px);max-height:85vh;overflow:auto;border:0;border-radius:18px;padding:18px;color:#102341;background:white}.pasis-install-dialog::backdrop{background:#0008}.pasis-install-dialog h2{font-size:23px;margin:0 0 12px;text-align:center}.pasis-install-dialog button{display:block;width:100%;padding:12px 6px;margin:8px 0;border:1px solid #b6cce6;border-radius:10px;background:#eef5ff;color:#174779;font-weight:800}.pasis-install-dialog #pasisInstallNow{background:#0965c4;color:white}.pasis-install-dialog p{font-size:16px;line-height:1.5;white-space:pre-line}.pasis-install-dialog input{width:100%;font-size:14px;padding:8px;border:1px solid #aabbd0;border-radius:6px}
+.pasis-install-dialog .pasis-install-heading,.pasis-install-dialog #pasisShareUrl{box-sizing:border-box;width:100%;background:#eaf3fd;border:2px solid #285580;border-radius:10px;color:#194c80;font-size:19px;font-weight:800;text-align:center;padding:12px 6px;margin:8px 0}
+.pasis-install-dialog #pasisCopyUrl{background:#f3f6fa;color:#194c80;font-size:18px}
+.pasis-install-dialog p{margin:10px 0;font-size:16px;line-height:1.5}
+.pasis-install-dialog #pasisInstallMessage:empty{display:none}
+.pasis-install-dialog input[hidden]{display:none!important}
+.pasis-install-divider{border:0;border-top:1px solid #d6e1ed;margin:15px 0}
+.pasis-install-dialog button{font-family:inherit;font-size:17px;min-height:46px}
+.parkgolf-app button.pasis-share-icon{position:absolute!important;right:7px!important;top:8px!important;width:34px!important;height:34px!important;padding:4px!important;border:1px solid #b9d5f5!important;border-radius:8px!important;background:#ffffff18!important;color:white!important;display:grid!important;place-items:center!important;}
+</style>
 </head>
 
 <body>
   <div class="parkgolf-app" style="padding: 0px !important; margin: 0 !important; max-width: 100% !important; width: 100% !important;">
 <div class="container" style="padding: 0px !important; margin: 0 !important; border-radius: 0 !important; box-shadow: none !important; max-width: 100% !important;">
-<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px 4px !important; border-radius: 12px; margin: 0 0 8px 0 !important; text-align: center;">
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px 4px !important; border-radius: 12px; margin: 0 0 8px 0 !important; text-align: center; position:relative;"><button type="button" class="pasis-share-icon" id="pasisInstallOpen" aria-label="앱 설치 및 공유" title="앱 설치 및 공유"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V3m-5 5 5-5 5 5M5 12H3v9h18v-9h-2"/></svg></button>
 <h1 style="color: #ffffff !important; margin: 0 0 14px 0 !important; font-size: 24px !important; font-weight: bold !important; letter-spacing: -0.5px !important;">파크골프 점수 기록표</h1>
 <div style="display: inline-block; background: rgba(255,255,255,0.3); padding: 8px 18px; border-radius: 8px;">
 <span style="font-size: 15px; color: #fff3e0; font-weight: 600; letter-spacing: 0.5px;">파시스 sv2.1 클럽용</span>
@@ -3045,5 +3056,34 @@ function openPasisYoutube(){
   });
 })();
 </script>
+<dialog class="pasis-install-dialog" id="pasisInstallDialog">
+<h2>앱 설치 및 공유</h2>
+<h3 class="pasis-install-heading">홈 화면 설치 방법</h3>
+<p>앱 주소를 복사하여 Chrome 또는 Safari 주소창에 붙여넣으세요.</p>
+<button type="button" id="pasisCopyUrl">▣ 앱 주소 복사</button>
+<p><strong>삼성폰</strong><br>Chrome → 점 3개(⋮) → 설치 및 바로가기 만들기</p>
+<p><strong>아이폰</strong><br>Safari → 공유(↑) → 홈 화면에 추가</p>
+<hr class="pasis-install-divider">
+<button type="button" id="pasisShareUrl">카카오톡·메일로 공유</button>
+<input id="pasisPublicUrl" hidden readonly aria-label="앱 주소" value="https://leejh50-dotcom.github.io/parkgolf-score/sv2_1.html">
+<p id="pasisInstallMessage" role="status" aria-live="polite"></p>
+<button type="button" id="pasisInstallClose">닫기</button>
+</dialog>
+<script>
+(()=>{
+const el=id=>document.getElementById(id), field=el('pasisPublicUrl'), url=field.value, dlg=el('pasisInstallDialog'), msg=el('pasisInstallMessage');
+async function copy(){
+ try{await navigator.clipboard.writeText(url);msg.textContent='주소를 복사했습니다. Chrome 또는 Safari 주소창에 붙여넣으세요.';return;}catch(e){}
+ field.hidden=false;field.focus();field.select();field.setSelectionRange(0,url.length);
+ try{if(document.execCommand('copy')){field.hidden=true;msg.textContent='주소를 복사했습니다. Chrome 또는 Safari 주소창에 붙여넣으세요.';return;}}catch(e){}
+ msg.textContent='주소 입력칸을 길게 눌러 복사하세요.';
+}
+el('pasisInstallOpen').onclick=()=>{msg.textContent='';field.hidden=true;dlg.showModal();};
+el('pasisInstallClose').onclick=()=>dlg.close();
+el('pasisCopyUrl').onclick=copy;
+el('pasisShareUrl').onclick=async()=>{if(navigator.share){try{await navigator.share({title:'파시스2.1',url});return;}catch(e){if(e.name==='AbortError')return;}}await copy();msg.textContent+=' 카카오톡 또는 메일에 붙여넣어 공유할 수 있습니다.';};
+})();
+</script>
+
 </body>
 </html>
